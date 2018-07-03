@@ -2,6 +2,7 @@ import argparse
 import pathlib
 import os.path
 import random
+import inflect
 
 from pptx import Presentation
 from pptx.util import Inches
@@ -71,15 +72,16 @@ def get_synonyms(args):
 def get_title(synonyms):
     print('******************************************')
 
-    # Generate a title
+    # Generate a basic title
     chosen_synonym = random.choice(synonyms)
+    chosen_synonym_plural = inflect.engine().plural(chosen_synonym)
     synonym_templates = ['The Unexpected Benefits of {}',
                              'What Your Choice in {} Says About You',
                              'How to Get Rid of {}',
                              'Why {} Will Ruin Your Life',
                              'The Biggest Concerns About {}']
     chosen_template = random.choice(synonym_templates);
-    return chosen_template.format(chosen_synonym.title())
+    return chosen_template.format(chosen_synonym_plural.title())
 
 
 def get_images(synonyms, num_images):
@@ -105,7 +107,7 @@ def get_images(synonyms, num_images):
     all_paths[synonym] = paths[synonym]
   return all_paths
 
-def compile_presentation(args, all_paths, definitions, synonyms):
+def compile_presentation(args, all_paths, title, definitions, synonyms):
   # Make a presentation
   prs = Presentation()
   
@@ -119,7 +121,17 @@ def compile_presentation(args, all_paths, definitions, synonyms):
   # Build an ordered list of slides for access
   slides = []
 
-  slide_idx_iter = 0
+  # Add title slide
+  slide = prs.slides.add_slide(prs.slide_layouts[0])
+  slides.append(slide)
+  title_object = slide.shapes.title
+  title_object.text = title
+  title_object.width = WIDTH_IN
+  title_object.height = HEIGHT_IN
+  title_object.left = LEFTMOST
+  title_object.right = TOPMOST
+  
+  slide_idx_iter = 1
   for synonym,paths in all_paths.items():
     print('***********************************')
     print('Adding slide: {}'.format(slide_idx_iter))
@@ -158,11 +170,13 @@ def main(args):
   definitions = get_definitions(args)
   synonyms = get_synonyms(args)
 
+  title = get_title(synonyms)
+
   # For each synonym get N image paths
   all_paths = get_images(synonyms, args.num_images)
 
   # Compile the presentation
-  prs, slides = compile_presentation(args, all_paths=all_paths, 
+  prs, slides = compile_presentation(args, all_paths=all_paths, title=title,
     definitions=definitions, synonyms=synonyms)
 
   if save_talk(args, prs):
