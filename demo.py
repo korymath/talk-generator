@@ -129,6 +129,8 @@ def compile_presentation(args, all_paths, definitions, synonyms):
 def save_talk(args, prs):
   # Save the presentation
   fp = 'output/' + args.topic + '-' + args.output
+  # TODO: make directory if it doesn't exist
+  # FileNotFoundError: [Errno 2] No such file or directory: 'output/latitude-test.pptx'
   prs.save(fp)
   print('Saved talk to {}'.format(fp))
   return True
