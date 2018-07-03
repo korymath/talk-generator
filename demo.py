@@ -1,5 +1,6 @@
 import argparse
-
+import pathlib
+import os.path
 
 from pptx import Presentation
 from pptx.util import Inches
@@ -128,7 +129,9 @@ def compile_presentation(args, all_paths, definitions, synonyms):
 
 def save_talk(args, prs):
   # Save the presentation
-  fp = 'output/' + args.topic + '-' + args.output
+  fp = './output/' + args.topic + '-' + args.output
+  # Create the parent folder if it doesn't exist
+  pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
   prs.save(fp)
   print('Saved talk to {}'.format(fp))
   return True
