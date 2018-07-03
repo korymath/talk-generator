@@ -1,0 +1,2 @@
+PyDictionary
+python-pptx
