@@ -1,6 +1,7 @@
 import argparse
 import pathlib
 import os.path
+import random
 
 from pptx import Presentation
 from pptx.util import Inches
@@ -66,6 +67,20 @@ def get_synonyms(args):
       print('\t {}'.format(synonym))
 
   return all_synonyms
+
+def get_title(synonyms):
+    print('******************************************')
+
+    # Generate a title
+    chosen_synonym = random.choice(synonyms)
+    synonym_templates = ['The Unexpected Benefits of {}',
+                             'What Your Choice in {} Says About You',
+                             'How to Get Rid of {}',
+                             'Why {} Will Ruin Your Life',
+                             'The Biggest Concerns About {}']
+    chosen_template = random.choice(synonym_templates);
+    return chosen_template.format(chosen_synonym.title())
+
 
 def get_images(synonyms, num_images):
   all_paths = {}
