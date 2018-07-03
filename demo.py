@@ -3,22 +3,29 @@ import argparse
 
 from pptx import Presentation
 from pptx.util import Inches
+from pptx.enum.text import PP_ALIGN
 
 from nltk.corpus import wordnet as wn
 from py_thesaurus import Thesaurus
 from PyDictionary import PyDictionary
 from google_images_download import google_images_download
 
+# CONSTANTS
+HEIGHT = 9
+WIDTH = 16
+LEFTMOST = Inches(0)
+TOPMOST = Inches(0)
+HEIGHT_IN = Inches(HEIGHT)
+WIDTH_IN = Inches(WIDTH)
 
 # One inch equates to 914400 EMUs 
-inches_to_emu = 914400
+INCHES_TO_EMU = 914400
 # One centimeter is 360000 EMUs
-cms_to_emu = 360000
+CMS_TO_EMU = 360000
 
 
-def main(args):
-  """Make a presentation with the given topic."""
-
+def get_definitions(args):
+  print('******************************************')
   print('Topic: {}'.format(args.topic))
   
   # Get definition
@@ -26,67 +33,122 @@ def main(args):
   definitions = dictionary.meaning(args.topic)
   
   if definitions:
-    print('{} definition(s)'.format(len(definitions)))
+    print('******************************************')
+    print('{} word type(s)'.format(len(definitions)))
     for word_type,word_type_defs in definitions.items():
-      print('As a {}, {} can mean: '.format(word_type, args.topic))
+      print('******************************************')
+      print('As a {}, {} can mean {} things: '.format(word_type.lower(), 
+        args.topic, len(word_type_defs)))
+      
       for word_type_def in word_type_defs:
-        print(word_type_def)
+        print('\t {}'.format(word_type_def))
+    return definitions
   else:
     print('No definition found.')
+    return None
 
+def get_synonyms(args):
+  print('******************************************')
   # Get N synonyms
-  for ss in wn.synsets(args.topic):
-    print(ss.name(), ss.lemma_names())
+  word_senses = wn.synsets(args.topic)
 
-  # Get related images at 16x9 aspect ratio
-  response = google_images_download.googleimagesdownload()   #class instantiation
+  all_synonyms = []
+  for ss in word_senses:
+    # print(ss.name(), ss.lemma_names(), ss.definition())
+    all_synonyms.extend([x.lower().replace('_', ' ') for x in ss.lemma_names()])
 
-  arguments = {
-    'keywords':args.topic,
-    'limit':3,
-    'print_urls':True,
-    'exact_size':'1600,900',
-    # 'size':'large',
-    # 'usage_rights':'labeled-for-noncommercial-reuse-with-modification'
-  }
+  all_synonyms = list(set(all_synonyms))
 
-  #passing the arguments to the function
-  paths = response.download(arguments)
-  #printing absolute paths of the downloaded images
-  print(paths)   
+  print('{} synonyms: '.format(len(all_synonyms)))
+  for synonym in all_synonyms:
+    if synonym is not args.topic.lower():
+      print('\t {}'.format(synonym))
 
+  return all_synonyms
+
+def get_images(synonyms, num_images):
+  all_paths = {}
+  for synonym in synonyms:
+    # Get related images at 16x9 aspect ratio
+
+    # TODO: add image filter for weird and NSFW stuff
+    response = google_images_download.googleimagesdownload()
+    arguments = {
+      'keywords':synonym,
+      'limit':num_images,
+      'print_urls':True,
+      'exact_size':'1600,900',
+      # 'size':'large',
+      # 'usage_rights':'labeled-for-noncommercial-reuse-with-modification'
+    }
+    # passing the arguments to the function
+    paths = response.download(arguments)
+    # printing absolute paths of the downloaded images
+    print(paths)
+    # Add to main dictionary
+    all_paths[synonym] = paths[synonym]
+  return all_paths
+
+def compile_presentation(args, all_paths, definitions, synonyms):
   # Make a presentation
   prs = Presentation()
   
+  # Set the height and width
+  prs.slide_height = HEIGHT * INCHES_TO_EMU
+  prs.slide_width = WIDTH * INCHES_TO_EMU
+  
   # Get a default blank slide layout
-  blank_slide_layout = prs.slide_layouts[6]
+  slide_layout = prs.slide_layouts[5]
 
-  # Set the heigh and width
-  prs.slide_height = 9 * inches_to_emu
-  prs.slide_width = 16 * inches_to_emu
-
-  
-  
+  # Build an ordered list of slides for access
   slides = []
-  
-  # Make slide 1, introducing the topic
-  slides.append(prs.slides.add_slide(blank_slide_layout))
-  
-  # Make slide 2, expanding on a word from slide 1
-  slides.append(prs.slides.add_slide(blank_slide_layout))
-  
-  # Make slide 3 connecting words from slide 1 and 2
-  slides.append(prs.slides.add_slide(blank_slide_layout))
 
-  left = top = Inches(1)
-  pic = slide.shapes.add_picture(img_path, left, top)
+  slide_idx_iter = 0
+  for synonym,paths in all_paths.items():
+    print('***********************************')
+    print('Adding slide: {}'.format(slide_idx_iter))
+    slides.append(prs.slides.add_slide(slide_layout))
+    
+    # Get an image
+    img_path = paths[0]
 
-  left = Inches(2)
-  height = Inches(2.5)
-  pic = slide.shapes.add_picture(img_path, left, top, height=height)
+    # Add the image to the slide.
+    pic = slides[slide_idx_iter].shapes.add_picture(img_path, LEFTMOST, TOPMOST, 
+      width=WIDTH_IN, height=HEIGHT_IN)
 
+    # Add title to the slide
+    shapes = slides[slide_idx_iter].shapes
+    shapes.title.text = synonym
+
+    # TODO: Add the text to the slide.
+
+    slide_idx_iter += 1
+
+  return prs,slides
+
+def save_talk(args, prs):
   # Save the presentation
-  prs.save('output/' + args.output)
+  fp = 'output/' + args.topic + '-' + args.output
+  prs.save(fp)
+  print('Saved talk to {}'.format(fp))
+  return True
+
+def main(args):
+  """Make a presentation with the given topic.""" 
+
+  # Get definitions
+  definitions = get_definitions(args)
+  synonyms = get_synonyms(args)
+
+  # For each synonym get N image paths
+  all_paths = get_images(synonyms, args.num_images)
+
+  # Compile the presentation
+  prs, slides = compile_presentation(args, all_paths=all_paths, 
+    definitions=definitions, synonyms=synonyms)
+
+  if save_talk(args, prs):
+    print('Successfully built talk.')
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='Process some integers.')
@@ -94,6 +156,10 @@ if __name__ == '__main__':
     default='test.pptx', type=str)
   parser.add_argument('--topic', help="Topic of presentation.", 
     default='bagels', type=str)
+  parser.add_argument('--num_images', help="Number of images for each synonym.", 
+    default=1, type=int)
+  parser.add_argument('--num_slides', help="Number of slides to create.", 
+    default=6, type=int)
   args = parser.parse_args()
   main(args)
 
