@@ -15,6 +15,9 @@ Pip might complain when installing the python-pptx dependency due to a missing t
 If this is not resolved automatically, visit [this page](https://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml).
 On that page, select the right lxml version for your platform and Python version (e.g. cp37 = Python 3.7).
 
+In case installing the dependencies complain about Visual C++ version while resolving the python-pptx dependency,
+consider installing a version of [Visual Studio](https://docs.microsoft.com/en-us/visualstudio/install/install-visual-studio).
+
 ## Run
 
 ```sh
