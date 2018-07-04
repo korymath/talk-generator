@@ -31,11 +31,9 @@ def get_definitions(word):
     """Get definitions of a given topic word."""
     print('******************************************')
     print('Word: {}'.format(word))
-
     # Get definition
     dictionary = PyDictionary()
     definitions = dictionary.meaning(word)
-
     if definitions:
         print('******************************************')
         print('{} word type(s)'.format(len(definitions)))
@@ -52,11 +50,10 @@ def get_definitions(word):
         return None
 
 
-def get_synonyms(args):
+def get_synonyms(word):
+    """Get all synonyms for a given word."""
     print('******************************************')
-    # Get N synonyms
-    word_senses = wn.synsets(args.topic)
-
+    word_senses = wn.synsets(word)
     all_synonyms = []
     for ss in word_senses:
         # print(ss.name(), ss.lemma_names(), ss.definition())
@@ -67,16 +64,15 @@ def get_synonyms(args):
 
     print('{} synonyms: '.format(len(all_synonyms)))
     for synonym in all_synonyms:
-        if synonym is not args.topic.lower():
+        if synonym is not word.lower():
             print('\t {}'.format(synonym))
 
     return all_synonyms
 
 
 def get_title(synonyms):
+    """Returns a template title from a source list."""
     print('******************************************')
-
-    # Generate a basic title
     chosen_synonym = random.choice(synonyms)
     chosen_synonym_plural = inflect.engine().plural(chosen_synonym)
     synonym_templates = ['The Unexpected Benefits of {}',
@@ -93,7 +89,6 @@ def get_images(synonyms, num_images):
         all_paths = {}
         for synonym in synonyms:
             # Get related images at 16x9 aspect ratio
-
             # TODO: add image filter for weird and NSFW stuff
             response = google_images_download.googleimagesdownload()
             arguments = {
@@ -176,26 +171,20 @@ def save_talk(args, prs):
 
 def main(args):
     """Make a presentation with the given topic."""
-
     # Get definitions
     definitions = get_definitions(args)
-
     # Get synonyms
     synonyms = get_synonyms(args)
-
     # Get a title
     title = get_title(synonyms)
-
     # For each synonym download num_images
     all_paths = get_images(synonyms, args.num_images)
-
     # Compile the presentation
     prs, slides = compile_presentation(args, 
                                        all_paths=all_paths, 
                                        title=title,
                                        definitions=definitions, 
                                        synonyms=synonyms)
-
     if save_talk(args, prs):
         print('Successfully built talk.')
 

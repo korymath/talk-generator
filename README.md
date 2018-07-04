@@ -11,6 +11,10 @@ python3 -m nltk.downloader wordnet
 python3 -m pip install google_images_download
 ```
 
+## Run
+
+
+
 ### Add parser for BeautifulSoup
 
 ```sh
