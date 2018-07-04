@@ -151,6 +151,18 @@ def _save_presentation_to_pptx(args, prs):
     print('Saved talk to {}'.format(fp))
     return True
 
+
+def create_title_slide(args, slide_layouts):
+    slide = slide_layouts[0]
+    title_object = slide.shapes.title
+    title_object.text = args.title
+    title_object.width = WIDTH_IN
+    title_object.height = HEIGHT_IN
+    title_object.left = LEFTMOST
+    title_object.right = TOPMOST
+    return slide
+
+
 def compile_talk_to_pptx(args):
     """Compile the talk with the given source material."""
     prs = Presentation()
@@ -164,14 +176,9 @@ def compile_talk_to_pptx(args):
     slides = []
 
     # Add title slide
-    slide = prs.slides.add_slide(prs.slide_layouts[0])
-    slides.append(slide)
-    title_object = slide.shapes.title
-    title_object.text = args.title
-    title_object.width = WIDTH_IN
-    title_object.height = HEIGHT_IN
-    title_object.left = LEFTMOST
-    title_object.right = TOPMOST
+    title_slide = create_title_slide(args, prs.slide_layouts)
+    prs.slides.add_slide(title_slide)
+    slides.append(title_slide)
     slide_idx_iter = 1
 
     # For each synonym 
