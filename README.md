@@ -11,7 +11,9 @@ Requires python3, tested on Mac OSX
 
 ## Installation Instructions (Windows)
 
-TODO(TWinters)
+Pip might complain when installing the python-pptx dependency due to a missing the lxml dependency.
+If this is not resolved automatically, visit [this page](https://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml).
+On that page, select the right lxml version for your platform and Python version (e.g. cp37 = Python 3.7).
 
 ## Run
 
