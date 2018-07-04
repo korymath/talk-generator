@@ -230,7 +230,7 @@ def main(args):
     # TODO Get lines from other TED talks related to the topic.
 
     # TODO Compile and save to raw data.file
-    compile_talk_to_raw_data(args)
+    # compile_talk_to_raw_data(args)
 
     # Compile and save the presentation to PPTX
     compile_talk_to_pptx(args)
