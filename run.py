@@ -217,9 +217,9 @@ def main(args):
     # Get synonyms
     args.synonyms = get_synonyms(topic_string)
     # Get a title
-    args.title = get_title(synonyms)
+    args.title = get_title(args.synonyms)
     # For each synonym download num_images
-    args.all_paths = get_images(synonyms, args.num_images)
+    args.all_paths = get_images(args.synonyms, args.num_images)
 
     # TODO Get quotes related to the topic.
     # TODO Get lines from other TED talks related to the topic.
