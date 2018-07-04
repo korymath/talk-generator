@@ -163,14 +163,34 @@ def create_title_slide(args, prs):
     return slide
 
 
+def create_google_image_slide(args, prs, word):
+    # Get all image paths
+    img_paths = args.all_paths.get(word)
+    if img_paths:
+        # Get a default blank slide layout
+        slide = prs.slides.add_slide(prs.slide_layouts[5])
+
+        # Pick one of the images
+        img_path = random.choice(img_paths)
+
+        # Add the image to the slide.
+        pic = slide.shapes.add_picture(img_path,
+                                       LEFTMOST, TOPMOST, width=WIDTH_IN, height=HEIGHT_IN)
+        # Add title to the slide
+        shapes = slide.shapes
+        shapes.title.text = word
+        # TODO: Add the text to the slide.
+        return slide
+    else:
+        return False
+
+
 def compile_talk_to_pptx(args):
     """Compile the talk with the given source material."""
     prs = Presentation()
     # Set the height and width
     prs.slide_height = HEIGHT * INCHES_TO_EMU
     prs.slide_width = WIDTH * INCHES_TO_EMU
-    # Get a default blank slide layout
-    slide_layout = prs.slide_layouts[5]
 
     # Build an ordered list of slides for access
     slides = []
@@ -184,21 +204,13 @@ def compile_talk_to_pptx(args):
     for word, path_list in args.all_paths.items():
         # print('Word: {}'.format(word))
         # For each image collected add a new slide
-        for i in range(len(path_list)):
-            print('***********************************')
-            print('Adding slide: {}'.format(slide_idx_iter))
-            slides.append(prs.slides.add_slide(slide_layout))
-            # Get an image
-            img_path = path_list[i]
-            # Add the image to the slide.
-            if img_path:
-                pic = slides[slide_idx_iter].shapes.add_picture(img_path,
-                                                                LEFTMOST, TOPMOST, width=WIDTH_IN, height=HEIGHT_IN)
-                # Add title to the slide
-                shapes = slides[slide_idx_iter].shapes
-                shapes.title.text = word
-                # TODO: Add the text to the slide.
-                slide_idx_iter += 1
+        # for i in range(len(path_list)):
+        print('***********************************')
+        print('Adding slide: {}'.format(slide_idx_iter))
+        slide = create_google_image_slide(args, prs, word)
+        if slide:
+            slides.append(slide)
+            slide_idx_iter += 1
     _save_presentation_to_pptx(args, prs)
     print('Successfully built talk.')
 
