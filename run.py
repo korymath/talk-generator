@@ -10,6 +10,7 @@ from pptx import Presentation
 from pptx.util import Inches
 from pptx.enum.text import PP_ALIGN
 
+import nltk
 from nltk.corpus import wordnet as wn
 from py_thesaurus import Thesaurus
 from google_images_download import google_images_download
@@ -201,6 +202,12 @@ def main(args):
     # Print status details
     print('******************************************')
     print("Making {} slide talk on: {}".format(args.num_slides, args.topic))
+
+    text = nltk.word_tokenize(args.topic)
+    print(text)
+    nltk.pos_tag(text)
+    print(nltk)
+
     topic_string = args.topic
 
     # Get definitions
