@@ -15,7 +15,6 @@ from nltk.corpus import wordnet as wn
 from py_thesaurus import Thesaurus
 from google_images_download import google_images_download
 
-
 # CONSTANTS
 HEIGHT = 9
 WIDTH = 16
@@ -73,7 +72,7 @@ def get_relations(word):
             rel_forms = [x.name() for x in lem.derivationally_related_forms()]
             rels[ss_name][lem_name]['related_forms'] = rel_forms
             all_rel_forms.extend(rel_forms)
-            
+
             perts = [x.name() for x in lem.pertainyms()]
             rels[ss_name][lem_name]['pertainyms'] = perts
             all_perts.extend(perts)
@@ -89,6 +88,7 @@ def get_relations(word):
     print('******************************************')
     print('{} antonyms'.format(len(all_ants)))
     return rels
+
 
 def get_title(synonyms):
     """Returns a template title from a source list."""
@@ -107,19 +107,19 @@ def get_title(synonyms):
 def get_images(synonyms, num_images, search_google_images=False):
     """Get images, first search locally then Google Image Search."""
     all_paths = {}
-    if num_images > 0:    
+    if num_images > 0:
         for word in synonyms:
             lp = 'downloads/' + word + '/'
             try:
-                local_files = [lp+f for f in listdir(lp) if isfile(join(lp, f))]
+                local_files = [lp + f for f in listdir(lp) if isfile(join(lp, f))]
                 all_paths[word] = local_files
             except FileNotFoundError as e:
                 all_paths[word] = []
                 pass
 
             if len(all_paths[word]) > 0:
-                print('{} local images on {} found'.format(len(all_paths[word]), 
-                    word))
+                print('{} local images on {} found'.format(len(all_paths[word]),
+                                                           word))
             # If no local images, search on Google Image Search
             if len(all_paths[word]) == 0 and search_google_images:
                 # Get related images at 16x9 aspect ratio
@@ -186,8 +186,8 @@ def compile_talk_to_pptx(args):
             img_path = path_list[i]
             # Add the image to the slide.
             if img_path:
-                pic = slides[slide_idx_iter].shapes.add_picture(img_path, 
-                    LEFTMOST, TOPMOST, width=WIDTH_IN, height=HEIGHT_IN)
+                pic = slides[slide_idx_iter].shapes.add_picture(img_path,
+                                                                LEFTMOST, TOPMOST, width=WIDTH_IN, height=HEIGHT_IN)
                 # Add title to the slide
                 shapes = slides[slide_idx_iter].shapes
                 shapes.title.text = word
