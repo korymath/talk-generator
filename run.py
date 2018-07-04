@@ -168,15 +168,12 @@ def create_google_image_slide(args, prs, word):
     # Get all image paths
     img_paths = args.all_paths.get(word)
     if img_paths:
-        # Get a default blank slide layout
-        slide = prs.slides.add_slide(prs.slide_layouts[5])
-
         # Pick one of the images
         img_path = random.choice(img_paths)
 
-        # Add the image to the slide.
-        pic = slide.shapes.add_picture(img_path,
-                                       LEFTMOST, TOPMOST, width=WIDTH_IN, height=HEIGHT_IN)
+        # Create slide with image
+        slide = create_image_slide(prs, img_path)
+
         # Add title to the slide
         shapes = slide.shapes
         shapes.title.text = word
@@ -192,6 +189,17 @@ def download_image(fromUrl, toUrl):
     f.close()
 
 
+def create_image_slide(prs, image_url):
+    # Get a default blank slide layout
+    slide = prs.slides.add_slide(prs.slide_layouts[5])
+
+    # Add image url as picture
+    pic = slide.shapes.add_picture(image_url,
+                                   LEFTMOST, TOPMOST, height=HEIGHT_IN)
+
+    return slide
+
+
 def create_inspirobot_slide(args, prs):
     # Generate a random url to access inspirobot
     dd = str(random.randint(1, 73)).zfill(2)
@@ -203,14 +211,8 @@ def create_inspirobot_slide(args, prs):
     print('from {} to {}'.format(inspirobot_url, image_url))
     download_image(inspirobot_url, image_url)
 
-    # Get a default blank slide layout
-    slide = prs.slides.add_slide(prs.slide_layouts[5])
-
-    # Add image url as picture
-    pic = slide.shapes.add_picture(image_url,
-                                   LEFTMOST, TOPMOST, height=HEIGHT_IN)
-
-    return slide
+    # Turn into image slide
+    return create_image_slide(prs, image_url)
 
 
 def compile_talk_to_pptx(args):
