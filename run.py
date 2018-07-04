@@ -152,8 +152,8 @@ def _save_presentation_to_pptx(args, prs):
     return True
 
 
-def create_title_slide(args, slide_layouts):
-    slide = slide_layouts[0]
+def create_title_slide(args, prs):
+    slide = prs.slides.add_slide(prs.slide_layouts[0])
     title_object = slide.shapes.title
     title_object.text = args.title
     title_object.width = WIDTH_IN
@@ -176,8 +176,7 @@ def compile_talk_to_pptx(args):
     slides = []
 
     # Add title slide
-    title_slide = create_title_slide(args, prs.slide_layouts)
-    prs.slides.add_slide(title_slide)
+    title_slide = create_title_slide(args, prs)
     slides.append(title_slide)
     slide_idx_iter = 1
 
