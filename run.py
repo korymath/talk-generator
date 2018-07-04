@@ -55,6 +55,40 @@ def get_synonyms(word):
     return all_synonyms
 
 
+def get_relations(word):
+    """Get relations to given definitions."""
+    rels = {}
+    all_rel_forms = []
+    all_perts = []
+    all_ants = []
+
+    word_senses = wn.synsets(word)
+    for ss in word_senses:
+        ss_name = ss.name()
+        rels[ss_name] = {}
+        for lem in ss.lemmas():
+            lem_name = lem.name()
+            rels[ss_name][lem_name] = {}
+            rel_forms = [x.name() for x in lem.derivationally_related_forms()]
+            rels[ss_name][lem_name]['related_forms'] = rel_forms
+            all_rel_forms.extend(rel_forms)
+            
+            perts = [x.name() for x in lem.pertainyms()]
+            rels[ss_name][lem_name]['pertainyms'] = perts
+            all_perts.extend(perts)
+
+            ants = [x.name() for x in lem.antonyms()]
+            rels[ss_name][lem_name]['antonyms'] = ants
+            all_ants.extend(ants)
+
+    print('******************************************')
+    print('{} derivationally related forms'.format(len(all_rel_forms)))
+    print('******************************************')
+    print('{} pertainyms'.format(len(all_perts)))
+    print('******************************************')
+    print('{} antonyms'.format(len(all_ants)))
+    return rels
+
 def get_title(synonyms):
     """Returns a template title from a source list."""
     print('******************************************')
@@ -74,7 +108,6 @@ def get_images(synonyms, num_images, search_google_images=False):
     all_paths = {}
     if num_images > 0:    
         for word in synonyms:
-            print('Searching for local images for {}'.format(word))
             lp = 'downloads/' + word + '/'
             try:
                 local_files = [lp+f for f in listdir(lp) if isfile(join(lp, f))]
@@ -82,7 +115,10 @@ def get_images(synonyms, num_images, search_google_images=False):
             except FileNotFoundError as e:
                 all_paths[word] = []
                 pass
-            print('{} local images on {} found'.format(len(all_paths[word]), word))
+
+            if len(all_paths[word]) > 0:
+                print('{} local images on {} found'.format(len(all_paths[word]), 
+                    word))
             # If no local images, search on Google Image Search
             if len(all_paths[word]) == 0 and search_google_images:
                 # Get related images at 16x9 aspect ratio
@@ -130,7 +166,7 @@ def compile_presentation(args, all_paths, title, definitions, synonyms):
 
     # For each synonym 
     for word, path_list in all_paths.items():
-        print('Word: {}'.format(word))
+        # print('Word: {}'.format(word))
         # For each image collected add a new slide
         for i in range(len(path_list)):
             print('***********************************')
@@ -169,6 +205,8 @@ def main(args):
 
     # Get definitions
     definitions = get_definitions(topic_string)
+    # Get relations
+    relations = get_relations(topic_string)
     # Get synonyms
     synonyms = get_synonyms(topic_string)
     # Get a title
