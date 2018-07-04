@@ -230,7 +230,7 @@ def main(args):
     # TODO Get lines from other TED talks related to the topic.
 
     # TODO Compile and save to raw data.file
-    # compile_talk_to_raw_data(args)
+    compile_talk_to_raw_data(args)
 
     # Compile and save the presentation to PPTX
     compile_talk_to_pptx(args)
@@ -241,7 +241,7 @@ if __name__ == '__main__':
     parser.add_argument('--topic', help="Topic of presentation.",
                         default='bagels', type=str)
     parser.add_argument('--num_images', help="Number of images per synonym.",
-                        default=0, type=int)
+                        default=1, type=int)
     parser.add_argument('--num_slides', help="Number of slides to create.",
                         default=3, type=int)
     args = parser.parse_args()
