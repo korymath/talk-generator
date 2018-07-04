@@ -42,4 +42,8 @@ sublime venv/lib/python3.6/site-packages/PyDictionary/utils.py
 
 ## Credits
 
-Talk Generator is made by Kory Mathewson and Thomas Winters.
+This ``Talk Generator`` is made by Kory Mathewson and Thomas Winters.
+
+## License
+
+MIT License. Copyright (c) 2018 Kory Mathewson and Thomas Winters.

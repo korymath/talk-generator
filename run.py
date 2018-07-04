@@ -142,7 +142,16 @@ def get_images(synonyms, num_images, search_google_images=False):
     return all_paths
 
 
-def compile_presentation(args, all_paths, title, definitions, synonyms):
+def _save_presentation_to_pptx(args, prs):
+    """Save the talk."""
+    fp = './output/' + args.topic + '.pptx'
+    # Create the parent folder if it doesn't exist
+    pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
+    prs.save(fp)
+    print('Saved talk to {}'.format(fp))
+    return True
+
+def compile_talk_to_pptx(args):
     """Compile the talk with the given source material."""
     prs = Presentation()
     # Set the height and width
@@ -184,17 +193,8 @@ def compile_presentation(args, all_paths, title, definitions, synonyms):
                 shapes.title.text = word
                 # TODO: Add the text to the slide.
                 slide_idx_iter += 1
-    return prs, slides
-
-
-def save_talk(args, prs):
-    """Save the talk."""
-    fp = './output/' + args.topic + '.pptx'
-    # Create the parent folder if it doesn't exist
-    pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
-    prs.save(fp)
-    print('Saved talk to {}'.format(fp))
-    return True
+    _save_presentation_to_pptx(args, prs)
+    print('Successfully built talk.')
 
 
 def main(args):
@@ -211,23 +211,24 @@ def main(args):
     topic_string = args.topic
 
     # Get definitions
-    definitions = get_definitions(topic_string)
+    args.definitions = get_definitions(topic_string)
     # Get relations
-    relations = get_relations(topic_string)
+    args.relations = get_relations(topic_string)
     # Get synonyms
-    synonyms = get_synonyms(topic_string)
+    args.synonyms = get_synonyms(topic_string)
     # Get a title
-    title = get_title(synonyms)
+    args.title = get_title(synonyms)
     # For each synonym download num_images
-    all_paths = get_images(synonyms, args.num_images)
-    # Compile the presentation
-    prs, slides = compile_presentation(args, 
-                                       all_paths=all_paths, 
-                                       title=title,
-                                       definitions=definitions, 
-                                       synonyms=synonyms)
-    if save_talk(args, prs):
-        print('Successfully built talk.')
+    args.all_paths = get_images(synonyms, args.num_images)
+
+    # TODO Get quotes related to the topic.
+    # TODO Get lines from other TED talks related to the topic.
+
+    # TODO Compile and save to raw data.file
+    compile_talk_to_raw_data(args)
+
+    # Compile and save the presentation to PPTX
+    compile_talk_to_pptx(args)
 
 
 if __name__ == '__main__':
