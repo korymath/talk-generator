@@ -5,6 +5,7 @@
 ```sh
 python3 -m pip install python-pptx
 python3 -m pip install py-thesaurus
+python3 -m pip install pydictionary
 python3 -m pip install nltk
 python3 -m nltk.downloader wordnet
 python3 -m pip install google_images_download
