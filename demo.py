@@ -141,16 +141,17 @@ def compile_presentation(args, all_paths, title, definitions, synonyms):
     img_path = paths[0]
 
     # Add the image to the slide.
-    pic = slides[slide_idx_iter].shapes.add_picture(img_path, LEFTMOST, TOPMOST, 
-      width=WIDTH_IN, height=HEIGHT_IN)
+    if img_path:
+      pic = slides[slide_idx_iter].shapes.add_picture(img_path, LEFTMOST, TOPMOST,
+        width=WIDTH_IN, height=HEIGHT_IN)
 
-    # Add title to the slide
-    shapes = slides[slide_idx_iter].shapes
-    shapes.title.text = synonym
+      # Add title to the slide
+      shapes = slides[slide_idx_iter].shapes
+      shapes.title.text = synonym
 
-    # TODO: Add the text to the slide.
+      # TODO: Add the text to the slide.
 
-    slide_idx_iter += 1
+      slide_idx_iter += 1
 
   return prs,slides
 
