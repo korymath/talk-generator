@@ -197,6 +197,11 @@ def compile_talk_to_pptx(args):
     print('Successfully built talk.')
 
 
+def compile_talk_to_raw_data(args):
+    """Save the raw data that has been harvested for future use."""
+    return True
+
+
 def main(args):
     """Make a talk with the given topic."""
     # Print status details
