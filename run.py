@@ -1,8 +1,10 @@
-import argparse
+import random
 import pathlib
 import os.path
-import random
 import inflect
+import argparse
+from os import listdir
+from os.path import isfile, join
 
 from pptx import Presentation
 from pptx.util import Inches
@@ -10,8 +12,8 @@ from pptx.enum.text import PP_ALIGN
 
 from nltk.corpus import wordnet as wn
 from py_thesaurus import Thesaurus
-from PyDictionary import PyDictionary
 from google_images_download import google_images_download
+
 
 # CONSTANTS
 HEIGHT = 9
@@ -30,24 +32,13 @@ CMS_TO_EMU = 360000
 def get_definitions(word):
     """Get definitions of a given topic word."""
     print('******************************************')
-    print('Word: {}'.format(word))
     # Get definition
-    dictionary = PyDictionary()
-    definitions = dictionary.meaning(word)
-    if definitions:
-        print('******************************************')
-        print('{} word type(s)'.format(len(definitions)))
-        for word_type, word_type_defs in definitions.items():
-            print('******************************************')
-            print('As a {}, {} can mean {} things: '.format(word_type.lower(),
-                word, len(word_type_defs)))
-
-            for word_type_def in word_type_defs:
-                print('\t {}'.format(word_type_def))
-        return definitions
-    else:
-        print('No definition found.')
-        return None
+    word_senses = wn.synsets(word)
+    definitions = {}
+    for ss in word_senses:
+        definitions[ss.name()] = ss.definition()
+    print('{} definitions for "{}"'.format(len(definitions), word))
+    return definitions
 
 
 def get_synonyms(word):
@@ -56,17 +47,11 @@ def get_synonyms(word):
     word_senses = wn.synsets(word)
     all_synonyms = []
     for ss in word_senses:
-        # print(ss.name(), ss.lemma_names(), ss.definition())
         all_synonyms.extend(
             [x.lower().replace('_', ' ') for x in ss.lemma_names()])
-
+    all_synonyms.append(word)
     all_synonyms = list(set(all_synonyms))
-
-    print('{} synonyms: '.format(len(all_synonyms)))
-    for synonym in all_synonyms:
-        if synonym is not word.lower():
-            print('\t {}'.format(synonym))
-
+    print('{} synonyms for "{}"'.format(len(all_synonyms), word))
     return all_synonyms
 
 
@@ -84,40 +69,48 @@ def get_title(synonyms):
     return chosen_template.format(chosen_synonym_plural.title())
 
 
-def get_images(synonyms, num_images):
-    if num_images > 0:
-        all_paths = {}
-        for synonym in synonyms:
-            # Get related images at 16x9 aspect ratio
-            # TODO: add image filter for weird and NSFW stuff
-            response = google_images_download.googleimagesdownload()
-            arguments = {
-                'keywords': synonym,
-                'limit': num_images,
-                'print_urls': True,
-                'exact_size': '1600,900',
-                # 'size':'large',
-                # 'usage_rights':'labeled-for-noncommercial-reuse-with-modification'
-            }
-            # passing the arguments to the function
-            paths = response.download(arguments)
-            # printing absolute paths of the downloaded images
-            print(paths)
-            # Add to main dictionary
-            all_paths[synonym] = paths[synonym]
-    else:
-        all_paths = None
+def get_images(synonyms, num_images, search_google_images=False):
+    """Get images, first search locally then Google Image Search."""
+    all_paths = {}
+    if num_images > 0:    
+        for word in synonyms:
+            print('Searching for local images for {}'.format(word))
+            lp = 'downloads/' + word + '/'
+            try:
+                local_files = [lp+f for f in listdir(lp) if isfile(join(lp, f))]
+                all_paths[word] = local_files
+            except FileNotFoundError as e:
+                all_paths[word] = []
+                pass
+            print('{} local images on {} found'.format(len(all_paths[word]), word))
+            # If no local images, search on Google Image Search
+            if len(all_paths[word]) == 0 and search_google_images:
+                # Get related images at 16x9 aspect ratio
+                # TODO: add image filter for weird and NSFW stuff
+                response = google_images_download.googleimagesdownload()
+                arguments = {
+                    'keywords': word,
+                    'limit': num_images,
+                    'print_urls': True,
+                    'exact_size': '1600,900',
+                    # 'size':'large',
+                    # 'usage_rights':'labeled-for-noncommercial-reuse-with-modification'
+                }
+                # passing the arguments to the function
+                paths = response.download(arguments)
+                # printing absolute paths of the downloaded images
+                print('paths of images', paths)
+                # Add to main dictionary
+                all_paths[word] = paths[word]
     return all_paths
 
 
 def compile_presentation(args, all_paths, title, definitions, synonyms):
-    # Make a presentation
+    """Compile the talk with the given source material."""
     prs = Presentation()
-
     # Set the height and width
     prs.slide_height = HEIGHT * INCHES_TO_EMU
     prs.slide_width = WIDTH * INCHES_TO_EMU
-
     # Get a default blank slide layout
     slide_layout = prs.slide_layouts[5]
 
@@ -133,34 +126,32 @@ def compile_presentation(args, all_paths, title, definitions, synonyms):
     title_object.height = HEIGHT_IN
     title_object.left = LEFTMOST
     title_object.right = TOPMOST
-
     slide_idx_iter = 1
-    for synonym, paths in all_paths.items():
-        print('***********************************')
-        print('Adding slide: {}'.format(slide_idx_iter))
-        slides.append(prs.slides.add_slide(slide_layout))
 
-        # Get an image
-        img_path = paths[0]
-
-        # Add the image to the slide.
-        if img_path:
-            pic = slides[slide_idx_iter].shapes.add_picture(img_path, 
-                LEFTMOST, TOPMOST, width=WIDTH_IN, height=HEIGHT_IN)
-
-            # Add title to the slide
-            shapes = slides[slide_idx_iter].shapes
-            shapes.title.text = synonym
-
-            # TODO: Add the text to the slide.
-
-            slide_idx_iter += 1
-
+    # For each synonym 
+    for word, path_list in all_paths.items():
+        print('Word: {}'.format(word))
+        # For each image collected add a new slide
+        for i in range(len(path_list)):
+            print('***********************************')
+            print('Adding slide: {}'.format(slide_idx_iter))
+            slides.append(prs.slides.add_slide(slide_layout))
+            # Get an image
+            img_path = path_list[i]
+            # Add the image to the slide.
+            if img_path:
+                pic = slides[slide_idx_iter].shapes.add_picture(img_path, 
+                    LEFTMOST, TOPMOST, width=WIDTH_IN, height=HEIGHT_IN)
+                # Add title to the slide
+                shapes = slides[slide_idx_iter].shapes
+                shapes.title.text = word
+                # TODO: Add the text to the slide.
+                slide_idx_iter += 1
     return prs, slides
 
 
 def save_talk(args, prs):
-    """Save the presentation."""
+    """Save the talk."""
     fp = './output/' + args.topic + '.pptx'
     # Create the parent folder if it doesn't exist
     pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
@@ -170,11 +161,16 @@ def save_talk(args, prs):
 
 
 def main(args):
-    """Make a presentation with the given topic."""
+    """Make a talk with the given topic."""
+    # Print status details
+    print('******************************************')
+    print("Making {} slide talk on: {}".format(args.num_slides, args.topic))
+    topic_string = args.topic
+
     # Get definitions
-    definitions = get_definitions(args)
+    definitions = get_definitions(topic_string)
     # Get synonyms
-    synonyms = get_synonyms(args)
+    synonyms = get_synonyms(topic_string)
     # Get a title
     title = get_title(synonyms)
     # For each synonym download num_images
@@ -196,6 +192,6 @@ if __name__ == '__main__':
     parser.add_argument('--num_images', help="Number of images per synonym.",
                         default=0, type=int)
     parser.add_argument('--num_slides', help="Number of slides to create.",
-                        default=6, type=int)
+                        default=3, type=int)
     args = parser.parse_args()
     main(args)
