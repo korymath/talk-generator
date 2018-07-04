@@ -160,8 +160,8 @@ def compile_presentation(args, all_paths, title, definitions, synonyms):
 
 
 def save_talk(args, prs):
-    # Save the presentation
-    fp = './output/' + args.topic + '-' + args.output
+    """Save the presentation."""
+    fp = './output/' + args.topic + '.pptx'
     # Create the parent folder if it doesn't exist
     pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
     prs.save(fp)
@@ -191,8 +191,6 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('--output', help="Output filename.",
-                        default='test.pptx', type=str)
     parser.add_argument('--topic', help="Topic of presentation.",
                         default='bagels', type=str)
     parser.add_argument('--num_images', help="Number of images per synonym.",

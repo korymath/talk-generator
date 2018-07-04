@@ -1,6 +1,8 @@
-# keynote-generator
+# Talk Generator
 
 ## Install
+
+Requires python3, tested on Mac OSX and Windows TODO(TWinters).
 
 ```sh
 python3 -m pip install python-pptx
@@ -9,10 +11,13 @@ python3 -m pip install pydictionary
 python3 -m pip install nltk
 python3 -m nltk.downloader wordnet
 python3 -m pip install google_images_download
+python3 -m pip install inflect
 ```
 
 ## Run
 
+```sh
+python3 run.py --
 
 
 ### Add parser for BeautifulSoup

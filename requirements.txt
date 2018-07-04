@@ -1,2 +1,6 @@
-PyDictionary
 python-pptx
+py-thesaurus
+pydictionary
+nltk
+google_images_download
+inflect
