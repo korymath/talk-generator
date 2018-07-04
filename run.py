@@ -3,6 +3,7 @@ import pathlib
 import os.path
 import inflect
 import argparse
+import requests
 from os import listdir
 from os.path import isfile, join
 
@@ -185,6 +186,33 @@ def create_google_image_slide(args, prs, word):
         return False
 
 
+def download_image(fromUrl, toUrl):
+    f = open(toUrl, 'wb')
+    f.write(requests.get(fromUrl).content)
+    f.close()
+
+
+def create_inspirobot_slide(args, prs):
+    # Generate a random url to access inspirobot
+    dd = str(random.randint(1, 73)).zfill(2)
+    nnnn = str(random.randint(0, 9998)).zfill(4)
+    inspirobot_url = 'http://generated.inspirobot.me/0{}/aXm{}xjU.jpg'.format(dd, nnnn)
+
+    # Download the image
+    image_url = 'downloads/inspirobot-{}-{}.jpg'.format(dd, nnnn)
+    print('from {} to {}'.format(inspirobot_url, image_url))
+    download_image(inspirobot_url, image_url)
+
+    # Get a default blank slide layout
+    slide = prs.slides.add_slide(prs.slide_layouts[5])
+
+    # Add image url as picture
+    pic = slide.shapes.add_picture(image_url,
+                                   LEFTMOST, TOPMOST, height=HEIGHT_IN)
+
+    return slide
+
+
 def compile_talk_to_pptx(args):
     """Compile the talk with the given source material."""
     prs = Presentation()
@@ -206,11 +234,20 @@ def compile_talk_to_pptx(args):
         # For each image collected add a new slide
         # for i in range(len(path_list)):
         print('***********************************')
-        print('Adding slide: {}'.format(slide_idx_iter))
+        print('Adding slide {} about {}'.format(slide_idx_iter, word))
         slide = create_google_image_slide(args, prs, word)
         if slide:
             slides.append(slide)
             slide_idx_iter += 1
+
+    # Add some Inspirobot quotes
+    print('***********************************')
+    print('Adding inspirobot slide: {}'.format(slide_idx_iter))
+    slide = create_inspirobot_slide(args, prs)
+    if slide:
+        slides.append(slide)
+        slide_idx_iter += 1
+
     _save_presentation_to_pptx(args, prs)
     print('Successfully built talk.')
 
