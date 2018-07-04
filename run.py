@@ -167,7 +167,7 @@ def compile_talk_to_pptx(args):
     slide = prs.slides.add_slide(prs.slide_layouts[0])
     slides.append(slide)
     title_object = slide.shapes.title
-    title_object.text = title
+    title_object.text = args.title
     title_object.width = WIDTH_IN
     title_object.height = HEIGHT_IN
     title_object.left = LEFTMOST
@@ -175,7 +175,7 @@ def compile_talk_to_pptx(args):
     slide_idx_iter = 1
 
     # For each synonym 
-    for word, path_list in all_paths.items():
+    for word, path_list in args.all_paths.items():
         # print('Word: {}'.format(word))
         # For each image collected add a new slide
         for i in range(len(path_list)):
@@ -225,7 +225,7 @@ def main(args):
     # TODO Get lines from other TED talks related to the topic.
 
     # TODO Compile and save to raw data.file
-    compile_talk_to_raw_data(args)
+    # compile_talk_to_raw_data(args)
 
     # Compile and save the presentation to PPTX
     compile_talk_to_pptx(args)
