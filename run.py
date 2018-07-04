@@ -153,6 +153,14 @@ def _save_presentation_to_pptx(args, prs):
     return True
 
 
+def download_image(fromUrl, toUrl):
+    f = open(toUrl, 'wb')
+    f.write(requests.get(fromUrl).content)
+    f.close()
+
+
+# FORMAT GENERATORS
+
 def create_title_slide(args, prs):
     slide = prs.slides.add_slide(prs.slide_layouts[0])
     title_object = slide.shapes.title
@@ -162,6 +170,34 @@ def create_title_slide(args, prs):
     title_object.left = LEFTMOST
     title_object.right = TOPMOST
     return slide
+
+
+def create_image_slide(prs, image_url):
+    # Get a default blank slide layout
+    slide = prs.slides.add_slide(prs.slide_layouts[5])
+
+    # Add image url as picture
+    pic = slide.shapes.add_picture(image_url,
+                                   LEFTMOST, TOPMOST, height=HEIGHT_IN)
+
+    return slide
+
+
+# CONTENT GENERATORS:
+
+def create_inspirobot_slide(args, prs):
+    # Generate a random url to access inspirobot
+    dd = str(random.randint(1, 73)).zfill(2)
+    nnnn = str(random.randint(0, 9998)).zfill(4)
+    inspirobot_url = 'http://generated.inspirobot.me/0{}/aXm{}xjU.jpg'.format(dd, nnnn)
+
+    # Download the image
+    image_url = 'downloads/inspirobot-{}-{}.jpg'.format(dd, nnnn)
+    print('from {} to {}'.format(inspirobot_url, image_url))
+    download_image(inspirobot_url, image_url)
+
+    # Turn into image slide
+    return create_image_slide(prs, image_url)
 
 
 def create_google_image_slide(args, prs, word):
@@ -181,38 +217,6 @@ def create_google_image_slide(args, prs, word):
         return slide
     else:
         return False
-
-
-def download_image(fromUrl, toUrl):
-    f = open(toUrl, 'wb')
-    f.write(requests.get(fromUrl).content)
-    f.close()
-
-
-def create_image_slide(prs, image_url):
-    # Get a default blank slide layout
-    slide = prs.slides.add_slide(prs.slide_layouts[5])
-
-    # Add image url as picture
-    pic = slide.shapes.add_picture(image_url,
-                                   LEFTMOST, TOPMOST, height=HEIGHT_IN)
-
-    return slide
-
-
-def create_inspirobot_slide(args, prs):
-    # Generate a random url to access inspirobot
-    dd = str(random.randint(1, 73)).zfill(2)
-    nnnn = str(random.randint(0, 9998)).zfill(4)
-    inspirobot_url = 'http://generated.inspirobot.me/0{}/aXm{}xjU.jpg'.format(dd, nnnn)
-
-    # Download the image
-    image_url = 'downloads/inspirobot-{}-{}.jpg'.format(dd, nnnn)
-    print('from {} to {}'.format(inspirobot_url, image_url))
-    download_image(inspirobot_url, image_url)
-
-    # Turn into image slide
-    return create_image_slide(prs, image_url)
 
 
 def compile_talk_to_pptx(args):
