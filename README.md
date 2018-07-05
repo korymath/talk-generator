@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/korymath/talk-generator.svg?style=svg)](https://circleci.com/gh/korymath/talk-generator)
+
 # Talk Generator
 
 ### Automatically Generated
