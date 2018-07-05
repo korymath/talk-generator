@@ -1,0 +1,5 @@
+Before|After
+Good|Better|Best
+Bad|Worse|Worst
+Do|Don't
+Let's turn this|Into this
