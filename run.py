@@ -252,12 +252,12 @@ def create_google_image_slide(args, prs, word):
         slide = create_image_slide(prs, img_path)
 
         # Add title to the slide
-        shapes = slide.shapes
-        shapes.title.text = word
-        # TODO: Add the text to the slide.
-        return slide
-    else:
-        return False
+        if slide:
+            shapes = slide.shapes
+            shapes.title.text = word
+            # TODO: Add the text to the slide.
+            return slide
+    return False
 
 
 def create_inspirobot_slide(prs):
