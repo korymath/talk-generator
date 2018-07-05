@@ -31,6 +31,31 @@ INCHES_TO_EMU = 914400
 CMS_TO_EMU = 360000
 
 
+# HELPER FUNCTIONS
+
+def _save_presentation_to_pptx(args, prs):
+    """Save the talk."""
+    fp = './output/' + args.topic + '.pptx'
+    # Create the parent folder if it doesn't exist
+    pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
+    prs.save(fp)
+    print('Saved talk to {}'.format(fp))
+    return True
+
+
+def download_image(fromUrl, toUrl):
+    # Create the parent folder if it doesn't exist
+    pathlib.Path(os.path.dirname(toUrl)).mkdir(parents=True, exist_ok=True)
+
+    # Download
+    f = open(toUrl, 'wb')
+    f.write(requests.get(fromUrl).content)
+    f.close()
+
+
+# CONTENT GENERATORS
+# These functions generate content, sometimes related to given arguments
+
 def get_definitions(word):
     """Get definitions of a given topic word."""
     print('******************************************')
@@ -144,27 +169,14 @@ def get_images(synonyms, num_images, search_google_images=False):
     return all_paths
 
 
-def _save_presentation_to_pptx(args, prs):
-    """Save the talk."""
-    fp = './output/' + args.topic + '.pptx'
-    # Create the parent folder if it doesn't exist
-    pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
-    prs.save(fp)
-    print('Saved talk to {}'.format(fp))
-    return True
-
-
-def download_image(fromUrl, toUrl):
-    # Create the parent folder if it doesn't exist
-    pathlib.Path(os.path.dirname(toUrl)).mkdir(parents=True, exist_ok=True)
-
-    # Download
-    f = open(toUrl, 'wb')
-    f.write(requests.get(fromUrl).content)
-    f.close()
+def get_related_giphy(seedword):
+    giphy = safygiphy.Giphy()
+    result = giphy.random(tag=seedword)
+    return result.get('data').get('images').get('original').get('url')
 
 
 # FORMAT GENERATORS
+# These are functions that get some inputs (texts, images...) and create layouted slides with these inputs
 
 def create_title_slide(args, prs):
     slide = prs.slides.add_slide(prs.slide_layouts[0])
@@ -189,16 +201,8 @@ def create_image_slide(prs, image_url):
     return False
 
 
-# CONTENT GENERATORS:
-
-def get_related_giphy(seedword):
-    giphy = safygiphy.Giphy()
-    result = giphy.random(tag=seedword)
-    print("results: {}".format(result))
-    return result.get('data').get('images').get('original').get('url')
-
-
 # FULL SLIDES GENERATORS:
+# These are functions that create slides with certain (generated) content
 
 def create_google_image_slide(args, prs, word):
     # Get all image paths
@@ -245,6 +249,7 @@ def create_giphy_slide(prs, word):
 
 
 # COMPILATION
+# Compiling the slides to a powerpoint
 
 def compile_talk_to_pptx(args):
     """Compile the talk with the given source material."""
@@ -298,6 +303,7 @@ def compile_talk_to_raw_data(args):
     """Save the raw data that has been harvested for future use."""
     return True
 
+# MAIN
 
 def main(args):
     """Make a talk with the given topic."""
