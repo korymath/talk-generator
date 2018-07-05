@@ -1,3 +1,4 @@
+import pickle
 import random
 import pathlib
 import os.path
@@ -139,7 +140,8 @@ def get_images(synonyms, num_images):
         for word in synonyms:
             lp = 'downloads/' + word + '/'
             try:
-                local_files = [lp + f for f in listdir(lp) if isfile(join(lp, f))]
+                local_files = [lp + f for f in listdir(lp) if isfile(join(lp, 
+                    f))]
                 all_paths[word] = local_files
             except FileNotFoundError as e:
                 all_paths[word] = []
@@ -157,8 +159,6 @@ def get_images(synonyms, num_images):
                     'limit': num_images,
                     'print_urls': True,
                     'exact_size': '1600,900',
-                    # 'size':'large',
-                    # 'usage_rights':'labeled-for-noncommercial-reuse-with-modification'
                 }
                 # passing the arguments to the function
                 paths = response.download(arguments)
@@ -181,10 +181,12 @@ def wikihow_action_to_action(wikihow_title):
 
 
 def get_related_wikihow_actions(seed_word):
-    page = requests.get("https://en.wikihow.com/wikiHowTo?search=" + seed_word.replace(" ", "+"))
+    page = requests.get(('https://en.wikihow.com/'
+        'wikiHowTo?search=') + seed_word.replace(' ', '+'))
     # Try again but with plural if nothing is found
     if not page:
-        page = requests.get("https://en.wikihow.com/wikiHowTo?search=" + inflect.engine().plural(seed_word).replace(" ", "+"))
+        page = requests.get(('https://en.wikihow.com/wikiHowTo?search=' 
+            + inflect.engine().plural(seed_word).replace(" ", "+")))
 
 
     soup = BeautifulSoup(page.content, 'html.parser')
@@ -200,7 +202,8 @@ def get_related_wikihow_actions(seed_word):
 
 
 # FORMAT GENERATORS
-# These are functions that get some inputs (texts, images...) and create layouted slides with these inputs
+# These are functions that get some inputs (texts, images...) 
+# and create layouted slides with these inputs
 
 def create_title_slide(args, prs):
     slide = prs.slides.add_slide(prs.slide_layouts[0])
@@ -263,7 +266,8 @@ def create_inspirobot_slide(prs):
     # Generate a random url to access inspirobot
     dd = str(random.randint(1, 73)).zfill(2)
     nnnn = random.randint(0, 9998)
-    inspirobot_url = 'http://generated.inspirobot.me/0{}/aXm{}xjU.jpg'.format(dd, nnnn)
+    inspirobot_url = ('http://generated.inspirobot.me/'
+                      '0{}/aXm{}xjU.jpg').format(dd, nnnn)
 
     # Download the image
     image_url = 'downloads/inspirobot/{}-{}.jpg'.format(dd, nnnn)
@@ -298,7 +302,8 @@ def create_wikihow_action_recommendation_slide(prs, wikihow_seed):
                                  'Friendly Reminder to {}',
                                  'When in Doubt: {}']
 
-        life_lesson = random.choice(life_lesson_templates).format(action.title())
+        life_lesson = random.choice(
+            life_lesson_templates).format(action.title())
 
         # Turn into image slide
         return create_text_slide(prs, life_lesson)
@@ -356,7 +361,8 @@ def compile_talk_to_pptx(args):
     # Add a life lesson
     print('***********************************')
     wikihow_seed = random.choice(args.synonyms)
-    print('Adding Wikihow Lifelesson slide: {} about {}'.format(slide_idx_iter, giphy_seed))
+    print('Adding Wikihow Lifelesson slide: {} about {}'.format(slide_idx_iter, 
+        giphy_seed))
     slide = create_wikihow_action_recommendation_slide(prs, wikihow_seed)
     if slide:
         slides.append(slide)
@@ -400,6 +406,7 @@ def main(args):
     # For each synonym download num_images
     args.all_paths = get_images(args.synonyms, args.num_images)
 
+    # Compile and save the presentation to data
     compile_talk_to_raw_data(args)
 
     # Compile and save the presentation to PPTX
