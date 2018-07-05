@@ -33,7 +33,6 @@ CMS_TO_EMU = 360000
 
 
 # HELPER FUNCTIONS
-
 def _save_presentation_to_pptx(args, prs):
     """Save the talk."""
     fp = './output/' + args.topic + '.pptx'
@@ -45,6 +44,7 @@ def _save_presentation_to_pptx(args, prs):
 
 
 def download_image(fromUrl, toUrl):
+    """Download image from url to path."""
     # Create the parent folder if it doesn't exist
     pathlib.Path(os.path.dirname(toUrl)).mkdir(parents=True, exist_ok=True)
 
@@ -151,7 +151,6 @@ def get_images(synonyms, num_images):
             # If no local images, search on Google Image Search
             if len(all_paths[word]) == 0:
                 # Get related images at 16x9 aspect ratio
-                # TODO: add image filter for weird and NSFW stuff
                 response = google_images_download.googleimagesdownload()
                 arguments = {
                     'keywords': word,
@@ -256,7 +255,6 @@ def create_google_image_slide(args, prs, word):
         if slide:
             shapes = slide.shapes
             shapes.title.text = word
-            # TODO: Add the text to the slide.
             return slide
     return False
 
@@ -381,11 +379,12 @@ def main(args):
     print('******************************************')
     print("Making {} slide talk on: {}".format(args.num_slides, args.topic))
 
+    # Parse topic string to parts-of-speech
     text = nltk.word_tokenize(args.topic)
-    print(text)
-    nltk.pos_tag(text)
-    print(nltk)
+    print('tokenized text: ', text)
+    print('pos tag text: ', nltk.pos_tag(text))
 
+    # Parse the actual topic subject from the parts-of-speech
     topic_string = args.topic
 
     # Get definitions
@@ -401,10 +400,6 @@ def main(args):
     # For each synonym download num_images
     args.all_paths = get_images(args.synonyms, args.num_images)
 
-    # TODO Get quotes related to the topic.
-    # TODO Get lines from other TED talks related to the topic.
-
-    # TODO Compile and save to raw data.file
     compile_talk_to_raw_data(args)
 
     # Compile and save the presentation to PPTX
