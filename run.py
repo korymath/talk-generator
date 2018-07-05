@@ -11,6 +11,7 @@ from os.path import isfile, join
 from pptx import Presentation
 from pptx.util import Inches
 from pptx.enum.text import PP_ALIGN
+from bs4 import BeautifulSoup
 
 import nltk
 from nltk.corpus import wordnet as wn
@@ -169,10 +170,29 @@ def get_images(synonyms, num_images, search_google_images=False):
     return all_paths
 
 
-def get_related_giphy(seedword):
+def get_related_giphy(seed_word):
     giphy = safygiphy.Giphy()
-    result = giphy.random(tag=seedword)
+    result = giphy.random(tag=seed_word)
     return result.get('data').get('images').get('original').get('url')
+
+
+def wikihow_action_to_action(wikihow_title):
+    index_of_to = wikihow_title.find('to')
+    return wikihow_title[index_of_to + 3:]
+
+
+def get_related_wikihow_actions(seed_word):
+    page = requests.get("https://en.wikihow.com/wikiHowTo?search=" + seed_word)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    actions_elements = soup.find_all('a', class_='result_link')
+    actions = \
+        list(
+            map(wikihow_action_to_action,
+                map(lambda x: x.get_text(), actions_elements)))
+
+    #print(actions)
+
+    return actions
 
 
 # FORMAT GENERATORS
@@ -182,6 +202,19 @@ def create_title_slide(args, prs):
     slide = prs.slides.add_slide(prs.slide_layouts[0])
     title_object = slide.shapes.title
     title_object.text = args.title
+    title_object.width = WIDTH_IN
+    title_object.height = HEIGHT_IN
+    title_object.left = LEFTMOST
+    title_object.right = TOPMOST
+    return slide
+
+
+def create_text_slide(prs, text):
+    # Get a default blank slide layout
+    slide = prs.slides.add_slide(prs.slide_layouts[5])
+
+    title_object = slide.shapes.title
+    title_object.text = text
     title_object.width = WIDTH_IN
     title_object.height = HEIGHT_IN
     title_object.left = LEFTMOST
@@ -233,6 +266,8 @@ def create_inspirobot_slide(prs):
     image_url = 'downloads/inspirobot/{}-{}.jpg'.format(dd, nnnn)
     download_image(inspirobot_url, image_url)
 
+    print("Downloaded inspirobot image: {}".format(image_url))
+
     # Turn into image slide
     return create_image_slide(prs, image_url)
 
@@ -248,8 +283,27 @@ def create_giphy_slide(prs, word):
     return create_image_slide(prs, image_url)
 
 
+def create_wikihow_action_recommendation_slide(prs, wikihow_seed):
+    related_actions = get_related_wikihow_actions(wikihow_seed)
+    if related_actions:
+        action = random.choice(related_actions)
+        life_lesson_templates = ['Life hack: Always {}!',
+                                 'I Will Teach You How To {}!',
+                                 'Life Advice: {}!',
+                                 'Life Advice: Never {}!',
+                                 'WARNING: Never {}!',
+                                 'Friendly Reminder to {}']
+
+        life_lesson = random.choice(life_lesson_templates).format(action.title())
+
+        # Turn into image slide
+        return create_text_slide(prs, life_lesson)
+    return False
+
+
 # COMPILATION
 # Compiling the slides to a powerpoint
+
 
 def compile_talk_to_pptx(args):
     """Compile the talk with the given source material."""
@@ -295,6 +349,15 @@ def compile_talk_to_pptx(args):
         slides.append(slide)
         slide_idx_iter += 1
 
+    # Add a life lesson
+    print('***********************************')
+    wikihow_seed = random.choice(args.synonyms)
+    print('Adding Wikihow Lifelesson slide: {} about {}'.format(slide_idx_iter, giphy_seed))
+    slide = create_wikihow_action_recommendation_slide(prs, wikihow_seed)
+    if slide:
+        slides.append(slide)
+        slide_idx_iter += 1
+
     _save_presentation_to_pptx(args, prs)
     print('Successfully built talk.')
 
@@ -302,6 +365,7 @@ def compile_talk_to_pptx(args):
 def compile_talk_to_raw_data(args):
     """Save the raw data that has been harvested for future use."""
     return True
+
 
 # MAIN
 
@@ -324,6 +388,8 @@ def main(args):
     args.relations = get_relations(topic_string)
     # Get synonyms
     args.synonyms = get_synonyms(topic_string)
+    # Get related actions
+    args.actions = get_related_wikihow_actions(topic_string)
     # Get a title
     args.title = get_title(args.synonyms)
     # For each synonym download num_images
