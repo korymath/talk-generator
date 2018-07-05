@@ -7,3 +7,4 @@ inflect
 requests
 safygiphy
 python-datamuse
+pytest
