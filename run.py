@@ -373,8 +373,10 @@ def compile_talk_to_pptx(args):
 
 
 def compile_talk_to_raw_data(args):
-    """Save the raw data that has been harvested for future use."""
-    return True
+    """Save the raw data that has been harvested."""
+    with open('output/' + args.topic.replace(' ', '_') + '.pkl', 'wb') as fh:
+        pickle.dump(args, fh, protocol=pickle.HIGHEST_PROTOCOL)
+        print('Pickle saved to output/' + args.topic.replace(' ', '_') + '.pkl')
 
 
 # MAIN
@@ -387,6 +389,7 @@ def main(args):
 
     # Parse topic string to parts-of-speech
     text = nltk.word_tokenize(args.topic)
+    print('******************************************')
     print('tokenized text: ', text)
     print('pos tag text: ', nltk.pos_tag(text))
 
