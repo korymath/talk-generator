@@ -1,10 +1,10 @@
 # Talk Generator
 
 ### Automatically Generated
-<img src="https://media.giphy.com/media/x47rKzgCuCaqFqmxSc/giphy.gif" width="320" height="240" />
+[![Automatically Generated](https://media.giphy.com/media/x47rKzgCuCaqFqmxSc/giphy.gif)](https://www.youtube.com/watch?v=bhZezzMu7D4 "Automatically Generated")
 
 ### Human Generated
-<img src="https://media.giphy.com/media/9FZONXXfCYdnp2eGd1/giphy.gif" width="320" height="240" />
+[![Human Generated](https://media.giphy.com/media/9FZONXXfCYdnp2eGd1/giphy.gif)](https://www.youtube.com/watch?v=bhZezzMu7D4 "Human Generated")
 
 ## Description
 
