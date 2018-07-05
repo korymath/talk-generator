@@ -4,7 +4,7 @@
 [![Automatically Generated](https://media.giphy.com/media/x47rKzgCuCaqFqmxSc/giphy.gif)](https://www.youtube.com/watch?v=bhZezzMu7D4 "Automatically Generated")
 
 ### Human Generated
-[![Human Generated](https://media.giphy.com/media/9FZONXXfCYdnp2eGd1/giphy.gif)](https://www.youtube.com/watch?v=QJ8i8cpVK0E "Human Generated")
+[![Human Generated](https://media.giphy.com/media/x47rKzgCuCaqFqmxSc/giphy.gif)](https://www.youtube.com/watch?v=QJ8i8cpVK0E "Human Generated")
 
 ## Description
 
@@ -46,16 +46,6 @@ sublime venv/lib/python3.6/site-packages/PyDictionary/utils.py
 # to: 	   return BeautifulSoup(requests.get(url).text, 'lxml')
 ```
 
-## Examples
-
-Compare the following automatically- and human- generated examples:
-
-### Automatically Generated
-[![Automatically Generated](https://i.imgur.com/fl9Doo9.jpg)](https://www.youtube.com/watch?v=bhZezzMu7D4 "Automatically Generated")
-
-### Human Generated
-[![Human Generated](https://i.imgur.com/XUfHXUK.jpg)](https://www.youtube.com/watch?v=QJ8i8cpVK0E "Human Generated")
-
 ## References
 
 * [python-pptx](https://github.com/scanny/python-pptx)
@@ -71,3 +61,13 @@ This ``Talk Generator`` is made by Kory Mathewson and Thomas Winters. With help 
 ## License
 
 MIT License. Copyright (c) 2018 Kory Mathewson and Thomas Winters.
+
+## Examples
+
+Compare the following automatically- and human- generated examples:
+
+### Automatically Generated
+[![Automatically Generated](https://i.imgur.com/fl9Doo9.jpg)](https://www.youtube.com/watch?v=bhZezzMu7D4 "Automatically Generated")
+
+### Human Generated
+[![Human Generated](https://i.imgur.com/XUfHXUK.jpg)](https://www.youtube.com/watch?v=QJ8i8cpVK0E "Human Generated")
