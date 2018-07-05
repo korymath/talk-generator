@@ -182,10 +182,11 @@ def create_image_slide(prs, image_url):
     slide = prs.slides.add_slide(prs.slide_layouts[5])
 
     # Add image url as picture
-    pic = slide.shapes.add_picture(image_url,
-                                   LEFTMOST, TOPMOST, height=HEIGHT_IN)
-
-    return slide
+    if image_url:
+        pic = slide.shapes.add_picture(image_url,
+                                       LEFTMOST, TOPMOST, height=HEIGHT_IN)
+        return slide
+    return False
 
 
 # CONTENT GENERATORS:
@@ -272,7 +273,6 @@ def compile_talk_to_pptx(args):
             slides.append(slide)
             slide_idx_iter += 1
 
-
     # Add some Inspirobot quotes
     print('***********************************')
     print('Adding inspirobot slide: {}'.format(slide_idx_iter))
@@ -289,7 +289,6 @@ def compile_talk_to_pptx(args):
     if slide:
         slides.append(slide)
         slide_idx_iter += 1
-
 
     _save_presentation_to_pptx(args, prs)
     print('Successfully built talk.')
