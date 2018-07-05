@@ -183,6 +183,10 @@ def wikihow_action_to_action(wikihow_title):
 
 def get_related_wikihow_actions(seed_word):
     page = requests.get("https://en.wikihow.com/wikiHowTo?search=" + seed_word)
+    # Try again but with plural if nothing is found
+    if not page:
+        page = requests.get("https://en.wikihow.com/wikiHowTo?search=" + inflect.engine().plural(seed_word))
+
     soup = BeautifulSoup(page.content, 'html.parser')
     actions_elements = soup.find_all('a', class_='result_link')
     actions = \
@@ -334,7 +338,7 @@ def compile_talk_to_pptx(args):
 
     # Add some Inspirobot quotes
     print('***********************************')
-    print('Adding inspirobot slide: {}'.format(slide_idx_iter))
+    print('Adding slide: {}, Inspirobot'.format(slide_idx_iter))
     slide = create_inspirobot_slide(prs)
     if slide:
         slides.append(slide)
@@ -343,7 +347,7 @@ def compile_talk_to_pptx(args):
     # Add a Gif slide
     print('***********************************')
     giphy_seed = random.choice(args.synonyms)
-    print('Adding Giphy slide: {} about {}'.format(slide_idx_iter, giphy_seed))
+    print('Adding slide: {}, Giphy about {}'.format(slide_idx_iter, giphy_seed))
     slide = create_giphy_slide(prs, giphy_seed)
     if slide:
         slides.append(slide)
