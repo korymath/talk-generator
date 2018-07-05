@@ -4,7 +4,7 @@
 [![Automatically Generated](https://media.giphy.com/media/x47rKzgCuCaqFqmxSc/giphy.gif)](https://www.youtube.com/watch?v=bhZezzMu7D4 "Automatically Generated")
 
 ### Human Generated
-[![Human Generated](https://media.giphy.com/media/x47rKzgCuCaqFqmxSc/giphy.gif)](https://www.youtube.com/watch?v=QJ8i8cpVK0E "Human Generated")
+[![Human Generated](https://media.giphy.com/media/9FZONXXfCYdnp2eGd1/giphy-downsized-large.gif)](https://www.youtube.com/watch?v=QJ8i8cpVK0E "Human Generated")
 
 ## Description
 
