@@ -43,6 +43,8 @@ sublime venv/lib/python3.6/site-packages/PyDictionary/utils.py
 * [python-pptx](https://github.com/scanny/python-pptx)
 * [TED-RNN](https://github.com/samim23/TED-RNN)
 * [PptxGenJS](https://gitbrent.github.io/PptxGenJS/docs/quick-start.html)
+* [TED Talks Trancripts](https://www.kaggle.com/goweiting/ted-talks-transcript)
+* [TED Talks - Complete List](https://data.world/owentemple/ted-talks-complete-list)
 
 ## Credits
 
