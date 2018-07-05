@@ -1,7 +1,10 @@
 # Talk Generator
 
-![Automatically Generated](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
-![Automatically Generated](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+Automatically Generated
+<img src="https://media.giphy.com/media/x47rKzgCuCaqFqmxSc/giphy.gif" width="320" height="240" />
+
+Human Generated
+<img src="https://media.giphy.com/media/9FZONXXfCYdnp2eGd1/giphy.gif" width="320" height="240" />
 
 ## Description
 
@@ -46,8 +49,12 @@ sublime venv/lib/python3.6/site-packages/PyDictionary/utils.py
 ## Examples
 
 Compare the following automatically- and human- generated examples:
+
+### Automatically Generated
 [![Automatically Generated](https://i.imgur.com/fl9Doo9.jpg)](https://www.youtube.com/watch?v=bhZezzMu7D4 "Automatically Generated")
-[![Human Generated](http://i.imgur.com/Ot5DWAW.png)](https://youtu.be/StTqXEQ2l-Y?t=35s "Human Generated")
+
+### Human Generated
+[![Human Generated](https://i.imgur.com/XUfHXUK.jpg)](https://www.youtube.com/watch?v=QJ8i8cpVK0E "Human Generated")
 
 ## References
 
