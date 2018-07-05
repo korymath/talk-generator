@@ -26,6 +26,7 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
+            python3 -m nltk.downloader wordnet punkt averaged_perceptron_tagger
 
       - save_cache:
           paths:
