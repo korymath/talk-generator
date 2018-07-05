@@ -2,7 +2,7 @@
 
 Software to automatically generate talks, presentations for PowerPoint and/or Keynote. These slides can be used for any sort of presentation including TED talks, pecha kucha, etc. 
 
-For more details, feel free to see the [project details and technical description](https://docs.google.com/document/d/1R7v6XELpqCwPH3kZzZHefAY1GiL32_wRhQOT8PpzEys/edit?usp=sharing)
+For more details, feel free to see the [project details and technical description.](https://docs.google.com/document/d/1R7v6XELpqCwPH3kZzZHefAY1GiL32_wRhQOT8PpzEys/edit?usp=sharing)
 
 ## Installation Instructions (Mac OSX)
 
