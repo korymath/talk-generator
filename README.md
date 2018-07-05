@@ -1,5 +1,10 @@
 # Talk Generator
 
+![Automatically Generated](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+![Automatically Generated](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+
+## Description
+
 Software to automatically generate talks, presentations for PowerPoint and/or Keynote. These slides can be used for any sort of presentation including TED talks, pecha kucha, etc. 
 
 For more details, feel free to see the [project details and technical description.](https://docs.google.com/document/d/1R7v6XELpqCwPH3kZzZHefAY1GiL32_wRhQOT8PpzEys/edit?usp=sharing)
@@ -15,7 +20,7 @@ Requires python3, tested on Mac OSX
 
 ## Installation Instructions (Windows)
 
-Pip might complain when installing the python-pptx dependency due to a missing the lxml dependency.
+pip might complain when installing the python-pptx dependency due to a missing the lxml dependency.
 If this is not resolved automatically, visit [this page](https://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml).
 On that page, select the right lxml version for your platform and Python version (e.g. cp37 = Python 3.7).
 
@@ -38,6 +43,12 @@ sublime venv/lib/python3.6/site-packages/PyDictionary/utils.py
 # to: 	   return BeautifulSoup(requests.get(url).text, 'lxml')
 ```
 
+## Examples
+
+Compare the following automatically- and human- generated examples:
+[![Automatically Generated](https://i.imgur.com/fl9Doo9.jpg)](https://www.youtube.com/watch?v=bhZezzMu7D4 "Automatically Generated")
+[![Human Generated](http://i.imgur.com/Ot5DWAW.png)](https://youtu.be/StTqXEQ2l-Y?t=35s "Human Generated")
+
 ## References
 
 * [python-pptx](https://github.com/scanny/python-pptx)
@@ -48,7 +59,7 @@ sublime venv/lib/python3.6/site-packages/PyDictionary/utils.py
 
 ## Credits
 
-This ``Talk Generator`` is made by Kory Mathewson and Thomas Winters.
+This ``Talk Generator`` is made by Kory Mathewson and Thomas Winters. With help from Piotr Mirowski and Julian Faid.
 
 ## License
 
