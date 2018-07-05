@@ -49,7 +49,7 @@ sublime venv/lib/python3.6/site-packages/PyDictionary/utils.py
 # to: 	   return BeautifulSoup(requests.get(url).text, 'lxml')
 ```
 
-## References
+## References and Inspiration
 
 * [python-pptx](https://github.com/scanny/python-pptx)
 * [TED-RNN](https://github.com/samim23/TED-RNN)
