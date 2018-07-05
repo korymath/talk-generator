@@ -149,7 +149,7 @@ def get_images(synonyms, num_images, search_google_images=False):
                 print('{} local images on {} found'.format(len(all_paths[word]),
                                                            word))
             # If no local images, search on Google Image Search
-            if len(all_paths[word]) == 0 and search_google_images:
+            if len(all_paths[word]) == 0:
                 # Get related images at 16x9 aspect ratio
                 # TODO: add image filter for weird and NSFW stuff
                 response = google_images_download.googleimagesdownload()
@@ -262,7 +262,7 @@ def create_google_image_slide(args, prs, word):
 
 def create_inspirobot_slide(prs):
     # Generate a random url to access inspirobot
-    dd = random.randint(1, 73)
+    dd = str(random.randint(1, 73)).zfill(2)
     nnnn = random.randint(0, 9998)
     inspirobot_url = 'http://generated.inspirobot.me/0{}/aXm{}xjU.jpg'.format(dd, nnnn)
 
