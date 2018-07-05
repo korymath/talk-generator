@@ -182,10 +182,11 @@ def wikihow_action_to_action(wikihow_title):
 
 
 def get_related_wikihow_actions(seed_word):
-    page = requests.get("https://en.wikihow.com/wikiHowTo?search=" + seed_word)
+    page = requests.get("https://en.wikihow.com/wikiHowTo?search=" + seed_word.replace(" ", "+"))
     # Try again but with plural if nothing is found
     if not page:
-        page = requests.get("https://en.wikihow.com/wikiHowTo?search=" + inflect.engine().plural(seed_word))
+        page = requests.get("https://en.wikihow.com/wikiHowTo?search=" + inflect.engine().plural(seed_word).replace(" ", "+"))
+
 
     soup = BeautifulSoup(page.content, 'html.parser')
     actions_elements = soup.find_all('a', class_='result_link')
