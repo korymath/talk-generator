@@ -1,5 +1,9 @@
 # Talk Generator
 
+Software to automatically generate talks, presentations for PowerPoint and/or Keynote. These slides can be used for any sort of presentation including TED talks, pecha kucha, etc. 
+
+For more details, feel free to see the [project details and technical description](https://docs.google.com/document/d/1R7v6XELpqCwPH3kZzZHefAY1GiL32_wRhQOT8PpzEys/edit?usp=sharing)
+
 ## Installation Instructions (Mac OSX)
 
 Requires python3, tested on Mac OSX
@@ -34,16 +38,11 @@ sublime venv/lib/python3.6/site-packages/PyDictionary/utils.py
 # to: 	   return BeautifulSoup(requests.get(url).text, 'lxml')
 ```
 
-## Project Details Draft
-
-* https://docs.google.com/document/d/1R7v6XELpqCwPH3kZzZHefAY1GiL32_wRhQOT8PpzEys/edit#heading=h.ggt0vmwisuu6
-
 ## References
 
-* https://github.com/scanny/python-pptx
-* https://github.com/samim23/TED-RNN
-* https://gitbrent.github.io/PptxGenJS/docs/quick-start.html
-* https://gitbrent.github.io/PptxGenJS/docs/usage-pres-create.html
+* [python-pptx](https://github.com/scanny/python-pptx)
+* [TED-RNN](https://github.com/samim23/TED-RNN)
+* [PptxGenJS](https://gitbrent.github.io/PptxGenJS/docs/quick-start.html)
 
 ## Credits
 
