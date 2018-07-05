@@ -132,7 +132,7 @@ def get_title(synonyms):
     return chosen_template.format(chosen_synonym_plural.title())
 
 
-def get_images(synonyms, num_images, search_google_images=False):
+def get_images(synonyms, num_images):
     """Get images, first search locally then Google Image Search."""
     all_paths = {}
     if num_images > 0:
