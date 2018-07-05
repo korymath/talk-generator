@@ -1,9 +1,9 @@
 # Talk Generator
 
-Automatically Generated
+### Automatically Generated
 <img src="https://media.giphy.com/media/x47rKzgCuCaqFqmxSc/giphy.gif" width="320" height="240" />
 
-Human Generated
+### Human Generated
 <img src="https://media.giphy.com/media/9FZONXXfCYdnp2eGd1/giphy.gif" width="320" height="240" />
 
 ## Description
