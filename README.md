@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/korymath/talk-generator.svg?style=svg)](https://circleci.com/gh/korymath/talk-generator)
+[![CircleCI](https://circleci.com/gh/korymath/talk-generator.svg?style=svg&circle-token=dcba7d5a9ff7953cff0526e201990c0b811b3aae)](https://circleci.com/gh/korymath/talk-generator)
 
 # Talk Generator
 
