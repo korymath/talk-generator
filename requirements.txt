@@ -5,3 +5,4 @@ nltk
 google_images_download
 inflect
 requests
+safygiphy

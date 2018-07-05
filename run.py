@@ -4,6 +4,7 @@ import os.path
 import inflect
 import argparse
 import requests
+import safygiphy
 from os import listdir
 from os.path import isfile, join
 
@@ -154,6 +155,10 @@ def _save_presentation_to_pptx(args, prs):
 
 
 def download_image(fromUrl, toUrl):
+    # Create the parent folder if it doesn't exist
+    pathlib.Path(os.path.dirname(toUrl)).mkdir(parents=True, exist_ok=True)
+
+    # Download
     f = open(toUrl, 'wb')
     f.write(requests.get(fromUrl).content)
     f.close()
@@ -185,20 +190,14 @@ def create_image_slide(prs, image_url):
 
 # CONTENT GENERATORS:
 
-def create_inspirobot_slide(args, prs):
-    # Generate a random url to access inspirobot
-    dd = str(random.randint(1, 73)).zfill(2)
-    nnnn = str(random.randint(0, 9998)).zfill(4)
-    inspirobot_url = 'http://generated.inspirobot.me/0{}/aXm{}xjU.jpg'.format(dd, nnnn)
+def get_related_giphy(seedword):
+    giphy = safygiphy.Giphy()
+    result = giphy.random(tag=seedword)
+    print("results: {}".format(result))
+    return result.get('data').get('images').get('original').get('url')
 
-    # Download the image
-    image_url = 'downloads/inspirobot-{}-{}.jpg'.format(dd, nnnn)
-    print('from {} to {}'.format(inspirobot_url, image_url))
-    download_image(inspirobot_url, image_url)
 
-    # Turn into image slide
-    return create_image_slide(prs, image_url)
-
+# FULL SLIDES GENERATORS:
 
 def create_google_image_slide(args, prs, word):
     # Get all image paths
@@ -218,6 +217,33 @@ def create_google_image_slide(args, prs, word):
     else:
         return False
 
+
+def create_inspirobot_slide(prs):
+    # Generate a random url to access inspirobot
+    dd = str(random.randint(1, 73)).zfill(2)
+    nnnn = str(random.randint(0, 9998)).zfill(4)
+    inspirobot_url = 'http://generated.inspirobot.me/0{}/aXm{}xjU.jpg'.format(dd, nnnn)
+
+    # Download the image
+    image_url = 'downloads/inspirobot/{}-{}.jpg'.format(dd, nnnn)
+    download_image(inspirobot_url, image_url)
+
+    # Turn into image slide
+    return create_image_slide(prs, image_url)
+
+
+def create_giphy_slide(prs, word):
+    # Download the image
+    giphy_url = get_related_giphy(word)
+    gif_name = os.path.basename(os.path.dirname(giphy_url))
+    image_url = 'downloads/' + word + '/gifs/' + gif_name + ".gif"
+    download_image(giphy_url, image_url)
+
+    # Turn into image slide
+    return create_image_slide(prs, image_url)
+
+
+# COMPILATION
 
 def compile_talk_to_pptx(args):
     """Compile the talk with the given source material."""
@@ -246,13 +272,24 @@ def compile_talk_to_pptx(args):
             slides.append(slide)
             slide_idx_iter += 1
 
+
     # Add some Inspirobot quotes
     print('***********************************')
     print('Adding inspirobot slide: {}'.format(slide_idx_iter))
-    slide = create_inspirobot_slide(args, prs)
+    slide = create_inspirobot_slide(prs)
     if slide:
         slides.append(slide)
         slide_idx_iter += 1
+
+    # Add a Gif slide
+    print('***********************************')
+    giphy_seed = random.choice(args.synonyms)
+    print('Adding Giphy slide: {} about {}'.format(slide_idx_iter, giphy_seed))
+    slide = create_giphy_slide(prs, giphy_seed)
+    if slide:
+        slides.append(slide)
+        slide_idx_iter += 1
+
 
     _save_presentation_to_pptx(args, prs)
     print('Successfully built talk.')
