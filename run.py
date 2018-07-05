@@ -262,8 +262,8 @@ def create_google_image_slide(args, prs, word):
 
 def create_inspirobot_slide(prs):
     # Generate a random url to access inspirobot
-    dd = str(random.randint(1, 73)).zfill(2)
-    nnnn = str(random.randint(0, 9998)).zfill(4)
+    dd = random.randint(1, 73)
+    nnnn = random.randint(0, 9998)
     inspirobot_url = 'http://generated.inspirobot.me/0{}/aXm{}xjU.jpg'.format(dd, nnnn)
 
     # Download the image
@@ -296,7 +296,8 @@ def create_wikihow_action_recommendation_slide(prs, wikihow_seed):
                                  'Life Advice: {}!',
                                  'Life Advice: Never {}!',
                                  'WARNING: Never {}!',
-                                 'Friendly Reminder to {}']
+                                 'Friendly Reminder to {}',
+                                 'When in Doubt: {}']
 
         life_lesson = random.choice(life_lesson_templates).format(action.title())
 
