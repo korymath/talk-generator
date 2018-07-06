@@ -32,6 +32,9 @@ INCHES_TO_EMU = 914400
 # One centimeter is 360000 EMUs
 CMS_TO_EMU = 360000
 
+# Location of powerpoint template
+POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
+
 
 # HELPER FUNCTIONS
 def _save_presentation_to_pptx(args, prs):
@@ -208,10 +211,6 @@ def create_title_slide(args, prs):
     slide = prs.slides.add_slide(prs.slide_layouts[0])
     title_object = slide.shapes.title
     title_object.text = args.title
-    title_object.width = WIDTH_IN
-    title_object.height = HEIGHT_IN
-    title_object.left = LEFTMOST
-    title_object.right = TOPMOST
     return slide
 
 
@@ -221,10 +220,6 @@ def create_text_slide(prs, text):
 
     title_object = slide.shapes.title
     title_object.text = text
-    title_object.width = WIDTH_IN
-    title_object.height = HEIGHT_IN
-    title_object.left = LEFTMOST
-    title_object.right = TOPMOST
     return slide
 
 
@@ -235,7 +230,7 @@ def create_image_slide(prs, image_url):
     # Add image url as picture
     if image_url:
         pic = slide.shapes.add_picture(image_url,
-                                       LEFTMOST, TOPMOST, height=HEIGHT_IN)
+                                       LEFTMOST, TOPMOST, height=prs.slide_height)
         return slide
     return False
 
@@ -315,10 +310,10 @@ def create_wikihow_action_recommendation_slide(prs, wikihow_seed):
 
 def compile_talk_to_pptx(args):
     """Compile the talk with the given source material."""
-    prs = Presentation()
+    prs = Presentation(POWERPOINT_TEMPLATE_FILE)
     # Set the height and width
-    prs.slide_height = HEIGHT * INCHES_TO_EMU
-    prs.slide_width = WIDTH * INCHES_TO_EMU
+    # prs.slide_height = HEIGHT * INCHES_TO_EMU
+    # prs.slide_width = WIDTH * INCHES_TO_EMU
 
     # Build an ordered list of slides for access
     slides = []
