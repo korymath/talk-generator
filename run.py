@@ -140,8 +140,8 @@ def get_images(synonyms, num_images):
         for word in synonyms:
             lp = 'downloads/' + word + '/'
             try:
-                local_files = [lp + f for f in listdir(lp) if isfile(join(lp, 
-                    f))]
+                local_files = [lp + f for f in listdir(lp) if isfile(join(lp,
+                                                                          f))]
                 all_paths[word] = local_files
             except FileNotFoundError as e:
                 all_paths[word] = []
@@ -182,12 +182,11 @@ def wikihow_action_to_action(wikihow_title):
 
 def get_related_wikihow_actions(seed_word):
     page = requests.get(('https://en.wikihow.com/'
-        'wikiHowTo?search=') + seed_word.replace(' ', '+'))
+                         'wikiHowTo?search=') + seed_word.replace(' ', '+'))
     # Try again but with plural if nothing is found
     if not page:
-        page = requests.get(('https://en.wikihow.com/wikiHowTo?search=' 
-            + inflect.engine().plural(seed_word).replace(" ", "+")))
-
+        page = requests.get(('https://en.wikihow.com/wikiHowTo?search='
+                             + inflect.engine().plural(seed_word).replace(" ", "+")))
 
     soup = BeautifulSoup(page.content, 'html.parser')
     actions_elements = soup.find_all('a', class_='result_link')
@@ -196,7 +195,7 @@ def get_related_wikihow_actions(seed_word):
             map(wikihow_action_to_action,
                 map(lambda x: x.get_text(), actions_elements)))
 
-    #print(actions)
+    # print(actions)
 
     return actions
 
@@ -255,7 +254,7 @@ def create_google_image_slide(args, prs, word):
         slide = create_image_slide(prs, img_path)
 
         # Add title to the slide
-        if slide:
+        if bool(slide):
             shapes = slide.shapes
             shapes.title.text = word
             return slide
@@ -361,8 +360,8 @@ def compile_talk_to_pptx(args):
     # Add a life lesson
     print('***********************************')
     wikihow_seed = random.choice(args.synonyms)
-    print('Adding Wikihow Lifelesson slide: {} about {}'.format(slide_idx_iter, 
-        giphy_seed))
+    print('Adding Wikihow Lifelesson slide: {} about {}'.format(slide_idx_iter,
+                                                                giphy_seed))
     slide = create_wikihow_action_recommendation_slide(prs, wikihow_seed)
     if slide:
         slides.append(slide)
