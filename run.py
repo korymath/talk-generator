@@ -58,6 +58,10 @@ def download_image(fromUrl, toUrl):
     f.close()
 
 
+def read_lines(file):
+    return [line.rstrip('\n') for line in open(file)]
+
+
 # CONTENT GENERATORS
 # These functions generate content, sometimes related to given arguments
 
@@ -127,11 +131,7 @@ def get_title(synonyms):
     print('******************************************')
     chosen_synonym = random.choice(synonyms)
     chosen_synonym_plural = inflect.engine().plural(chosen_synonym)
-    synonym_templates = ['The Unexpected Benefits of {}',
-                         'What Your Choice in {} Says About You',
-                         'How to Get Rid of {}',
-                         'Why {} Will Ruin Your Life',
-                         'The Biggest Concerns About {}']
+    synonym_templates = read_lines('data/text-templates/titles.txt')
     chosen_template = random.choice(synonym_templates);
     return chosen_template.format(chosen_synonym_plural.title())
 
@@ -284,20 +284,22 @@ def create_giphy_slide(prs, word):
     return create_image_slide(prs, image_url)
 
 
-def create_wikihow_action_recommendation_slide(prs, wikihow_seed):
+def create_wikihow_action_bold_statement_slide(prs, wikihow_seed):
     related_actions = get_related_wikihow_actions(wikihow_seed)
     if related_actions:
         action = random.choice(related_actions)
-        life_lesson_templates = ['Life hack: Always {}!',
-                                 'I Will Teach You How To {}!',
-                                 'Life Advice: {}!',
-                                 'Life Advice: Never {}!',
-                                 'WARNING: Never {}!',
-                                 'Friendly Reminder to {}',
-                                 'When in Doubt: {}']
+        bold_statement_templates = read_lines('data/text-templates/bold-statements.txt')
 
-        life_lesson = random.choice(
-            life_lesson_templates).format(action.title())
+        chosen_template = random.choice(bold_statement_templates)
+        print(chosen_template)
+        template_values = {'action': action.title(),
+                           # TODO: Make a scraper that scrapes a step related to this action on wikihow.
+                           'step': 'DO IT',
+                           'topic': wikihow_seed}
+        print(template_values)
+        life_lesson = chosen_template.format(**template_values)
+
+        print(life_lesson)
 
         # Turn into image slide
         return create_text_slide(prs, life_lesson)
@@ -354,13 +356,14 @@ def compile_talk_to_pptx(args):
 
     # Add a life lesson
     print('***********************************')
-    wikihow_seed = random.choice(args.synonyms)
-    print('Adding Wikihow Lifelesson slide: {} about {}'.format(slide_idx_iter,
-                                                                giphy_seed))
-    slide = create_wikihow_action_recommendation_slide(prs, wikihow_seed)
-    if slide:
-        slides.append(slide)
-        slide_idx_iter += 1
+    for i in range(10):
+        wikihow_seed = random.choice(args.synonyms)
+        print('Adding Wikihow Lifelesson slide: {} about {}'.format(slide_idx_iter,
+                                                                    wikihow_seed))
+        slide = create_wikihow_action_bold_statement_slide(prs, wikihow_seed)
+        if bool(slide):
+            slides.append(slide)
+            slide_idx_iter += 1
 
     _save_presentation_to_pptx(args, prs)
     print('Successfully built talk.')
