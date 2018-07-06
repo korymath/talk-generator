@@ -293,17 +293,13 @@ def create_wikihow_action_bold_statement_slide(prs, wikihow_seed):
         bold_statement_templates = read_lines('data/text-templates/bold-statements.txt')
 
         chosen_template = random.choice(bold_statement_templates)
-        print(chosen_template)
         template_values = {'action': action.title(),
                            # TODO: Make a scraper that scrapes a step related to this action on wikihow.
                            'step': 'DO IT',
                            'topic': wikihow_seed,
                            # TODO: Use datamuse or some other mechanism of finding a related location
                            'location': 'Here'}
-        print(template_values)
         life_lesson = chosen_template.format(**template_values)
-
-        print(life_lesson)
 
         # Turn into image slide
         return create_text_slide(prs, life_lesson)
