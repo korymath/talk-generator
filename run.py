@@ -224,11 +224,11 @@ def create_text_slide(prs, text):
 
 
 def create_image_slide(prs, image_url):
-    # Get a default blank slide layout
-    slide = prs.slides.add_slide(prs.slide_layouts[5])
-
     # Add image url as picture
     if image_url:
+        # Get a default blank slide layout
+        slide = prs.slides.add_slide(prs.slide_layouts[5])
+
         pic = slide.shapes.add_picture(image_url,
                                        LEFTMOST, TOPMOST, height=prs.slide_height)
         return slide
