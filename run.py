@@ -297,7 +297,9 @@ def create_wikihow_action_bold_statement_slide(prs, wikihow_seed):
         template_values = {'action': action.title(),
                            # TODO: Make a scraper that scrapes a step related to this action on wikihow.
                            'step': 'DO IT',
-                           'topic': wikihow_seed}
+                           'topic': wikihow_seed,
+                           # TODO: Use datamuse or some other mechanism of finding a related location
+                           'location': 'Here'}
         print(template_values)
         life_lesson = chosen_template.format(**template_values)
 
