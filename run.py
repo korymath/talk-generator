@@ -295,7 +295,9 @@ def create_wikihow_action_bold_statement_slide(prs, wikihow_seed):
         chosen_template = random.choice(bold_statement_templates)
         template_values = {'action': action.title(),
                            # TODO: Make a scraper that scrapes a step related to this action on wikihow.
-                           'step': 'DO IT',
+                           # TODO: Fix action_infinitive
+                           'action_infinitive': action.title(),
+                           'step': 'Do Whatever You Like',
                            'topic': wikihow_seed,
                            # TODO: Use datamuse or some other mechanism of finding a related location
                            'location': 'Here'}
@@ -356,7 +358,7 @@ def compile_talk_to_pptx(args):
 
     # Add a life lesson
     print('***********************************')
-    for i in range(10):
+    for i in range(2):
         wikihow_seed = random.choice(args.synonyms)
         print('Adding Wikihow Lifelesson slide: {} about {}'.format(slide_idx_iter,
                                                                     wikihow_seed))
