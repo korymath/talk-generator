@@ -225,15 +225,25 @@ def create_text_slide(prs, text):
     return slide
 
 
-def create_image_slide(prs, image_url):
+def create_image_slide(prs, image_url, title=False):
     # Add image url as picture
     if image_url:
         # Get a default blank slide layout
-        slide = prs.slides.add_slide(prs.slide_layouts[5])
+        slide = prs.slides.add_slide(prs.slide_layouts[11])
+
+        if title:
+            title_object = slide.shapes.title
+            title_object.text = title
+
+        # print("{}, {}".format(slide.shapes[0],slide.shapes[1]))
+
+        # slide.shapes[1].image_url = image_url;
 
         pic = slide.shapes.add_picture(image_url,
                                        LEFTMOST, TOPMOST, height=prs.slide_height)
+        print(pic)
         return slide
+
     return False
 
 
@@ -248,7 +258,7 @@ def create_google_image_slide(args, prs, word):
         img_path = random.choice(img_paths)
 
         # Create slide with image
-        slide = create_image_slide(prs, img_path)
+        slide = create_image_slide(prs, img_path, word)
 
         # Add title to the slide
         if bool(slide):
