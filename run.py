@@ -224,8 +224,8 @@ def create_text_slide(prs, text):
     title_object.text = text
     return slide
 
-
-def create_image_slide(prs, image_url, title=False):
+# Creates a slide with an image covering the whole slide
+def create_full_image_slide(prs, image_url, title=False):
     # Add image url as picture
     if image_url:
         # Get a default blank slide layout
@@ -235,13 +235,16 @@ def create_image_slide(prs, image_url, title=False):
             title_object = slide.shapes.title
             title_object.text = title
 
+        image_placeholder = slide.placeholders[1]
+        picture = image_placeholder.insert_picture(image_url)
+
         # print("{}, {}".format(slide.shapes[0],slide.shapes[1]))
 
         # slide.shapes[1].image_url = image_url;
 
-        pic = slide.shapes.add_picture(image_url,
-                                       LEFTMOST, TOPMOST, height=prs.slide_height)
-        print(pic)
+        # pic = slide.shapes.add_picture(image_url,
+        #                                LEFTMOST, TOPMOST, height=prs.slide_height)
+        # print(pic)
         return slide
 
     return False
@@ -258,7 +261,7 @@ def create_google_image_slide(args, prs, word):
         img_path = random.choice(img_paths)
 
         # Create slide with image
-        slide = create_image_slide(prs, img_path, word)
+        slide = create_full_image_slide(prs, img_path, word)
 
         # Add title to the slide
         if bool(slide):
@@ -282,7 +285,7 @@ def create_inspirobot_slide(prs):
     print("Downloaded inspirobot image: {}".format(image_url))
 
     # Turn into image slide
-    return create_image_slide(prs, image_url)
+    return create_full_image_slide(prs, image_url)
 
 
 def create_giphy_slide(prs, word):
@@ -293,7 +296,7 @@ def create_giphy_slide(prs, word):
     download_image(giphy_url, image_url)
 
     # Turn into image slide
-    return create_image_slide(prs, image_url)
+    return create_full_image_slide(prs, image_url)
 
 
 def create_wikihow_action_bold_statement_slide(prs, wikihow_seed):
