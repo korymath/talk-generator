@@ -224,27 +224,30 @@ def create_text_slide(prs, text):
     title_object.text = text
     return slide
 
+
+# Creates a slide with an image covering the whole slide
+def create_image_slide(prs, image_url, title=False):
+    return _create_single_image_slide(prs, image_url, 2, title)
+
+
 # Creates a slide with an image covering the whole slide
 def create_full_image_slide(prs, image_url, title=False):
+    return _create_single_image_slide(prs, image_url, 11, title)
+
+
+def _create_single_image_slide(prs, image_url, slide_template_idx, title=False):
     # Add image url as picture
     if image_url:
         # Get a default blank slide layout
-        slide = prs.slides.add_slide(prs.slide_layouts[11])
+        slide = prs.slides.add_slide(prs.slide_layouts[slide_template_idx])
 
         if title:
             title_object = slide.shapes.title
             title_object.text = title
 
         image_placeholder = slide.placeholders[1]
-        picture = image_placeholder.insert_picture(image_url)
+        image_placeholder.insert_picture(image_url)
 
-        # print("{}, {}".format(slide.shapes[0],slide.shapes[1]))
-
-        # slide.shapes[1].image_url = image_url;
-
-        # pic = slide.shapes.add_picture(image_url,
-        #                                LEFTMOST, TOPMOST, height=prs.slide_height)
-        # print(pic)
         return slide
 
     return False
