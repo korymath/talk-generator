@@ -49,33 +49,36 @@ class SlideGenerator:
 
     # The weight of the generator for a particular slide.
     # Determines how much chance it has being picked for a particular slide number
-    def get_weight_for(self, slideNr, totalSlides):
-        return self._weight_function(slideNr, totalSlides)
+    def get_weight_for(self, slide_nr, total_slides):
+        return self._weight_function(slide_nr, total_slides)
 
     # Class function to create a function that always returns a certain weight
     def constant_weight(weight):
-        return lambda slideNr, totalSlides: weight
+        return lambda slide_nr, total_slides: weight
 
 
 # Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
 # each slide is generated
 class PresentationSchema:
 
-    def __init__(self, seedGenerator, slideGenerators):
-        self._seedGenerator = seedGenerator
-        self._slideGenerators = slideGenerators
+    def __init__(self, seed_generator, slide_generators):
+        self._seed_generator = seed_generator
+        self._slide_generators = slide_generators
 
     # Generate a presentation about a certain topic with a certain number of slides
-    def generate_presentation(self, topic, numberOfSlides):
-        presentation = null  # TODO: create presentation like below
-        for i in range(numberOfSlides):
-            generator = self._select_generator(i, numberOfSlides)
-            generator(i, numberOfSlides)
-        return False
+    def generate_presentation(self, topic, number_of_slides):
+        presentation = False  # TODO: create presentation like below
+        for i in range(number_of_slides):
+            generator = self._select_generator(i, number_of_slides)
+            generator(i, number_of_slides)
+        return presentation
 
     # Select a generator for a certain slide number
-    def _select_generator(self, slideNr, totalSlides):
-        return random.choice(self._slideGenerators)  # TODO incorporate weights
+    def _select_generator(self, slide_nr, total_slides):
+        return random.choice(self._seed_generator)  # TODO incorporate weights
+
+
+presentation_schema = PresentationSchema(lambda x: "test", [])
 
 
 # HELPER FUNCTIONS
