@@ -35,6 +35,23 @@ CMS_TO_EMU = 360000
 # Location of powerpoint template
 POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
 
+# Slide generator class
+class SlideGenerator:
+
+    def __init__(self, generator, weight_function):
+        self._generator = generator
+        self._weight_function = weight_function ;
+
+    def generate(self, presentation, seed):
+        return self._generator(presentation, seed)
+
+    def get_weight_for(self, slideNr, totalSlides):
+        return self._weight_function(slideNr, totalSlides)
+
+    def constant_weight(weight):
+        return lambda slideNr, totalSlides: weight
+
+
 
 # HELPER FUNCTIONS
 def _save_presentation_to_pptx(args, prs):
