@@ -39,7 +39,11 @@ POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
 # Slide generator class
 class SlideGenerator:
 
-    def __init__(self, generator, weight_function):
+    # Class function to create a function that always returns a certain weight
+    def constant_weight(weight):
+        return lambda slide_nr, total_slides: weight
+
+    def __init__(self, generator, weight_function=constant_weight(1)):
         self._generator = generator
         self._weight_function = weight_function;
 
@@ -51,10 +55,6 @@ class SlideGenerator:
     # Determines how much chance it has being picked for a particular slide number
     def get_weight_for(self, slide_nr, total_slides):
         return self._weight_function(slide_nr, total_slides)
-
-    # Class function to create a function that always returns a certain weight
-    def constant_weight(weight):
-        return lambda slide_nr, total_slides: weight
 
 
 # Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
@@ -68,16 +68,26 @@ class PresentationSchema:
     # Generate a presentation about a certain topic with a certain number of slides
     def generate_presentation(self, topic, number_of_slides):
 
+        # Create new presentation
         presentation = Presentation(POWERPOINT_TEMPLATE_FILE)
+        # Create the topic-for-each-slide generator
+        seed_generator = self._seed_generator(topic, number_of_slides)
 
         for i in range(number_of_slides):
-            # generator = self._select_generator(i, number_of_slides)
-            # generator(i, number_of_slides)
+            # Generate a topic for the next slide
+            seed = seed_generator(i)
 
-            print('***********************************')
-            giphy_seed = self._seed_generator("deleteme")
-            print('Adding slide: {}, Giphy about {}'.format(i, giphy_seed))
-            slide = create_giphy_slide(presentation, giphy_seed)
+            # Select the slide generator to generate with
+            generator = self._select_generator(i, number_of_slides)
+
+            # Generate the slide
+            print('Adding slide: {} using {}'.format(i, generator))
+            slide = generator.generate(presentation, seed)
+
+            # Try again if slide is False!
+            if not bool(slide):
+                i -= 1
+                # TODO: Remove slide from presentation if there was a slide generated
 
         return presentation
 
@@ -86,7 +96,6 @@ class PresentationSchema:
         return random.choice(self._seed_generator)  # TODO incorporate weights
 
 
-presentation_schema = PresentationSchema(lambda x: "test", [])
 
 
 # HELPER FUNCTIONS
@@ -487,6 +496,8 @@ def main(args):
     # Save presentation
     _save_presentation_to_pptx(args, presentation)
 
+
+presentation_schema = PresentationSchema(lambda x: "test", [SlideGenerator(create_giphy_slide)])
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
