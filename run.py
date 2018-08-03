@@ -67,10 +67,18 @@ class PresentationSchema:
 
     # Generate a presentation about a certain topic with a certain number of slides
     def generate_presentation(self, topic, number_of_slides):
-        presentation = False  # TODO: create presentation like below
+
+        presentation = Presentation(POWERPOINT_TEMPLATE_FILE)
+
         for i in range(number_of_slides):
-            generator = self._select_generator(i, number_of_slides)
-            generator(i, number_of_slides)
+            # generator = self._select_generator(i, number_of_slides)
+            # generator(i, number_of_slides)
+
+            print('***********************************')
+            giphy_seed = self._seed_generator("deleteme")
+            print('Adding slide: {}, Giphy about {}'.format(i, giphy_seed))
+            slide = create_giphy_slide(presentation, giphy_seed)
+
         return presentation
 
     # Select a generator for a certain slide number
@@ -470,10 +478,14 @@ def main(args):
     args.all_paths = get_images(args.synonyms, args.num_images)
 
     # Compile and save the presentation to data
-    compile_talk_to_raw_data(args)
+    # compile_talk_to_raw_data(args)
 
     # Compile and save the presentation to PPTX
-    compile_talk_to_pptx(args)
+    # compile_talk_to_pptx(args)
+    presentation = presentation_schema.generate_presentation(topic_string, args.num_slides)
+
+    # Save presentation
+    _save_presentation_to_pptx(args, presentation)
 
 
 if __name__ == '__main__':
