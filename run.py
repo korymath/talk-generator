@@ -35,22 +35,47 @@ CMS_TO_EMU = 360000
 # Location of powerpoint template
 POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
 
+
 # Slide generator class
 class SlideGenerator:
 
     def __init__(self, generator, weight_function):
         self._generator = generator
-        self._weight_function = weight_function ;
+        self._weight_function = weight_function;
 
+    # Generate a slide for a given presentation using the given seed.
     def generate(self, presentation, seed):
         return self._generator(presentation, seed)
 
+    # The weight of the generator for a particular slide.
+    # Determines how much chance it has being picked for a particular slide number
     def get_weight_for(self, slideNr, totalSlides):
         return self._weight_function(slideNr, totalSlides)
 
+    # Class function to create a function that always returns a certain weight
     def constant_weight(weight):
         return lambda slideNr, totalSlides: weight
 
+
+# Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
+# each slide is generated
+class PresentationSchema:
+
+    def __init__(self, seedGenerator, slideGenerators):
+        self._seedGenerator = seedGenerator
+        self._slideGenerators = slideGenerators
+
+    # Generate a presentation about a certain topic with a certain number of slides
+    def generate_presentation(self, topic, numberOfSlides):
+        presentation = null  # TODO: create presentation like below
+        for i in range(numberOfSlides):
+            generator = self._select_generator(i, numberOfSlides)
+            generator(i, numberOfSlides)
+        return False
+
+    # Select a generator for a certain slide number
+    def _select_generator(self, slideNr, totalSlides):
+        return random.choice(self._slideGenerators)  # TODO incorporate weights
 
 
 # HELPER FUNCTIONS
