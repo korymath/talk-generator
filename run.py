@@ -42,7 +42,7 @@ POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
 class SlideGenerator:
 
     # Class function to create a function that always returns a certain weight
-    def constant_weight(weight):
+    def constant_weight(weight: int):
         return lambda slide_nr, total_slides: weight
 
     def __init__(self, generator, weight_function=constant_weight(1)):
