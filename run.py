@@ -469,7 +469,7 @@ def main(args):
     print('pos tag text: ', nltk.pos_tag(text))
 
     # Parse the actual topic subject from the parts-of-speech
-    topic_string = args.topic
+    # topic_string = args.topic
 
     # Get definitions
     # args.definitions = get_definitions(topic_string)
@@ -480,7 +480,7 @@ def main(args):
     # Get related actions
     # args.actions = get_related_wikihow_actions(topic_string)
     # Get a title
-    # args.title = get_title(args.synonyms) #TODO Title slide mechanism
+    # args.title = get_title(args.synonyms)
     # For each synonym download num_images
     # args.all_paths = get_images(args.synonyms, args.num_images)
 
@@ -489,22 +489,27 @@ def main(args):
 
     # Compile and save the presentation to PPTX
     # compile_talk_to_pptx(args)
-    presentation = presentation_schema.generate_presentation(topic_string, args.num_slides)
+    presentation = presentation_schema.generate_presentation(args.topic, args.num_slides)
 
     # Save presentation
     _save_presentation_to_pptx(args, presentation)
 
 
-presentation_schema = PresentationSchema(lambda topic, num_slides: SynonymTopicGenerator(topic, num_slides),
-                                         [
-                                             # TODO probably better to create cleaner way of forcing positional slides
-                                             SlideGenerator(create_title_slide,
-                                                            lambda slide_nr, total_slides:
-                                                            100000 if slide_nr == 0 else 0),
-                                             SlideGenerator(create_giphy_slide),
-                                             SlideGenerator(create_inspirobot_slide),
-                                             SlideGenerator(create_wikihow_action_bold_statement_slide),
-                                             SlideGenerator(create_google_image_slide)])
+# This object holds all the information about how to generate the presentation
+presentation_schema = PresentationSchema(
+    # Topic per slide generator
+    lambda topic, num_slides: SynonymTopicGenerator(topic, num_slides),
+
+    # Slide generators
+    [SlideGenerator(create_title_slide,
+                    # Make title slides only happen as first slide
+                    # TODO probably better to create cleaner way of forcing positional slides
+                    lambda slide_nr, total_slides:
+                    100000 if slide_nr == 0 else 0),
+     SlideGenerator(create_giphy_slide),
+     SlideGenerator(create_inspirobot_slide),
+     SlideGenerator(create_wikihow_action_bold_statement_slide),
+     SlideGenerator(create_google_image_slide)])
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
