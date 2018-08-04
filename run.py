@@ -531,7 +531,9 @@ def main(args):
 
 
 presentation_schema = PresentationSchema(lambda topic, num_slides: SynonymTopicGenerator(topic, num_slides),
-                                         [SlideGenerator(create_giphy_slide), SlideGenerator(create_inspirobot_slide)])
+                                         [SlideGenerator(create_giphy_slide),
+                                          SlideGenerator(create_inspirobot_slide),
+                                          SlideGenerator(create_wikihow_action_bold_statement_slide)])
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
