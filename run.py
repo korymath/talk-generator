@@ -307,7 +307,8 @@ def _get_google_image_cached(word, num_image, lp):
 def get_related_giphy(seed_word):
     giphy = safygiphy.Giphy()
     result = giphy.random(tag=seed_word)
-    return result.get('data').get('images').get('original').get('url')
+    if result:
+        return result.get('data').get('images').get('original').get('url')
 
 
 def wikihow_action_to_action(wikihow_title):
@@ -427,12 +428,13 @@ def create_inspirobot_slide(prs, topic):
 def create_giphy_slide(prs, word):
     # Download the image
     giphy_url = get_related_giphy(word)
-    gif_name = os.path.basename(os.path.dirname(giphy_url))
-    image_url = 'downloads/' + word + '/gifs/' + gif_name + ".gif"
-    download_image(giphy_url, image_url)
+    if bool(giphy_url):
+        gif_name = os.path.basename(os.path.dirname(giphy_url))
+        image_url = 'downloads/' + word + '/gifs/' + gif_name + ".gif"
+        download_image(giphy_url, image_url)
 
-    # Turn into image slide
-    return create_full_image_slide(prs, image_url)
+        # Turn into image slide
+        return create_full_image_slide(prs, image_url)
 
 
 def create_wikihow_action_bold_statement_slide(prs, wikihow_seed):
