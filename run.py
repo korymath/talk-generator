@@ -283,7 +283,10 @@ def get_google_images(word, num_images=1):
             'exact_size': '1600,900',
         }
         # passing the arguments to the function
-        paths = response.download(arguments)
+        paths_dict = response.download(arguments)
+        for value in paths_dict.values():
+            paths.extend(value)
+
         # printing absolute paths of the downloaded images
         print('paths of images', paths)
     return paths
