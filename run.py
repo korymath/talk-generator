@@ -446,67 +446,6 @@ def create_wikihow_action_bold_statement_slide(prs, wikihow_seed):
 
 
 # COMPILATION
-# Compiling the slides to a powerpoint
-
-# TODO remove this method
-def compile_talk_to_pptx(args):
-    """Compile the talk with the given source material."""
-    prs = Presentation(POWERPOINT_TEMPLATE_FILE)
-    # Set the height and width
-    # prs.slide_height = HEIGHT * INCHES_TO_EMU
-    # prs.slide_width = WIDTH * INCHES_TO_EMU
-
-    # Build an ordered list of slides for access
-    slides = []
-
-    # Add title slide
-    title_slide = create_title_slide(args, prs)
-    slides.append(title_slide)
-    slide_idx_iter = 1
-
-    # For each synonym 
-    for word, path_list in args.all_paths.items():
-        # print('Word: {}'.format(word))
-        # For each image collected add a new slide
-        # for i in range(len(path_list)):
-        print('***********************************')
-        print('Adding slide {} about {}'.format(slide_idx_iter, word))
-        slide = create_google_image_slide(args, prs, word)
-        if slide:
-            slides.append(slide)
-            slide_idx_iter += 1
-
-    # Add some Inspirobot quotes
-    print('***********************************')
-    print('Adding slide: {}, Inspirobot'.format(slide_idx_iter))
-    slide = create_inspirobot_slide(prs)
-    if slide:
-        slides.append(slide)
-        slide_idx_iter += 1
-
-    # Add a Gif slide
-    print('***********************************')
-    giphy_seed = random.choice(args.synonyms)
-    print('Adding slide: {}, Giphy about {}'.format(slide_idx_iter, giphy_seed))
-    slide = create_giphy_slide(prs, giphy_seed)
-    if slide:
-        slides.append(slide)
-        slide_idx_iter += 1
-
-    # Add a life lesson
-    print('***********************************')
-    for i in range(2):
-        wikihow_seed = random.choice(args.synonyms)
-        print('Adding Wikihow Lifelesson slide: {} about {}'.format(slide_idx_iter,
-                                                                    wikihow_seed))
-        slide = create_wikihow_action_bold_statement_slide(prs, wikihow_seed)
-        if bool(slide):
-            slides.append(slide)
-            slide_idx_iter += 1
-
-    _save_presentation_to_pptx(args, prs)
-    print('Successfully built talk.')
-
 
 def compile_talk_to_raw_data(args):
     """Save the raw data that has been harvested."""
