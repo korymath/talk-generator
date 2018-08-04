@@ -51,12 +51,18 @@ class SlideGenerator:
 
     # Generate a slide for a given presentation using the given seed.
     def generate(self, presentation, seed):
-        return self._generator(presentation, seed)
+        slide = self._generator(presentation, seed)
+        # Add information about the generator to the notes
+        if slide:
+            slide.notes_slide.notes_text_frame.text = str(self)
 
     # The weight of the generator for a particular slide.
     # Determines how much chance it has being picked for a particular slide number
     def get_weight_for(self, slide_nr, total_slides):
         return self._weight_function(slide_nr, total_slides)
+
+    def __str__(self):
+        return "SlideGenerator[" + str(self._generator.__name__) + "]"
 
 
 # Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
