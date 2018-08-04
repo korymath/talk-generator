@@ -55,7 +55,8 @@ class SlideGenerator:
         slide = self._generator(presentation, seed)
         # Add information about the generator to the notes
         if slide:
-            slide.notes_slide.notes_text_frame.text = str(self)
+            slide.notes_slide.notes_text_frame.text = str(self) + " / " + seed
+        return slide
 
     # The weight of the generator for a particular slide.
     # Determines how much chance it has being picked for a particular slide number
@@ -75,36 +76,45 @@ class PresentationSchema:
         self._slide_generators = slide_generators
 
     # Generate a presentation about a certain topic with a certain number of slides
-    def generate_presentation(self, topic, number_of_slides):
+    def generate_presentation(self, topic, num_slides):
 
         # Create new presentation
         presentation = Presentation(POWERPOINT_TEMPLATE_FILE)
         # Create the topic-for-each-slide generator
-        seed_generator = self._seed_generator(topic, number_of_slides)
+        seed_generator = self._seed_generator(topic, num_slides)
 
-        for i in range(number_of_slides):
-            # Generate a topic for the next slide
-            seed = seed_generator.generate_seed(i)
-
-            # Select the slide generator to generate with
-            generator = self._select_generator(i, number_of_slides)
-
-            # Generate the slide
-            print('Adding slide {} about {} using {}'.format(i, seed, generator))
-            slide = generator.generate(presentation, seed)
-
-            # Try again if slide is False!
-            if not bool(slide):
-                i -= 1
-                # TODO: Remove slide from presentation if there was a slide generated
+        for slide_nr in range(num_slides):
+            slide = self._generate_slide(presentation, seed_generator, slide_nr, num_slides, [])
 
         return presentation
 
+    def _generate_slide(self, presentation, seed_generator, slide_nr, num_slides, prohibited_generators):
+
+        # Generate a topic for the next slide
+        seed = seed_generator.generate_seed(slide_nr)
+
+        # Select the slide generator to generate with
+        generator = self._select_generator(slide_nr, num_slides, prohibited_generators)
+
+        print('Generating slide {} about {} using {}'.format(slide_nr, seed, generator))
+        slide = generator.generate(presentation, seed)
+
+        # Try again if slide is False, and prohibit generator for generating for this topic
+        if not bool(slide):
+            prohibited_generators.append(generator)
+
+            return self._generate_slide(presentation, seed_generator, slide_nr, num_slides, prohibited_generators)
+            # TODO: Remove slide from presentation if there was a slide generated
+
+        return slide
+
     # Select a generator for a certain slide number
-    def _select_generator(self, slide_nr, total_slides):
+    def _select_generator(self, slide_nr, total_slides, prohibited_generators):
         weighted_generators = []
         for i in range(len(self._slide_generators)):
             generator = self._slide_generators[i]
+            if generator in prohibited_generators:
+                continue
             weighted_generator = generator.get_weight_for(slide_nr, total_slides), generator
             weighted_generators.append(weighted_generator)
         return weighted_random(weighted_generators)
@@ -165,6 +175,8 @@ def read_lines(file):
 
 # From https://stackoverflow.com/questions/14992521/python-weighted-random
 def weighted_random(pairs):
+    if len(pairs) == 0:
+        raise ValueError("Pairs can't be zero")
     total = sum(pair[0] for pair in pairs)
     r = randint(1, total)
     for (weight, value) in pairs:
