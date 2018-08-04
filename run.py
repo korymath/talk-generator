@@ -47,7 +47,7 @@ class SlideGenerator:
 
     def __init__(self, generator, weight_function=constant_weight(1)):
         self._generator = generator
-        self._weight_function = weight_function;
+        self._weight_function = weight_function
 
     # Generate a slide for a given presentation using the given seed.
     def generate(self, presentation, seed):
@@ -363,7 +363,7 @@ def create_google_image_slide(args, prs, word):
     return False
 
 
-def create_inspirobot_slide(prs):
+def create_inspirobot_slide(prs, topic):
     # Generate a random url to access inspirobot
     dd = str(random.randint(1, 73)).zfill(2)
     nnnn = random.randint(0, 9998)
@@ -514,7 +514,7 @@ def main(args):
     args.all_paths = get_images(args.synonyms, args.num_images)
 
     # Compile and save the presentation to data
-    # compile_talk_to_raw_data(args)
+    compile_talk_to_raw_data(args)
 
     # Compile and save the presentation to PPTX
     # compile_talk_to_pptx(args)
@@ -525,7 +525,7 @@ def main(args):
 
 
 presentation_schema = PresentationSchema(lambda topic, num_slides: SynonymTopicGenerator(topic, num_slides),
-                                         [SlideGenerator(create_giphy_slide)])
+                                         [SlideGenerator(create_giphy_slide), SlideGenerator(create_inspirobot_slide)])
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
