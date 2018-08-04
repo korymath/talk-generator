@@ -329,10 +329,10 @@ def get_related_wikihow_actions(seed_word):
 # These are functions that get some inputs (texts, images...) 
 # and create layouted slides with these inputs
 
-def create_title_slide(args, prs):
+def create_title_slide(prs, seed):
     slide = prs.slides.add_slide(prs.slide_layouts[0])
     title_object = slide.shapes.title
-    title_object.text = args.title
+    title_object.text = get_title(get_synonyms(seed))
     return slide
 
 
@@ -559,6 +559,10 @@ def main(args):
 
 presentation_schema = PresentationSchema(lambda topic, num_slides: SynonymTopicGenerator(topic, num_slides),
                                          [
+                                             # TODO probably better to create cleaner way of forcing positional slides
+                                             SlideGenerator(create_title_slide,
+                                                            lambda slide_nr, total_slides:
+                                                            100000 if slide_nr == 0 else 0),
                                              SlideGenerator(create_giphy_slide),
                                              SlideGenerator(create_inspirobot_slide),
                                              SlideGenerator(create_wikihow_action_bold_statement_slide),
