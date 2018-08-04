@@ -8,6 +8,7 @@ import requests
 import safygiphy
 import math
 import numpy
+from random import randint
 from os import listdir
 from os.path import isfile, join
 
@@ -101,7 +102,12 @@ class PresentationSchema:
 
     # Select a generator for a certain slide number
     def _select_generator(self, slide_nr, total_slides):
-        return random.choice(self._slide_generators)  # TODO incorporate weights
+        weighted_generators = []
+        for i in range(len(self._slide_generators)):
+            generator = self._slide_generators[i]
+            weighted_generator = generator.get_weight_for(slide_nr, total_slides), generator
+            weighted_generators.append(weighted_generator)
+        return weighted_random(weighted_generators)
 
 
 # This class generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation
@@ -155,6 +161,15 @@ def download_image(fromUrl, toUrl):
 
 def read_lines(file):
     return [line.rstrip('\n') for line in open(file)]
+
+
+# From https://stackoverflow.com/questions/14992521/python-weighted-random
+def weighted_random(pairs):
+    total = sum(pair[0] for pair in pairs)
+    r = randint(1, total)
+    for (weight, value) in pairs:
+        r -= weight
+        if r <= 0: return value
 
 
 # CONTENT GENERATORS
