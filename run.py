@@ -23,17 +23,17 @@ from py_thesaurus import Thesaurus
 from google_images_download import google_images_download
 
 # CONSTANTS
-HEIGHT = 9
-WIDTH = 16
-LEFTMOST = Inches(0)
-TOPMOST = Inches(0)
-HEIGHT_IN = Inches(HEIGHT)
-WIDTH_IN = Inches(WIDTH)
+# HEIGHT = 9
+# WIDTH = 16
+# LEFTMOST = Inches(0)
+# TOPMOST = Inches(0)
+# HEIGHT_IN = Inches(HEIGHT)
+# WIDTH_IN = Inches(WIDTH)
 
 # One inch equates to 914400 EMUs 
-INCHES_TO_EMU = 914400
+# INCHES_TO_EMU = 914400
 # One centimeter is 360000 EMUs
-CMS_TO_EMU = 360000
+# CMS_TO_EMU = 360000
 
 # Location of powerpoint template
 POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
@@ -440,8 +440,8 @@ def create_giphy_slide(prs, word):
         return create_full_image_slide(prs, image_url)
 
 
-def create_wikihow_action_bold_statement_slide(prs, wikihow_seed):
-    related_actions = get_related_wikihow_actions(wikihow_seed)
+def create_wikihow_action_bold_statement_slide(prs, seed):
+    related_actions = get_related_wikihow_actions(seed)
     if related_actions:
         action = random.choice(related_actions)
         bold_statement_templates = read_lines('data/text-templates/bold-statements.txt')
@@ -452,7 +452,7 @@ def create_wikihow_action_bold_statement_slide(prs, wikihow_seed):
                            # TODO: Fix action_infinitive
                            'action_infinitive': action.title(),
                            'step': 'Do Whatever You Like',
-                           'topic': wikihow_seed,
+                           'topic': seed,
                            # TODO: Use datamuse or some other mechanism of finding a related location
                            'location': 'Here'}
         life_lesson = chosen_template.format(**template_values)
@@ -480,10 +480,10 @@ def main(args):
     print("Making {} slide talk on: {}".format(args.num_slides, args.topic))
 
     # Parse topic string to parts-of-speech
-    text = nltk.word_tokenize(args.topic)
-    print('******************************************')
-    print('tokenized text: ', text)
-    print('pos tag text: ', nltk.pos_tag(text))
+    # text = nltk.word_tokenize(args.topic)
+    # print('******************************************')
+    # print('tokenized text: ', text)
+    # print('pos tag text: ', nltk.pos_tag(text))
 
     # Parse the actual topic subject from the parts-of-speech
     # topic_string = args.topic
