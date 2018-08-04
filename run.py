@@ -116,22 +116,22 @@ class SynonymTopicGenerator:
     def __init__(self, topic, number_of_slides):
         self._topic = topic
         self._slides_nr = number_of_slides
-        seeds = get_synonyms(topic)
+        synonyms = get_synonyms(topic)
         # seeds.extend(get_relations(topic))
 
         # Check if enough generated
-        if len(seeds) < number_of_slides:
+        if len(synonyms) < number_of_slides:
             # If nothing: big problem!
-            if len(seeds) == 0:
-                seeds = [topic]
+            if len(synonyms) == 0:
+                synonyms = [topic]
 
             # Now fill the seeds up with repeating topics
-            number_of_repeats = int(math.ceil(number_of_slides / len(seeds)))
-            seeds = numpy.tile(seeds, number_of_repeats)
+            number_of_repeats = int(math.ceil(number_of_slides / len(synonyms)))
+            synonyms = numpy.tile(synonyms, number_of_repeats)
 
         # Take random `number_of_slides` elements
-        random.shuffle(seeds)
-        self._seeds = seeds[0: number_of_slides]
+        random.shuffle(synonyms)
+        self._seeds = synonyms[0: number_of_slides]
 
     def generate_seed(self, slide_nr):
         return self._seeds[slide_nr]
