@@ -8,3 +8,4 @@ requests
 safygiphy
 python-datamuse
 pytest
+numpy

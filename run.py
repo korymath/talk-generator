@@ -6,6 +6,8 @@ import inflect
 import argparse
 import requests
 import safygiphy
+import math
+import numpy
 from os import listdir
 from os.path import isfile, join
 
@@ -75,13 +77,13 @@ class PresentationSchema:
 
         for i in range(number_of_slides):
             # Generate a topic for the next slide
-            seed = seed_generator(i)
+            seed = seed_generator.generate_seed(i)
 
             # Select the slide generator to generate with
             generator = self._select_generator(i, number_of_slides)
 
             # Generate the slide
-            print('Adding slide: {} using {}'.format(i, generator))
+            print('Adding slide {} about {} using {}'.format(i, seed, generator))
             slide = generator.generate(presentation, seed)
 
             # Try again if slide is False!
@@ -93,9 +95,34 @@ class PresentationSchema:
 
     # Select a generator for a certain slide number
     def _select_generator(self, slide_nr, total_slides):
-        return random.choice(self._seed_generator)  # TODO incorporate weights
+        return random.choice(self._slide_generators)  # TODO incorporate weights
 
 
+# This class generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation
+class SynonymTopicGenerator:
+
+    def __init__(self, topic, number_of_slides):
+        self._topic = topic
+        self._slides_nr = number_of_slides
+        seeds = get_synonyms(topic)
+        # seeds.extend(get_relations(topic))
+
+        # Check if enough generated
+        if len(seeds) < number_of_slides:
+            # If nothing: big problem!
+            if len(seeds) == 0:
+                seeds = [topic]
+
+            # Now fill the seeds up with repeating topics
+            number_of_repeats = int(math.ceil(number_of_slides / len(seeds)))
+            seeds = numpy.tile(seeds, number_of_repeats)
+
+        # Take random `number_of_slides` elements
+        random.shuffle(seeds)
+        self._seeds = seeds[0: number_of_slides]
+
+    def generate_seed(self, slide_nr):
+        return self._seeds[slide_nr]
 
 
 # HELPER FUNCTIONS
@@ -497,7 +524,8 @@ def main(args):
     _save_presentation_to_pptx(args, presentation)
 
 
-presentation_schema = PresentationSchema(lambda x: "test", [SlideGenerator(create_giphy_slide)])
+presentation_schema = PresentationSchema(lambda topic, num_slides: SynonymTopicGenerator(topic, num_slides),
+                                         [SlideGenerator(create_giphy_slide)])
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
