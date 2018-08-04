@@ -236,35 +236,45 @@ def get_images(synonyms, num_images):
     all_paths = {}
     if num_images > 0:
         for word in synonyms:
-            lp = 'downloads/' + word + '/'
-            try:
-                local_files = [lp + f for f in listdir(lp) if isfile(join(lp,
-                                                                          f))]
-                all_paths[word] = local_files
-            except FileNotFoundError as e:
-                all_paths[word] = []
-                pass
+            all_paths[word] = get_google_images(word, num_images)
 
-            if len(all_paths[word]) > 0:
-                print('{} local images on {} found'.format(len(all_paths[word]),
-                                                           word))
-            # If no local images, search on Google Image Search
-            if len(all_paths[word]) == 0:
-                # Get related images at 16x9 aspect ratio
-                response = google_images_download.googleimagesdownload()
-                arguments = {
-                    'keywords': word,
-                    'limit': num_images,
-                    'print_urls': True,
-                    'exact_size': '1600,900',
-                }
-                # passing the arguments to the function
-                paths = response.download(arguments)
-                # printing absolute paths of the downloaded images
-                print('paths of images', paths)
-                # Add to main dictionary
-                all_paths[word] = paths[word]
     return all_paths
+
+
+def get_google_images(word, num_images=1):
+    lp = 'downloads/' + word + '/'
+    paths = _get_google_image_cached(word, num_images, lp)
+
+    # If no local images, search on Google Image Search
+    if len(paths) == 0:
+        # Get related images at 16x9 aspect ratio
+        response = google_images_download.googleimagesdownload()
+        arguments = {
+            'keywords': word,
+            'limit': num_images,
+            'print_urls': True,
+            'exact_size': '1600,900',
+        }
+        # passing the arguments to the function
+        paths = response.download(arguments)
+        # printing absolute paths of the downloaded images
+        print('paths of images', paths)
+    return paths
+
+
+def _get_google_image_cached(word, num_image, lp):
+    paths = []
+    try:
+        local_files = [lp + f for f in listdir(lp) if isfile(join(lp,
+                                                                  f))]
+        paths = local_files
+    except FileNotFoundError as e:
+        paths = []
+
+    if len(paths) > 0:
+        print('{} local images on {} found'.format(len(paths), word))
+
+    return paths
 
 
 def get_related_giphy(seed_word):
@@ -351,20 +361,22 @@ def _create_single_image_slide(prs, image_url, slide_template_idx, title=False):
 # FULL SLIDES GENERATORS:
 # These are functions that create slides with certain (generated) content
 
-def create_google_image_slide(args, prs, word):
+def create_google_image_slide(prs, seed_word):
     # Get all image paths
-    img_paths = args.all_paths.get(word)
+    # img_paths = args.all_paths.get(word)
+    img_paths = get_google_images(seed_word, 1)
     if img_paths:
+        print("PATHS:" + str(img_paths))
         # Pick one of the images
         img_path = random.choice(img_paths)
 
         # Create slide with image
-        slide = create_full_image_slide(prs, img_path, word)
+        slide = create_full_image_slide(prs, img_path, seed_word)
 
         # Add title to the slide
         if bool(slide):
             shapes = slide.shapes
-            shapes.title.text = word
+            shapes.title.text = seed_word
             return slide
     return False
 
@@ -531,9 +543,11 @@ def main(args):
 
 
 presentation_schema = PresentationSchema(lambda topic, num_slides: SynonymTopicGenerator(topic, num_slides),
-                                         [SlideGenerator(create_giphy_slide),
-                                          SlideGenerator(create_inspirobot_slide),
-                                          SlideGenerator(create_wikihow_action_bold_statement_slide)])
+                                         [
+                                             SlideGenerator(create_giphy_slide),
+                                             SlideGenerator(create_inspirobot_slide),
+                                             SlideGenerator(create_wikihow_action_bold_statement_slide),
+                                             SlideGenerator(create_google_image_slide)])
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
