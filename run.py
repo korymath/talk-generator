@@ -197,7 +197,7 @@ def get_synonyms(word):
             [x.lower().replace('_', ' ') for x in ss.lemma_names()])
     all_synonyms.append(word)
     all_synonyms = list(set(all_synonyms))
-    print('{} synonyms for "{}"'.format(len(all_synonyms), word))
+    # print('{} synonyms for "{}"'.format(len(all_synonyms), word))
     return all_synonyms
 
 
@@ -381,7 +381,6 @@ def create_google_image_slide(prs, seed_word):
     # img_paths = args.all_paths.get(word)
     img_paths = get_google_images(seed_word, 1)
     if img_paths:
-        print("PATHS:" + str(img_paths))
         # Pick one of the images
         img_path = random.choice(img_paths)
 
@@ -449,7 +448,7 @@ def create_wikihow_action_bold_statement_slide(prs, wikihow_seed):
 # COMPILATION
 # Compiling the slides to a powerpoint
 
-
+# TODO remove this method
 def compile_talk_to_pptx(args):
     """Compile the talk with the given source material."""
     prs = Presentation(POWERPOINT_TEMPLATE_FILE)
@@ -534,17 +533,17 @@ def main(args):
     topic_string = args.topic
 
     # Get definitions
-    args.definitions = get_definitions(topic_string)
+    # args.definitions = get_definitions(topic_string)
     # Get relations
-    args.relations = get_relations(topic_string)
+    # args.relations = get_relations(topic_string)
     # Get synonyms
-    args.synonyms = get_synonyms(topic_string)
+    # args.synonyms = get_synonyms(topic_string)
     # Get related actions
-    args.actions = get_related_wikihow_actions(topic_string)
+    # args.actions = get_related_wikihow_actions(topic_string)
     # Get a title
-    args.title = get_title(args.synonyms)
+    # args.title = get_title(args.synonyms) #TODO Title slide mechanism
     # For each synonym download num_images
-    args.all_paths = get_images(args.synonyms, args.num_images)
+    # args.all_paths = get_images(args.synonyms, args.num_images)
 
     # Compile and save the presentation to data
     compile_talk_to_raw_data(args)
