@@ -190,7 +190,6 @@ def _get_google_image_cached(word, num_image, lp):
 # GENERATORS
 def generate_powerpoint_title(seed):
     """Returns a template title from a source list."""
-    print('******************************************')
     chosen_synonym_plural = inflect.engine().plural(seed)
     synonym_templates = read_lines('data/text-templates/titles.txt')
     chosen_template = random.choice(synonym_templates)
@@ -200,7 +199,7 @@ def generate_powerpoint_title(seed):
 def get_related_giphy(seed_word):
     giphy = safygiphy.Giphy()
     response = giphy.random(tag=seed_word)
-    if response:
+    if bool(response):
         giphy_url = response.get('data').get('images').get('original').get('url')
         gif_name = os.path.basename(os.path.dirname(giphy_url))
         image_url = 'downloads/' + seed_word + '/gifs/' + gif_name + ".gif"
@@ -360,7 +359,7 @@ presentation_schema = PresentationSchema(
      SlideGenerator(slide_templates.generate_full_image_slide(none_generator, get_random_inspirobot_image),
                     name="Inspirobot"),
      SlideGenerator(slide_templates.generate_text_slide(generate_wikihow_bold_bold_statement),
-                    name="Wikihow Bold Statmenet"),
+                    name="Wikihow Bold Statement"),
      SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
                     name="Google Images")
      ]

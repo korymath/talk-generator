@@ -46,11 +46,12 @@ def create_title_slide(prs, title):
 
 def create_text_slide(prs, text):
     # Get a default blank slide layout
-    slide = prs.slides.add_slide(prs.slide_layouts[LAYOUT_TITLE_ONLY])
+    if bool(text):
+        slide = prs.slides.add_slide(prs.slide_layouts[LAYOUT_TITLE_ONLY])
 
-    title_object = slide.shapes.title
-    title_object.text = text
-    return slide
+        title_object = slide.shapes.title
+        title_object.text = text
+        return slide
 
 
 def create_image_slide(prs, title=None, image_url=None):
