@@ -234,7 +234,6 @@ def get_relations(word):
     return rels
 
 
-
 def get_images(synonyms, num_images):
     """Get images, first search locally then Google Image Search."""
     all_paths = {}
@@ -296,9 +295,13 @@ def generate_powerpoint_title(seed):
 
 def get_related_giphy(seed_word):
     giphy = safygiphy.Giphy()
-    result = giphy.random(tag=seed_word)
-    if result:
-        return result.get('data').get('images').get('original').get('url')
+    response = giphy.random(tag=seed_word)
+    if response:
+        giphy_url = response.get('data').get('images').get('original').get('url')
+        gif_name = os.path.basename(os.path.dirname(giphy_url))
+        image_url = 'downloads/' + seed_word + '/gifs/' + gif_name + ".gif"
+        download_image(giphy_url, image_url)
+        return image_url
 
 
 def wikihow_action_to_action(wikihow_title):
@@ -361,17 +364,6 @@ def create_inspirobot_slide(prs, topic):
     # Turn into image slide
     return slide_templates.create_full_image_slide(prs, None, image_url)
 
-
-def create_giphy_slide(prs, word):
-    # Download the image
-    giphy_url = get_related_giphy(word)
-    if bool(giphy_url):
-        gif_name = os.path.basename(os.path.dirname(giphy_url))
-        image_url = 'downloads/' + word + '/gifs/' + gif_name + ".gif"
-        download_image(giphy_url, image_url)
-
-        # Turn into image slide
-        return slide_templates.create_full_image_slide(prs, None, image_url)
 
 
 def create_wikihow_action_bold_statement_slide(prs, seed):
@@ -444,6 +436,8 @@ def main(args):
 
     # Save presentation
     _save_presentation_to_pptx(args, presentation)
+def none_generator(ignore):
+    return None
 
 
 # This object holds all the information about how to generate the presentation
@@ -457,10 +451,12 @@ presentation_schema = PresentationSchema(
                     # TODO probably better to create cleaner way of forcing positional slides
                     lambda slide_nr, total_slides:
                     100000 if slide_nr == 0 else 0),
-     SlideGenerator(create_giphy_slide),
-     SlideGenerator(create_inspirobot_slide),
-     SlideGenerator(create_wikihow_action_bold_statement_slide),
-     SlideGenerator(create_google_image_slide)])
+     SlideGenerator(slide_templates.generate_full_image_slide(none_generator, get_related_giphy), name="Giphy"),
+     SlideGenerator(create_inspirobot_slide, name="Inspirobot"),
+     SlideGenerator(create_wikihow_action_bold_statement_slide, name="Wikihow Bold Statmenet"),
+     SlideGenerator(create_google_image_slide, name="Google Images")
+     ]
+)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
