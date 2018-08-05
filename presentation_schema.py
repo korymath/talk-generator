@@ -1,10 +1,12 @@
 from random import randint
 
+
 # Classes that are abstractly responsible for generating powerpoints
 
 class SlideGenerator:
     """ Responsible for providing the slide generator and other attributes, such as its name and weight"""
 
+    @staticmethod
     def constant_weight(weight: int):
         """Class function to create a function that always returns a certain weight"""
         return lambda slide_nr, total_slides: weight
@@ -86,6 +88,7 @@ class PresentationSchema:
             weighted_generator = generator.get_weight_for(slide_nr, total_slides), generator
             weighted_generators.append(weighted_generator)
         return weighted_random(weighted_generators)
+
 
 # Helper functions
 
