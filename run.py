@@ -332,6 +332,20 @@ def get_related_wikihow_actions(seed_word):
     return actions
 
 
+def get_random_inspirobot_image(_):
+    # Generate a random url to access inspirobot
+    dd = str(random.randint(1, 73)).zfill(2)
+    nnnn = random.randint(0, 9998)
+    inspirobot_url = ('http://generated.inspirobot.me/'
+                      '0{}/aXm{}xjU.jpg').format(dd, nnnn)
+
+    # Download the image
+    image_url = 'downloads/inspirobot/{}-{}.jpg'.format(dd, nnnn)
+    download_image(inspirobot_url, image_url)
+
+    return image_url
+
+
 # FULL SLIDES GENERATORS:
 # These are functions that create slides with certain (generated) content
 
@@ -347,23 +361,6 @@ def create_google_image_slide(prs, seed_word):
         slide = slide_templates.create_full_image_slide(prs, seed_word, img_path)
 
         return slide
-
-
-def create_inspirobot_slide(prs, _):
-    # Generate a random url to access inspirobot
-    dd = str(random.randint(1, 73)).zfill(2)
-    nnnn = random.randint(0, 9998)
-    inspirobot_url = ('http://generated.inspirobot.me/'
-                      '0{}/aXm{}xjU.jpg').format(dd, nnnn)
-
-    # Download the image
-    image_url = 'downloads/inspirobot/{}-{}.jpg'.format(dd, nnnn)
-    download_image(inspirobot_url, image_url)
-
-    print("Downloaded inspirobot image: {}".format(image_url))
-
-    # Turn into image slide
-    return slide_templates.create_full_image_slide(prs, None, image_url)
 
 
 def create_wikihow_action_bold_statement_slide(prs, seed):
@@ -442,6 +439,10 @@ def none_generator(_):
     return None
 
 
+def identity_generator(input):
+    return input
+
+
 # This object holds all the information about how to generate the presentation
 presentation_schema = PresentationSchema(
     # Topic per slide generator
@@ -451,10 +452,13 @@ presentation_schema = PresentationSchema(
     [SlideGenerator(slide_templates.generate_title_slide(generate_powerpoint_title),
                     # Make title slides only happen as first slide
                     # TODO probably better to create cleaner way of forcing positional slides
-                    lambda slide_nr, total_slides:
-                    100000 if slide_nr == 0 else 0),
-     SlideGenerator(slide_templates.generate_full_image_slide(none_generator, get_related_giphy), name="Giphy"),
-     SlideGenerator(create_inspirobot_slide, name="Inspirobot"),
+                    weight_function=lambda slide_nr, total_slides:
+                    100000 if slide_nr == 0 else 0,
+                    name="Title slide"),
+     # TODO : Make the generators below use normal images
+     SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
+     SlideGenerator(slide_templates.generate_full_image_slide(none_generator, get_random_inspirobot_image),
+                    name="Inspirobot"),
      SlideGenerator(create_wikihow_action_bold_statement_slide, name="Wikihow Bold Statmenet"),
      SlideGenerator(create_google_image_slide, name="Google Images")
      ]
