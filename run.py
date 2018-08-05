@@ -84,11 +84,11 @@ class PresentationSchema:
         seed_generator = self._seed_generator(topic, num_slides)
 
         for slide_nr in range(num_slides):
-            slide = self._generate_slide(presentation, seed_generator, slide_nr, num_slides, [])
+            slide = self._generate_slide(presentation, seed_generator, slide_nr, num_slides, set())
 
         return presentation
 
-    def _generate_slide(self, presentation, seed_generator, slide_nr, num_slides, prohibited_generators):
+    def _generate_slide(self, presentation, seed_generator, slide_nr, num_slides, prohibited_generators=set()):
 
         # Generate a topic for the next slide
         seed = seed_generator.generate_seed(slide_nr)
@@ -96,12 +96,12 @@ class PresentationSchema:
         # Select the slide generator to generate with
         generator = self._select_generator(slide_nr, num_slides, prohibited_generators)
 
-        print('Generating slide {} about {} using {}'.format(slide_nr, seed, generator))
+        print('Generating slide {} about {} using {}'.format(slide_nr+1, seed, generator))
         slide = generator.generate(presentation, seed)
 
-        # Try again if slide is False, and prohibit generator for generating for this topic
+        # Try again if slide is None, and prohibit generator for generating for this topic
         if not bool(slide):
-            prohibited_generators.append(generator)
+            prohibited_generators.add(generator)
 
             return self._generate_slide(presentation, seed_generator, slide_nr, num_slides, prohibited_generators)
             # TODO: Remove slide from presentation if there was a slide generated
