@@ -63,6 +63,11 @@ def _add_image(slide, placeholder_id, image_url, fit_image=True):
         placeholder.insert_picture(image_url)
 
 
+def _add_text(slide, placeholder_id, text):
+    placeholder = slide.placeholders[placeholder_id]
+    placeholder.text = text
+
+
 # FORMAT GENERATORS
 # These are functions that get some inputs (texts, images...)
 # and create layouted slides with these inputs
@@ -97,10 +102,19 @@ def create_full_image_slide(prs, title=None, image_url=None):
     return _create_single_image_slide(prs, title, image_url, LAYOUT_FULL_PICTURE, False)
 
 
+def create_two_column_images_slide(prs, title=None, caption_1=None, image_1=None, caption_2=None, image_2=None):
+    if bool(image_1) and bool(image_2):
+        slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_CONTENT)
+        _add_title(slide, title)
+        _add_text(slide, 1, caption_1)
+        _add_image(slide, 2, image_1)
+        _add_text(slide, 3, caption_2)
+        _add_image(slide, 4, image_2)
+        return slide
+
+
 def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_image):
-    # Add image url as picture
     if image_url:
-        # Get a default blank slide layout
         slide = _create_slide(prs, slide_template_idx)
         _add_title(slide, title)
         _add_image(slide, 1, image_url, fit_image)
@@ -123,3 +137,10 @@ def generate_title_slide(title_generator):
 
 def generate_text_slide(text_generator):
     return lambda prs, seed: create_text_slide(prs, text_generator(seed))
+
+
+def generate_two_column_images_slide(title_generator, caption_1_generator, image_1_generator, caption_2_generator,
+                                     image_2_generator):
+    return lambda prs, seed: create_two_column_images_slide(prs, title_generator(seed), caption_1_generator(seed),
+                                                            image_1_generator(seed), caption_2_generator(seed),
+                                                            image_2_generator(seed))
