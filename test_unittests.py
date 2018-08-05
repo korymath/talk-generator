@@ -1,8 +1,10 @@
 from run import *
 
 
-def test_imports():
-    assert INCHES_TO_EMU == 914400
+def test_some_imports():
+    assert bool(random)
+    assert bool(slide_templates)
+    assert bool(presentation_schema)
 
 
 def test_get_definitions():
