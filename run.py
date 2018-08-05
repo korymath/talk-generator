@@ -28,9 +28,10 @@ class SlideGenerator:
     def constant_weight(weight: int):
         return lambda slide_nr, total_slides: weight
 
-    def __init__(self, generator, weight_function=constant_weight(1)):
+    def __init__(self, generator, weight_function=constant_weight(1), name=None):
         self._generator = generator
         self._weight_function = weight_function
+        self._name = name
 
     # Generate a slide for a given presentation using the given seed.
     def generate(self, presentation, seed):
@@ -46,7 +47,10 @@ class SlideGenerator:
         return self._weight_function(slide_nr, total_slides)
 
     def __str__(self):
-        return "SlideGenerator[" + str(self._generator.__name__) + "]"
+        name = str(self._generator.__name__)
+        if name == '<lambda>':
+            name = str(self._name)
+        return "SlideGenerator[" + name + "]"
 
 
 # Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
