@@ -89,6 +89,10 @@ class PresentationSchema:
                 continue
             weighted_generator = generator.get_weight_for(slide_nr, total_slides), generator
             weighted_generators.append(weighted_generator)
+
+        if len(weighted_generators) == 0:
+            raise ValueError("No generators left to generate slides with!")
+
         return weighted_random(weighted_generators)
 
 

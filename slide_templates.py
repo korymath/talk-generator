@@ -29,6 +29,7 @@ LAYOUT_PICTURE_CAPTION = 8
 LAYOUT_FULL_PICTURE = 11
 LAYOUT_TITLE_AND_PICTURE = 12
 LAYOUT_LARGE_QUOTE = 13
+LAYOUT_TWO_TITLE_AND_IMAGE = 14
 
 
 # HELPERS
@@ -103,12 +104,12 @@ def create_full_image_slide(prs, title=None, image_url=None):
 
 def create_two_column_images_slide(prs, title=None, caption_1=None, image_1=None, caption_2=None, image_2=None):
     if bool(image_1) and bool(image_2):
-        slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_CONTENT)
+        slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
         _add_title(slide, title)
         _add_text(slide, 1, caption_1)
-        _add_image(slide, 2, image_1)
+        _add_image(slide, 13, image_1, False)
         _add_text(slide, 3, caption_2)
-        _add_image(slide, 4, image_2)
+        _add_image(slide, 14, image_2, False)
         return slide
 
 
@@ -143,3 +144,25 @@ def generate_two_column_images_slide(title_generator, caption_1_generator, image
     return lambda prs, seed: create_two_column_images_slide(prs, title_generator(seed), caption_1_generator(seed),
                                                             image_1_generator(seed), caption_2_generator(seed),
                                                             image_2_generator(seed))
+
+
+class TupledGenerator:
+    """ This class got introduced due to Python not having multi-line lambdas,
+    thus requiring us in order to use tupled generators"""
+
+    def __init__(self, generator, rest_of_function):
+        self._generator = generator
+        self._rest_of_function = rest_of_function
+
+    def generate(self, prs, seed):
+        generated_tuple = self._generator(seed)
+        return self._rest_of_function(prs, seed, generated_tuple)
+
+
+def generate_two_column_images_slide_tuple_caption(title_generator, captions_generator, image_1_generator,
+                                                   image_2_generator):
+    tupled_generator = TupledGenerator(captions_generator,
+                                       lambda prs, seed, tuple: create_two_column_images_slide(prs, title_generator(
+                                           seed), tuple[0], image_1_generator(
+                                           seed), tuple[1], image_2_generator(seed)))
+    return tupled_generator.generate
