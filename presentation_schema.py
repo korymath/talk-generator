@@ -1,15 +1,15 @@
 from random import randint
 
 
+def constant_weight(weight: int):
+    """Class function to create a function that always returns a certain weight"""
+    return lambda slide_nr, total_slides: weight
+
+
 # Classes that are abstractly responsible for generating powerpoints
 
 class SlideGenerator:
     """ Responsible for providing the slide generator and other attributes, such as its name and weight"""
-
-    @staticmethod
-    def constant_weight(weight: int):
-        """Class function to create a function that always returns a certain weight"""
-        return lambda slide_nr, total_slides: weight
 
     def __init__(self, generator, weight_function=constant_weight(1), name=None):
         self._generator = generator
