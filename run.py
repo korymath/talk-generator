@@ -13,29 +13,12 @@ from random import randint
 from os import listdir
 from os.path import isfile, join
 
-from pptx import Presentation
 from bs4 import BeautifulSoup
 
 import nltk
 from nltk.corpus import wordnet as wn
 from py_thesaurus import Thesaurus
 from google_images_download import google_images_download
-
-# CONSTANTS
-# HEIGHT = 9
-# WIDTH = 16
-# LEFTMOST = Inches(0)
-# TOPMOST = Inches(0)
-# HEIGHT_IN = Inches(HEIGHT)
-# WIDTH_IN = Inches(WIDTH)
-
-# One inch equates to 914400 EMUs 
-# INCHES_TO_EMU = 914400
-# One centimeter is 360000 EMUs
-# CMS_TO_EMU = 360000
-
-# Location of powerpoint template
-POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
 
 
 # Slide generator class
@@ -66,9 +49,6 @@ class SlideGenerator:
         return "SlideGenerator[" + str(self._generator.__name__) + "]"
 
 
-def create_full_image_slide_generator(title_generator, image_generator):
-    return lambda seed: slide_templates.create_full_image_slide(image_generator(seed), title_generator(seed))
-
 
 # Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
 # each slide is generated
@@ -82,7 +62,7 @@ class PresentationSchema:
     def generate_presentation(self, topic, num_slides):
 
         # Create new presentation
-        presentation = Presentation(POWERPOINT_TEMPLATE_FILE)
+        presentation = slide_templates.create_new_powerpoint()
         # Create the topic-for-each-slide generator
         seed_generator = self._seed_generator(topic, num_slides)
 
