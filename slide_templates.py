@@ -27,6 +27,7 @@ LAYOUT_BLANK = 6
 LAYOUT_CONTENT_CAPTION = 7
 LAYOUT_PICTURE_CAPTION = 8
 LAYOUT_FULL_PICTURE = 11
+LAYOUT_TITLE_AND_PICTURE = 12
 
 
 # HELPERS
@@ -40,6 +41,11 @@ def _add_title(slide, title):
     if title:
         title_object = slide.shapes.title
         title_object.text = title
+
+
+def _add_image(slide, placeholder_id, image_url, cover=True):
+    image_placeholder = slide.placeholders[placeholder_id]
+    image_placeholder.insert_picture(image_url)
 
 
 # FORMAT GENERATORS
@@ -59,7 +65,7 @@ def create_title_slide(prs, title):
 def create_text_slide(prs, text):
     # Get a default blank slide layout
     if bool(text):
-        slide = _create_slide(prs,LAYOUT_TITLE_ONLY)
+        slide = _create_slide(prs, LAYOUT_TITLE_ONLY)
 
         _add_title(slide, text)
         return slide
@@ -68,7 +74,7 @@ def create_text_slide(prs, text):
 def create_image_slide(prs, title=None, image_url=None):
     """ Creates a slide with an image covering the whole slide"""
     # TODO debug this: the image can not be set!
-    return _create_single_image_slide(prs, title, image_url, LAYOUT_TITLE_AND_CONTENT)
+    return _create_single_image_slide(prs, title, image_url, LAYOUT_TITLE_AND_PICTURE)
 
 
 def create_full_image_slide(prs, title=None, image_url=None):
@@ -84,8 +90,7 @@ def _create_single_image_slide(prs, title, image_url, slide_template_idx):
 
         _add_title(slide, title)
 
-        image_placeholder = slide.placeholders[1]
-        image_placeholder.insert_picture(image_url)
+        _add_image(slide, 1, image_url, False)
 
         return slide
 

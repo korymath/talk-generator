@@ -392,7 +392,7 @@ test_schema = PresentationSchema(
     # SlideGenerator(slide_templates.generate_full_image_slide(none_generator, get_random_inspirobot_image),
     #                 name="Inspirobot"),
 
-     SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
+     SlideGenerator(slide_templates.generate_image_slide(identity_generator, get_random_inspirobot_image)),
      ]
 )
 
