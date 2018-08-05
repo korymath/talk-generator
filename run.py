@@ -380,6 +380,11 @@ presentation_schema = PresentationSchema(
      ]
 )
 
+
+def create_static_image_generator(image):
+    return lambda _: image
+
+
 test_schema = PresentationSchema(
     # Basic powerpoint generator
     slide_templates.create_new_powerpoint,
