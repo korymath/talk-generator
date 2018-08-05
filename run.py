@@ -351,8 +351,8 @@ def none_generator(_):
     return None
 
 
-def identity_generator(input):
-    return input
+def identity_generator(input_word):
+    return input_word
 
 
 # This object holds all the information about how to generate the presentation

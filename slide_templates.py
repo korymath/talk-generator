@@ -29,6 +29,19 @@ LAYOUT_PICTURE_CAPTION = 8
 LAYOUT_FULL_PICTURE = 11
 
 
+# HELPERS
+def _create_slide(prs, slide_type):
+    """ Creates a new slide in the given presentation using the slide_type template """
+    return prs.slides.add_slide(prs.slide_layouts[slide_type])
+
+
+def _add_title(slide, title):
+    """ Adds the given title to the slide if the title is present"""
+    if title:
+        title_object = slide.shapes.title
+        title_object.text = title
+
+
 # FORMAT GENERATORS
 # These are functions that get some inputs (texts, images...)
 # and create layouted slides with these inputs
@@ -38,30 +51,28 @@ def create_new_powerpoint():
 
 
 def create_title_slide(prs, title):
-    slide = prs.slides.add_slide(prs.slide_layouts[LAYOUT_TITLE_SLIDE])
-    title_object = slide.shapes.title
-    title_object.text = title
+    slide = _create_slide(prs, LAYOUT_TITLE_SLIDE)
+    _add_title(slide, title)
     return slide
 
 
 def create_text_slide(prs, text):
     # Get a default blank slide layout
     if bool(text):
-        slide = prs.slides.add_slide(prs.slide_layouts[LAYOUT_TITLE_ONLY])
+        slide = _create_slide(prs,LAYOUT_TITLE_ONLY)
 
-        title_object = slide.shapes.title
-        title_object.text = text
+        _add_title(slide, text)
         return slide
 
 
 def create_image_slide(prs, title=None, image_url=None):
-    """Creates a slide with an image covering the whole slide"""
+    """ Creates a slide with an image covering the whole slide"""
     # TODO debug this: the image can not be set!
     return _create_single_image_slide(prs, title, image_url, LAYOUT_TITLE_AND_CONTENT)
 
 
 def create_full_image_slide(prs, title=None, image_url=None):
-    """Creates a slide with an image covering the whole slide"""
+    """ Creates a slide with an image covering the whole slide"""
     return _create_single_image_slide(prs, title, image_url, LAYOUT_FULL_PICTURE)
 
 
@@ -69,11 +80,9 @@ def _create_single_image_slide(prs, title, image_url, slide_template_idx):
     # Add image url as picture
     if image_url:
         # Get a default blank slide layout
-        slide = prs.slides.add_slide(prs.slide_layouts[slide_template_idx])
+        slide = _create_slide(prs, slide_template_idx)
 
-        if title:
-            title_object = slide.shapes.title
-            title_object.text = title
+        _add_title(slide, title)
 
         image_placeholder = slide.placeholders[1]
         image_placeholder.insert_picture(image_url)
