@@ -55,6 +55,7 @@ def create_text_slide(prs, text):
 
 # Creates a slide with an image covering the whole slide
 def create_image_slide(prs, title=None, image_url=None):
+    # TODO debug this: the image can not be set!
     return _create_single_image_slide(prs, title, image_url, LAYOUT_TITLE_AND_CONTENT)
 
 

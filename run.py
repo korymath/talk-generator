@@ -70,7 +70,7 @@ class PresentationSchema:
         seed_generator = self._seed_generator(topic, num_slides)
 
         for slide_nr in range(num_slides):
-            slide = self._generate_slide(presentation, seed_generator, slide_nr, num_slides, set())
+            self._generate_slide(presentation, seed_generator, slide_nr, num_slides, set())
 
         return presentation
 
@@ -134,9 +134,9 @@ class SynonymTopicGenerator:
 
 
 # HELPER FUNCTIONS
-def _save_presentation_to_pptx(args, prs):
+def _save_presentation_to_pptx(topic, prs):
     """Save the talk."""
-    fp = './output/' + args.topic + '.pptx'
+    fp = './output/' + topic + '.pptx'
     # Create the parent folder if it doesn't exist
     pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
     prs.save(fp)
@@ -144,14 +144,14 @@ def _save_presentation_to_pptx(args, prs):
     return True
 
 
-def download_image(fromUrl, toUrl):
+def download_image(from_url, to_url):
     """Download image from url to path."""
     # Create the parent folder if it doesn't exist
-    pathlib.Path(os.path.dirname(toUrl)).mkdir(parents=True, exist_ok=True)
+    pathlib.Path(os.path.dirname(to_url)).mkdir(parents=True, exist_ok=True)
 
     # Download
-    f = open(toUrl, 'wb')
-    f.write(requests.get(fromUrl).content)
+    f = open(to_url, 'wb')
+    f.write(requests.get(from_url).content)
     f.close()
 
 
@@ -167,7 +167,8 @@ def weighted_random(pairs):
     r = randint(1, total)
     for (weight, value) in pairs:
         r -= weight
-        if r <= 0: return value
+        if r <= 0:
+            return value
 
 
 # CONTENT GENERATORS
@@ -274,7 +275,7 @@ def _get_google_image_cached(word, num_image, lp):
         local_files = [lp + f for f in listdir(lp) if isfile(join(lp,
                                                                   f))]
         paths = local_files
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         paths = []
 
     if len(paths) > 0:
@@ -348,7 +349,7 @@ def create_google_image_slide(prs, seed_word):
         return slide
 
 
-def create_inspirobot_slide(prs, topic):
+def create_inspirobot_slide(prs, _):
     # Generate a random url to access inspirobot
     dd = str(random.randint(1, 73)).zfill(2)
     nnnn = random.randint(0, 9998)
@@ -363,7 +364,6 @@ def create_inspirobot_slide(prs, topic):
 
     # Turn into image slide
     return slide_templates.create_full_image_slide(prs, None, image_url)
-
 
 
 def create_wikihow_action_bold_statement_slide(prs, seed):
@@ -390,20 +390,20 @@ def create_wikihow_action_bold_statement_slide(prs, seed):
 
 # COMPILATION
 
-def compile_talk_to_raw_data(args):
+def compile_talk_to_raw_data(arguments):
     """Save the raw data that has been harvested."""
-    with open('output/' + args.topic.replace(' ', '_') + '.pkl', 'wb') as fh:
-        pickle.dump(args, fh, protocol=pickle.HIGHEST_PROTOCOL)
-        print('Pickle saved to output/' + args.topic.replace(' ', '_') + '.pkl')
+    with open('output/' + arguments.topic.replace(' ', '_') + '.pkl', 'wb') as fh:
+        pickle.dump(arguments, fh, protocol=pickle.HIGHEST_PROTOCOL)
+        print('Pickle saved to output/' + arguments.topic.replace(' ', '_') + '.pkl')
 
 
 # MAIN
 
-def main(args):
+def main(arguments):
     """Make a talk with the given topic."""
     # Print status details
     print('******************************************')
-    print("Making {} slide talk on: {}".format(args.num_slides, args.topic))
+    print("Making {} slide talk on: {}".format(arguments.num_slides, arguments.topic))
 
     # Parse topic string to parts-of-speech
     # text = nltk.word_tokenize(args.topic)
@@ -428,15 +428,17 @@ def main(args):
     # args.all_paths = get_images(args.synonyms, args.num_images)
 
     # Compile and save the presentation to data
-    compile_talk_to_raw_data(args)
+    compile_talk_to_raw_data(arguments)
 
     # Compile and save the presentation to PPTX
     # compile_talk_to_pptx(args)
-    presentation = presentation_schema.generate_presentation(args.topic, args.num_slides)
+    presentation = presentation_schema.generate_presentation(arguments.topic, arguments.num_slides)
 
     # Save presentation
-    _save_presentation_to_pptx(args, presentation)
-def none_generator(ignore):
+    _save_presentation_to_pptx(arguments.topic, presentation)
+
+
+def none_generator(_):
     return None
 
 
