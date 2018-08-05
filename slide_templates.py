@@ -102,14 +102,15 @@ def create_full_image_slide(prs, title=None, image_url=None):
     return _create_single_image_slide(prs, title, image_url, LAYOUT_FULL_PICTURE, False)
 
 
-def create_two_column_images_slide(prs, title=None, caption_1=None, image_1=None, caption_2=None, image_2=None):
+def create_two_column_images_slide(prs, title=None, caption_1=None, image_1=None, caption_2=None, image_2=None,
+                                   fit_images=True):
     if bool(image_1) and bool(image_2):
         slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
         _add_title(slide, title)
         _add_text(slide, 1, caption_1)
-        _add_image(slide, 13, image_1, False)
+        _add_image(slide, 13, image_1, fit_images)
         _add_text(slide, 3, caption_2)
-        _add_image(slide, 14, image_2, False)
+        _add_image(slide, 14, image_2, fit_images)
         return slide
 
 
@@ -164,5 +165,5 @@ def generate_two_column_images_slide_tuple_caption(title_generator, captions_gen
     tupled_generator = TupledGenerator(captions_generator,
                                        lambda prs, seed, tuple: create_two_column_images_slide(prs, title_generator(
                                            seed), tuple[0], image_1_generator(
-                                           seed), tuple[1], image_2_generator(seed)))
+                                           seed), tuple[1], image_2_generator(seed), False))
     return tupled_generator.generate
