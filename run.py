@@ -8,13 +8,12 @@ import requests
 import safygiphy
 import math
 import numpy
+import slide_templates
 from random import randint
 from os import listdir
 from os.path import isfile, join
 
 from pptx import Presentation
-from pptx.util import Inches
-from pptx.enum.text import PP_ALIGN
 from bs4 import BeautifulSoup
 
 import nltk
@@ -65,6 +64,10 @@ class SlideGenerator:
 
     def __str__(self):
         return "SlideGenerator[" + str(self._generator.__name__) + "]"
+
+
+def create_full_image_slide_generator(title_generator, image_generator):
+    return lambda seed: slide_templates.create_full_image_slide(image_generator(seed), title_generator(seed))
 
 
 # Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
@@ -341,52 +344,6 @@ def get_related_wikihow_actions(seed_word):
     return actions
 
 
-# FORMAT GENERATORS
-# These are functions that get some inputs (texts, images...) 
-# and create layouted slides with these inputs
-
-def create_title_slide(prs, seed):
-    slide = prs.slides.add_slide(prs.slide_layouts[0])
-    title_object = slide.shapes.title
-    title_object.text = get_title(get_synonyms(seed))
-    return slide
-
-
-def create_text_slide(prs, text):
-    # Get a default blank slide layout
-    slide = prs.slides.add_slide(prs.slide_layouts[5])
-
-    title_object = slide.shapes.title
-    title_object.text = text
-    return slide
-
-
-# Creates a slide with an image covering the whole slide
-def create_image_slide(prs, image_url, title=False):
-    return _create_single_image_slide(prs, image_url, 2, title)
-
-
-# Creates a slide with an image covering the whole slide
-def create_full_image_slide(prs, image_url, title=False):
-    return _create_single_image_slide(prs, image_url, 11, title)
-
-
-def _create_single_image_slide(prs, image_url, slide_template_idx, title=False):
-    # Add image url as picture
-    if image_url:
-        # Get a default blank slide layout
-        slide = prs.slides.add_slide(prs.slide_layouts[slide_template_idx])
-
-        if title:
-            title_object = slide.shapes.title
-            title_object.text = title
-
-        image_placeholder = slide.placeholders[1]
-        image_placeholder.insert_picture(image_url)
-
-        return slide
-
-    return False
 
 
 # FULL SLIDES GENERATORS:
@@ -401,7 +358,7 @@ def create_google_image_slide(prs, seed_word):
         img_path = random.choice(img_paths)
 
         # Create slide with image
-        slide = create_full_image_slide(prs, img_path, seed_word)
+        slide = slide_templates.create_full_image_slide(prs, img_path, seed_word)
 
         # Add title to the slide
         if bool(slide):
@@ -425,7 +382,7 @@ def create_inspirobot_slide(prs, topic):
     print("Downloaded inspirobot image: {}".format(image_url))
 
     # Turn into image slide
-    return create_full_image_slide(prs, image_url)
+    return slide_templates.create_full_image_slide(prs, image_url)
 
 
 def create_giphy_slide(prs, word):
@@ -437,7 +394,7 @@ def create_giphy_slide(prs, word):
         download_image(giphy_url, image_url)
 
         # Turn into image slide
-        return create_full_image_slide(prs, image_url)
+        return slide_templates.create_full_image_slide(prs, image_url)
 
 
 def create_wikihow_action_bold_statement_slide(prs, seed):
@@ -458,7 +415,7 @@ def create_wikihow_action_bold_statement_slide(prs, seed):
         life_lesson = chosen_template.format(**template_values)
 
         # Turn into image slide
-        return create_text_slide(prs, life_lesson)
+        return slide_templates.create_text_slide(prs, life_lesson)
     return False
 
 
@@ -518,7 +475,7 @@ presentation_schema = PresentationSchema(
     lambda topic, num_slides: SynonymTopicGenerator(topic, num_slides),
 
     # Slide generators
-    [SlideGenerator(create_title_slide,
+    [SlideGenerator(lambda presentation, topic: slide_templates.create_title_slide(presentation, get_title(topic)),
                     # Make title slides only happen as first slide
                     # TODO probably better to create cleaner way of forcing positional slides
                     lambda slide_nr, total_slides:
