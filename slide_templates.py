@@ -44,8 +44,23 @@ def _add_title(slide, title):
 
 
 def _add_image(slide, placeholder_id, image_url, fit_image=True):
-    image_placeholder = slide.placeholders[placeholder_id]
-    image_placeholder.insert_picture(image_url)
+    placeholder = slide.placeholders[placeholder_id]
+    if fit_image:
+        pic = slide.shapes.add_picture(image_url, placeholder.left, placeholder.top)
+
+        # calculate max width/height for target size
+        ratio = min(placeholder.width / float(pic.width), placeholder.height / float(pic.height))
+
+        pic.height = int(pic.height * ratio)
+        pic.width = int(pic.width * ratio)
+
+        pic.left = int(placeholder.left + ((placeholder.width - pic.width) / 2))
+        pic.top = int(placeholder.top + ((placeholder.height - pic.height) / 2))
+
+        placeholder = placeholder.element
+        placeholder.getparent().remove(placeholder)
+    else:
+        placeholder.insert_picture(image_url)
 
 
 # FORMAT GENERATORS
