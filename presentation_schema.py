@@ -34,6 +34,8 @@ class SlideGenerator:
         name = str(self._generator.__name__)
         if name == '<lambda>':
             name = str(self._name)
+        if name == 'None':
+            name = "Unnamed Generator"
         return "SlideGenerator[" + name + "]"
 
 
