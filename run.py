@@ -200,11 +200,15 @@ def get_related_giphy(seed_word):
     giphy = safygiphy.Giphy()
     response = giphy.random(tag=seed_word)
     if bool(response):
-        giphy_url = response.get('data').get('images').get('original').get('url')
-        gif_name = os.path.basename(os.path.dirname(giphy_url))
-        image_url = 'downloads/' + seed_word + '/gifs/' + gif_name + ".gif"
-        download_image(giphy_url, image_url)
-        return image_url
+        data = response.get('data')
+        if bool(data):
+            images = data.get('images')
+            original = images.get('original')
+            giphy_url = original.get('url')
+            gif_name = os.path.basename(os.path.dirname(giphy_url))
+            image_url = 'downloads/' + seed_word + '/gifs/' + gif_name + ".gif"
+            download_image(giphy_url, image_url)
+            return image_url
 
 
 def wikihow_action_to_action(wikihow_title):
