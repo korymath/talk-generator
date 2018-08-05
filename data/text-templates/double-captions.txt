@@ -1,0 +1,8 @@
+Before|After
+Previously|Currently
+Me|Them
+What I initially did|The actual solution
+Let's turn this:|Into this:
+Past|Present
+Past|Future
+Present|Future

@@ -356,6 +356,17 @@ def identity_generator(input_word):
     return input_word
 
 
+def create_static_image_generator(image):
+    return lambda _: image
+
+
+def create_double_image_captions(_):
+    lines = read_lines("./data/text-templates/double-captions.txt")
+    line = random.choice(lines)
+    parts = line.split("|")
+    return parts[0], parts[1]
+
+
 # This object holds all the information about how to generate the presentation
 presentation_schema = PresentationSchema(
     # Basic powerpoint generator
@@ -370,21 +381,21 @@ presentation_schema = PresentationSchema(
                     weight_function=lambda slide_nr, total_slides:
                     100000 if slide_nr == 0 else 0,
                     name="Title slide"),
-     # TODO : Make the generators below use normal images
      SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
      SlideGenerator(slide_templates.generate_full_image_slide(none_generator, get_random_inspirobot_image),
                     name="Inspirobot"),
      SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_bold_statement),
                     name="Wikihow Bold Statement"),
      SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
-                    name="Google Images")
+                    name="Google Images"),
+     SlideGenerator(
+         slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
+                                                                        create_double_image_captions,
+                                                                        get_related_giphy,
+                                                                        get_related_giphy),
+         name="Two Captions Giphy")
      ]
 )
-
-
-def create_static_image_generator(image):
-    return lambda _: image
-
 
 test_schema = PresentationSchema(
     # Basic powerpoint generator
