@@ -78,4 +78,16 @@ def _create_single_image_slide(prs, title, image_url, slide_template_idx):
 
         return slide
 
-    return False
+
+# GENERATORS: Same as the template fillers above, but using generation functions
+
+def generate_full_image_slide(title_generator, image_generator):
+    return lambda prs, seed: create_full_image_slide(prs, title_generator(seed), image_generator(seed))
+
+
+def generate_image_slide(title_generator, image_generator):
+    return lambda prs, seed: create_image_slide(prs, title_generator(seed), image_generator(seed))
+
+
+def generate_title_slide(title_generator):
+    return lambda prs, seed: create_image_slide(prs, title_generator(seed))

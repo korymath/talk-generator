@@ -49,7 +49,6 @@ class SlideGenerator:
         return "SlideGenerator[" + str(self._generator.__name__) + "]"
 
 
-
 # Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
 # each slide is generated
 class PresentationSchema:
@@ -79,7 +78,7 @@ class PresentationSchema:
         # Select the slide generator to generate with
         generator = self._select_generator(slide_nr, num_slides, prohibited_generators)
 
-        print('Generating slide {} about {} using {}'.format(slide_nr+1, seed, generator))
+        print('Generating slide {} about {} using {}'.format(slide_nr + 1, seed, generator))
         slide = generator.generate(presentation, seed)
 
         # Try again if slide is None, and prohibit generator for generating for this topic
@@ -324,8 +323,6 @@ def get_related_wikihow_actions(seed_word):
     return actions
 
 
-
-
 # FULL SLIDES GENERATORS:
 # These are functions that create slides with certain (generated) content
 
@@ -338,14 +335,9 @@ def create_google_image_slide(prs, seed_word):
         img_path = random.choice(img_paths)
 
         # Create slide with image
-        slide = slide_templates.create_full_image_slide(prs, img_path, seed_word)
+        slide = slide_templates.create_full_image_slide(prs, seed_word, img_path)
 
-        # Add title to the slide
-        if bool(slide):
-            shapes = slide.shapes
-            shapes.title.text = seed_word
-            return slide
-    return False
+        return slide
 
 
 def create_inspirobot_slide(prs, topic):
@@ -362,7 +354,7 @@ def create_inspirobot_slide(prs, topic):
     print("Downloaded inspirobot image: {}".format(image_url))
 
     # Turn into image slide
-    return slide_templates.create_full_image_slide(prs, image_url)
+    return slide_templates.create_full_image_slide(prs, None, image_url)
 
 
 def create_giphy_slide(prs, word):
@@ -374,7 +366,7 @@ def create_giphy_slide(prs, word):
         download_image(giphy_url, image_url)
 
         # Turn into image slide
-        return slide_templates.create_full_image_slide(prs, image_url)
+        return slide_templates.create_full_image_slide(prs, None, image_url)
 
 
 def create_wikihow_action_bold_statement_slide(prs, seed):
