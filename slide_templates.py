@@ -90,4 +90,4 @@ def generate_image_slide(title_generator, image_generator):
 
 
 def generate_title_slide(title_generator):
-    return lambda prs, seed: create_image_slide(prs, title_generator(seed))
+    return lambda prs, seed: create_title_slide(prs, title_generator(seed))

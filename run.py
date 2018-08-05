@@ -230,15 +230,6 @@ def get_relations(word):
     return rels
 
 
-def get_title(synonyms):
-    """Returns a template title from a source list."""
-    print('******************************************')
-    chosen_synonym = random.choice(synonyms)
-    chosen_synonym_plural = inflect.engine().plural(chosen_synonym)
-    synonym_templates = read_lines('data/text-templates/titles.txt')
-    chosen_template = random.choice(synonym_templates);
-    return chosen_template.format(chosen_synonym_plural.title())
-
 
 def get_images(synonyms, num_images):
     """Get images, first search locally then Google Image Search."""
@@ -287,6 +278,16 @@ def _get_google_image_cached(word, num_image, lp):
         print('{} local images on {} found'.format(len(paths), word))
 
     return paths
+
+
+# GENERATORS
+def generate_powerpoint_title(seed):
+    """Returns a template title from a source list."""
+    print('******************************************')
+    chosen_synonym_plural = inflect.engine().plural(seed)
+    synonym_templates = read_lines('data/text-templates/titles.txt')
+    chosen_template = random.choice(synonym_templates)
+    return chosen_template.format(chosen_synonym_plural.title())
 
 
 def get_related_giphy(seed_word):
@@ -426,7 +427,7 @@ def main(args):
     # Get related actions
     # args.actions = get_related_wikihow_actions(topic_string)
     # Get a title
-    # args.title = get_title(args.synonyms)
+    # args.title = generate_powerpoint_title(args.synonyms)
     # For each synonym download num_images
     # args.all_paths = get_images(args.synonyms, args.num_images)
 
@@ -447,7 +448,7 @@ presentation_schema = PresentationSchema(
     lambda topic, num_slides: SynonymTopicGenerator(topic, num_slides),
 
     # Slide generators
-    [SlideGenerator(lambda presentation, topic: slide_templates.create_title_slide(presentation, get_title(topic)),
+    [SlideGenerator(slide_templates.generate_title_slide(generate_powerpoint_title),
                     # Make title slides only happen as first slide
                     # TODO probably better to create cleaner way of forcing positional slides
                     lambda slide_nr, total_slides:
