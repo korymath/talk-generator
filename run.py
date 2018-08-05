@@ -374,7 +374,7 @@ presentation_schema = PresentationSchema(
      SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
      SlideGenerator(slide_templates.generate_full_image_slide(none_generator, get_random_inspirobot_image),
                     name="Inspirobot"),
-     SlideGenerator(slide_templates.generate_text_slide(generate_wikihow_bold_bold_statement),
+     SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_bold_statement),
                     name="Wikihow Bold Statement"),
      SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
                     name="Google Images")
@@ -415,7 +415,8 @@ if __name__ == '__main__':
     parser.add_argument('--topic', help="Topic of presentation.",
                         default='bagels', type=str)
     parser.add_argument('--num_images', help="Number of images per synonym.",
-                        default=1, type=int)
+                        default=1,
+                        type=int)  # TODO(Kory): is this still a useful parameter? We should probably remove it
     parser.add_argument('--num_slides', help="Number of slides to create.",
                         default=3, type=int)
     parser.add_argument('--schema', help="The presentation schema to generate the presentation with",

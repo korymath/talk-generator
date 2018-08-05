@@ -28,6 +28,7 @@ LAYOUT_CONTENT_CAPTION = 7
 LAYOUT_PICTURE_CAPTION = 8
 LAYOUT_FULL_PICTURE = 11
 LAYOUT_TITLE_AND_PICTURE = 12
+LAYOUT_LARGE_QUOTE = 13
 
 
 # HELPERS
@@ -82,12 +83,10 @@ def create_title_slide(prs, title):
     return slide
 
 
-def create_text_slide(prs, text):
-    # Get a default blank slide layout
+def create_large_quote_slide(prs, text):
     if bool(text):
-        slide = _create_slide(prs, LAYOUT_TITLE_ONLY)
-
-        _add_title(slide, text)
+        slide = _create_slide(prs, LAYOUT_LARGE_QUOTE)
+        _add_text(slide, 1, text)
         return slide
 
 
@@ -135,8 +134,8 @@ def generate_title_slide(title_generator):
     return lambda prs, seed: create_title_slide(prs, title_generator(seed))
 
 
-def generate_text_slide(text_generator):
-    return lambda prs, seed: create_text_slide(prs, text_generator(seed))
+def generate_large_quote_slide(text_generator):
+    return lambda prs, seed: create_large_quote_slide(prs, text_generator(seed))
 
 
 def generate_two_column_images_slide(title_generator, caption_1_generator, image_1_generator, caption_2_generator,
