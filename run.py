@@ -194,7 +194,8 @@ def _get_google_image_cached(word, num_image, lp):
     if len(paths) > 0:
         print('{} local images on {} found'.format(len(paths), word))
 
-    return paths
+    if len(paths) > num_image:
+        return paths
 
 
 # GENERATORS
