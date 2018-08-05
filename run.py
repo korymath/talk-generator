@@ -21,8 +21,18 @@ from py_thesaurus import Thesaurus
 from google_images_download import google_images_download
 
 
+class IdentityTopicGenerator:
+    """ Generates always the given topic as the seed for each slide """
+
+    def __init__(self, topic, _):
+        self._topic = topic
+
+    def generate_seed(self, _):
+        return self._topic
+
+
 class SynonymTopicGenerator:
-    """This class generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation"""
+    """ Generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation"""
 
     def __init__(self, topic, number_of_slides):
         self._topic = topic
