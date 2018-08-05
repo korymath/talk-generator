@@ -340,7 +340,8 @@ def main(arguments):
 
     # Compile and save the presentation to PPTX
     # compile_talk_to_pptx(args)
-    presentation = presentation_schema.generate_presentation(arguments.topic, arguments.num_slides)
+    schema = get_schema(args.schema)
+    presentation = schema.generate_presentation(arguments.topic, arguments.num_slides)
 
     # Save presentation
     _save_presentation_to_pptx(arguments.topic, presentation)
@@ -379,6 +380,32 @@ presentation_schema = PresentationSchema(
      ]
 )
 
+test_schema = PresentationSchema(
+    # Basic powerpoint generator
+    slide_templates.create_new_powerpoint,
+    # Topic per slide generator
+    lambda topic, num_slides: IdentityTopicGenerator(topic, num_slides),
+
+    # Slide generators
+
+    [
+    # SlideGenerator(slide_templates.generate_full_image_slide(none_generator, get_random_inspirobot_image),
+    #                 name="Inspirobot"),
+
+     SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
+     ]
+)
+
+schemas = {
+    "default": presentation_schema,
+    "test": test_schema
+}
+
+
+def get_schema(name):
+    return schemas[name]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('--topic', help="Topic of presentation.",
@@ -387,5 +414,7 @@ if __name__ == '__main__':
                         default=1, type=int)
     parser.add_argument('--num_slides', help="Number of slides to create.",
                         default=3, type=int)
+    parser.add_argument('--schema', help="The presentation schema to generate the presentation with",
+                        default="default", type=str)
     args = parser.parse_args()
     main(args)
