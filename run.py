@@ -349,21 +349,17 @@ def get_random_inspirobot_image(_):
 # FULL SLIDES GENERATORS:
 # These are functions that create slides with certain (generated) content
 
-def create_google_image_slide(prs, seed_word):
+def get_related_google_image(seed_word):
     # Get all image paths
     # img_paths = args.all_paths.get(word)
     img_paths = get_google_images(seed_word, 1)
     if img_paths:
         # Pick one of the images
         img_path = random.choice(img_paths)
-
-        # Create slide with image
-        slide = slide_templates.create_full_image_slide(prs, seed_word, img_path)
-
-        return slide
+        return img_path
 
 
-def create_wikihow_action_bold_statement_slide(prs, seed):
+def generate_wikihow_bold_bold_statement(seed):
     related_actions = get_related_wikihow_actions(seed)
     if related_actions:
         action = random.choice(related_actions)
@@ -381,8 +377,7 @@ def create_wikihow_action_bold_statement_slide(prs, seed):
         life_lesson = chosen_template.format(**template_values)
 
         # Turn into image slide
-        return slide_templates.create_text_slide(prs, life_lesson)
-    return False
+        return life_lesson
 
 
 # COMPILATION
@@ -459,8 +454,10 @@ presentation_schema = PresentationSchema(
      SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
      SlideGenerator(slide_templates.generate_full_image_slide(none_generator, get_random_inspirobot_image),
                     name="Inspirobot"),
-     SlideGenerator(create_wikihow_action_bold_statement_slide, name="Wikihow Bold Statmenet"),
-     SlideGenerator(create_google_image_slide, name="Google Images")
+     SlideGenerator(slide_templates.generate_text_slide(generate_wikihow_bold_bold_statement),
+                    name="Wikihow Bold Statmenet"),
+     SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
+                    name="Google Images")
      ]
 )
 

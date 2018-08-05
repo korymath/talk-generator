@@ -92,3 +92,7 @@ def generate_image_slide(title_generator, image_generator):
 
 def generate_title_slide(title_generator):
     return lambda prs, seed: create_title_slide(prs, title_generator(seed))
+
+
+def generate_text_slide(text_generator):
+    return lambda prs, seed: create_text_slide(prs, text_generator(seed))
