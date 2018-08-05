@@ -23,9 +23,10 @@ from google_images_download import google_images_download
 
 # Slide generator class
 class SlideGenerator:
+    """ Responsible for providing the slide generator and other attributes, such as its name and weight"""
 
-    # Class function to create a function that always returns a certain weight
     def constant_weight(weight: int):
+        """Class function to create a function that always returns a certain weight"""
         return lambda slide_nr, total_slides: weight
 
     def __init__(self, generator, weight_function=constant_weight(1), name=None):
@@ -33,17 +34,18 @@ class SlideGenerator:
         self._weight_function = weight_function
         self._name = name
 
-    # Generate a slide for a given presentation using the given seed.
     def generate(self, presentation, seed):
+        """Generate a slide for a given presentation using the given seed."""
         slide = self._generator(presentation, seed)
         # Add information about the generator to the notes
         if slide:
             slide.notes_slide.notes_text_frame.text = str(self) + " / " + seed
         return slide
 
-    # The weight of the generator for a particular slide.
-    # Determines how much chance it has being picked for a particular slide number
+    #
     def get_weight_for(self, slide_nr, total_slides):
+        """The weight of the generator for a particular slide.
+        Determines how much chance it has being picked for a particular slide number"""
         return self._weight_function(slide_nr, total_slides)
 
     def __str__(self):
@@ -53,17 +55,16 @@ class SlideGenerator:
         return "SlideGenerator[" + name + "]"
 
 
-# Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
-# each slide is generated
 class PresentationSchema:
+    """ Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
+    each slide is generated """
 
     def __init__(self, seed_generator, slide_generators):
         self._seed_generator = seed_generator
         self._slide_generators = slide_generators
 
-    # Generate a presentation about a certain topic with a certain number of slides
     def generate_presentation(self, topic, num_slides):
-
+        """Generate a presentation about a certain topic with a certain number of slides"""
         # Create new presentation
         presentation = slide_templates.create_new_powerpoint()
         # Create the topic-for-each-slide generator
@@ -94,8 +95,8 @@ class PresentationSchema:
 
         return slide
 
-    # Select a generator for a certain slide number
     def _select_generator(self, slide_nr, total_slides, prohibited_generators):
+        """Select a generator for a certain slide number"""
         weighted_generators = []
         for i in range(len(self._slide_generators)):
             generator = self._slide_generators[i]
@@ -106,8 +107,8 @@ class PresentationSchema:
         return weighted_random(weighted_generators)
 
 
-# This class generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation
 class SynonymTopicGenerator:
+    """This class generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation"""
 
     def __init__(self, topic, number_of_slides):
         self._topic = topic
