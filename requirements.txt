@@ -9,3 +9,4 @@ safygiphy
 python-datamuse
 pytest
 numpy
+bs4
