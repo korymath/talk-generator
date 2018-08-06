@@ -18,15 +18,21 @@ class TemplatedTextGenerator:
         possible_templates = self._templates.copy()
         for i in range(len(possible_templates)):
             template = random.choice(possible_templates)
-            format_variables = get_format_variables(template)
-            if set(format_variables) <= set(variables_dictionary.keys()):
+            if can_format_with(template, variables_dictionary):
                 return template.format(**variables_dictionary)
             else:
                 possible_templates.remove(template)
 
 
-def get_format_variables(line):
-    matches = re.findall('{(\w+)}', line)
+def can_format_with(template, variables_dictionary):
+    """ Checks if the template can be fully formatted by the given variable dictionary without errors"""
+    format_variables = get_format_variables(template)
+    return set(format_variables) <= set(variables_dictionary.keys())
+
+
+def get_format_variables(template):
+    """ Finds all the names of the variables used in the template """
+    matches = re.findall('{(\w+)}', template)
     return matches
 
 
