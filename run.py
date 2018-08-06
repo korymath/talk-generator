@@ -10,7 +10,6 @@ import math
 import numpy
 from os import listdir
 from os.path import isfile, join
-from bs4 import BeautifulSoup
 import nltk
 from nltk.corpus import wordnet as wn
 from py_thesaurus import Thesaurus
@@ -19,6 +18,7 @@ from google_images_download import google_images_download
 # Own classes:
 import slide_templates
 import text_generator
+import wikihow
 from presentation_schema import PresentationSchema, SlideGenerator
 
 
@@ -196,7 +196,6 @@ def get_google_images(word, num_images=1):
 
 
 def _get_google_image_cached(word, num_image, lp):
-    paths = []
     try:
         local_files = [lp + f for f in listdir(lp) if isfile(join(lp,
                                                                   f))]
@@ -234,32 +233,6 @@ def get_related_giphy(seed_word):
             download_image(giphy_url, image_url)
             return image_url
 
-
-def wikihow_action_to_action(wikihow_title):
-    index_of_to = wikihow_title.find('to')
-    return wikihow_title[index_of_to + 3:]
-
-
-def search_wikihow(search_words):
-    return requests.get(
-        'https://en.wikihow.com/wikiHowTo?search='
-        + search_words.replace(' ', '+'))
-
-
-def get_related_wikihow_actions(seed_word):
-    page = search_wikihow(seed_word)
-    # Try again but with plural if nothing is found
-    if not page:
-        page = search_wikihow(inflect.engine().plural(seed_word))
-
-    soup = BeautifulSoup(page.content, 'html.parser')
-    actions_elements = soup.find_all('a', class_='result_link')
-    actions = \
-        list(
-            map(wikihow_action_to_action,
-                map(lambda x: x.get_text(), actions_elements)))
-
-    return actions
 
 
 def get_random_inspirobot_image(_):
@@ -299,7 +272,7 @@ def generate_wikihow_bold_statement(seed):
         'location': 'Here'
     }
     # TODO: Sometimes "Articles Form Wikihow" is being scraped as an action, this is a bug
-    related_actions = get_related_wikihow_actions(seed)
+    related_actions = wikihow.get_related_wikihow_actions(seed)
     if related_actions:
         action = random.choice(related_actions)
         template_values.update({'action': action.title(),
