@@ -1,5 +1,6 @@
 from run import *
 import text_generator
+import wikihow
 
 
 def test_some_imports():
@@ -48,9 +49,15 @@ def test_all_possible_outcomes():
     assert expected == all_generations
 
 
+def test_wrong_wikihow_links_regression_test():
+    actions = wikihow.get_related_wikihow_actions("cat")
+    assert not "articles from wikiHow" in actions
+
+
 test_some_imports()
 test_get_definitions()
 test_get_synonyms()
 test_variable_extraction()
 test_not_using_unusable_template()
 test_all_possible_outcomes()
+test_wrong_wikihow_links_regression_test()

@@ -3,6 +3,7 @@ import inflect
 import requests
 from bs4 import BeautifulSoup
 
+
 def wikihow_action_to_action(wikihow_title):
     index_of_to = wikihow_title.find('to')
     return wikihow_title[index_of_to + 3:]
@@ -25,6 +26,7 @@ def get_related_wikihow_actions(seed_word):
     actions = \
         list(
             map(wikihow_action_to_action,
-                map(lambda x: x.get_text(), actions_elements)))
+                filter(lambda x: not x.startswith("Category"),
+                       map(lambda x: x.get_text(), actions_elements))))
 
     return actions
