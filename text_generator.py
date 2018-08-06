@@ -14,8 +14,12 @@ class TemplatedTextGenerator:
         # Create a tuple so no templates can accidentally be deleted from the generator
         self._templates = tuple(templates)
 
-    def generate(self, variables_dictionary):
+    def generate(self, variables_dictionary=None):
         """ Generates a text from the templates using the given variables dictionary"""
+        # Set empty dictionary if none is given
+        if not bool(variables_dictionary):
+            variables_dictionary = {}
+        # Create a mutable copy of the templates list
         possible_templates = list(self._templates)
         for i in range(len(possible_templates)):
             template = random.choice(possible_templates)
