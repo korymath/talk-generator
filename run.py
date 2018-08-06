@@ -8,6 +8,7 @@ import requests
 import safygiphy
 import math
 import numpy
+import string
 from os import listdir
 from os.path import isfile, join
 import nltk
@@ -234,7 +235,6 @@ def get_related_giphy(seed_word):
             return image_url
 
 
-
 def get_random_inspirobot_image(_):
     # Generate a random url to access inspirobot
     dd = str(random.randint(1, 73)).zfill(2)
@@ -268,6 +268,7 @@ bold_statement_templated_generator = text_generator.TemplatedTextGenerator('data
 def generate_wikihow_bold_statement(seed):
     template_values = {
         "topic": seed,
+        "topic_plural": inflect.engine().plural(seed).title(),
         # TODO: Use datamuse or conceptnet or some other mechanism of finding a related location
         'location': 'Here'
     }
@@ -277,11 +278,58 @@ def generate_wikihow_bold_statement(seed):
         action = random.choice(related_actions)
         template_values.update({'action': action.title(),
                                 # TODO: Fix action_infinitive
-                                'action_infinitive': action.title(),
+                                'action_present_participle': to_present_participle_first_word(action).title(),
                                 # TODO: Make a scraper that scrapes a step related to this action on wikihow.
                                 'step': 'Do Whatever You Like'})
 
     return bold_statement_templated_generator.generate(template_values)
+
+
+def to_present_participle_first_word(action):
+    words = action.split(" ")
+    first_word = make_ing_form(words[0])
+    if len(words) == 1:
+        return first_word
+    return first_word + " " + " ".join(words[1:])
+
+
+def to_present_participle(text):
+    tokens = nltk.word_tokenize(text)
+    pos_tags = nltk.pos_tag(tokens)
+
+    result = ""
+    seen_verb = False
+    for tag in pos_tags:
+        if not seen_verb and tag[1] == 'VB':
+            seen_verb = True
+            result += make_ing_form(" " + tag[0])
+        result += " " + tag[0]
+    return result.strip()
+
+
+# From https://github.com/arsho/46-Simple-Python-Exercises-Solutions/blob/master/problem_25.py
+def make_ing_form(passed_string):
+    passed_string = passed_string.lower()
+    letter = list(string.ascii_lowercase)
+    vowel = ['a', 'e', 'i', 'o', 'u']
+    consonant = [c for c in letter if c not in vowel]
+    exception = ['be', 'see', 'flee', 'knee', 'lie']
+    if passed_string.endswith('e'):
+        if passed_string in exception:
+            return passed_string + 'ing'
+        else:
+            passed_string = passed_string[:-1]
+            return passed_string + 'ing'
+
+    elif passed_string.endswith('ie'):
+        passed_string = passed_string[:-2]
+        return passed_string + 'ying'
+
+    elif passed_string[-1] in consonant and passed_string[-2] in vowel and passed_string[-3] in consonant:
+        passed_string += passed_string[-1]
+        return passed_string + 'ing'
+    else:
+        return passed_string + 'ing'
 
 
 # COMPILATION
@@ -400,6 +448,9 @@ test_schema = PresentationSchema(
     # Slide generators
 
     [
+
+        # SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title, get_random_inspirobot_image),
+        #                name="Inspirobot"),
         SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
                        name="Wikihow Bold Statement")
     ])
