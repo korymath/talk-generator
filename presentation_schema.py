@@ -1,3 +1,9 @@
+"""
+This module represents the abstractions of a presentation schema (responsible for specifying how to generate a
+presentation), and slide generators, that have functions for generating slides along with some other metadata.
+
+"""
+
 from random import randint
 
 

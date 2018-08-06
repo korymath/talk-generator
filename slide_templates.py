@@ -1,3 +1,4 @@
+""" This module helps creating specific type of slides using our template powerpoint using python-pptx """
 from pptx import Presentation
 
 # CONSTANTS
