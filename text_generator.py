@@ -11,16 +11,18 @@ class TemplatedTextGenerator:
             templates.extend(read_lines(template_file))
         if templates_list:
             templates.extend(templates_list)
-        self._templates = templates
+        # Create a tuple so no templates can accidentally be deleted from the generator
+        self._templates = tuple(templates)
 
     def generate(self, variables_dictionary):
         """ Generates a text from the templates using the given variables dictionary"""
-        possible_templates = self._templates.copy()
+        possible_templates = list(self._templates)
         for i in range(len(possible_templates)):
             template = random.choice(possible_templates)
             if can_format_with(template, variables_dictionary):
                 return template.format(**variables_dictionary)
             else:
+                # Remove the template from the possible templates list, such that it won
                 possible_templates.remove(template)
 
 
@@ -37,4 +39,5 @@ def get_format_variables(template):
 
 
 def read_lines(file):
+    """ Reads all the string lines from a file """
     return [line.rstrip('\n') for line in open(file)]
