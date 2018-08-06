@@ -8,17 +8,18 @@ import requests
 import safygiphy
 import math
 import numpy
-import slide_templates
-from presentation_schema import PresentationSchema, SlideGenerator
 from os import listdir
 from os.path import isfile, join
-
 from bs4 import BeautifulSoup
-
 import nltk
 from nltk.corpus import wordnet as wn
 from py_thesaurus import Thesaurus
 from google_images_download import google_images_download
+
+# Own classes:
+import slide_templates
+import text_generator
+from presentation_schema import PresentationSchema, SlideGenerator
 
 
 class IdentityTopicGenerator:
@@ -276,22 +277,23 @@ def get_related_google_image(seed_word):
         return img_path
 
 
-def generate_wikihow_bold_bold_statement(seed):
+bold_statement_templated_generator = text_generator.TemplatedTextGenerator('data/text-templates/bold-statements.txt')
+
+
+def generate_wikihow_bold_statement(seed):
     related_actions = get_related_wikihow_actions(seed)
+    # TODO: Sometimes "Articles Form Wikihow" is being scraped as an action, this is a bug
     if related_actions:
         action = random.choice(related_actions)
-        bold_statement_templates = read_lines('data/text-templates/bold-statements.txt')
-
-        chosen_template = random.choice(bold_statement_templates)
         template_values = {'action': action.title(),
                            # TODO: Make a scraper that scrapes a step related to this action on wikihow.
                            # TODO: Fix action_infinitive
                            'action_infinitive': action.title(),
                            'step': 'Do Whatever You Like',
                            'topic': seed,
-                           # TODO: Use datamuse or some other mechanism of finding a related location
+                           # TODO: Use datamuse or conceptnet or some other mechanism of finding a related location
                            'location': 'Here'}
-        life_lesson = chosen_template.format(**template_values)
+        life_lesson = bold_statement_templated_generator.generate(template_values)
 
         # Turn into image slide
         return life_lesson
@@ -384,7 +386,7 @@ presentation_schema = PresentationSchema(
      SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
      SlideGenerator(slide_templates.generate_full_image_slide(none_generator, get_random_inspirobot_image),
                     name="Inspirobot"),
-     SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_bold_statement),
+     SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
                     name="Wikihow Bold Statement"),
      SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
                     name="Google Images"),
