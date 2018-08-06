@@ -1,10 +1,16 @@
 Something to think about
-Inspiration
+Some Inspiration
+Something my father always told me
+My mother always told me
+My grandma always said:
 Think about it...
 Consequence:
 Thus...
 Logical Implication
-Implication:
+Logical Implication for {topic_title}
+Implication
 Something that motivated me
 Food for Thought
 My Life Motto
+Best Thing About {topic_title}
+What {topic_title} Really Think:

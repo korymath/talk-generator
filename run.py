@@ -373,8 +373,8 @@ def create_double_image_captions(_):
 inspirational_title_generator = text_generator.TemplatedTextGenerator("data/text-templates/inspiration.txt")
 
 
-def generate_inspirational_title(_):
-    return inspirational_title_generator.generate()
+def generate_inspirational_title(seed):
+    return inspirational_title_generator.generate({"topic": seed, "topic_title": seed.title()})
 
 
 # This object holds all the information about how to generate the presentation
