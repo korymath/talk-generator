@@ -24,7 +24,7 @@ class TemplatedTextGenerator:
         for i in range(len(possible_templates)):
             template = random.choice(possible_templates)
             if can_format_with(template, variables_dictionary):
-                return template.format(**variables_dictionary)
+                return apply(template, variables_dictionary)
             else:
                 # Remove the template from the possible templates list, such that it won
                 possible_templates.remove(template)
@@ -42,6 +42,11 @@ def get_format_variables(template):
     """ Finds all the names of the variables used in the template """
     matches = re.findall('{(\w+)}', template)
     return matches
+
+
+def apply(template, variables_dictionary):
+    # TODO(Thomas): Handle functions like '.title' and '.plural', should also update 'get_format_variables': ignore '.'
+    return template.format(**variables_dictionary)
 
 
 def read_lines(file):
