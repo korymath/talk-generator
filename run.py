@@ -281,22 +281,22 @@ bold_statement_templated_generator = text_generator.TemplatedTextGenerator('data
 
 
 def generate_wikihow_bold_statement(seed):
-    related_actions = get_related_wikihow_actions(seed)
+    template_values = {
+        "topic": seed,
+        # TODO: Use datamuse or conceptnet or some other mechanism of finding a related location
+        'location': 'Here'
+    }
     # TODO: Sometimes "Articles Form Wikihow" is being scraped as an action, this is a bug
+    related_actions = get_related_wikihow_actions(seed)
     if related_actions:
         action = random.choice(related_actions)
-        template_values = {'action': action.title(),
-                           # TODO: Make a scraper that scrapes a step related to this action on wikihow.
-                           # TODO: Fix action_infinitive
-                           'action_infinitive': action.title(),
-                           'step': 'Do Whatever You Like',
-                           'topic': seed,
-                           # TODO: Use datamuse or conceptnet or some other mechanism of finding a related location
-                           'location': 'Here'}
-        life_lesson = bold_statement_templated_generator.generate(template_values)
+        template_values.update({'action': action.title(),
+                                # TODO: Fix action_infinitive
+                                'action_infinitive': action.title(),
+                                # TODO: Make a scraper that scrapes a step related to this action on wikihow.
+                                'step': 'Do Whatever You Like'})
 
-        # Turn into image slide
-        return life_lesson
+    return bold_statement_templated_generator.generate(template_values)
 
 
 # COMPILATION

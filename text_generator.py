@@ -26,6 +26,8 @@ class TemplatedTextGenerator:
                 possible_templates.remove(template)
 
 
+# TODO(Thomas): Add TraceryTemplatedTextGenerator for better variations than a template list
+
 def can_format_with(template, variables_dictionary):
     """ Checks if the template can be fully formatted by the given variable dictionary without errors"""
     format_variables = get_format_variables(template)
