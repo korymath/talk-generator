@@ -71,6 +71,11 @@ def _add_text(slide, placeholder_id, text):
     placeholder.text = text
 
 
+def _print_all_placeholders(slide):
+    for shape in slide.placeholders:
+        print('%d %s' % (shape.placeholder_format.idx, shape.name))
+
+
 # FORMAT GENERATORS
 # These are functions that get some inputs (texts, images...)
 # and create layouted slides with these inputs
