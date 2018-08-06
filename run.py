@@ -164,7 +164,8 @@ def get_google_images(word, num_images=1):
     paths = _get_google_image_cached(word, num_images, lp)
 
     # If no local images, search on Google Image Search
-    if len(paths) == 0:
+    if not bool(paths) or len(paths) == 0:
+        paths = []
         # Get related images at 16x9 aspect ratio
         response = google_images_download.googleimagesdownload()
         arguments = {
@@ -358,8 +359,8 @@ def identity_generator(input_word):
     return input_word
 
 
-def create_static_image_generator(image):
-    return lambda _: image
+def create_static_generator(always_generate_this):
+    return lambda _: always_generate_this
 
 
 def create_double_image_captions(_):
@@ -367,6 +368,13 @@ def create_double_image_captions(_):
     line = random.choice(lines)
     parts = line.split("|")
     return parts[0], parts[1]
+
+
+inspirational_title_generator = text_generator.TemplatedTextGenerator("data/text-templates/inspiration.txt")
+
+
+def generate_inspirational_title(_):
+    return inspirational_title_generator.generate()
 
 
 # This object holds all the information about how to generate the presentation
@@ -384,7 +392,7 @@ presentation_schema = PresentationSchema(
                     100000 if slide_nr == 0 else 0,
                     name="Title slide"),
      SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
-     SlideGenerator(slide_templates.generate_full_image_slide(none_generator, get_random_inspirobot_image),
+     SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title, get_random_inspirobot_image),
                     name="Inspirobot"),
      SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
                     name="Wikihow Bold Statement"),
@@ -408,10 +416,9 @@ test_schema = PresentationSchema(
     # Slide generators
 
     [
-        SlideGenerator(slide_templates.generate_image_slide(none_generator, get_random_inspirobot_image),
-                       name="Inspirobot"),
-    ]
-)
+        SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
+                       name="Wikihow Bold Statement")
+    ])
 
 schemas = {
     "default": presentation_schema,
