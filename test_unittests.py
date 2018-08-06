@@ -15,3 +15,8 @@ def test_get_definitions():
 def test_get_synonyms():
     synonyms = get_synonyms('dog')
     assert len(synonyms) == 30
+
+
+test_some_imports()
+test_get_definitions()
+test_get_synonyms()
