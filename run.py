@@ -114,7 +114,6 @@ def get_definitions(word):
 
 def get_synonyms(word):
     """Get all synonyms for a given word."""
-    print('******************************************')
     word_senses = wn.synsets(word)
     all_synonyms = []
     for ss in word_senses:
@@ -122,7 +121,6 @@ def get_synonyms(word):
             [x.lower().replace('_', ' ') for x in ss.lemma_names()])
     all_synonyms.append(word)
     all_synonyms = list(set(all_synonyms))
-    # print('{} synonyms for "{}"'.format(len(all_synonyms), word))
     return all_synonyms
 
 
