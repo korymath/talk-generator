@@ -1,21 +1,22 @@
+import argparse
+import math
+import os.path
+import pathlib
 import pickle
 import random
-import pathlib
-import os.path
-import argparse
-import requests
-import safygiphy
-import math
-import numpy
 from os import listdir
 from os.path import isfile, join
+
+import numpy
+import requests
+import safygiphy
 from google_images_download import google_images_download
 
+import language_util
 # Own classes:
 import slide_templates
 import text_generator
 import wikihow
-import language_util
 from presentation_schema import PresentationSchema, SlideGenerator
 
 
@@ -203,7 +204,6 @@ bold_statement_templated_generator = text_generator.TemplatedTextGenerator('data
 def generate_wikihow_bold_statement(seed):
     template_values = {
         "topic": seed,
-        "topic_plural": language_util.to_plural(seed).title(),
         # TODO: Use datamuse or conceptnet or some other mechanism of finding a related location
         'location': 'Here'
     }
@@ -212,13 +212,10 @@ def generate_wikihow_bold_statement(seed):
     if related_actions:
         action = random.choice(related_actions)
         template_values.update({'action': action.title(),
-                                # TODO: Fix action_infinitive
-                                'action_present_participle': language_util.to_present_participle_first_word(action).title(),
                                 # TODO: Make a scraper that scrapes a step related to this action on wikihow.
                                 'step': 'Do Whatever You Like'})
 
     return bold_statement_templated_generator.generate(template_values)
-
 
 
 # COMPILATION

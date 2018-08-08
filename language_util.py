@@ -118,4 +118,4 @@ def get_relations(word):
 
 
 def to_plural(word):
-    return inflect.engine().plural(seed)
+    return inflect.engine().plural(word)
