@@ -1,6 +1,7 @@
 """ Module providing language-related operations to manipulate strings"""
 import string
 
+import inflect
 import nltk
 from nltk.corpus import wordnet as wn
 
@@ -109,3 +110,7 @@ def get_relations(word):
     print('******************************************')
     print('{} antonyms'.format(len(all_ants)))
     return rels
+
+
+def to_plural(word):
+    return inflect.engine().plural(seed)

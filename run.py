@@ -2,7 +2,6 @@ import pickle
 import random
 import pathlib
 import os.path
-import inflect
 import argparse
 import requests
 import safygiphy
@@ -150,7 +149,7 @@ def _get_google_image_cached(word, num_image, lp):
 # GENERATORS
 def generate_powerpoint_title(seed):
     """Returns a template title from a source list."""
-    chosen_synonym_plural = inflect.engine().plural(seed)
+    chosen_synonym_plural = language_util.to_plural(seed)
     synonym_templates = read_lines('data/text-templates/titles.txt')
     chosen_template = random.choice(synonym_templates)
     return chosen_template.format(chosen_synonym_plural.title())
@@ -204,7 +203,7 @@ bold_statement_templated_generator = text_generator.TemplatedTextGenerator('data
 def generate_wikihow_bold_statement(seed):
     template_values = {
         "topic": seed,
-        "topic_plural": inflect.engine().plural(seed).title(),
+        "topic_plural": language_util.to_plural(seed).title(),
         # TODO: Use datamuse or conceptnet or some other mechanism of finding a related location
         'location': 'Here'
     }
