@@ -2,6 +2,8 @@
 import random
 import re
 
+import language_util
+
 
 class TemplatedTextGenerator:
 
@@ -61,7 +63,10 @@ def apply_variables_to_template(template, variables_dictionary):
 known_functions = {
     "title": str.title,
     "lower": str.lower,
-    "upper": str.upper
+    "upper": str.upper,
+    "ing": language_util.to_present_participle_first_word,
+    "plural": language_util.to_plural,
+    "synonym": language_util.get_random_synonym
 }
 
 

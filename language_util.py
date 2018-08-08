@@ -1,4 +1,5 @@
 """ Module providing language-related operations to manipulate strings"""
+import random
 import string
 
 import inflect
@@ -75,6 +76,10 @@ def get_synonyms(word):
     all_synonyms.append(word)
     all_synonyms = list(set(all_synonyms))
     return all_synonyms
+
+
+def get_random_synonym(word):
+    return random.choice(get_synonyms(word))
 
 
 def get_relations(word):
