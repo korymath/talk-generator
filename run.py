@@ -404,7 +404,7 @@ inspirational_title_generator = text_generator.TemplatedTextGenerator("data/text
 
 
 def generate_inspirational_title(seed):
-    return inspirational_title_generator.generate({"topic": seed, "topic_title": seed.title()})
+    return inspirational_title_generator.generate({"topic": seed})
 
 
 # This object holds all the information about how to generate the presentation
