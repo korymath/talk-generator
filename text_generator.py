@@ -52,7 +52,51 @@ def get_format_variables_and_functions(template):
 
 def apply_variables_to_template(template, variables_dictionary):
     # TODO(Thomas): Handle functions like '.title' and '.plural', should also update 'get_format_variables': ignore '.'
+    variables_and_functions = get_format_variables_and_functions(template)
+    (template, variables_dictionary) = apply_functions_to_variables(template, variables_dictionary,
+                                                                    variables_and_functions)
     return template.format(**variables_dictionary)
+
+
+known_functions = {
+    "title": str.title,
+    "lower": str.lower,
+    "upper": str.upper
+}
+
+
+def apply_functions(variable, functions):
+    """ Applies a list of functions to a variable """
+    result = variable
+    for func in functions:
+        if func in known_functions:
+            result = known_functions[func](result)
+        else:
+            raise ValueError("Unknown function:",
+                             func)  # TODO check for attributes like real format, and check for numbers for identity preservation
+    return result
+
+
+def apply_functions_to_variables(template, variables_dictionary, variables_and_functions):
+    """ Applies the functions of the variables_and_functions tuple and stores them in the variable dictionary and
+    updates the template """
+    for var_func in variables_and_functions:
+        # Check if it has functions to apply
+        if len(var_func) > 1 and len(var_func[1]) > 0:
+            old_var_name = var_func[0] + var_func[1]
+            functions = var_func[1][1:].split(".")
+            variable_name = var_func[0]
+            variable = variables_dictionary[variable_name]
+            applied_functions = apply_functions(variable, functions)
+            applied_var_name = old_var_name.replace(".", "_")
+            # Replace all occurrences with the dot to the underscore notation
+            template = template.replace(old_var_name, applied_var_name)
+            # Store in dictionary
+            variables_dictionary[applied_var_name] = applied_functions
+            print(applied_var_name, variables_dictionary)
+            return template, variables_dictionary
+
+    return template, variables_dictionary
 
 
 def read_lines(file):

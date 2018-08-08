@@ -41,11 +41,18 @@ class TextGeneratorTest(unittest.TestCase):
 
         self.assertEqual(expected, all_generations)
 
+
     def test_variable_and_function_extraction(self):
 
         self.assertEqual({("nice", ".title.lower.upper"), ("is", ".lower.ing"), ("test", ".title")},
                          text_generator.get_format_variables_and_functions(
                              "this {is.lower.ing} a {test.title}, {nice.title.lower.upper} right?"))
+
+    def test_functions_on_variables(self):
+        template_text_generator = text_generator.TemplatedTextGenerator(templates_list=["this is a {test.title}"])
+        result = template_text_generator.generate({"test": "something"})
+        print(result)
+        self.assertEqual("this is a Something", result)
 
 
 if __name__ == '__main__':
