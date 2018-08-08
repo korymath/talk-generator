@@ -12,14 +12,6 @@ class TestStringMethods(unittest.TestCase):
         self.assertTrue(bool(slide_templates))
         self.assertTrue(bool(presentation_schema))
 
-    def test_get_definitions(self):
-        definitions = get_definitions('dog')
-        self.assertEqual(len(definitions), 8)
-
-    def test_get_synonyms(self):
-        synonyms = get_synonyms('dog')
-        self.assertEqual(30, len(synonyms))
-
 
     def test_wrong_wikihow_links_regression_test(self):
         actions = wikihow.get_related_wikihow_actions("cat")
