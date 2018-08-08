@@ -8,18 +8,15 @@ import requests
 import safygiphy
 import math
 import numpy
-import string
 from os import listdir
 from os.path import isfile, join
-import nltk
-from nltk.corpus import wordnet as wn
-from py_thesaurus import Thesaurus
 from google_images_download import google_images_download
 
 # Own classes:
 import slide_templates
 import text_generator
 import wikihow
+import language_util
 from presentation_schema import PresentationSchema, SlideGenerator
 
 
@@ -50,7 +47,7 @@ class SynonymTopicGenerator:
     def __init__(self, topic, number_of_slides):
         self._topic = topic
         self._slides_nr = number_of_slides
-        synonyms = get_synonyms(topic)
+        synonyms = language_util.get_synonyms(topic)
         # seeds.extend(get_relations(topic))
 
         # Check if enough generated
@@ -99,65 +96,6 @@ def read_lines(file):
 
 # CONTENT GENERATORS
 # These functions generate content, sometimes related to given arguments
-
-def get_definitions(word):
-    """Get definitions of a given topic word."""
-    print('******************************************')
-    # Get definition
-    word_senses = wn.synsets(word)
-    definitions = {}
-    for ss in word_senses:
-        definitions[ss.name()] = ss.definition()
-    print('{} definitions for "{}"'.format(len(definitions), word))
-    return definitions
-
-
-def get_synonyms(word):
-    """Get all synonyms for a given word."""
-    word_senses = wn.synsets(word)
-    all_synonyms = []
-    for ss in word_senses:
-        all_synonyms.extend(
-            [x.lower().replace('_', ' ') for x in ss.lemma_names()])
-    all_synonyms.append(word)
-    all_synonyms = list(set(all_synonyms))
-    return all_synonyms
-
-
-def get_relations(word):
-    """Get relations to given definitions."""
-    rels = {}
-    all_rel_forms = []
-    all_perts = []
-    all_ants = []
-
-    word_senses = wn.synsets(word)
-    for ss in word_senses:
-        ss_name = ss.name()
-        rels[ss_name] = {}
-        for lem in ss.lemmas():
-            lem_name = lem.name()
-            rels[ss_name][lem_name] = {}
-            rel_forms = [x.name() for x in lem.derivationally_related_forms()]
-            rels[ss_name][lem_name]['related_forms'] = rel_forms
-            all_rel_forms.extend(rel_forms)
-
-            perts = [x.name() for x in lem.pertainyms()]
-            rels[ss_name][lem_name]['pertainyms'] = perts
-            all_perts.extend(perts)
-
-            ants = [x.name() for x in lem.antonyms()]
-            rels[ss_name][lem_name]['antonyms'] = ants
-            all_ants.extend(ants)
-
-    print('******************************************')
-    print('{} derivationally related forms'.format(len(all_rel_forms)))
-    print('******************************************')
-    print('{} pertainyms'.format(len(all_perts)))
-    print('******************************************')
-    print('{} antonyms'.format(len(all_ants)))
-    return rels
-
 
 def get_images(synonyms, num_images):
     """Get images, first search locally then Google Image Search."""
@@ -276,58 +214,12 @@ def generate_wikihow_bold_statement(seed):
         action = random.choice(related_actions)
         template_values.update({'action': action.title(),
                                 # TODO: Fix action_infinitive
-                                'action_present_participle': to_present_participle_first_word(action).title(),
+                                'action_present_participle': language_util.to_present_participle_first_word(action).title(),
                                 # TODO: Make a scraper that scrapes a step related to this action on wikihow.
                                 'step': 'Do Whatever You Like'})
 
     return bold_statement_templated_generator.generate(template_values)
 
-
-def to_present_participle_first_word(action):
-    words = action.split(" ")
-    first_word = make_ing_form(words[0])
-    if len(words) == 1:
-        return first_word
-    return first_word + " " + " ".join(words[1:])
-
-
-def to_present_participle(text):
-    tokens = nltk.word_tokenize(text)
-    pos_tags = nltk.pos_tag(tokens)
-
-    result = ""
-    seen_verb = False
-    for tag in pos_tags:
-        if not seen_verb and tag[1] == 'VB':
-            seen_verb = True
-            result += make_ing_form(" " + tag[0])
-        result += " " + tag[0]
-    return result.strip()
-
-
-# From https://github.com/arsho/46-Simple-Python-Exercises-Solutions/blob/master/problem_25.py
-def make_ing_form(passed_string):
-    passed_string = passed_string.lower()
-    letter = list(string.ascii_lowercase)
-    vowel = ['a', 'e', 'i', 'o', 'u']
-    consonant = [c for c in letter if c not in vowel]
-    exception = ['be', 'see', 'flee', 'knee', 'lie']
-    if passed_string.endswith('e'):
-        if passed_string in exception:
-            return passed_string + 'ing'
-        else:
-            passed_string = passed_string[:-1]
-            return passed_string + 'ing'
-
-    elif passed_string.endswith('ie'):
-        passed_string = passed_string[:-2]
-        return passed_string + 'ying'
-
-    elif passed_string[-1] in consonant and passed_string[-2] in vowel and passed_string[-3] in consonant:
-        passed_string += passed_string[-1]
-        return passed_string + 'ing'
-    else:
-        return passed_string + 'ing'
 
 
 # COMPILATION
@@ -447,10 +339,12 @@ test_schema = PresentationSchema(
 
     [
 
-        # SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title, get_random_inspirobot_image),
-        #                name="Inspirobot"),
-        SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
-                       name="Wikihow Bold Statement")
+        SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title,
+                                                            # get_random_inspirobot_image),
+                                                            create_static_generator("downloads/inspirobot/01-743.jpg")),
+                       name="Inspirobot"),
+        # SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
+        #                name="Wikihow Bold Statement")
     ])
 
 schemas = {
