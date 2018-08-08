@@ -37,10 +37,10 @@ class SlideGenerator:
         return self._weight_function(slide_nr, total_slides)
 
     def __str__(self):
+        if bool(self._name):
+            return str(self._name)
         name = str(self._generator.__name__)
         if name == '<lambda>':
-            name = str(self._name)
-        if name == 'None':
             name = "Unnamed Generator"
         return "SlideGenerator[" + name + "]"
 
