@@ -1,4 +1,6 @@
 """ This module helps creating specific type of slides using our template powerpoint using python-pptx """
+import sys
+
 from pptx import Presentation
 
 # CONSTANTS
@@ -62,8 +64,12 @@ def _add_image(slide, placeholder_id, image_url, fit_image=True):
 
         placeholder = placeholder.element
         placeholder.getparent().remove(placeholder)
+        return True
     else:
-        placeholder.insert_picture(image_url)
+        try:
+            placeholder.insert_picture(image_url)
+        except OSError:
+            print("Unexpected error inserting image:", image_url, ":", sys.exc_info()[0])
 
 
 def _add_text(slide, placeholder_id, text):
