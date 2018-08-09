@@ -248,9 +248,11 @@ def create_static_generator(always_generate_this):
     return lambda _: always_generate_this
 
 
-def create_double_image_captions(_):
-    lines = read_lines("./data/text-templates/double-captions.txt")
-    line = random.choice(lines)
+double_captions_generator = text_generator.TemplatedTextGenerator("./data/text-templates/double-captions.txt")
+
+
+def create_double_image_captions(seed):
+    line = double_captions_generator.generate({"seed": seed})
     parts = line.split("|")
     return parts[0], parts[1]
 
