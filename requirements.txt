@@ -10,3 +10,4 @@ python-datamuse
 pytest
 numpy
 bs4
+praw
