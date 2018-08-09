@@ -93,14 +93,14 @@ def create_new_powerpoint():
 def create_title_slide(prs, title):
     slide = _create_slide(prs, LAYOUT_TITLE_SLIDE)
     _add_title(slide, title)
-    return slide
+    return slide, {title}
 
 
 def create_large_quote_slide(prs, text):
     if bool(text):
         slide = _create_slide(prs, LAYOUT_LARGE_QUOTE)
         _add_text(slide, 1, text)
-        return slide
+        return slide, {text}
 
 
 def create_image_slide(prs, title=None, image_url=None):
@@ -123,7 +123,7 @@ def create_two_column_images_slide(prs, title=None, caption_1=None, image_1=None
         _add_image(slide, 13, image_1, fit_images)
         _add_text(slide, 3, caption_2)
         _add_image(slide, 14, image_2, fit_images)
-        return slide
+        return slide, {title, caption_1, image_1, caption_2, image_2}
 
 
 def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_image):
@@ -131,7 +131,7 @@ def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_im
         slide = _create_slide(prs, slide_template_idx)
         _add_title(slide, title)
         _add_image(slide, 1, image_url, fit_image)
-        return slide
+        return slide, {title, image_url}
 
 
 # GENERATORS: Same as the template fillers above, but using generation functions

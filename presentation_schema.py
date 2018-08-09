@@ -20,14 +20,17 @@ class SlideGenerator:
     def __init__(self, generator, weight_function=constant_weight(1), retries=1, name=None):
         self._generator = generator
         self._weight_function = weight_function
-        self._name = name
         self._retries = retries
+        self._name = name
 
     def generate(self, presentation, seed):
         """Generate a slide for a given presentation using the given seed."""
+        used_elements = set()
+
         # Try a certain amount of times
         for _ in range(self._retries):
-            slide = self._generator(presentation, seed)
+            (slide, generated_element) = self._generator(presentation, seed)
+            used_elements.update(generated_element)
             # Add information about the generator to the notes
             if slide:
                 slide.notes_slide.notes_text_frame.text = str(self) + " / " + seed
