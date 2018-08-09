@@ -288,6 +288,8 @@ inspirational_title_generator = text_generator.TemplatedTextGenerator("data/text
 def generate_inspirational_title(seed):
     return inspirational_title_generator.generate({"topic": seed})
 
+weird_image_generator = create_reddit_image_generator("hmmm+hmm+wtf+wtfstockphotos+photoshopbattles"
+                                                      "+confusing_perspective+cursedimages")
 
 # This object holds all the information about how to generate the presentation
 presentation_schema = PresentationSchema(
@@ -310,14 +312,15 @@ presentation_schema = PresentationSchema(
                     name="Wikihow Bold Statement"),
      SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
                     name="Google Images"),
-     SlideGenerator(
-         slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
-                                                                        create_double_image_captions,
-                                                                        get_related_giphy,
-                                                                        get_related_giphy),
-         name="Two Captions Giphy")
+        SlideGenerator(
+            slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
+                                                                           create_double_image_captions,
+                                                                           weird_image_generator,
+                                                                           weird_image_generator),
+            name="Two Captions Weird Reddit"),
      ]
 )
+
 
 test_schema = PresentationSchema(
     # Basic powerpoint generator
@@ -328,14 +331,14 @@ test_schema = PresentationSchema(
     # Slide generators
 
     [
+
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
                                                                            create_double_image_captions,
-                                                                           create_reddit_image_generator("hmm"),
-                                                                           create_reddit_image_generator(
-                                                                               "hmm+wtfstockphotos")),
+                                                                           weird_image_generator,
+                                                                           weird_image_generator),
             weight_function=constant_weight(1000),
-            name="Two Captions Giphy"),
+            name="Two Captions Weird Reddit"),
         # Back up in case something goes wrong
         SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title,
                                                             # get_random_inspirobot_image),
