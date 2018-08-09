@@ -17,18 +17,21 @@ def constant_weight(weight: int):
 class SlideGenerator:
     """ Responsible for providing the slide generator and other attributes, such as its name and weight"""
 
-    def __init__(self, generator, weight_function=constant_weight(1), name=None):
+    def __init__(self, generator, weight_function=constant_weight(1), retries=1, name=None):
         self._generator = generator
         self._weight_function = weight_function
         self._name = name
+        self._retries = retries
 
     def generate(self, presentation, seed):
         """Generate a slide for a given presentation using the given seed."""
-        slide = self._generator(presentation, seed)
-        # Add information about the generator to the notes
-        if slide:
-            slide.notes_slide.notes_text_frame.text = str(self) + " / " + seed
-        return slide
+        # Try a certain amount of times
+        for _ in range(self._retries):
+            slide = self._generator(presentation, seed)
+            # Add information about the generator to the notes
+            if slide:
+                slide.notes_slide.notes_text_frame.text = str(self) + " / " + seed
+                return slide
 
     #
     def get_weight_for(self, slide_nr, total_slides):
