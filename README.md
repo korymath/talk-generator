@@ -1,7 +1,8 @@
 [![CircleCI](https://circleci.com/gh/korymath/talk-generator.svg?style=svg&circle-token=dcba7d5a9ff7953cff0526e201990c0b811b3aae)](https://circleci.com/gh/korymath/talk-generator)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/korymath/britbot/blob/master/LICENSE.md)
 
-# TEDRIC - Automatic Talk Generator
+# TEDRIC - Automatic Talk Generator 
+[//]: # "I find puns such as 'AutomaTED' or 'GeneraTED' to be a bit more descriptive than TEDRIC tbh :) -Thomas"
 
 ### Automatically Generated
 [![Automatically Generated](https://media.giphy.com/media/x47rKzgCuCaqFqmxSc/giphy.gif)](https://www.youtube.com/watch?v=bhZezzMu7D4 "Automatically Generated")
