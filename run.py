@@ -258,6 +258,8 @@ def main(arguments):
     # args.all_paths = get_images(args.synonyms, args.num_images)
 
     # Compile and save the presentation to data
+    # TODO(Kory) is this still useful now that we generate slides on the fly rather than harvesting a
+    # lot of (often unused) things upfront?
     compile_talk_to_raw_data(arguments)
 
     # Compile and save the presentation to PPTX

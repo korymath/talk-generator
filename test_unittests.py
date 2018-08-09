@@ -1,7 +1,5 @@
 import unittest
 
-import text_generator
-import wikihow
 from run import *
 
 
@@ -11,7 +9,6 @@ class TestStringMethods(unittest.TestCase):
         self.assertTrue(bool(random))
         self.assertTrue(bool(slide_templates))
         self.assertTrue(bool(presentation_schema))
-
 
     def test_wrong_wikihow_links_regression_test(self):
         actions = wikihow.get_related_wikihow_actions("cat")
