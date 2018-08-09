@@ -260,23 +260,22 @@ class RedditImageGenerator:
         self._subreddit = subreddit
 
     def generate(self, seed):
-        images = list(reddit.search_subreddit(self._subreddit, seed + " nsfw:no (url:.jpg OR url:.png)"))
-        print(len(images), " images: ", images)
-        if len(images) > 0:
-            chosen_image = random.choice(images).url
-            downloaded_url = "downloads/reddit/" + self._subreddit + "/" + get_file_name(chosen_image)
+        images = list(reddit.search_subreddit(self._subreddit, seed + " nsfw:no (url:.jpg OR url:.png OR url:.gif)"))
+        while len(images) > 0:
+            chosen_image = random.choice(images)
+            chosen_image_url = chosen_image.url
+            downloaded_url = "downloads/reddit/" + self._subreddit + "/" + get_file_name(chosen_image_url)
             try:
-                download_image(chosen_image, downloaded_url)
+                download_image(chosen_image_url, downloaded_url)
                 return downloaded_url
             except PermissionError:
-                print("Permission error when downloading", chosen_image)
-                return None
+                print("Permission error when downloading", chosen_image_url)
             except requests.exceptions.MissingSchema:
-                print("Missing schema for image ", chosen_image)
-                return None
+                print("Missing schema for image ", chosen_image_url)
             except OSError:
-                print("Non existing image for: ", chosen_image)
-                return None
+                print("Non existing image for: ", chosen_image_url)
+            images.remove(chosen_image)
+        return None
 
 
 def create_reddit_image_generator(name):
