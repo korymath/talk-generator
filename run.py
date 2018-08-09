@@ -21,14 +21,9 @@ import wikihow
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight
 
 
-class IdentityTopicGenerator:
+def create_identity_topic_generator(topic, _):
     """ Generates always the given topic as the seed for each slide """
-
-    def __init__(self, topic, _):
-        self._topic = topic
-
-    def generate_seed(self, _):
-        return self._topic
+    return lambda _: topic
 
 
 # TODO Other topic generators
@@ -288,6 +283,7 @@ inspirational_title_generator = text_generator.TemplatedTextGenerator("data/text
 def generate_inspirational_title(seed):
     return inspirational_title_generator.generate({"topic": seed})
 
+
 weird_image_generator = create_reddit_image_generator("hmmm+hmm+wtf+wtfstockphotos+photoshopbattles"
                                                       "+confusing_perspective+cursedimages")
 
@@ -312,21 +308,20 @@ presentation_schema = PresentationSchema(
                     name="Wikihow Bold Statement"),
      SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
                     name="Google Images"),
-        SlideGenerator(
-            slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
-                                                                           create_double_image_captions,
-                                                                           weird_image_generator,
-                                                                           weird_image_generator),
-            name="Two Captions Weird Reddit"),
+     SlideGenerator(
+         slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
+                                                                        create_double_image_captions,
+                                                                        weird_image_generator,
+                                                                        weird_image_generator),
+         name="Two Captions Weird Reddit"),
      ]
 )
-
 
 test_schema = PresentationSchema(
     # Basic powerpoint generator
     slide_templates.create_new_powerpoint,
     # Topic per slide generator
-    lambda topic, num_slides: IdentityTopicGenerator(topic, num_slides),
+    lambda topic, num_slides: create_identity_topic_generator(topic, num_slides),
 
     # Slide generators
 
