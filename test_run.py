@@ -10,10 +10,6 @@ class TestStringMethods(unittest.TestCase):
         self.assertTrue(bool(slide_templates))
         self.assertTrue(bool(presentation_schema))
 
-    def test_wrong_wikihow_links_regression_test(self):
-        actions = wikihow.get_related_wikihow_actions("cat")
-        self.assertFalse("articles from wikiHow" in actions)
-
 
 if __name__ == '__main__':
     unittest.main()
