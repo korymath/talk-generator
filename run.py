@@ -18,7 +18,7 @@ import reddit
 import slide_templates
 import text_generator
 import wikihow
-from presentation_schema import PresentationSchema, SlideGenerator
+from presentation_schema import PresentationSchema, SlideGenerator, constant_weight
 
 
 class IdentityTopicGenerator:
@@ -333,12 +333,15 @@ test_schema = PresentationSchema(
             slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
                                                                            create_double_image_captions,
                                                                            create_reddit_image_generator("hmm"),
-                                                                           create_reddit_image_generator("hmm")),
-            name="Two Captions Giphy")
-        # SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title,
-        #                                                     get_random_inspirobot_image),
-        #                                                     create_static_generator("downloads/inspirobot/01-743.jpg")),
-        #                name="Inspirobot"),
+                                                                           create_reddit_image_generator(
+                                                                               "hmm+wtfstockphotos")),
+            weight_function=constant_weight(1000),
+            name="Two Captions Giphy"),
+        # Back up in case something goes wrong
+        SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title,
+                                                            # get_random_inspirobot_image),
+                                                            create_static_generator("downloads/inspirobot/01-743.jpg")),
+                       name="Inspirobot")
         # SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
         #                name="Wikihow Bold Statement")
     ])
