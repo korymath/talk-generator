@@ -21,9 +21,14 @@ import wikihow
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight
 
 
-def create_identity_topic_generator(topic, _):
+class IdentityTopicGenerator:
     """ Generates always the given topic as the seed for each slide """
-    return lambda _: topic
+
+    def __init__(self, topic, _):
+        self._topic = topic
+
+    def generate_seed(self, _):
+        return self._topic
 
 
 # TODO Other topic generators
@@ -321,7 +326,7 @@ test_schema = PresentationSchema(
     # Basic powerpoint generator
     slide_templates.create_new_powerpoint,
     # Topic per slide generator
-    lambda topic, num_slides: create_identity_topic_generator(topic, num_slides),
+    lambda topic, num_slides: IdentityTopicGenerator(topic, num_slides),
 
     # Slide generators
 
