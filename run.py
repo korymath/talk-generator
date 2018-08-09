@@ -260,7 +260,7 @@ class RedditImageGenerator:
         self._subreddit = subreddit
 
     def generate(self, seed):
-        images = list(reddit.search_subreddit(self._subreddit, seed + " nsfw:no (url:.jpg OR url:.png OR url:.gif)"))
+        images = reddit.search_subreddit(self._subreddit, seed + " nsfw:no (url:.jpg OR url:.png OR url:.gif)")
         while len(images) > 0:
             chosen_image = random.choice(images)
             chosen_image_url = chosen_image.url

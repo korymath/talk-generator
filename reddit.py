@@ -1,4 +1,5 @@
 import json
+from functools import lru_cache
 
 import praw
 
@@ -29,8 +30,9 @@ def get_subreddit(name):
         return get_reddit().subreddit(name)
 
 
+@lru_cache(maxsize=20)
 def search_subreddit(name, query, sort="relevance", limit=200):
     if has_reddit_access():
-        return get_subreddit(name).search(query, sort=sort, limit=limit)
+        return list(get_subreddit(name).search(query, sort=sort, limit=limit))
     else:
         print("WARNING: No reddit access!")
