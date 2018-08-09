@@ -217,16 +217,6 @@ def generate_wikihow_bold_statement(seed):
 
     return bold_statement_templated_generator.generate(template_values)
 
-
-# COMPILATION
-
-def compile_talk_to_raw_data(arguments):
-    """Save the raw data that has been harvested."""
-    with open('output/' + arguments.topic.replace(' ', '_') + '.pkl', 'wb') as fh:
-        pickle.dump(arguments, fh, protocol=pickle.HIGHEST_PROTOCOL)
-        print('Pickle saved to output/' + arguments.topic.replace(' ', '_') + '.pkl')
-
-
 # MAIN
 
 def main(arguments):
@@ -240,27 +230,6 @@ def main(arguments):
     # print('******************************************')
     # print('tokenized text: ', text)
     # print('pos tag text: ', nltk.pos_tag(text))
-
-    # Parse the actual topic subject from the parts-of-speech
-    # topic_string = args.topic
-
-    # Get definitions
-    # args.definitions = get_definitions(topic_string)
-    # Get relations
-    # args.relations = get_relations(topic_string)
-    # Get synonyms
-    # args.synonyms = get_synonyms(topic_string)
-    # Get related actions
-    # args.actions = get_related_wikihow_actions(topic_string)
-    # Get a title
-    # args.title = generate_powerpoint_title(args.synonyms)
-    # For each synonym download num_images
-    # args.all_paths = get_images(args.synonyms, args.num_images)
-
-    # Compile and save the presentation to data
-    # TODO(Kory) is this still useful now that we generate slides on the fly rather than harvesting a
-    # lot of (often unused) things upfront?
-    compile_talk_to_raw_data(arguments)
 
     # Compile and save the presentation to PPTX
     # compile_talk_to_pptx(args)
