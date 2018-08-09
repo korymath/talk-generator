@@ -17,20 +17,26 @@ def constant_weight(weight: int):
 class SlideGenerator:
     """ Responsible for providing the slide generator and other attributes, such as its name and weight"""
 
-    def __init__(self, generator, weight_function=constant_weight(1), retries=1, name=None):
+    def __init__(self, generator, weight_function=constant_weight(1), retries=5, allowed_repeated_elements=0, name=None):
         self._generator = generator
         self._weight_function = weight_function
         self._retries = retries
         self._name = name
+        self._allowed_repeats = allowed_repeated_elements
 
-    def generate(self, presentation, seed):
+    def generate(self, presentation, seed, used_elements):
         """Generate a slide for a given presentation using the given seed."""
-        used_elements = set()
-
         # Try a certain amount of times
         for _ in range(self._retries):
             (slide, generated_element) = self._generator(presentation, seed)
+
+            # Check if it uses more already used elements than is allowed
+            print("Already used in generation:", used_elements & generated_element)
+            if self._allowed_repeats < len(used_elements & generated_element):
+                continue
+
             used_elements.update(generated_element)
+            print("used_elements", used_elements)
             # Add information about the generator to the notes
             if slide:
                 slide.notes_slide.notes_text_frame.text = str(self) + " / " + seed
@@ -67,12 +73,13 @@ class PresentationSchema:
         # Create the topic-for-each-slide generator
         seed_generator = self._seed_generator(topic, num_slides)
 
+        used_elements = set()
         for slide_nr in range(num_slides):
-            self._generate_slide(presentation, seed_generator, slide_nr, num_slides, set())
+            self._generate_slide(presentation, seed_generator, slide_nr, num_slides, used_elements, set())
 
         return presentation
 
-    def _generate_slide(self, presentation, seed_generator, slide_nr, num_slides, prohibited_generators=set()):
+    def _generate_slide(self, presentation, seed_generator, slide_nr, num_slides, used_elements=set(), prohibited_generators=set()):
 
         # Generate a topic for the next slide
         seed = seed_generator.generate_seed(slide_nr)
@@ -81,13 +88,18 @@ class PresentationSchema:
         generator = self._select_generator(slide_nr, num_slides, prohibited_generators)
 
         print('Generating slide {} about {} using {}'.format(slide_nr + 1, seed, generator))
-        slide = generator.generate(presentation, seed)
+        slide = generator.generate(presentation, seed, used_elements)
 
         # Try again if slide is None, and prohibit generator for generating for this topic
         if not bool(slide):
             prohibited_generators.add(generator)
 
-            return self._generate_slide(presentation, seed_generator, slide_nr, num_slides, prohibited_generators)
+            return self._generate_slide(presentation=presentation,
+                                        seed_generator=seed_generator,
+                                        slide_nr=slide_nr,
+                                        num_slides=num_slides,
+                                        used_elements=used_elements,
+                                        prohibited_generators=prohibited_generators)
             # TODO: Remove slide from presentation if there was a slide generated
 
         return slide
