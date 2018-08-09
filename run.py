@@ -1,5 +1,6 @@
 import argparse
 import math
+import ntpath
 import os.path
 import pathlib
 import random
@@ -91,7 +92,7 @@ def download_image(from_url, to_url):
 
 
 def get_file_name(url):
-    return os.path.basename(os.path.dirname(url))
+    return ntpath.basename(url)
 
 
 def read_lines(file):
@@ -159,7 +160,7 @@ def get_related_giphy(seed_word):
             images = data.get('images')
             original = images.get('original')
             giphy_url = original.get('url')
-            gif_name = get_file_name(giphy_url)
+            gif_name = os.path.basename(os.path.dirname(giphy_url))
             image_url = 'downloads/' + seed_word + '/gifs/' + gif_name + ".gif"
             download_image(giphy_url, image_url)
             return image_url
