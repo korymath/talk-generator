@@ -53,7 +53,6 @@ def get_format_variables_and_functions(template):
 
 
 def apply_variables_to_template(template, variables_dictionary):
-    # TODO(Thomas): Handle functions like '.title' and '.plural', should also update 'get_format_variables': ignore '.'
     variables_and_functions = get_format_variables_and_functions(template)
     (template, variables_dictionary) = apply_functions_to_variables(template, variables_dictionary,
                                                                     variables_and_functions)
