@@ -48,9 +48,9 @@ def _add_title(slide, title):
         title_object.text = title
 
 
-def _add_image(slide, placeholder_id, image_url, fit_image=True):
+def _add_image(slide, placeholder_id, image_url, original_size=True):
     placeholder = slide.placeholders[placeholder_id]
-    if fit_image:
+    if original_size:
         pic = slide.shapes.add_picture(image_url, placeholder.left, placeholder.top)
 
         # calculate max width/height for target size
@@ -159,23 +159,12 @@ def generate_two_column_images_slide(title_generator, caption_1_generator, image
                                                             image_2_generator(seed))
 
 
-class TupledGenerator:
-    """ This class got introduced due to Python not having multi-line lambdas,
-    thus requiring us in order to use tupled generators"""
-
-    def __init__(self, generator, rest_of_function):
-        self._generator = generator
-        self._rest_of_function = rest_of_function
-
-    def generate(self, prs, seed):
-        generated_tuple = self._generator(seed)
-        return self._rest_of_function(prs, seed, generated_tuple)
-
-
 def generate_two_column_images_slide_tuple_caption(title_generator, captions_generator, image_1_generator,
                                                    image_2_generator):
-    tupled_generator = TupledGenerator(captions_generator,
-                                       lambda prs, seed, tuple: create_two_column_images_slide(prs, title_generator(
-                                           seed), tuple[0], image_1_generator(
-                                           seed), tuple[1], image_2_generator(seed), False))
-    return tupled_generator.generate
+    def generate(prs, seed):
+        generated_tuple = captions_generator(seed)
+        return create_two_column_images_slide(prs, title_generator(
+            seed), generated_tuple[0], image_1_generator(
+            seed), generated_tuple[1], image_2_generator(seed), False)
+
+    return generate
