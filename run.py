@@ -2,7 +2,6 @@ import argparse
 import math
 import os.path
 import pathlib
-import pickle
 import random
 from os import listdir
 from os.path import isfile, join
@@ -13,6 +12,7 @@ import safygiphy
 from google_images_download import google_images_download
 
 import language_util
+import reddit
 # Own classes:
 import slide_templates
 import text_generator
@@ -90,6 +90,10 @@ def download_image(from_url, to_url):
     f.close()
 
 
+def get_file_name(url):
+    return os.path.basename(os.path.dirname(url))
+
+
 def read_lines(file):
     return [line.rstrip('\n') for line in open(file)]
 
@@ -155,7 +159,7 @@ def get_related_giphy(seed_word):
             images = data.get('images')
             original = images.get('original')
             giphy_url = original.get('url')
-            gif_name = os.path.basename(os.path.dirname(giphy_url))
+            gif_name = get_file_name(giphy_url)
             image_url = 'downloads/' + seed_word + '/gifs/' + gif_name + ".gif"
             download_image(giphy_url, image_url)
             return image_url
@@ -207,6 +211,7 @@ def generate_wikihow_bold_statement(seed):
 
     return bold_statement_templated_generator.generate(template_values)
 
+
 # MAIN
 
 def main(arguments):
@@ -247,6 +252,34 @@ def create_double_image_captions(_):
     line = random.choice(lines)
     parts = line.split("|")
     return parts[0], parts[1]
+
+
+class RedditImageGenerator:
+    def __init__(self, subreddit):
+        self._subreddit = subreddit
+
+    def generate(self, seed):
+        images = list(reddit.search_subreddit(self._subreddit, seed + " nsfw:no (url:.jpg OR url:.png)"))
+        print(len(images), " images: ", images)
+        if len(images) > 0:
+            chosen_image = random.choice(images).url
+            downloaded_url = "downloads/reddit/" + self._subreddit + "/" + get_file_name(chosen_image)
+            try:
+                download_image(chosen_image, downloaded_url)
+                return downloaded_url
+            except PermissionError:
+                print("Permission error when downloading", chosen_image)
+                return None
+            except requests.exceptions.MissingSchema:
+                print("Missing schema for image ", chosen_image)
+                return None
+            except OSError:
+                print("Non existing image for: ", chosen_image)
+                return None
+
+
+def create_reddit_image_generator(name):
+    return RedditImageGenerator(name).generate
 
 
 inspirational_title_generator = text_generator.TemplatedTextGenerator("data/text-templates/inspiration.txt")
@@ -295,11 +328,16 @@ test_schema = PresentationSchema(
     # Slide generators
 
     [
-
-        SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title,
-                                                            # get_random_inspirobot_image),
-                                                            create_static_generator("downloads/inspirobot/01-743.jpg")),
-                       name="Inspirobot"),
+        SlideGenerator(
+            slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
+                                                                           create_double_image_captions,
+                                                                           create_reddit_image_generator("hmm"),
+                                                                           create_reddit_image_generator("hmm")),
+            name="Two Captions Giphy")
+        # SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title,
+        #                                                     get_random_inspirobot_image),
+        #                                                     create_static_generator("downloads/inspirobot/01-743.jpg")),
+        #                name="Inspirobot"),
         # SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
         #                name="Wikihow Bold Statement")
     ])

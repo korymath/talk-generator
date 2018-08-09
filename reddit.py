@@ -24,5 +24,13 @@ def has_reddit_access():
     return bool(get_reddit())
 
 
-print(has_reddit_access())
-# print(get_reddit().read_only)
+def get_subreddit(name):
+    if has_reddit_access():
+        return get_reddit().subreddit(name)
+
+
+def search_subreddit(name, query, sort="relevance", limit=200):
+    if has_reddit_access():
+        return get_subreddit(name).search(query, sort=sort, limit=limit)
+    else:
+        print("WARNING: No reddit access!")
