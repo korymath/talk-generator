@@ -97,16 +97,6 @@ def read_lines(file):
 # CONTENT GENERATORS
 # These functions generate content, sometimes related to given arguments
 
-def get_images(synonyms, num_images):
-    """Get images, first search locally then Google Image Search."""
-    all_paths = {}
-    if num_images > 0:
-        for word in synonyms:
-            all_paths[word] = get_google_images(word, num_images)
-
-    return all_paths
-
-
 def get_google_images(word, num_images=1):
     lp = 'downloads/' + word + '/'
     paths = _get_google_image_cached(word, num_images, lp)
