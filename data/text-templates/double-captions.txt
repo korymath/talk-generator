@@ -14,3 +14,9 @@ How they see it|What it actually is
 How I see it|What it actually is
 Stereotype|Reality
 {seed.title}'s Stereotype|{seed.title}'s Reality
+Don't|Do
+Do|Don't
+Bad|Worse
+Good|Best
+Good|Bad
+Bad|Good
