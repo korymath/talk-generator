@@ -41,7 +41,6 @@ class TextGeneratorTest(unittest.TestCase):
 
         self.assertEqual(expected, all_generations)
 
-
     def test_variable_and_function_extraction(self):
 
         self.assertEqual({("nice", ".title.lower.upper"), ("is", ".lower.ing"), ("test", ".title")},

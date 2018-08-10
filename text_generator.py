@@ -75,9 +75,14 @@ def apply_functions(variable, functions):
     for func in functions:
         if func in known_functions:
             result = known_functions[func](result)
+        # Check if it is a dictionary, as is allowed in real str.format
+        elif isinstance(result, dict) and func in result:
+            result = result[func]
+        # Unique identifier to make similar functions on a variable have different effects
+        elif func.isdigit():
+            result = result
         else:
-            raise ValueError("Unknown function:",
-                             func)  # TODO check for attributes like real format, and check for numbers for identity preservation
+            raise ValueError("Unknown function:", func)
     return result
 
 
