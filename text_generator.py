@@ -11,7 +11,17 @@ import random_util
 import wikihow
 
 
-class TemplatedTextGenerator(object):
+class AbstractTextGenerator(object):
+    def generate(self, variables_dictionary):
+        raise NotImplementedError()
+
+    def generate_with_seed(self, seed):
+        return self.generate({
+            seed: seed
+        })
+
+
+class TemplatedTextGenerator(AbstractTextGenerator):
 
     def __init__(self, template_file=None, templates_list=None):
         templates = []
@@ -39,7 +49,7 @@ class TemplatedTextGenerator(object):
             possible_templates.remove(template)
 
 
-class TraceryTextGenerator(object):
+class TraceryTextGenerator(AbstractTextGenerator):
     def __init__(self, tracery_json):
         with open(tracery_json) as grammar_file:
             grammar = tracery.Grammar(json.load(grammar_file))
@@ -66,7 +76,8 @@ class TraceryTextGenerator(object):
 def can_format_with(template, variables_dictionary):
     """ Checks if the template can be fully formatted by the given variable dictionary without errors"""
     format_variables = get_format_variables(template)
-    return set(format_variables) <= set(variables_dictionary.keys())
+    return (len(format_variables) == 0 and len(variables_dictionary) == 0) or set(format_variables) <= set(
+        variables_dictionary.keys())
 
 
 def get_format_variables(template):

@@ -286,17 +286,18 @@ _double_captions_generator = text_generator.TemplatedTextGenerator("./data/text-
 
 
 def create_double_image_captions(seed):
-    line = _double_captions_generator.generate({"seed": seed})
+    line = _double_captions_generator.generate(seed)
     parts = line.split("|")
     return parts[0], parts[1]
 
 
 # TITLE FOR INSPIRATIONAL SLIDES
 _inspirational_title_generator = text_generator.TemplatedTextGenerator("data/text-templates/inspiration.txt")
+generate_inspirational_title = _inspirational_title_generator.generate_with_seed
 
 
-def generate_inspirational_title(seed):
-    return _inspirational_title_generator.generate({"topic": seed})
+# NAME
+name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json").generate_with_seed
 
 
 # TRIVIAL GENERATORS

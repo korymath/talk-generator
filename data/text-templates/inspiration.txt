@@ -7,10 +7,10 @@ Think about it...
 Consequence:
 Thus...
 Logical Implication
-Logical Implication for {topic.title}
+Logical Implication for {seed.title}
 Implication
 Something that motivated me
 Food for Thought
 My Life Motto
-Best Thing About {topic.title}
-What {topic.plural.title} Really Think:
+Best Thing About {seed.title}
+What {seed.plural.title} Really Think:
