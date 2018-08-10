@@ -4,9 +4,9 @@ import ntpath
 import os.path
 import pathlib
 import random
+from functools import lru_cache
 from os import listdir
 from os.path import isfile, join
-from functools import lru_cache
 
 import numpy
 import requests
@@ -300,6 +300,17 @@ def generate_inspirational_title(seed):
 weird_image_generator = create_reddit_image_generator("hmmm+hmm+wtf+wtfstockphotos+photoshopbattles"
                                                       "+confusing_perspective+cursedimages")
 
+
+def create_peaked_weight(peak_values, weight, other_weight):
+
+    def weight_function(slide_nr, _):
+        if slide_nr in peak_values:
+            return weight
+        return other_weight
+
+    return weight_function
+
+
 # This object holds all the information about how to generate the presentation
 presentation_schema = PresentationSchema(
     # Basic powerpoint generator
@@ -311,16 +322,13 @@ presentation_schema = PresentationSchema(
     [
         SlideGenerator(
             slide_templates.generate_title_slide(generate_powerpoint_title),
-            # Make title slides only happen as first slide
-            # TODO probably better to create cleaner way of forcing positional slides
-            weight_function=lambda slide_nr, total_slides:
-            100000 if slide_nr == 0 else 0,
+            weight_function=create_peaked_weight([0], 100000, 0),
             name="Title slide"),
         SlideGenerator(
             slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
         SlideGenerator(
             slide_templates.generate_image_slide(generate_inspirational_title, get_random_inspirobot_image),
-            weight_function=constant_weight(0.3),
+            weight_function=constant_weight(0.7),
             name="Inspirobot"),
         SlideGenerator(
             slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
@@ -348,9 +356,7 @@ test_schema = PresentationSchema(
     slide_templates.create_new_powerpoint,
     # Topic per slide generator
     lambda topic, num_slides: IdentityTopicGenerator(topic, num_slides),
-
     # Slide generators
-
     [
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(create_none_generator(),
