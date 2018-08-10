@@ -1,10 +1,11 @@
 """ Module providing language-related operations to manipulate strings"""
-import random_util
 import string
 
 import inflect
 import nltk
 from nltk.corpus import wordnet as wn
+
+import random_util
 
 
 def to_present_participle_first_word(action):
@@ -117,5 +118,24 @@ def get_relations(word):
     return rels
 
 
+inflect_engine = inflect.engine()
+
+
+def is_singular(word):
+    return inflect_engine.singular_noun(word) is False
+
+
+def is_plural(word):
+    return bool(inflect_engine.singular_noun(word))
+
+
 def to_plural(word):
-    return inflect.engine().plural(word)
+    if is_singular(word):
+        return inflect_engine.plural(word)
+    return word
+
+
+def to_singular(word):
+    if is_plural(word):
+        return inflect_engine.singular_noun(word)
+    return word

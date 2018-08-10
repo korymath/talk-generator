@@ -12,6 +12,14 @@ class LanguageUtilTest(unittest.TestCase):
         synonyms = language_util.get_synonyms('dog')
         self.assertEqual(30, len(synonyms))
 
+    def test_to_plural(self):
+        self.assertEqual("cats", language_util.to_plural("cat"))
+        self.assertEqual("cats", language_util.to_plural("cats"))
+
+    def test_to_singular(self):
+        self.assertEqual("cat", language_util.to_singular("cat"))
+        self.assertEqual("cat", language_util.to_singular("cats"))
+
 
 if __name__ == '__main__':
     unittest.main()
