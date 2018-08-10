@@ -1,5 +1,11 @@
 import random
 
+def combined_generator(weighted_generators):
+    def generate(seed):
+        generator = weighted_random(weighted_generators)
+        return generator(seed)
+    return generate
+
 
 # From https://stackoverflow.com/questions/14992521/python-weighted-random
 def weighted_random(pairs):
