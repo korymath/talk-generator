@@ -97,7 +97,6 @@ def apply_functions_to_variables(template, variables_dictionary, variables_and_f
             template = template.replace(old_var_name, applied_var_name)
             # Store in dictionary
             variables_dictionary[applied_var_name] = applied_functions
-            print(applied_var_name, variables_dictionary)
             return template, variables_dictionary
 
     return template, variables_dictionary
