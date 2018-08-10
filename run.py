@@ -19,7 +19,7 @@ import reddit
 import slide_templates
 import text_generator
 import wikihow
-from presentation_schema import PresentationSchema, SlideGenerator, constant_weight
+from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
 
 class IdentityTopicGenerator:
@@ -300,15 +300,7 @@ def generate_inspirational_title(seed):
 weird_image_generator = create_reddit_image_generator("hmmm+hmm+wtf+wtfstockphotos+photoshopbattles"
                                                       "+confusing_perspective+cursedimages")
 
-
-def create_peaked_weight(peak_values, weight, other_weight):
-    def weight_function(slide_nr, _):
-        if slide_nr in peak_values:
-            return weight
-        return other_weight
-
-    return weight_function
-
+# SCHEMAS
 
 # This object holds all the information about how to generate the presentation
 presentation_schema = PresentationSchema(

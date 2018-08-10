@@ -4,7 +4,19 @@ presentation), and slide generators, that have functions for generating slides a
 
 """
 
-import random
+import random_util
+
+
+
+# WEIGHT FUNCTIONS
+
+def create_peaked_weight(peak_values, weight, other_weight):
+    def weight_function(slide_nr, _):
+        if slide_nr in peak_values:
+            return weight
+        return other_weight
+
+    return weight_function
 
 
 def constant_weight(weight):
@@ -128,21 +140,11 @@ class PresentationSchema:
         if len(weighted_generators) == 0:
             raise ValueError("No generators left to generate slides with!")
 
-        return weighted_random(weighted_generators)
+        return random_util.weighted_random(weighted_generators)
 
 
 # Helper functions
 
-# From https://stackoverflow.com/questions/14992521/python-weighted-random
-def weighted_random(pairs):
-    if len(pairs) == 0:
-        raise ValueError("Pairs can't be zero")
-    total = sum(pair[0] for pair in pairs)
-    r = random.uniform(1, total)
-    for (weight, value) in pairs:
-        r -= weight
-        if r <= 0:
-            return value
 
 
 def _has_not_generated_something(generated_elements):
