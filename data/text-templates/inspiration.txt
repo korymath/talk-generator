@@ -13,4 +13,4 @@ Something that motivated me
 Food for Thought
 My Life Motto
 Best Thing About {topic.title}
-What {topic.title} Really Think:
+What {topic.plural.title} Really Think:
