@@ -173,7 +173,6 @@ def generate_powerpoint_title(seed):
     return chosen_template.format(chosen_synonym_plural.title())
 
 
-
 def get_random_inspirobot_image(_):
     # Generate a random url to access inspirobot
     dd = str(random.randint(1, 73)).zfill(2)
@@ -217,8 +216,7 @@ def create_reddit_image_generator(name):
 
 
 weird_image_generator = create_reddit_image_generator("hmmm+hmm+wtf+wtfstockphotos+photoshopbattles"
-                                                      "+confusing_perspective+cursedimages")
-
+                                                      "+confusing_perspective+cursedimages+HybridAnimals")
 
 
 # GOOGLE IMAGES
@@ -250,13 +248,13 @@ def get_related_giphy(seed_word):
             return image_url
 
 
-reddit_gif_generator = create_reddit_image_generator("gifs+gif+gifextra")
+reddit_gif_generator = create_reddit_image_generator("gifs+gif+gifextra+nonononoYES")
 
 combined_gif_generator = random_util.combined_generator([(.5, get_related_giphy), (.5, reddit_gif_generator)])
 
 # OLD
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
-vintage_picture_generator = create_reddit_image_generator("TheWayWeWere")
+vintage_picture_generator = create_reddit_image_generator("TheWayWeWere+100yearsago+ColorizedHistory")
 
 # BOLD_STATEMENT
 
