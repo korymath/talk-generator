@@ -296,7 +296,8 @@ history_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/history.txt").generate_with_seed
 about_me_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/about-me.txt").generate_with_seed
-name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json").generate_with_seed
+historical_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
+                                                                "title_name").generate_with_seed
 
 
 # TRIVIAL GENERATORS
@@ -367,18 +368,20 @@ test_schema = PresentationSchema(
     lambda topic, num_slides: IdentityTopicGenerator(topic, num_slides),
     # Slide generators
     [
-
         SlideGenerator(
-            slide_templates.generate_full_image_slide(
-                identity_generator,
-                get_related_google_image),
-            allowed_repeated_elements=1,
+            slide_templates.generate_two_column_images_slide_text_second(
+                history_title_generator,
+                historical_name_generator,
+                vintage_person_generator,
+                none_generator,
+                create_static_generator("TODO: A quote here")),
             weight_function=constant_weight(100000),
-            name="Google Images"),
+            allowed_repeated_elements=3,
+            name="Historical Figure Quote"),
         # Back up in case something goes wrong
         SlideGenerator(
             slide_templates.generate_image_slide(
-                generate_inspirational_title,
+                inspiration_title_generator,
                 get_random_inspirobot_image),
             # create_static_generator("downloads/inspirobot/01-743.jpg")),
             name="Inspirobot")

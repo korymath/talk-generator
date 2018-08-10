@@ -50,11 +50,12 @@ class TemplatedTextGenerator(AbstractTextGenerator):
 
 
 class TraceryTextGenerator(AbstractTextGenerator):
-    def __init__(self, tracery_json):
+    def __init__(self, tracery_json, variable="origin"):
         with open(tracery_json) as grammar_file:
             grammar = tracery.Grammar(json.load(grammar_file))
             grammar.add_modifiers(base_english)
             self._grammar = grammar
+            self._variable = variable
 
     def generate(self, variables_dictionary=None):
         """ Generates a text from internal tracery grammar using the given variables dictionary"""
@@ -64,7 +65,7 @@ class TraceryTextGenerator(AbstractTextGenerator):
 
         # Generate
         for i in range(100):  # TODO prune the grammar instead of retrying
-            template = self._grammar.flatten("#origin#")
+            template = self._grammar.flatten("#"+self._variable+"#")
             if can_format_with(template, variables_dictionary):
                 result = apply_variables_to_template(template, variables_dictionary)
                 if result:
