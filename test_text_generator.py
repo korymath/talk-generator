@@ -50,8 +50,13 @@ class TextGeneratorTest(unittest.TestCase):
     def test_functions_on_variables(self):
         template_text_generator = text_generator.TemplatedTextGenerator(templates_list=["this is a {test.title}"])
         result = template_text_generator.generate({"test": "something"})
-        print(result)
         self.assertEqual("this is a Something", result)
+
+    def test_functions_on_multiple_variables(self):
+        template_text_generator = text_generator.TemplatedTextGenerator(
+            templates_list=["this is a {test.title} using multiple {variable.plural.title}"])
+        result = template_text_generator.generate({"test": "something", "variable": "instance"})
+        self.assertEqual("this is a Something using multiple Instances", result)
 
 
 if __name__ == '__main__':

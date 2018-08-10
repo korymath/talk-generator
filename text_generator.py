@@ -26,10 +26,11 @@ class TemplatedTextGenerator:
         for i in range(len(possible_templates)):
             template = random.choice(possible_templates)
             if can_format_with(template, variables_dictionary):
-                return apply_variables_to_template(template, variables_dictionary)
-            else:
-                # Remove the template from the possible templates list, such that it won
-                possible_templates.remove(template)
+                result = apply_variables_to_template(template, variables_dictionary)
+                if result:
+                    return result
+            # Remove the template from the possible templates list, such that it won
+            possible_templates.remove(template)
 
 
 # TODO(Thomas): Add TraceryTemplatedTextGenerator for better variations than a template list
@@ -54,9 +55,10 @@ def get_format_variables_and_functions(template):
 
 def apply_variables_to_template(template, variables_dictionary):
     variables_and_functions = get_format_variables_and_functions(template)
-    (template, variables_dictionary) = apply_functions_to_variables(template, variables_dictionary,
-                                                                    variables_and_functions)
-    return template.format(**variables_dictionary)
+    applied = apply_functions_to_variables(template, variables_dictionary, variables_and_functions)
+    if applied:
+        (template, variables_dictionary) = applied
+        return template.format(**variables_dictionary)
 
 
 known_functions = {
@@ -76,7 +78,7 @@ def apply_functions(variable, functions):
         # Check if it transformed the result into None
         if result is None:
             return None
-        
+
         if func in known_functions:
             result = known_functions[func](result)
         # Check if it is a dictionary, as is allowed in real str.format
@@ -102,12 +104,14 @@ def apply_functions_to_variables(template, variables_dictionary, variables_and_f
             variable_name = var_func[0]
             variable = variables_dictionary[variable_name]
             applied_functions = apply_functions(variable, functions)
-            applied_var_name = old_var_name.replace(".", "_")
-            # Replace all occurrences with the dot to the underscore notation
-            template = template.replace(old_var_name, applied_var_name)
-            # Store in dictionary
-            variables_dictionary[applied_var_name] = applied_functions
-            return template, variables_dictionary
+            if applied_functions is not None:
+                applied_var_name = old_var_name.replace(".", "_")
+                # Replace all occurrences with the dot to the underscore notation
+                template = template.replace(old_var_name, applied_var_name)
+                # Store in dictionary
+                variables_dictionary[applied_var_name] = applied_functions
+            else:
+                return None
 
     return template, variables_dictionary
 
