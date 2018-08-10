@@ -289,12 +289,13 @@ def create_double_image_captions(seed):
     return parts[0], parts[1]
 
 
-# TITLE FOR INSPIRATIONAL SLIDES
-_inspirational_title_generator = text_generator.TemplatedTextGenerator("data/text-templates/inspiration.txt")
-generate_inspirational_title = _inspirational_title_generator.generate_with_seed
-
-
-# NAME
+# TITLE GENERATORS
+inspiration_title_generator = text_generator.TemplatedTextGenerator(
+    "data/text-templates/inspiration.txt").generate_with_seed
+history_title_generator = text_generator.TemplatedTextGenerator(
+    "data/text-templates/history.txt").generate_with_seed
+about_me_title_generator = text_generator.TemplatedTextGenerator(
+    "data/text-templates/about-me.txt").generate_with_seed
 name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json").generate_with_seed
 
 
@@ -335,7 +336,7 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_full_image_slide(identity_generator, combined_gif_generator),
             name="Full Screen Giphy"),
         SlideGenerator(
-            slide_templates.generate_image_slide(generate_inspirational_title, get_random_inspirobot_image),
+            slide_templates.generate_image_slide(inspiration_title_generator, get_random_inspirobot_image),
             weight_function=constant_weight(0.7),
             name="Inspirobot"),
         SlideGenerator(

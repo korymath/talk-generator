@@ -1,0 +1,6 @@
+History
+Some History
+Important Figures in {seed.plural.title} History
+Historical {seed.title} People
+Quick Historical Note
+History of {seed.plural.title}
