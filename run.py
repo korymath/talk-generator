@@ -302,7 +302,6 @@ weird_image_generator = create_reddit_image_generator("hmmm+hmm+wtf+wtfstockphot
 
 
 def create_peaked_weight(peak_values, weight, other_weight):
-
     def weight_function(slide_nr, _):
         if slide_nr in peak_values:
             return weight
@@ -336,6 +335,9 @@ presentation_schema = PresentationSchema(
         SlideGenerator(
             slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
             name="Google Images"),
+        SlideGenerator(
+            slide_templates.generate_full_image_slide(identity_generator, get_related_giphy),
+            name="Full Screen Giphy"),
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
                                                                            create_double_image_captions,
