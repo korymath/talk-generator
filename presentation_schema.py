@@ -7,7 +7,6 @@ presentation), and slide generators, that have functions for generating slides a
 import random_util
 
 
-
 # WEIGHT FUNCTIONS
 
 def create_peaked_weight(peak_values, weight, other_weight):
@@ -144,7 +143,6 @@ class PresentationSchema:
 
 
 # Helper functions
-
 
 
 def _has_not_generated_something(generated_elements):

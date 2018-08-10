@@ -352,21 +352,21 @@ test_schema = PresentationSchema(
     lambda topic, num_slides: IdentityTopicGenerator(topic, num_slides),
     # Slide generators
     [
+
         SlideGenerator(
-            slide_templates.generate_two_column_images_slide_tuple_caption(create_none_generator(),
-                                                                           create_double_image_captions,
-                                                                           create_reddit_image_generator(
-                                                                               "hmm"),
-                                                                           create_reddit_image_generator(
-                                                                               "hmm")),
-            weight_function=constant_weight(1000),
-            name="Two Captions Weird Reddit"),
+            slide_templates.generate_full_image_slide(
+                identity_generator,
+                get_related_google_image),
+            allowed_repeated_elements=1,
+            weight_function=constant_weight(100000),
+            name="Google Images"),
         # Back up in case something goes wrong
-        SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title,
-                                                            # get_random_inspirobot_image),
-                                                            create_static_generator("downloads/inspirobot/01-743.jpg")),
-                       allowed_repeated_elements=1,
-                       name="Inspirobot")
+        SlideGenerator(
+            slide_templates.generate_image_slide(
+                generate_inspirational_title,
+                get_random_inspirobot_image),
+            # create_static_generator("downloads/inspirobot/01-743.jpg")),
+            name="Inspirobot")
     ])
 
 schemas = {
