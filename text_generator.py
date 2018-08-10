@@ -1,12 +1,17 @@
 """ This module helps out with generating text using templates """
+import json
+import random
 import re
+
+import tracery
+from tracery.modifiers import base_english
 
 import language_util
 import random_util
 import wikihow
 
 
-class TemplatedTextGenerator:
+class TemplatedTextGenerator(object):
 
     def __init__(self, template_file=None, templates_list=None):
         templates = []
@@ -32,6 +37,27 @@ class TemplatedTextGenerator:
                     return result
             # Remove the template from the possible templates list, such that it won
             possible_templates.remove(template)
+
+
+class TraceryTextGenerator(object):
+    def __init__(self, tracery_json):
+        grammar = tracery.Grammar(json.load(open(tracery_json)))
+        grammar.add_modifiers(base_english)
+        self._grammar = grammar
+
+    def generate(self, variables_dictionary=None):
+        """ Generates a text from internal tracery grammar using the given variables dictionary"""
+        # Set empty dictionary if none is given
+        if not bool(variables_dictionary):
+            variables_dictionary = {}
+
+        # Generate
+        for i in range(100):  # TODO prune the grammar instead of retrying
+            template = self._grammar.flatten("#origin#")
+            if can_format_with(template, variables_dictionary):
+                result = apply_variables_to_template(template, variables_dictionary)
+                if result:
+                    return result
 
 
 # TODO(Thomas): Add TraceryTemplatedTextGenerator for better variations than a template list

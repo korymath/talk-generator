@@ -11,3 +11,4 @@ pytest
 numpy
 bs4
 praw
+tracery
