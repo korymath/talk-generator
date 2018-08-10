@@ -13,9 +13,10 @@ import requests
 import safygiphy
 from google_images_download import google_images_download
 
-import language_util
-import reddit
 # Own modules:
+import language_util
+import random_util
+import reddit
 import slide_templates
 import text_generator
 import wikihow
@@ -172,20 +173,6 @@ def generate_powerpoint_title(seed):
     return chosen_template.format(chosen_synonym_plural.title())
 
 
-def get_related_giphy(seed_word):
-    giphy = safygiphy.Giphy()
-    response = giphy.random(tag=seed_word)
-    if bool(response):
-        data = response.get('data')
-        if bool(data):
-            images = data.get('images')
-            original = images.get('original')
-            giphy_url = original.get('url')
-            gif_name = os.path.basename(os.path.dirname(giphy_url))
-            image_url = 'downloads/' + seed_word + '/gifs/' + gif_name + ".gif"
-            download_image(giphy_url, image_url)
-            return image_url
-
 
 def get_random_inspirobot_image(_):
     # Generate a random url to access inspirobot
@@ -233,6 +220,7 @@ weird_image_generator = create_reddit_image_generator("hmmm+hmm+wtf+wtfstockphot
                                                       "+confusing_perspective+cursedimages")
 
 
+
 # GOOGLE IMAGES
 
 def get_related_google_image(seed_word):
@@ -244,6 +232,31 @@ def get_related_google_image(seed_word):
         img_path = random.choice(img_paths)
         return img_path
 
+
+# GIFS
+
+def get_related_giphy(seed_word):
+    giphy = safygiphy.Giphy()
+    response = giphy.random(tag=seed_word)
+    if bool(response):
+        data = response.get('data')
+        if bool(data):
+            images = data.get('images')
+            original = images.get('original')
+            giphy_url = original.get('url')
+            gif_name = os.path.basename(os.path.dirname(giphy_url))
+            image_url = 'downloads/' + seed_word + '/gifs/' + gif_name + ".gif"
+            download_image(giphy_url, image_url)
+            return image_url
+
+
+reddit_gif_generator = create_reddit_image_generator("gifs+gif+gifextra")
+
+combined_gif_generator = random_util.combined_generator([(.5, get_related_giphy), (.5, reddit_gif_generator)])
+
+# OLD
+vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
+vintage_picture_generator = create_reddit_image_generator("TheWayWeWere")
 
 # BOLD_STATEMENT
 
@@ -320,7 +333,8 @@ presentation_schema = PresentationSchema(
             weight_function=create_peaked_weight([0], 100000, 0),
             name="Title slide"),
         SlideGenerator(
-            slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
+            slide_templates.generate_full_image_slide(identity_generator, combined_gif_generator),
+            name="Full Screen Giphy"),
         SlideGenerator(
             slide_templates.generate_image_slide(generate_inspirational_title, get_random_inspirobot_image),
             weight_function=constant_weight(0.7),
@@ -332,14 +346,11 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
             name="Google Images"),
         SlideGenerator(
-            slide_templates.generate_full_image_slide(identity_generator, get_related_giphy),
-            name="Full Screen Giphy"),
-        SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
                                                                            create_double_image_captions,
-                                                                           get_related_giphy,
-                                                                           get_related_giphy),
-            name="Two Captions Giphy"),
+                                                                           combined_gif_generator,
+                                                                           combined_gif_generator),
+            name="Two Captions Gifs"),
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
                                                                            create_double_image_captions,
