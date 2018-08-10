@@ -1,6 +1,6 @@
 Don't We All {action}?
 What's the Best Way to {action}?
-I hate {action_present_participle}
+I hate {action.ing}
 Is There a Way to Avoid Having to {action}?
 The Hidden Link Between {topic} and {action.ing}
 But What's the Effect of {action.ing} on {topic.plural}?

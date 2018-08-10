@@ -73,6 +73,10 @@ def apply_functions(variable, functions):
     """ Applies a list of functions to a variable """
     result = variable
     for func in functions:
+        # Check if it transformed the result into None
+        if result is None:
+            return None
+        
         if func in known_functions:
             result = known_functions[func](result)
         # Check if it is a dictionary, as is allowed in real str.format
@@ -83,6 +87,7 @@ def apply_functions(variable, functions):
             result = result
         else:
             raise ValueError("Unknown function:", func)
+
     return result
 
 
