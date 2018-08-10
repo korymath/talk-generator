@@ -15,12 +15,62 @@ from google_images_download import google_images_download
 
 import language_util
 import reddit
-# Own classes:
+# Own modules:
 import slide_templates
 import text_generator
 import wikihow
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
+
+# == HELPER FUNCTIONS ==
+def _save_presentation_to_pptx(topic, prs):
+    """Save the talk."""
+    fp = './output/' + topic + '.pptx'
+    # Create the parent folder if it doesn't exist
+    pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
+    prs.save(fp)
+    print('Saved talk to {}'.format(fp))
+    return True
+
+
+def download_image(from_url, to_url):
+    """Download image from url to path."""
+    # Create the parent folder if it doesn't exist
+    pathlib.Path(os.path.dirname(to_url)).mkdir(parents=True, exist_ok=True)
+
+    # Download
+    f = open(to_url, 'wb')
+    f.write(requests.get(from_url).content)
+    f.close()
+
+
+def get_file_name(url):
+    return ntpath.basename(url)
+
+
+def read_lines(file):
+    return [line.rstrip('\n') for line in open(file)]
+
+
+# == MAIN ==
+
+def main(arguments):
+    """Make a talk with the given topic."""
+    # Print status details
+    print('******************************************')
+    print("Making {} slide talk on: {}".format(arguments.num_slides, arguments.topic))
+
+    # Retrieve the schema to generate the presentation with
+    schema = get_schema(args.schema)
+
+    # Generate the presentation object
+    presentation = schema.generate_presentation(arguments.topic, arguments.num_slides)
+
+    # Save presentation
+    _save_presentation_to_pptx(arguments.topic, presentation)
+
+
+# == TOPIC GENERATORS ==
 
 class IdentityTopicGenerator:
     """ Generates always the given topic as the seed for each slide """
@@ -70,37 +120,7 @@ class SynonymTopicGenerator:
         return self._seeds[slide_nr]
 
 
-# HELPER FUNCTIONS
-def _save_presentation_to_pptx(topic, prs):
-    """Save the talk."""
-    fp = './output/' + topic + '.pptx'
-    # Create the parent folder if it doesn't exist
-    pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
-    prs.save(fp)
-    print('Saved talk to {}'.format(fp))
-    return True
-
-
-def download_image(from_url, to_url):
-    """Download image from url to path."""
-    # Create the parent folder if it doesn't exist
-    pathlib.Path(os.path.dirname(to_url)).mkdir(parents=True, exist_ok=True)
-
-    # Download
-    f = open(to_url, 'wb')
-    f.write(requests.get(from_url).content)
-    f.close()
-
-
-def get_file_name(url):
-    return ntpath.basename(url)
-
-
-def read_lines(file):
-    return [line.rstrip('\n') for line in open(file)]
-
-
-# CONTENT GENERATORS
+# == CONTENT GENERATORS ==
 # These functions generate content, sometimes related to given arguments
 
 def get_google_images(word, num_images=1):
@@ -144,7 +164,6 @@ def _get_google_image_cached(word, num_image, lp):
         return paths
 
 
-# GENERATORS
 def generate_powerpoint_title(seed):
     """Returns a template title from a source list."""
     chosen_synonym_plural = language_util.to_plural(seed)
@@ -182,87 +201,7 @@ def get_random_inspirobot_image(_):
     return image_url
 
 
-# FULL SLIDES GENERATORS:
-# These are functions that create slides with certain (generated) content
-
-def get_related_google_image(seed_word):
-    # Get all image paths
-    # img_paths = args.all_paths.get(word)
-    img_paths = get_google_images(seed_word, 1)
-    if img_paths:
-        # Pick one of the images
-        img_path = random.choice(img_paths)
-        return img_path
-
-
-bold_statement_templated_generator = text_generator.TemplatedTextGenerator('data/text-templates/bold-statements.txt')
-
-
-def generate_wikihow_bold_statement(seed):
-    template_values = {
-        "topic": seed,
-        # TODO: Use datamuse or conceptnet or some other mechanism of finding a related location
-        'location': 'Here'
-    }
-    # TODO: Sometimes "Articles Form Wikihow" is being scraped as an action, this is a bug
-    related_actions = wikihow.get_related_wikihow_actions(seed)
-    if related_actions:
-        action = random.choice(related_actions)
-        template_values.update({'action': action.title(),
-                                # TODO: Make a scraper that scrapes a step related to this action on wikihow.
-                                'step': 'Do Whatever You Like'})
-
-    return bold_statement_templated_generator.generate(template_values)
-
-
-# MAIN
-
-def main(arguments):
-    """Make a talk with the given topic."""
-    # Print status details
-    print('******************************************')
-    print("Making {} slide talk on: {}".format(arguments.num_slides, arguments.topic))
-
-    # Parse topic string to parts-of-speech
-    # text = nltk.word_tokenize(args.topic)
-    # print('******************************************')
-    # print('tokenized text: ', text)
-    # print('pos tag text: ', nltk.pos_tag(text))
-
-    # Compile and save the presentation to PPTX
-    # compile_talk_to_pptx(args)
-    schema = get_schema(args.schema)
-    presentation = schema.generate_presentation(arguments.topic, arguments.num_slides)
-
-    # Save presentation
-    _save_presentation_to_pptx(arguments.topic, presentation)
-
-
-def none_generator(_):
-    return None
-
-
-def identity_generator(input_word):
-    return input_word
-
-
-def create_static_generator(always_generate_this):
-    return lambda _: always_generate_this
-
-
-def create_none_generator():
-    return lambda _: None
-
-
-double_captions_generator = text_generator.TemplatedTextGenerator("./data/text-templates/double-captions.txt")
-
-
-def create_double_image_captions(seed):
-    line = double_captions_generator.generate({"seed": seed})
-    parts = line.split("|")
-    return parts[0], parts[1]
-
-
+# REDDIT
 class RedditImageGenerator:
     def __init__(self, subreddit):
         self._subreddit = subreddit
@@ -290,17 +229,82 @@ def create_reddit_image_generator(name):
     return RedditImageGenerator(name).generate
 
 
-inspirational_title_generator = text_generator.TemplatedTextGenerator("data/text-templates/inspiration.txt")
-
-
-def generate_inspirational_title(seed):
-    return inspirational_title_generator.generate({"topic": seed})
-
-
 weird_image_generator = create_reddit_image_generator("hmmm+hmm+wtf+wtfstockphotos+photoshopbattles"
                                                       "+confusing_perspective+cursedimages")
 
-# SCHEMAS
+
+# GOOGLE IMAGES
+
+def get_related_google_image(seed_word):
+    # Get all image paths
+    # img_paths = args.all_paths.get(word)
+    img_paths = get_google_images(seed_word, 1)
+    if img_paths:
+        # Pick one of the images
+        img_path = random.choice(img_paths)
+        return img_path
+
+
+# BOLD_STATEMENT
+
+bold_statement_templated_generator = text_generator.TemplatedTextGenerator('data/text-templates/bold-statements.txt')
+
+
+def generate_wikihow_bold_statement(seed):
+    template_values = {
+        "topic": seed,
+        # TODO: Use datamuse or conceptnet or some other mechanism of finding a related location
+        'location': 'Here'
+    }
+    # TODO: Sometimes "Articles Form Wikihow" is being scraped as an action, this is a bug
+    related_actions = wikihow.get_related_wikihow_actions(seed)
+    if related_actions:
+        action = random.choice(related_actions)
+        template_values.update({'action': action.title(),
+                                # TODO: Make a scraper that scrapes a step related to this action on wikihow.
+                                'step': 'Do Whatever You Like'})
+
+    return bold_statement_templated_generator.generate(template_values)
+
+
+# DOUBLE CAPTIONS
+
+_double_captions_generator = text_generator.TemplatedTextGenerator("./data/text-templates/double-captions.txt")
+
+
+def create_double_image_captions(seed):
+    line = _double_captions_generator.generate({"seed": seed})
+    parts = line.split("|")
+    return parts[0], parts[1]
+
+
+# TITLE FOR INSPIRATIONAL SLIDES
+_inspirational_title_generator = text_generator.TemplatedTextGenerator("data/text-templates/inspiration.txt")
+
+
+def generate_inspirational_title(seed):
+    return _inspirational_title_generator.generate({"topic": seed})
+
+
+# TRIVIAL GENERATORS
+
+def none_generator(_):
+    return None
+
+
+def identity_generator(input_word):
+    return input_word
+
+
+def create_static_generator(always_generate_this):
+    return lambda _: always_generate_this
+
+
+def create_none_generator():
+    return lambda _: None
+
+
+# == SCHEMAS ==
 
 # This object holds all the information about how to generate the presentation
 presentation_schema = PresentationSchema(
