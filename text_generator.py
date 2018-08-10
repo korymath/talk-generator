@@ -41,9 +41,10 @@ class TemplatedTextGenerator(object):
 
 class TraceryTextGenerator(object):
     def __init__(self, tracery_json):
-        grammar = tracery.Grammar(json.load(open(tracery_json)))
-        grammar.add_modifiers(base_english)
-        self._grammar = grammar
+        with open(tracery_json) as grammar_file:
+            grammar = tracery.Grammar(json.load(grammar_file))
+            grammar.add_modifiers(base_english)
+            self._grammar = grammar
 
     def generate(self, variables_dictionary=None):
         """ Generates a text from internal tracery grammar using the given variables dictionary"""

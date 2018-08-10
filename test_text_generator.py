@@ -58,6 +58,11 @@ class TextGeneratorTest(unittest.TestCase):
         result = template_text_generator.generate({"test": "something", "variable": "instance"})
         self.assertEqual("this is a Something using multiple Instances", result)
 
+    def test_tracery_grammar(self):
+        tracery = text_generator.TraceryTextGenerator("./data/text-templates/name.json")
+        for i in range(5):
+            self.assertTrue(tracery.generate())
+
 
 if __name__ == '__main__':
     unittest.main()
