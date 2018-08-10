@@ -4,10 +4,10 @@ presentation), and slide generators, that have functions for generating slides a
 
 """
 
-from random import randint
+import random
 
 
-def constant_weight(weight: int):
+def constant_weight(weight):
     """Class function to create a function that always returns a certain weight"""
     return lambda slide_nr, total_slides: weight
 
@@ -23,23 +23,24 @@ class SlideGenerator:
         self._weight_function = weight_function
         self._retries = retries
         self._name = name
-        self._allowed_repeats = allowed_repeated_elements
+        self._allowed_repeated_elements = allowed_repeated_elements
 
     def generate(self, presentation, seed, used_elements):
         """Generate a slide for a given presentation using the given seed."""
         # Try a certain amount of times
         for i in range(self._retries):
-            slide_results =self._generator(presentation, seed)
+            slide_results = self._generator(presentation, seed, (used_elements, self._allowed_repeated_elements))
             if slide_results:
                 (slide, generated_elements) = slide_results
 
-                # Add new generated content
-                _filter_generated_elements(generated_elements)
-                used_elements.update(generated_elements)
+                # If the generated content is nothing, don't try again
+                if _has_not_generated_something(generated_elements):
+                    return None
 
-                # Add notes about the generation
-                slide.notes_slide.notes_text_frame.text = str(self) + " / " + seed
-                return slide
+                if slide:
+                    # Add notes about the generation
+                    slide.notes_slide.notes_text_frame.text = str(self) + " / " + seed + " / " + str(generated_elements)
+                    return slide, generated_elements
 
     #
     def get_weight_for(self, slide_nr, total_slides):
@@ -54,13 +55,6 @@ class SlideGenerator:
         if name == '<lambda>':
             name = "Unnamed Generator"
         return "SlideGenerator[" + name + "]"
-
-
-def _filter_generated_elements(generated_elements):
-    if "" in generated_elements:
-        generated_elements.remove("")
-    if None in generated_elements:
-        generated_elements.remove(None)
 
 
 class PresentationSchema:
@@ -81,7 +75,14 @@ class PresentationSchema:
 
         used_elements = set()
         for slide_nr in range(num_slides):
-            self._generate_slide(presentation, seed_generator, slide_nr, num_slides, used_elements, set())
+            slide_results = self._generate_slide(presentation, seed_generator, slide_nr, num_slides, used_elements,
+                                                 set())
+            if slide_results:
+                # Add new generated content
+                slide, generated_elements = slide_results
+                generated_elements = set(generated_elements)
+                _filter_generated_elements(generated_elements)
+                used_elements.update(generated_elements)
 
         return presentation
 
@@ -94,22 +95,25 @@ class PresentationSchema:
         # Select the slide generator to generate with
         generator = self._select_generator(slide_nr, num_slides, prohibited_generators)
 
-        print('\n * Generating slide {} about {} using {} *'.format(slide_nr + 1, seed, generator))
-        slide = generator.generate(presentation, seed, used_elements)
+        if generator:
+            print('\n * Generating slide {} about {} using {} *'.format(slide_nr + 1, seed, generator))
+            slide = generator.generate(presentation, seed, used_elements)
 
-        # Try again if slide is None, and prohibit generator for generating for this topic
-        if not bool(slide):
-            prohibited_generators.add(generator)
+            # Try again if slide is None, and prohibit generator for generating for this topic
+            if not bool(slide):
+                prohibited_generators.add(generator)
 
-            return self._generate_slide(presentation=presentation,
-                                        seed_generator=seed_generator,
-                                        slide_nr=slide_nr,
-                                        num_slides=num_slides,
-                                        used_elements=used_elements,
-                                        prohibited_generators=prohibited_generators)
-            # TODO: Remove slide from presentation if there was a slide generated
+                return self._generate_slide(presentation=presentation,
+                                            seed_generator=seed_generator,
+                                            slide_nr=slide_nr,
+                                            num_slides=num_slides,
+                                            used_elements=used_elements,
+                                            prohibited_generators=prohibited_generators)
+                # TODO: Remove slide from presentation if there was a slide generated
 
-        return slide
+            return slide
+        else:
+            print("No generator found to generate about ", presentation)
 
     def _select_generator(self, slide_nr, total_slides, prohibited_generators):
         """Select a generator for a certain slide number"""
@@ -134,8 +138,25 @@ def weighted_random(pairs):
     if len(pairs) == 0:
         raise ValueError("Pairs can't be zero")
     total = sum(pair[0] for pair in pairs)
-    r = randint(1, total)
+    r = random.uniform(1, total)
     for (weight, value) in pairs:
         r -= weight
         if r <= 0:
             return value
+
+
+def _has_not_generated_something(generated_elements):
+    generated_elements = set(generated_elements)
+    _filter_generated_elements(generated_elements)
+    return len(generated_elements) == 0
+
+
+def _filter_generated_elements(generated_elements):
+    if "" in generated_elements:
+        generated_elements.remove("")
+    if None in generated_elements:
+        generated_elements.remove(None)
+    if True in generated_elements:
+        generated_elements.remove(True)
+    if False in generated_elements:
+        generated_elements.remove(False)

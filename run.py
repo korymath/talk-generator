@@ -6,6 +6,7 @@ import pathlib
 import random
 from os import listdir
 from os.path import isfile, join
+from functools import lru_cache
 
 import numpy
 import requests
@@ -114,7 +115,7 @@ def get_google_images(word, num_images=1):
         arguments = {
             'keywords': word,
             'limit': num_images,
-            'print_urls': True,
+            'print_urls': False,
             'exact_size': '1600,900',
         }
         # passing the arguments to the function
@@ -123,10 +124,11 @@ def get_google_images(word, num_images=1):
             paths.extend(value)
 
         # printing absolute paths of the downloaded images
-        print('paths of images', paths)
+        # print('paths of images', paths)
     return paths
 
 
+@lru_cache(maxsize=20)
 def _get_google_image_cached(word, num_image, lp):
     try:
         local_files = [lp + f for f in listdir(lp) if isfile(join(lp,
@@ -248,6 +250,10 @@ def create_static_generator(always_generate_this):
     return lambda _: always_generate_this
 
 
+def create_none_generator():
+    return lambda _: None
+
+
 double_captions_generator = text_generator.TemplatedTextGenerator("./data/text-templates/double-captions.txt")
 
 
@@ -302,26 +308,39 @@ presentation_schema = PresentationSchema(
     lambda topic, num_slides: SynonymTopicGenerator(topic, num_slides),
 
     # Slide generators
-    [SlideGenerator(slide_templates.generate_title_slide(generate_powerpoint_title),
-                    # Make title slides only happen as first slide
-                    # TODO probably better to create cleaner way of forcing positional slides
-                    weight_function=lambda slide_nr, total_slides:
-                    100000 if slide_nr == 0 else 0,
-                    name="Title slide"),
-     SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
-     SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title, get_random_inspirobot_image),
-                    name="Inspirobot"),
-     SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
-                    name="Wikihow Bold Statement"),
-     SlideGenerator(slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
-                    name="Google Images"),
-     SlideGenerator(
-         slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
-                                                                        create_double_image_captions,
-                                                                        weird_image_generator,
-                                                                        weird_image_generator),
-         name="Two Captions Weird Reddit"),
-     ]
+    [
+        SlideGenerator(
+            slide_templates.generate_title_slide(generate_powerpoint_title),
+            # Make title slides only happen as first slide
+            # TODO probably better to create cleaner way of forcing positional slides
+            weight_function=lambda slide_nr, total_slides:
+            100000 if slide_nr == 0 else 0,
+            name="Title slide"),
+        SlideGenerator(
+            slide_templates.generate_full_image_slide(identity_generator, get_related_giphy), name="Giphy"),
+        SlideGenerator(
+            slide_templates.generate_image_slide(generate_inspirational_title, get_random_inspirobot_image),
+            weight_function=constant_weight(0.3),
+            name="Inspirobot"),
+        SlideGenerator(
+            slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
+            name="Wikihow Bold Statement"),
+        SlideGenerator(
+            slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
+            name="Google Images"),
+        SlideGenerator(
+            slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
+                                                                           create_double_image_captions,
+                                                                           get_related_giphy,
+                                                                           get_related_giphy),
+            name="Two Captions Giphy"),
+        SlideGenerator(
+            slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
+                                                                           create_double_image_captions,
+                                                                           weird_image_generator,
+                                                                           weird_image_generator),
+            name="Two Captions Weird Reddit"),
+    ]
 )
 
 test_schema = PresentationSchema(
@@ -333,21 +352,21 @@ test_schema = PresentationSchema(
     # Slide generators
 
     [
-
         SlideGenerator(
-            slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
+            slide_templates.generate_two_column_images_slide_tuple_caption(create_none_generator(),
                                                                            create_double_image_captions,
-                                                                           weird_image_generator,
-                                                                           weird_image_generator),
+                                                                           create_reddit_image_generator(
+                                                                               "hmm"),
+                                                                           create_reddit_image_generator(
+                                                                               "hmm")),
             weight_function=constant_weight(1000),
             name="Two Captions Weird Reddit"),
         # Back up in case something goes wrong
         SlideGenerator(slide_templates.generate_image_slide(generate_inspirational_title,
                                                             # get_random_inspirobot_image),
                                                             create_static_generator("downloads/inspirobot/01-743.jpg")),
+                       allowed_repeated_elements=1,
                        name="Inspirobot")
-        # SlideGenerator(slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
-        #                name="Wikihow Bold Statement")
     ])
 
 schemas = {

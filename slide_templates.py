@@ -93,14 +93,14 @@ def create_new_powerpoint():
 def create_title_slide(prs, title):
     slide = _create_slide(prs, LAYOUT_TITLE_SLIDE)
     _add_title(slide, title)
-    return slide, {title}
+    return slide
 
 
 def create_large_quote_slide(prs, text):
     if bool(text):
         slide = _create_slide(prs, LAYOUT_LARGE_QUOTE)
         _add_text(slide, 1, text)
-        return slide, {text}
+        return slide
 
 
 def create_image_slide(prs, title=None, image_url=None):
@@ -123,7 +123,7 @@ def create_two_column_images_slide(prs, title=None, caption_1=None, image_1=None
         _add_image(slide, 13, image_1, fit_images)
         _add_text(slide, 3, caption_2)
         _add_image(slide, 14, image_2, fit_images)
-        return slide, {title, caption_1, image_1, caption_2, image_2}
+        return slide
 
 
 def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_image):
@@ -131,40 +131,58 @@ def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_im
         slide = _create_slide(prs, slide_template_idx)
         _add_title(slide, title)
         _add_image(slide, 1, image_url, fit_image)
-        return slide, {title, image_url}
+        return slide
 
 
 # GENERATORS: Same as the template fillers above, but using generation functions
 
 def generate_full_image_slide(title_generator, image_generator):
-    return lambda prs, seed: create_full_image_slide(prs, title_generator(seed), image_generator(seed))
+    return _generate_slide_generator(create_full_image_slide, (image_generator,))
 
 
 def generate_image_slide(title_generator, image_generator):
-    return lambda prs, seed: create_image_slide(prs, title_generator(seed), image_generator(seed))
+    return _generate_slide_generator(create_image_slide, (title_generator, image_generator))
 
 
 def generate_title_slide(title_generator):
-    return lambda prs, seed: create_title_slide(prs, title_generator(seed))
+    return _generate_slide_generator(create_title_slide, (title_generator,))
 
 
 def generate_large_quote_slide(text_generator):
-    return lambda prs, seed: create_large_quote_slide(prs, text_generator(seed))
+    return _generate_slide_generator(create_large_quote_slide, (text_generator,))
 
 
 def generate_two_column_images_slide(title_generator, caption_1_generator, image_1_generator, caption_2_generator,
                                      image_2_generator):
-    return lambda prs, seed: create_two_column_images_slide(prs, title_generator(seed), caption_1_generator(seed),
-                                                            image_1_generator(seed), caption_2_generator(seed),
-                                                            image_2_generator(seed))
+    return _generate_slide_generator(create_two_column_images_slide, (title_generator, caption_1_generator,
+                                     image_1_generator, caption_2_generator,
+                                     image_2_generator))
 
 
 def generate_two_column_images_slide_tuple_caption(title_generator, captions_generator, image_1_generator,
                                                    image_2_generator):
-    def generate(prs, seed):
+    def generate(prs, seed, used):
         generated_tuple = captions_generator(seed)
-        return create_two_column_images_slide(prs, title_generator(
-            seed), generated_tuple[0], image_1_generator(
-            seed), generated_tuple[1], image_2_generator(seed), False)
+        generated = title_generator(seed), generated_tuple[0], image_1_generator(seed), generated_tuple[
+            1], image_2_generator(seed)
+        if _is_different_enough(generated, used):
+            return create_two_column_images_slide(prs, *generated, False), generated
 
     return generate
+
+
+# HELPERS
+
+def _generate_slide_generator(slide_template, generators):
+    def generate(prs, seed, used):
+        generated = [content_generator(seed) for content_generator in generators]
+        if _is_different_enough(generated, used):
+            return slide_template(prs, *generated), generated
+
+    return generate
+
+
+def _is_different_enough(generated, used):
+    (used_elements, allowed_repeated_elements) = used
+    intersection = set(generated) & used_elements
+    return allowed_repeated_elements >= len(intersection)
