@@ -87,7 +87,8 @@ class PresentationSchema:
         used_elements = set()
         for slide_nr in range(num_slides):
             # TODO: This can be done in parallel. There might be race conditions with the used_elements set,
-            # but that's an okay sacrifice for generating that much faster
+            # and the order of slides must still happen in the same order, so the slide_nr should be passed as
+            # argument to slide generator's content generator
             slide_results = self._generate_slide(presentation, seed_generator, slide_nr, num_slides, used_elements,
                                                  set())
             if slide_results:
