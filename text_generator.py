@@ -1,8 +1,9 @@
 """ This module helps out with generating text using templates """
-import random
 import re
 
 import language_util
+import random_util
+import wikihow
 
 
 class TemplatedTextGenerator:
@@ -67,7 +68,8 @@ known_functions = {
     "upper": str.upper,
     "ing": language_util.to_present_participle_first_word,
     "plural": language_util.to_plural,
-    "synonym": language_util.get_random_synonym
+    "synonym": language_util.get_random_synonym,
+    "wikihow_action": lambda seed: random_util.choice_optional(wikihow.get_related_wikihow_actions(seed)),
 }
 
 

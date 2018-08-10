@@ -1,5 +1,5 @@
 """ Module providing language-related operations to manipulate strings"""
-import random
+import random_util
 import string
 
 import inflect
@@ -79,7 +79,7 @@ def get_synonyms(word):
 
 
 def get_random_synonym(word):
-    return random.choice(get_synonyms(word))
+    return random_util.choice_optional(get_synonyms(word))
 
 
 def get_relations(word):
