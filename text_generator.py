@@ -17,7 +17,7 @@ class AbstractTextGenerator(object):
 
     def generate_with_seed(self, seed):
         return self.generate({
-            seed: seed
+            "seed": seed
         })
 
 
@@ -65,7 +65,7 @@ class TraceryTextGenerator(AbstractTextGenerator):
 
         # Generate
         for i in range(100):  # TODO prune the grammar instead of retrying
-            template = self._grammar.flatten("#"+self._variable+"#")
+            template = self._grammar.flatten("#" + self._variable + "#")
             if can_format_with(template, variables_dictionary):
                 result = apply_variables_to_template(template, variables_dictionary)
                 if result:
