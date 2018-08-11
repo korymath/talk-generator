@@ -1,0 +1,25 @@
+{
+  "origin": [
+    "#subtitle#"
+  ],
+  "subtitle": [
+    "A presentation by #name_and_job#",
+    "By #name_and_job#",
+    "Presented by #name_and_job#"
+  ],
+  "name_and_job": [
+    "{presenter_name}, #job#"
+  ],
+  "job": [
+    "reseacher in #science#",
+    "#science# PhD",
+    "professor in #science#"
+  ],
+  "science": [
+    "{seed.title} Studies",
+    "{seed.title} Science",
+    "{seed.title} Literature",
+    "{seed.title} Physics",
+    "{seed.title} Engineering"
+  ]
+}
