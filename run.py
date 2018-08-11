@@ -198,6 +198,7 @@ def _get_google_image_cached(word, num_image, lp):
 
 
 talk_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/talk_title.txt').generate
+talk_subtitle_generator = text_generator.TraceryTextGenerator('data/text-templates/talk_subtitle.json').generate
 
 
 def get_random_inspirobot_image(_):
@@ -328,6 +329,8 @@ about_me_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/about-me.txt").generate
 historical_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
                                                                 "title_name").generate
+full_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
+                                                          "full_name").generate
 
 # == SCHEMAS ==
 

@@ -91,9 +91,10 @@ def create_new_powerpoint():
     return Presentation(POWERPOINT_TEMPLATE_FILE)
 
 
-def create_title_slide(prs, title):
+def create_title_slide(prs, title, subtitle):
     slide = _create_slide(prs, LAYOUT_TITLE_SLIDE)
     _add_title(slide, title)
+    _add_text(slide, 1, subtitle)
     return slide
 
 
@@ -170,8 +171,8 @@ def generate_image_slide(title_generator, image_generator):
     return generate_slide(create_image_slide, (title_generator, image_generator))
 
 
-def generate_title_slide(title_generator):
-    return generate_slide(create_title_slide, (title_generator,))
+def generate_title_slide(title_generator, subtitle_generator):
+    return generate_slide(create_title_slide, (title_generator, subtitle_generator))
 
 
 def generate_large_quote_slide(text_generator):
