@@ -11,7 +11,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertTrue(bool(presentation_schema))
 
     def test_google_images(self):
-        self.assertTrue(bool(get_related_google_image("cat")))
+        self.assertTrue(bool(get_related_google_image({"seed": "cat"})))
 
 
 if __name__ == '__main__':

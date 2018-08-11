@@ -121,10 +121,36 @@ class SynonymTopicGenerator:
         return self._seeds[slide_nr]
 
 
+# == TRIVIAL GENERATORS ==
+
+def seeded_generator(simple_generator):
+    return lambda presentation_context: simple_generator(presentation_context["seed"])
+
+
+def none_generator(_):
+    return None
+
+
+def identity_generator(input_word):
+    return input_word
+
+
+def create_static_generator(always_generate_this):
+    return lambda _: always_generate_this
+
+
+def create_none_generator():
+    return lambda _: None
+
+
+seeded_identity_generator = seeded_generator(identity_generator)
+
+
 # == CONTENT GENERATORS ==
 # These functions generate content, sometimes related to given arguments
 
-def get_google_images(word, num_images=1):
+def get_google_images(presentation_context, num_images=1):
+    word = presentation_context["seed"]
     lp = 'downloads/' + word + '/'
     paths = _get_google_image_cached(word, num_images, lp)
 
@@ -165,12 +191,7 @@ def _get_google_image_cached(word, num_image, lp):
         return paths
 
 
-def generate_powerpoint_title(seed):
-    """Returns a template title from a source list."""
-    chosen_synonym_plural = language_util.to_plural(seed)
-    synonym_templates = read_lines('data/text-templates/titles.txt')
-    chosen_template = random.choice(synonym_templates)
-    return chosen_template.format(chosen_synonym_plural.title())
+talk_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/titles.txt').generate
 
 
 def get_random_inspirobot_image(_):
@@ -192,7 +213,8 @@ class RedditImageGenerator:
     def __init__(self, subreddit):
         self._subreddit = subreddit
 
-    def generate(self, seed):
+    def generate(self, presentation_context):
+        seed = presentation_context["seed"]
         images = reddit.search_subreddit(self._subreddit, seed + " nsfw:no (url:.jpg OR url:.png OR url:.gif)")
         while len(images) > 0:
             chosen_image = random.choice(images)
@@ -248,9 +270,10 @@ def get_related_giphy(seed_word):
             return image_url
 
 
+giphy_generator = seeded_generator(get_related_giphy)
 reddit_gif_generator = create_reddit_image_generator("gifs+gif+gifextra+nonononoYES")
 
-combined_gif_generator = random_util.combined_generator([(.5, get_related_giphy), (.5, reddit_gif_generator)])
+combined_gif_generator = random_util.combined_generator([(.5, giphy_generator), (.5, reddit_gif_generator)])
 
 # OLD
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
@@ -261,14 +284,15 @@ vintage_picture_generator = create_reddit_image_generator("TheWayWeWere+100years
 bold_statement_templated_generator = text_generator.TemplatedTextGenerator('data/text-templates/bold-statements.txt')
 
 
-def generate_wikihow_bold_statement(seed):
-    template_values = {
-        "topic": seed,
-        # TODO: Use datamuse or conceptnet or some other mechanism of finding a related location
-        'location': 'Here'
-    }
+def generate_wikihow_bold_statement(presentation_context):
+    # template_values = {
+    #     "topic": seed,
+    #     # TODO: Use datamuse or conceptnet or some other mechanism of finding a related location
+    #     'location': 'Here'
+    # }
+    template_values = presentation_context
     # TODO: Sometimes "Articles Form Wikihow" is being scraped as an action, this is a bug
-    related_actions = wikihow.get_related_wikihow_actions(seed)
+    related_actions = wikihow.get_related_wikihow_actions(presentation_context["seed"])
     if related_actions:
         action = random.choice(related_actions)
         template_values.update({'action': action.title(),
@@ -283,40 +307,21 @@ def generate_wikihow_bold_statement(seed):
 _double_captions_generator = text_generator.TemplatedTextGenerator("./data/text-templates/double-captions.txt")
 
 
-def create_double_image_captions(seed):
-    line = _double_captions_generator.generate(seed)
+def create_double_image_captions(presentation_context):
+    line = _double_captions_generator.generate(presentation_context)
     parts = line.split("|")
     return parts[0], parts[1]
 
 
 # TITLE GENERATORS
 inspiration_title_generator = text_generator.TemplatedTextGenerator(
-    "data/text-templates/inspiration.txt").generate_with_seed
+    "data/text-templates/inspiration.txt").generate
 history_title_generator = text_generator.TemplatedTextGenerator(
-    "data/text-templates/history.txt").generate_with_seed
+    "data/text-templates/history.txt").generate
 about_me_title_generator = text_generator.TemplatedTextGenerator(
-    "data/text-templates/about-me.txt").generate_with_seed
+    "data/text-templates/about-me.txt").generate
 historical_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
-                                                                "title_name").generate_with_seed
-
-
-# TRIVIAL GENERATORS
-
-def none_generator(_):
-    return None
-
-
-def identity_generator(input_word):
-    return input_word
-
-
-def create_static_generator(always_generate_this):
-    return lambda _: always_generate_this
-
-
-def create_none_generator():
-    return lambda _: None
-
+                                                                "title_name").generate
 
 # == SCHEMAS ==
 
@@ -330,11 +335,11 @@ presentation_schema = PresentationSchema(
     # Slide generators
     [
         SlideGenerator(
-            slide_templates.generate_title_slide(generate_powerpoint_title),
+            slide_templates.generate_title_slide(talk_title_generator),
             weight_function=create_peaked_weight([0], 100000, 0),
             name="Title slide"),
         SlideGenerator(
-            slide_templates.generate_full_image_slide(identity_generator, combined_gif_generator),
+            slide_templates.generate_full_image_slide(seeded_identity_generator, combined_gif_generator),
             name="Full Screen Giphy"),
         SlideGenerator(
             slide_templates.generate_image_slide(inspiration_title_generator, get_random_inspirobot_image),
@@ -344,16 +349,16 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
             name="Wikihow Bold Statement"),
         SlideGenerator(
-            slide_templates.generate_full_image_slide(identity_generator, get_related_google_image),
+            slide_templates.generate_full_image_slide(seeded_identity_generator, get_related_google_image),
             name="Google Images"),
         SlideGenerator(
-            slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
+            slide_templates.generate_two_column_images_slide_tuple_caption(seeded_identity_generator,
                                                                            create_double_image_captions,
                                                                            combined_gif_generator,
                                                                            combined_gif_generator),
             name="Two Captions Gifs"),
         SlideGenerator(
-            slide_templates.generate_two_column_images_slide_tuple_caption(identity_generator,
+            slide_templates.generate_two_column_images_slide_tuple_caption(seeded_identity_generator,
                                                                            create_double_image_captions,
                                                                            weird_image_generator,
                                                                            weird_image_generator),

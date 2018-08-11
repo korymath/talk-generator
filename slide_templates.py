@@ -194,12 +194,13 @@ def generate_two_column_images_slide_text_second(title_generator, caption_1_gene
 
 def generate_two_column_images_slide_tuple_caption(title_generator, captions_generator, image_1_generator,
                                                    image_2_generator):
-    def generate(prs, seed, used):
-        generated_tuple = captions_generator(seed)
-        generated = title_generator(seed), generated_tuple[0], image_1_generator(seed), generated_tuple[
-            1], image_2_generator(seed)
+    def generate(presentation_context, used):
+        generated_tuple = captions_generator(presentation_context)
+        generated = title_generator(presentation_context), generated_tuple[0], \
+                    image_1_generator(presentation_context), generated_tuple[1], image_2_generator(presentation_context)
+
         if _is_different_enough(generated, used):
-            return create_two_column_images_slide(prs, *generated, False), generated
+            return create_two_column_images_slide(get_presentation(presentation_context), *generated, False), generated
 
     return generate
 
@@ -207,12 +208,16 @@ def generate_two_column_images_slide_tuple_caption(title_generator, captions_gen
 # HELPERS
 
 def generate_slide(slide_template, generators):
-    def generate(prs, seed, used):
-        generated = [content_generator(seed) for content_generator in generators]
+    def generate(presentation_context, used):
+        generated = [content_generator(presentation_context) for content_generator in generators]
         if _is_different_enough(generated, used):
-            return slide_template(prs, *generated), generated
+            return slide_template(get_presentation(presentation_context), *generated), generated
 
     return generate
+
+
+def get_presentation(presentation_context):
+    return presentation_context["presentation"]
 
 
 def _is_different_enough(generated, used):
