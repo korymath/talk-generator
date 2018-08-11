@@ -191,7 +191,7 @@ def _get_google_image_cached(word, num_image, lp):
         return paths
 
 
-talk_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/titles.txt').generate
+talk_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/talk_title.txt').generate
 
 
 def get_random_inspirobot_image(_):

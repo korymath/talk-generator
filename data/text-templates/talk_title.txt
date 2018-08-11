@@ -13,7 +13,7 @@ This Is What Happens When You {seed.plural.title}
 {seed.plural.title} Isn't Everything. Believe Me.
 The Puzzle of {seed.plural.title}
 How to Spot a {seed.plural.title}
-What makes a good {seed.plural.title}? Lessons from the longest study.
+What makes a good {seed.singular.title}? Lessons from the longest study.
 The Happy Secret to Better {seed.plural.title}
 The Thrilling Potential of {seed.plural.title}
 How I Held My {seed.plural.title} for 17 Minutes

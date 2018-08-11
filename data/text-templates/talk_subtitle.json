@@ -8,7 +8,14 @@
     "Presented by #name_and_job#"
   ],
   "name_and_job": [
-    "{presenter_name}, #job#"
+    "#title#{presenter}, #job#"
+  ],
+  "title": [
+    "professor ",
+    "dr ",
+    "ir ",
+    "",
+    ""
   ],
   "job": [
     "reseacher in #science#",
