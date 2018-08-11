@@ -64,8 +64,14 @@ def main(arguments):
     # Retrieve the schema to generate the presentation with
     schema = get_schema(args.schema)
 
+    # Generate random presenter name if no presenter name given
+    if not arguments.presenter:
+        arguments.presenter = full_name_generator()
+
     # Generate the presentation object
-    presentation = schema.generate_presentation(arguments.topic, arguments.num_slides)
+    presentation = schema.generate_presentation(topic=arguments.topic,
+                                                num_slides=arguments.num_slides,
+                                                presenter=arguments.presenter)
 
     # Save presentation
     _save_presentation_to_pptx(arguments.topic, presentation)
@@ -335,7 +341,7 @@ presentation_schema = PresentationSchema(
     # Slide generators
     [
         SlideGenerator(
-            slide_templates.generate_title_slide(talk_title_generator),
+            slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
             weight_function=create_peaked_weight([0], 100000, 0),
             name="Title slide"),
         SlideGenerator(
@@ -413,5 +419,7 @@ if __name__ == '__main__':
                         default=3, type=int)
     parser.add_argument('--schema', help="The presentation schema to generate the presentation with",
                         default="default", type=str)
+    parser.add_argument('--presenter', help="The full name of the presenter, leave blank to randomise",
+                        default=None, type=str)
     args = parser.parse_args()
     main(args)

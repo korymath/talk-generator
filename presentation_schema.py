@@ -78,19 +78,19 @@ class PresentationSchema:
         self._seed_generator = seed_generator
         self._slide_generators = slide_generators
 
-    def generate_presentation(self, topic, num_slides):
+    def generate_presentation(self, topic, num_slides, presenter=None):
         """Generate a presentation about a certain topic with a certain number of slides"""
         # Create new presentation
         presentation = self._powerpoint_creator()
 
         # Create the topic-for-each-slide generator
         seed_generator = self._seed_generator(topic, num_slides)
-        7
 
         # Create main presentation_context
         main_presentation_context = {
             "presentation": presentation,
-            "topic": topic
+            "topic": topic,
+            "presenter": presenter
         }
 
         used_elements = set()
