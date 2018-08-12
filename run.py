@@ -30,7 +30,7 @@ MAX_PRESENTATION_SAVE_TRIES = 100
 def _save_presentation_to_pptx(output_folder, file_name, prs, index=0):
     """Save the talk."""
     if index > MAX_PRESENTATION_SAVE_TRIES:
-        return False
+        return None
 
     suffix = "_" + str(index) if index > 0 else ""
     fp = os.path.join(output_folder, str(file_name) + str(suffix) + ".pptx")
@@ -39,7 +39,7 @@ def _save_presentation_to_pptx(output_folder, file_name, prs, index=0):
     try:
         prs.save(fp)
         print('Saved talk to {}'.format(fp))
-        return True
+        return fp
     except PermissionError:
         index += 1
         return _save_presentation_to_pptx(output_folder, file_name, prs, index)
@@ -85,7 +85,10 @@ def main(arguments):
                                                 presenter=arguments.presenter)
 
     # Save presentation
-    _save_presentation_to_pptx(arguments.output_folder, arguments.topic, presentation)
+    presentation_file = _save_presentation_to_pptx(arguments.output_folder, arguments.topic, presentation)
+    if args.open_file and presentation_file is not None:
+        path = os.path.realpath(presentation_file)
+        os.startfile(path)
 
 
 # == TOPIC GENERATORS ==
@@ -490,5 +493,7 @@ if __name__ == '__main__':
                         default=None, type=str)
     parser.add_argument('--output_folder', help="The folder to output the generated presentations",
                         default="./output/", type=str)
+    parser.add_argument('--open_file', help="If this flag is true, the generated powerpoint will automatically open",
+                        default=True, type=bool)
     args = parser.parse_args()
     main(args)
