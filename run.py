@@ -362,6 +362,17 @@ presentation_schema = PresentationSchema(
             weight_function=create_peaked_weight([0], 100000, 0),
             name="Title slide"),
         SlideGenerator(
+            slide_templates.generate_two_column_images_slide_text_second(
+                history_title_generator,
+                historical_name_generator,
+                vintage_person_generator,
+                none_generator,
+                create_goodreads_quote_generator(280)
+            ),
+            weight_function=create_peaked_weight([2, 3], 10, 0),
+            allowed_repeated_elements=1,
+            name="Historical Figure Quote"),
+        SlideGenerator(
             slide_templates.generate_full_image_slide(seeded_identity_generator, combined_gif_generator),
             name="Full Screen Giphy"),
         SlideGenerator(
@@ -411,9 +422,9 @@ test_schema = PresentationSchema(
         SlideGenerator(
             slide_templates.generate_image_slide(
                 inspiration_title_generator,
-                get_random_inspirobot_image),
-            # create_static_generator("downloads/inspirobot/01-743.jpg")),
-            name="Inspirobot")
+                create_static_generator("downloads/inspirobot/01-743.jpg")),
+            allowed_repeated_elements=1,
+            name="Fake Inspirobot")
     ])
 
 schemas = {
