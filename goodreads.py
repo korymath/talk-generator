@@ -1,5 +1,6 @@
-import requests
 from functools import lru_cache
+
+import requests
 from bs4 import BeautifulSoup
 
 
@@ -35,4 +36,3 @@ def _search_quotes_page(search_term, page):
         quotes = [" ".join([part.strip() for part in quote.get_text().split("—")][0:-1]) for quote in quote_elements]
 
         return quotes
-
