@@ -54,9 +54,9 @@ def _add_text(slide, placeholder_id, text):
         placeholder.text = text
 
 
-def _add_image(slide, placeholder_id, image_url, original_size=True):
+def _add_image(slide, placeholder_id, image_url, original_image_size=True):
     placeholder = slide.placeholders[placeholder_id]
-    if original_size:
+    if original_image_size:
         pic = slide.shapes.add_picture(image_url, placeholder.left, placeholder.top)
 
         # calculate max width/height for target size
