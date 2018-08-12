@@ -392,7 +392,7 @@ presentation_schema = PresentationSchema(
                 none_generator,
                 create_goodreads_quote_generator(280)
             ),
-            weight_function=create_peaked_weight([2, 3], 10, 0),
+            weight_function=create_peaked_weight([1, 2], 10, 0.4),
             allowed_repeated_elements=1,
             name="Historical Figure Quote"),
         SlideGenerator(
@@ -403,7 +403,7 @@ presentation_schema = PresentationSchema(
                 none_generator,
                 vintage_picture_generator
             ),
-            weight_function=create_peaked_weight([2, 3], 3, 0.2),
+            weight_function=create_peaked_weight([1, 2], 4, 0.2),
             allowed_repeated_elements=1,
             name="Two History Pictures"),
         SlideGenerator(
