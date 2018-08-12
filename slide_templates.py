@@ -197,8 +197,8 @@ def generate_two_column_images_slide_tuple_caption(title_generator, captions_gen
                                                    image_2_generator):
     def generate(presentation_context, used):
         generated_tuple = captions_generator(presentation_context)
-        generated = title_generator(presentation_context), generated_tuple[0], \
-                    image_1_generator(presentation_context), generated_tuple[1], image_2_generator(presentation_context)
+        generated = title_generator(presentation_context), generated_tuple[0], image_1_generator(
+            presentation_context), generated_tuple[1], image_2_generator(presentation_context)
 
         if _is_different_enough(generated, used):
             return create_two_column_images_slide(get_presentation(presentation_context), *generated, False), generated
