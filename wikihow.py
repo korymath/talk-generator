@@ -3,12 +3,15 @@ import inflect
 import requests
 from bs4 import BeautifulSoup
 
+from functools import lru_cache
+
 
 def wikihow_action_to_action(wikihow_title):
     index_of_to = wikihow_title.find('to')
     return wikihow_title[index_of_to + 3:]
 
 
+@lru_cache(maxsize=20)
 def search_wikihow(search_words):
     return requests.get(
         'https://en.wikihow.com/wikiHowTo?search='
