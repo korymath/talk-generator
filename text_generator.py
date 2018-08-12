@@ -10,6 +10,18 @@ import language_util
 import random_util
 import wikihow
 
+known_functions = {
+    "title": str.title,
+    "lower": str.lower,
+    "upper": str.upper,
+    "dashes":  lambda input: input.replace(" ","-"),
+    "ing": language_util.to_present_participle_first_word,
+    "plural": language_util.to_plural,
+    "singular": language_util.to_singular,
+    "synonym": language_util.get_random_synonym,
+    "wikihow_action": lambda seed: random_util.choice_optional(wikihow.get_related_wikihow_actions(seed)),
+}
+
 
 class AbstractTextGenerator(object):
     def generate(self, variables_dictionary):
@@ -99,18 +111,6 @@ def apply_variables_to_template(template, variables_dictionary):
     if applied:
         (template, variables_dictionary) = applied
         return template.format(**variables_dictionary)
-
-
-known_functions = {
-    "title": str.title,
-    "lower": str.lower,
-    "upper": str.upper,
-    "ing": language_util.to_present_participle_first_word,
-    "plural": language_util.to_plural,
-    "singular": language_util.to_singular,
-    "synonym": language_util.get_random_synonym,
-    "wikihow_action": lambda seed: random_util.choice_optional(wikihow.get_related_wikihow_actions(seed)),
-}
 
 
 def apply_functions(variable, functions):
