@@ -25,13 +25,14 @@ from presentation_schema import PresentationSchema, SlideGenerator, constant_wei
 
 MAX_PRESENTATION_SAVE_TRIES = 100
 
+
 # == HELPER FUNCTIONS ==
 def _save_presentation_to_pptx(output_folder, file_name, prs, index=0):
     """Save the talk."""
     if index > MAX_PRESENTATION_SAVE_TRIES:
         return False
 
-    suffix = "_"+str(index) if index > 0 else ""
+    suffix = "_" + str(index) if index > 0 else ""
     fp = os.path.join(output_folder, str(file_name) + str(suffix) + ".pptx")
     # Create the parent folder if it doesn't exist
     pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
@@ -477,7 +478,7 @@ def get_schema(name):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('--topic', help="Topic of presentation.",
-                        default='bagels', type=str)
+                        default='cat', type=str)
     parser.add_argument('--num_images', help="Number of images per synonym.",
                         default=1,
                         type=int)  # TODO(Kory): is this still a useful parameter? We should probably remove it
