@@ -217,9 +217,24 @@ def _get_google_image_cached(word, num_image, lp):
         return paths
 
 
-# TITLES
+# TITLE GENERATORS
 talk_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/talk_title.txt').generate
 talk_subtitle_generator = text_generator.TraceryTextGenerator('data/text-templates/talk_subtitle.json').generate
+
+inspiration_title_generator = text_generator.TemplatedTextGenerator(
+    "data/text-templates/inspiration.txt").generate
+history_title_generator = text_generator.TemplatedTextGenerator(
+    "data/text-templates/history.txt").generate
+history_person_title_generator = text_generator.TemplatedTextGenerator(
+    "data/text-templates/history_person.txt").generate
+history_and_history_person_title_generator = combined_generator(
+    [(4, history_title_generator), (6, history_person_title_generator)])
+about_me_title_generator = text_generator.TemplatedTextGenerator(
+    "data/text-templates/about-me.txt").generate
+historical_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
+                                                                "title_name").generate
+full_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
+                                                          "full_name").generate
 
 
 # QUOTES
@@ -229,6 +244,7 @@ def create_goodreads_quote_generator(max_quote_length):
         quotes = goodreads.search_quotes(seed, 50)
         filtered_quotes = [quote for quote in quotes if len(quote) <= max_quote_length]
         return random.choice(filtered_quotes)
+
     return generator
 
 
@@ -313,7 +329,7 @@ def get_related_giphy(seed_word):
 giphy_generator = seeded_generator(get_related_giphy)
 reddit_gif_generator = create_reddit_image_generator("gifs+gif+gifextra+nonononoYES")
 
-combined_gif_generator = random_util.combined_generator([(.5, giphy_generator), (.5, reddit_gif_generator)])
+combined_gif_generator = combined_generator([(.5, giphy_generator), (.5, reddit_gif_generator)])
 
 # OLD
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
@@ -353,18 +369,6 @@ def create_double_image_captions(presentation_context):
     return parts[0], parts[1]
 
 
-# TITLE GENERATORS
-inspiration_title_generator = text_generator.TemplatedTextGenerator(
-    "data/text-templates/inspiration.txt").generate
-history_title_generator = text_generator.TemplatedTextGenerator(
-    "data/text-templates/history.txt").generate
-about_me_title_generator = text_generator.TemplatedTextGenerator(
-    "data/text-templates/about-me.txt").generate
-historical_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
-                                                                "title_name").generate
-full_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
-                                                          "full_name").generate
-
 # == SCHEMAS ==
 
 # This object holds all the information about how to generate the presentation
@@ -382,7 +386,7 @@ presentation_schema = PresentationSchema(
             name="Title slide"),
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_text_second(
-                history_title_generator,
+                history_and_history_person_title_generator,
                 historical_name_generator,
                 vintage_person_generator,
                 none_generator,
@@ -428,7 +432,7 @@ test_schema = PresentationSchema(
     [
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_text_second(
-                history_title_generator,
+                history_and_history_person_title_generator,
                 historical_name_generator,
                 vintage_person_generator,
                 none_generator,
