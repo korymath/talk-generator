@@ -31,7 +31,7 @@ def to_present_participle(text):
 
 
 # From https://github.com/arsho/46-Simple-Python-Exercises-Solutions/blob/master/problem_25.py
-def make_ing_form(passed_string):
+def _make_ing_form(passed_string):
     passed_string = passed_string.lower()
     letter = list(string.ascii_lowercase)
     vowel = ['a', 'e', 'i', 'o', 'u']
@@ -53,6 +53,17 @@ def make_ing_form(passed_string):
         return passed_string + 'ing'
     else:
         return passed_string + 'ing'
+
+
+def make_ing_form(passed_string):
+    result = _make_ing_form(passed_string)
+    if passed_string.islower():
+        return result.lower()
+    if passed_string.isupper():
+        return result.upper()
+    if passed_string.istitle():
+        return result.title()
+    return result
 
 
 def get_definitions(word):
