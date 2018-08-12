@@ -23,16 +23,25 @@ import text_generator
 import wikihow
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
+MAX_PRESENTATION_SAVE_TRIES = 100
 
 # == HELPER FUNCTIONS ==
-def _save_presentation_to_pptx(topic, prs):
+def _save_presentation_to_pptx(output_folder, file_name, prs, index=0):
     """Save the talk."""
-    fp = './output/' + topic + '.pptx'
+    if index > MAX_PRESENTATION_SAVE_TRIES:
+        return False
+
+    suffix = "_"+str(index) if index > 0 else ""
+    fp = os.path.join(output_folder, str(file_name) + str(suffix) + ".pptx")
     # Create the parent folder if it doesn't exist
     pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
-    prs.save(fp)
-    print('Saved talk to {}'.format(fp))
-    return True
+    try:
+        prs.save(fp)
+        print('Saved talk to {}'.format(fp))
+        return True
+    except PermissionError:
+        index += 1
+        return _save_presentation_to_pptx(output_folder, file_name, prs, index)
 
 
 def download_image(from_url, to_url):
@@ -75,7 +84,7 @@ def main(arguments):
                                                 presenter=arguments.presenter)
 
     # Save presentation
-    _save_presentation_to_pptx(arguments.topic, presentation)
+    _save_presentation_to_pptx(arguments.output_folder, arguments.topic, presentation)
 
 
 # == TOPIC GENERATORS ==
@@ -442,16 +451,10 @@ test_schema = PresentationSchema(
     # Slide generators
     [
         SlideGenerator(
-            slide_templates.generate_two_column_images_slide_text_second(
-                history_and_history_person_title_generator,
-                historical_name_generator,
-                vintage_person_generator,
-                none_generator,
-                create_goodreads_quote_generator(280)
-            ),
+            slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
             weight_function=constant_weight(100000),
             allowed_repeated_elements=1,
-            name="Historical Figure Quote"),
+            name="Two History Pictures"),
         # Back up in case something goes wrong
         SlideGenerator(
             slide_templates.generate_image_slide(
@@ -484,5 +487,7 @@ if __name__ == '__main__':
                         default="default", type=str)
     parser.add_argument('--presenter', help="The full name of the presenter, leave blank to randomise",
                         default=None, type=str)
+    parser.add_argument('--output_folder', help="The folder to output the generated presentations",
+                        default="./output/", type=str)
     args = parser.parse_args()
     main(args)
