@@ -396,6 +396,17 @@ presentation_schema = PresentationSchema(
             allowed_repeated_elements=1,
             name="Historical Figure Quote"),
         SlideGenerator(
+            slide_templates.generate_two_column_images_slide(
+                history_title_generator,
+                none_generator,
+                vintage_picture_generator,
+                none_generator,
+                vintage_picture_generator
+            ),
+            weight_function=create_peaked_weight([2, 3], 3, 0.2),
+            allowed_repeated_elements=1,
+            name="Two History Pictures"),
+        SlideGenerator(
             slide_templates.generate_full_image_slide(seeded_identity_generator, combined_gif_generator),
             name="Full Screen Giphy"),
         SlideGenerator(
