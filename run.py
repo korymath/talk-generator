@@ -479,7 +479,7 @@ if __name__ == '__main__':
                         default=1,
                         type=int)  # TODO(Kory): is this still a useful parameter? We should probably remove it
     parser.add_argument('--num_slides', help="Number of slides to create.",
-                        default=3, type=int)
+                        default=10, type=int)
     parser.add_argument('--schema', help="The presentation schema to generate the presentation with",
                         default="default", type=str)
     parser.add_argument('--presenter', help="The full name of the presenter, leave blank to randomise",
