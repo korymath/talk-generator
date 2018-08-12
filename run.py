@@ -13,6 +13,7 @@ import requests
 import safygiphy
 from google_images_download import google_images_download
 
+import goodreads
 # Own modules:
 import language_util
 import random_util
@@ -197,9 +198,22 @@ def _get_google_image_cached(word, num_image, lp):
         return paths
 
 
+# TITLES
 talk_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/talk_title.txt').generate
 talk_subtitle_generator = text_generator.TraceryTextGenerator('data/text-templates/talk_subtitle.json').generate
 
+
+# QUOTES
+def create_goodreads_quote_generator(max_quote_length):
+    def generator(presentation_context):
+        seed = presentation_context["seed"]
+        quotes = goodreads.search_quotes(seed, 50)
+        filtered_quotes = [quote for quote in quotes if len(quote) <= max_quote_length]
+        return random.choice(filtered_quotes)
+    return generator
+
+
+# INSPIROBOT
 
 def get_random_inspirobot_image(_):
     # Generate a random url to access inspirobot
@@ -388,9 +402,10 @@ test_schema = PresentationSchema(
                 historical_name_generator,
                 vintage_person_generator,
                 none_generator,
-                create_static_generator("TODO: A quote here")),
+                create_goodreads_quote_generator(280)
+            ),
             weight_function=constant_weight(100000),
-            allowed_repeated_elements=3,
+            allowed_repeated_elements=1,
             name="Historical Figure Quote"),
         # Back up in case something goes wrong
         SlideGenerator(
