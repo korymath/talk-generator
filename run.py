@@ -352,7 +352,7 @@ presentation_schema = PresentationSchema(
             name="Full Screen Giphy"),
         SlideGenerator(
             slide_templates.generate_image_slide(inspiration_title_generator, get_random_inspirobot_image),
-            weight_function=constant_weight(0.7),
+            weight_function=constant_weight(0.6),
             name="Inspirobot"),
         SlideGenerator(
             slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),

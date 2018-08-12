@@ -8,18 +8,21 @@ Your {seed.plural.title} May Shape Who You Are
 How {seed.plural.title} Inspires Action
 The Power of {seed.plural.title}
 10 Things You Didn't Know About {seed.plural.title}
-Why We Do What We Do To {seed.plural.title}
+Why We Do What We Do To {seed.wikihow_action.title}
 This Is What Happens When You {seed.plural.title}
 {seed.plural.title} Isn't Everything. Believe Me.
 The Puzzle of {seed.plural.title}
+The {seed.plural.title} Conundrum
 How to Spot a {seed.plural.title}
 What makes a good {seed.singular.title}? Lessons from the longest study.
 The Happy Secret to Better {seed.plural.title}
 The Thrilling Potential of {seed.plural.title}
 How I Held My {seed.plural.title} for 17 Minutes
 The Art of {seed.plural.title}
+The Art of {seed.wikihow_action.ing.title}
 The Surprising Science of {seed.plural.title}
+The Surprising Science of {seed.wikihow_action.ing.title}
 Inside the Mind of a Master {seed.plural.title}
-How to Make {seed.plural.title} Your Friend
+How to Make {seed.plural.title} for Your Friend
 Underwater {seed.plural.title}
 The Danger of a Single {seed.plural.title}

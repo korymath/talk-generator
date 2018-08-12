@@ -23,10 +23,20 @@
     "professor in #science#"
   ],
   "science": [
-    "{seed.title} Studies",
-    "{seed.title} Science",
-    "{seed.title} Literature",
-    "{seed.title} Physics",
-    "{seed.title} Engineering"
+    "{seed.title} #science_type#",
+    "#science_specifier# {seed.title} #science_type#"
+  ],
+  "science_specifier": [
+    "Molecular",
+    "Nuclear",
+    "Applied"
+  ],
+  "science_type": [
+    "Studies",
+    "Science",
+    "Literature",
+    "Physics",
+    "Engineering",
+    "Technology"
   ]
 }
