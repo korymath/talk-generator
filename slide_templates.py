@@ -68,7 +68,7 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
         im = Image.open(image_url)
         width, height = im.size
 
-        # Calculate and set max width/height for target size
+        # Calculate and set max width/height for target size, such that the placeholder doesn't "zoom in" the image
         ratio = min(placeholder.width / float(width), placeholder.height / float(height))
         placeholder.height = int(height * ratio)
         placeholder.width = int(width * ratio)
@@ -83,13 +83,13 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
         # Placeholder width too wide:
         if image_ratio < placeholder_ratio:
             ratio_difference = placeholder_ratio - image_ratio
-            difference_on_each_side = ratio_difference / 2 # Because we want it centered
+            difference_on_each_side = ratio_difference / 2  # Because we want the image centered on the placeholder
             placeholder.crop_left = -difference_on_each_side
             placeholder.crop_right = -difference_on_each_side
         # Placeholder height to high
         else:
             ratio_difference = image_ratio - placeholder_ratio
-            difference_on_each_side = ratio_difference / 2 # Because we want it centered
+            difference_on_each_side = ratio_difference / 2
             placeholder.crop_bottom = -difference_on_each_side
             placeholder.crop_top = -difference_on_each_side
 
@@ -137,51 +137,52 @@ def create_large_quote_slide(prs, text):
         return slide
 
 
-def create_image_slide(prs, title=None, image_url=None, fit_images=True):
+def create_image_slide(prs, title=None, image_url=None, original_image_size=True):
     """ Creates a slide with an image covering the whole slide"""
     # TODO debug this: the image can not be set!
-    return _create_single_image_slide(prs, title, image_url, LAYOUT_TITLE_AND_PICTURE, fit_images)
+    return _create_single_image_slide(prs, title, image_url, LAYOUT_TITLE_AND_PICTURE, original_image_size)
 
 
-def create_full_image_slide(prs, title=None, image_url=None):
+def create_full_image_slide(prs, title=None, image_url=None, original_image_size=True):
     """ Creates a slide with an image covering the whole slide"""
-    return _create_single_image_slide(prs, title, image_url, LAYOUT_FULL_PICTURE, False)
+    return _create_single_image_slide(prs, title, image_url, LAYOUT_FULL_PICTURE, original_image_size)
 
 
 def create_two_column_images_slide(prs, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
-                                   image_or_text_2=None, fit_images=True):
+                                   image_or_text_2=None, original_image_size=True):
     if bool(image_or_text_1) and bool(image_or_text_2):
         slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
         _add_title(slide, title)
         _add_text(slide, 1, caption_1)
-        _add_image_or_text(slide, 13, image_or_text_1, fit_images)
+        _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
         _add_text(slide, 3, caption_2)
-        _add_image_or_text(slide, 14, image_or_text_2, fit_images)
+        _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
         return slide
 
 
 def create_three_column_images_slide(prs, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
-                                     image_or_text_2=None, caption_3=None, image_or_text_3=None, fit_images=True):
+                                     image_or_text_2=None, caption_3=None, image_or_text_3=None,
+                                     original_image_size=True):
     if bool(image_or_text_1) and bool(image_or_text_2) and bool(image_or_text_3):
         slide = _create_slide(prs, LAYOUT_THREE_TITLE_AND_IMAGE)
         _add_title(slide, title)
         _add_text(slide, 1, caption_1)
-        _add_image_or_text(slide, 13, image_or_text_1, fit_images)
+        _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
         _add_text(slide, 3, caption_2)
-        _add_image_or_text(slide, 14, image_or_text_2, fit_images)
+        _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
         _add_text(slide, 15, caption_3)
-        _add_image_or_text(slide, 16, image_or_text_3, fit_images)
+        _add_image_or_text(slide, 16, image_or_text_3, original_image_size)
         return slide
 
 
 # def create_two_column_images_slide_text_second(prs, title=None, caption_1=None, image_1=None, caption_2=None,
 #                                                quote=None,
-#                                                fit_images=True):
+#                                                original_image_size=True):
 #     if bool(image_1):
 #         slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
 #         _add_title(slide, title)
 #         _add_text(slide, 1, caption_1)
-#         _add_image_or_text(slide, 13, image_1, fit_images)
+#         _add_image_or_text(slide, 13, image_1, original_image_size)
 #         _add_text(slide, 3, caption_2)
 #         _add_image_or_text(slide, 14, quote)
 #         return slide
@@ -197,12 +198,12 @@ def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_im
 
 # GENERATORS: Same as the template fillers above, but using generation functions
 
-def generate_full_image_slide(title_generator, image_generator):
-    return generate_slide(create_full_image_slide, (title_generator, image_generator))
+def generate_full_image_slide(title_generator, image_generator, original_image_size=True):
+    return generate_slide(create_full_image_slide, (title_generator, image_generator, lambda x: original_image_size))
 
 
-def generate_image_slide(title_generator, image_generator, fit_images=True):
-    return generate_slide(create_image_slide, (title_generator, image_generator, lambda x: fit_images))
+def generate_image_slide(title_generator, image_generator, original_image_size=True):
+    return generate_slide(create_image_slide, (title_generator, image_generator, lambda x: original_image_size))
 
 
 def generate_title_slide(title_generator, subtitle_generator):
@@ -228,7 +229,7 @@ def generate_two_column_images_slide_tuple_caption(title_generator, captions_gen
             presentation_context), generated_tuple[1], image_2_generator(presentation_context)
 
         if _is_different_enough(generated, used):
-            return create_two_column_images_slide(get_presentation(presentation_context), *generated, False), generated
+            return create_two_column_images_slide(get_presentation(presentation_context), *generated), generated
 
     return generate
 
