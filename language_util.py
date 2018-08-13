@@ -150,3 +150,12 @@ def to_singular(word):
     if is_plural(word):
         return inflect_engine.singular_noun(word)
     return word
+
+
+def add_article(word):
+    # TODO: Maybe more checks, some u's cause "an", or some big letters in case it's an abbreviation
+    word = word.lower()
+    article = "a"
+    if word.startswith("a") or word.startswith("e") or word.startswith("i") or word.startswith("o"):
+        article = "an"
+    return article + " " + word
