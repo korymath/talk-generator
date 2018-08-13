@@ -34,6 +34,7 @@ LAYOUT_FULL_PICTURE = 11
 LAYOUT_TITLE_AND_PICTURE = 12
 LAYOUT_LARGE_QUOTE = 13
 LAYOUT_TWO_TITLE_AND_IMAGE = 14
+LAYOUT_THREE_TITLE_AND_IMAGE = 15
 
 
 # HELPERS
@@ -130,18 +131,6 @@ def create_full_image_slide(prs, title=None, image_url=None):
     return _create_single_image_slide(prs, title, image_url, LAYOUT_FULL_PICTURE, False)
 
 
-def create_two_column_images_slide(prs, title=None, caption_1=None, image_1=None, caption_2=None, image_2=None,
-                                   fit_images=True):
-    if bool(image_1) and bool(image_2):
-        slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
-        _add_title(slide, title)
-        _add_text(slide, 1, caption_1)
-        _add_image(slide, 13, image_1, fit_images)
-        _add_text(slide, 3, caption_2)
-        _add_image(slide, 14, image_2, fit_images)
-        return slide
-
-
 def create_two_column_images_slide(prs, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
                                    image_or_text_2=None, fit_images=True):
     if bool(image_or_text_1) and bool(image_or_text_2):
@@ -151,6 +140,21 @@ def create_two_column_images_slide(prs, title=None, caption_1=None, image_or_tex
         _add_image_or_text(slide, 13, image_or_text_1, fit_images)
         _add_text(slide, 3, caption_2)
         _add_image_or_text(slide, 14, image_or_text_2, fit_images)
+        return slide
+
+
+def create_three_column_images_slide(prs, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
+                                     image_or_text_2=None, caption_3=None, image_or_text_3=None, fit_images=True):
+    if bool(image_or_text_1) and bool(image_or_text_2) and bool(image_or_text_3):
+        slide = _create_slide(prs, LAYOUT_THREE_TITLE_AND_IMAGE)
+        _add_title(slide, title)
+        _add_text(slide, 1, caption_1)
+        _add_image_or_text(slide, 13, image_or_text_1, fit_images)
+        _add_text(slide, 3, caption_2)
+        _add_image_or_text(slide, 14, image_or_text_2, fit_images)
+        _add_text(slide, 15, caption_3)
+        _add_image_or_text(slide, 16, image_or_text_3, fit_images)
+        _print_all_placeholders(slide)
         return slide
 
 
@@ -200,13 +204,6 @@ def generate_two_column_images_slide(title_generator, caption_1_generator, image
                                                            image_2_generator))
 
 
-# def generate_two_column_images_slide_text_second(title_generator, caption_1_generator, image_1_generator,
-#                                                  caption_2_generator, quote_generator):
-#     return generate_slide(create_two_column_images_slide, (title_generator, caption_1_generator,
-#                                                                        image_1_generator, caption_2_generator,
-#                                                                        quote_generator))
-
-
 def generate_two_column_images_slide_tuple_caption(title_generator, captions_generator, image_1_generator,
                                                    image_2_generator):
     def generate(presentation_context, used):
@@ -218,6 +215,14 @@ def generate_two_column_images_slide_tuple_caption(title_generator, captions_gen
             return create_two_column_images_slide(get_presentation(presentation_context), *generated, False), generated
 
     return generate
+
+
+def generate_three_column_images_slide(title_generator, caption_1_generator, image_1_generator, caption_2_generator,
+                                       image_2_generator, caption_3_generator, image_3_generator):
+    return generate_slide(create_three_column_images_slide, (title_generator, caption_1_generator,
+                                                             image_1_generator, caption_2_generator,
+                                                             image_2_generator, caption_3_generator,
+                                                             image_3_generator))
 
 
 # HELPERS
