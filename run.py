@@ -20,6 +20,7 @@ import reddit
 import slide_templates
 import text_generator
 import wikihow
+import random_util
 # Import a lot from generator_util to make schema creation easier
 from generator_util import seeded_generator, none_generator, create_static_generator, combined_generator, \
     seeded_identity_generator
@@ -214,7 +215,7 @@ def create_goodreads_quote_generator(max_quote_length):
         seed = presentation_context["seed"]
         quotes = goodreads.search_quotes(seed, 50)
         filtered_quotes = [quote for quote in quotes if len(quote) <= max_quote_length]
-        return random.choice(filtered_quotes)
+        return random_util.choice_optional(filtered_quotes)
 
     return generator
 
