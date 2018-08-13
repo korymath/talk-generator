@@ -1,14 +1,26 @@
 """ Module for interacting with Wikihow """
+import re
+from functools import lru_cache
+
 import inflect
 import requests
 from bs4 import BeautifulSoup
 
-from functools import lru_cache
-
 
 def wikihow_action_to_action(wikihow_title):
     index_of_to = wikihow_title.find('to')
-    return wikihow_title[index_of_to + 3:]
+    action = wikihow_title[index_of_to + 3:]
+    action = _remove_between_brackets(action)
+    return action
+
+
+def _remove_between_brackets(sentence):
+    while True:
+        s_new = re.sub(r'\([^\(]*?\)', r'', sentence)
+        if s_new == sentence:
+            break
+        sentence = s_new
+    return sentence
 
 
 @lru_cache(maxsize=20)
