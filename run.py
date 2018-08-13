@@ -356,7 +356,7 @@ presentation_schema = PresentationSchema(
             weight_function=create_peaked_weight([0], 100000, 0),
             name="Title slide"),
         SlideGenerator(
-            slide_templates.generate_two_column_images_slide_text_second(
+            slide_templates.generate_two_column_images_slide(
                 history_and_history_person_title_generator,
                 historical_name_generator,
                 vintage_person_generator,
@@ -413,10 +413,16 @@ test_schema = PresentationSchema(
     # Slide generators
     [
         SlideGenerator(
-            slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
+            slide_templates.generate_two_column_images_slide(
+                about_me_title_generator,
+                none_generator,
+                none_generator,
+                none_generator,
+                none_generator
+            ),
             weight_function=constant_weight(100000),
-            allowed_repeated_elements=1,
-            name="Two History Pictures"),
+            allowed_repeated_elements=3,
+            name="About Me"),
         # Back up in case something goes wrong
         SlideGenerator(
             slide_templates.generate_image_slide(

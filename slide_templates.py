@@ -1,4 +1,5 @@
 """ This module helps creating specific type of slides using our template powerpoint using python-pptx """
+import os
 import sys
 
 from pptx import Presentation
@@ -46,15 +47,19 @@ def _add_title(slide, title):
     if title:
         title_object = slide.shapes.title
         title_object.text = title
+        return True
 
 
 def _add_text(slide, placeholder_id, text):
     if text:
         placeholder = slide.placeholders[placeholder_id]
         placeholder.text = text
+        return True
 
 
 def _add_image(slide, placeholder_id, image_url, original_image_size=True):
+    if not os.path.isfile(image_url):
+        return None
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:
         pic = slide.shapes.add_picture(image_url, placeholder.left, placeholder.top)
@@ -76,6 +81,15 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
             placeholder.insert_picture(image_url)
         except OSError:
             print("Unexpected error inserting image:", image_url, ":", sys.exc_info()[0])
+            return None
+
+
+def _add_image_or_text(slide, placeholder_id, image_url_or_text, original_image_size):
+    if ".jpg" in image_url_or_text.lower() or ".gif" in image_url_or_text.lower() \
+            or ".png" in image_url_or_text.lower():
+        return _add_image(slide, placeholder_id, image_url_or_text, original_image_size)
+    else:
+        return _add_text(slide, placeholder_id, image_url_or_text)
 
 
 def _print_all_placeholders(slide):
@@ -128,29 +142,29 @@ def create_two_column_images_slide(prs, title=None, caption_1=None, image_1=None
         return slide
 
 
-def create_two_column_images_slide(prs, title=None, caption_1=None, image_1=None, caption_2=None, image_2=None,
-                                   fit_images=True):
-    if bool(image_1):
+def create_two_column_images_slide(prs, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
+                                   image_or_text_2=None, fit_images=True):
+    if bool(image_or_text_1) and bool(image_or_text_2):
         slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
         _add_title(slide, title)
         _add_text(slide, 1, caption_1)
-        _add_image(slide, 13, image_1, fit_images)
+        _add_image_or_text(slide, 13, image_or_text_1, fit_images)
         _add_text(slide, 3, caption_2)
-        _add_image(slide, 14, image_2, fit_images)
+        _add_image_or_text(slide, 14, image_or_text_2, fit_images)
         return slide
 
 
-def create_two_column_images_slide_text_second(prs, title=None, caption_1=None, image_1=None, caption_2=None,
-                                               quote=None,
-                                               fit_images=True):
-    if bool(image_1):
-        slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
-        _add_title(slide, title)
-        _add_text(slide, 1, caption_1)
-        _add_image(slide, 13, image_1, fit_images)
-        _add_text(slide, 3, caption_2)
-        _add_text(slide, 14, quote)
-        return slide
+# def create_two_column_images_slide_text_second(prs, title=None, caption_1=None, image_1=None, caption_2=None,
+#                                                quote=None,
+#                                                fit_images=True):
+#     if bool(image_1):
+#         slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
+#         _add_title(slide, title)
+#         _add_text(slide, 1, caption_1)
+#         _add_image_or_text(slide, 13, image_1, fit_images)
+#         _add_text(slide, 3, caption_2)
+#         _add_image_or_text(slide, 14, quote)
+#         return slide
 
 
 def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_image):
@@ -186,11 +200,11 @@ def generate_two_column_images_slide(title_generator, caption_1_generator, image
                                                            image_2_generator))
 
 
-def generate_two_column_images_slide_text_second(title_generator, caption_1_generator, image_1_generator,
-                                                 caption_2_generator, quote_generator):
-    return generate_slide(create_two_column_images_slide_text_second, (title_generator, caption_1_generator,
-                                                                       image_1_generator, caption_2_generator,
-                                                                       quote_generator))
+# def generate_two_column_images_slide_text_second(title_generator, caption_1_generator, image_1_generator,
+#                                                  caption_2_generator, quote_generator):
+#     return generate_slide(create_two_column_images_slide, (title_generator, caption_1_generator,
+#                                                                        image_1_generator, caption_2_generator,
+#                                                                        quote_generator))
 
 
 def generate_two_column_images_slide_tuple_caption(title_generator, captions_generator, image_1_generator,
