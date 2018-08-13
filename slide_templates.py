@@ -2,6 +2,7 @@
 import os
 import sys
 
+from PIL import Image
 from pptx import Presentation
 
 # CONSTANTS
@@ -63,19 +64,35 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
         return None
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:
-        pic = slide.shapes.add_picture(image_url, placeholder.left, placeholder.top)
+        # Calculate the image size of the image
+        im = Image.open(image_url)
+        width, height = im.size
 
-        # calculate max width/height for target size
-        ratio = min(placeholder.width / float(pic.width), placeholder.height / float(pic.height))
+        # Calculate and set max width/height for target size
+        ratio = min(placeholder.width / float(width), placeholder.height / float(height))
+        placeholder.height = int(height * ratio)
+        placeholder.width = int(width * ratio)
 
-        pic.height = int(pic.height * ratio)
-        pic.width = int(pic.width * ratio)
+        # Insert the picture
+        placeholder = placeholder.insert_picture(image_url)
 
-        pic.left = int(placeholder.left + ((placeholder.width - pic.width) / 2))
-        pic.top = int(placeholder.top + ((placeholder.height - pic.height) / 2))
+        # Calculate ratios to compare them
+        image_ratio = width / height
+        placeholder_ratio = placeholder.width / placeholder.height
 
-        placeholder = placeholder.element
-        placeholder.getparent().remove(placeholder)
+        # Placeholder width too wide:
+        if image_ratio < placeholder_ratio:
+            ratio_difference = placeholder_ratio - image_ratio
+            difference_on_each_side = ratio_difference / 2 # Because we want it centered
+            placeholder.crop_left = -difference_on_each_side
+            placeholder.crop_right = -difference_on_each_side
+        # Placeholder height to high
+        else:
+            ratio_difference = image_ratio - placeholder_ratio
+            difference_on_each_side = ratio_difference / 2 # Because we want it centered
+            placeholder.crop_bottom = -difference_on_each_side
+            placeholder.crop_top = -difference_on_each_side
+
         return True
     else:
         try:
@@ -120,10 +137,10 @@ def create_large_quote_slide(prs, text):
         return slide
 
 
-def create_image_slide(prs, title=None, image_url=None):
+def create_image_slide(prs, title=None, image_url=None, fit_images=True):
     """ Creates a slide with an image covering the whole slide"""
     # TODO debug this: the image can not be set!
-    return _create_single_image_slide(prs, title, image_url, LAYOUT_TITLE_AND_PICTURE, True)
+    return _create_single_image_slide(prs, title, image_url, LAYOUT_TITLE_AND_PICTURE, fit_images)
 
 
 def create_full_image_slide(prs, title=None, image_url=None):
@@ -154,7 +171,6 @@ def create_three_column_images_slide(prs, title=None, caption_1=None, image_or_t
         _add_image_or_text(slide, 14, image_or_text_2, fit_images)
         _add_text(slide, 15, caption_3)
         _add_image_or_text(slide, 16, image_or_text_3, fit_images)
-        _print_all_placeholders(slide)
         return slide
 
 
@@ -185,8 +201,8 @@ def generate_full_image_slide(title_generator, image_generator):
     return generate_slide(create_full_image_slide, (title_generator, image_generator))
 
 
-def generate_image_slide(title_generator, image_generator):
-    return generate_slide(create_image_slide, (title_generator, image_generator))
+def generate_image_slide(title_generator, image_generator, fit_images=True):
+    return generate_slide(create_image_slide, (title_generator, image_generator, lambda x: fit_images))
 
 
 def generate_title_slide(title_generator, subtitle_generator):
