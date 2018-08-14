@@ -3,19 +3,7 @@ from functools import lru_cache
 import requests
 from bs4 import BeautifulSoup
 
-
-def search_quotes(search_term, amount):
-    results = []
-    page = 1
-    while len(results) < amount:
-        new_quotes = _search_quotes_page(search_term, page)
-        if not new_quotes:
-            break
-        results.extend(new_quotes)
-        page += 1
-
-    return results[0:amount]
-
+import scraper_util
 
 quote_search_url = "https://www.goodreads.com/search?page={}&q={" \
                    "}&search%5Bsource%5D=goodreads&search_type=quotes&tab=quotes "
@@ -36,3 +24,6 @@ def _search_quotes_page(search_term, page):
         quotes = [" ".join([part.strip() for part in quote.get_text().split("—")][0:-1]) for quote in quote_elements]
 
         return quotes
+
+
+search_quotes = scraper_util.create_page_scraper(_search_quotes_page)
