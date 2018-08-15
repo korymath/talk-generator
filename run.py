@@ -21,8 +21,9 @@ import slide_templates
 import text_generator
 import wikihow
 import random_util
+import shitpostbot
 # Import a lot from generator_util to make schema creation easier
-from generator_util import seeded_generator, none_generator, create_static_generator, combined_generator, \
+from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
     seeded_identity_generator
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
@@ -298,7 +299,7 @@ def get_related_giphy(seed_word):
             return image_url
 
 
-giphy_generator = seeded_generator(get_related_giphy)
+giphy_generator = create_seeded_generator(get_related_giphy)
 reddit_gif_generator = create_reddit_image_generator("gifs+gif+gifextra+nonononoYES")
 
 combined_gif_generator = combined_generator([(.5, giphy_generator), (.5, reddit_gif_generator)])

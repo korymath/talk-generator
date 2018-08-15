@@ -1,8 +1,9 @@
 import random_util
 
+
 # == TRIVIAL GENERATORS ==
 
-def seeded_generator(simple_generator):
+def create_seeded_generator(simple_generator):
     return lambda presentation_context: simple_generator(presentation_context["seed"])
 
 
@@ -41,4 +42,4 @@ def _remove_object_from_weighted_list(current_weighted_generators, generator):
             current_weighted_generators.remove(i)
 
 
-seeded_identity_generator = seeded_generator(identity_generator)
+seeded_identity_generator = create_seeded_generator(identity_generator)
