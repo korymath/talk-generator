@@ -13,7 +13,6 @@ search_url = "https://www.shitpostbot.com/gallery/sourceimages?query={" \
 @lru_cache(maxsize=20)
 def _search_shitpostbot_page(search_term, page):
     url = search_url.format(search_term, page, search_term.replace(' ', '+'))
-    print("VISITING", url)
     page = requests.get(url)
     if page:
         soup = BeautifulSoup(page.content, 'html.parser')
@@ -49,4 +48,8 @@ def get_random_image(_):
     return random.choice(_search_shitpostbot_page("", random.choice(range(150))))
 
 
-search_images = scraper_util.create_page_scraper(_search_shitpostbot_page)
+_search_image_function = scraper_util.create_page_scraper(_search_shitpostbot_page)
+
+
+def search_images(search_term, amount=50):
+    return _search_image_function(search_term,amount)
