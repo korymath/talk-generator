@@ -68,28 +68,26 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
         im = Image.open(image_url)
         width, height = im.size
 
-        # Calculate and set max width/height for target size, such that the placeholder doesn't "zoom in" the image
-        ratio = min(placeholder.width / float(width), placeholder.height / float(height))
-        placeholder.height = int(height * ratio)
-        placeholder.width = int(width * ratio)
+        # Make sure the placeholder doesn't zoom in
+        placeholder.height = height
+        placeholder.width = width
 
         # Insert the picture
         placeholder = placeholder.insert_picture(image_url)
 
-        # Calculate ratios to compare them
+        # Calculate ratios and compare
         image_ratio = width / height
         placeholder_ratio = placeholder.width / placeholder.height
+        ratio_difference = placeholder_ratio - image_ratio
 
         # Placeholder width too wide:
-        if image_ratio < placeholder_ratio:
-            ratio_difference = placeholder_ratio - image_ratio
-            difference_on_each_side = ratio_difference / 2  # Because we want the image centered on the placeholder
+        if ratio_difference > 0:
+            difference_on_each_side = ratio_difference / 2
             placeholder.crop_left = -difference_on_each_side
             placeholder.crop_right = -difference_on_each_side
-        # Placeholder height to high
+        # Placeholder height too high
         else:
-            ratio_difference = image_ratio - placeholder_ratio
-            difference_on_each_side = ratio_difference / 2
+            difference_on_each_side = -ratio_difference / 2
             placeholder.crop_bottom = -difference_on_each_side
             placeholder.crop_top = -difference_on_each_side
 
