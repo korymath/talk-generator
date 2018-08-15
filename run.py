@@ -58,7 +58,7 @@ def main(arguments):
     print("Making {} slide talk on: {}".format(arguments.num_slides, arguments.topic))
 
     # Retrieve the schema to generate the presentation with
-    schema = get_schema(args.schema)
+    schema = get_schema(arguments.schema)
 
     # Generate random presenter name if no presenter name given
     if not arguments.presenter:
@@ -70,12 +70,15 @@ def main(arguments):
                                                 presenter=arguments.presenter)
 
     # Save presentation
-    presentation_file = _save_presentation_to_pptx(arguments.output_folder, arguments.topic, presentation)
+    if arguments.save_ppt:
+        presentation_file = _save_presentation_to_pptx(arguments.output_folder, arguments.topic, presentation)
 
-    # Open the presentation
-    if args.open_file and presentation_file is not None:
-        path = os.path.realpath(presentation_file)
-        os.startfile(path)
+        # Open the presentation
+        if arguments.open_ppt and presentation_file is not None:
+            path = os.path.realpath(presentation_file)
+            os.startfile(path)
+
+    return presentation
 
 
 # == TOPIC GENERATORS ==
@@ -452,7 +455,9 @@ if __name__ == '__main__':
                         default=None, type=str)
     parser.add_argument('--output_folder', help="The folder to output the generated presentations",
                         default="./output/", type=str)
-    parser.add_argument('--open_file', help="If this flag is true, the generated powerpoint will automatically open",
+    parser.add_argument('--save_ppt', help="If this flag is true, the generated powerpoint will be saved",
+                        default=True, type=bool)
+    parser.add_argument('--open_ppt', help="If this flag is true, the generated powerpoint will automatically open",
                         default=True, type=bool)
     args = parser.parse_args()
     main(args)
