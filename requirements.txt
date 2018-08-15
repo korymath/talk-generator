@@ -12,3 +12,4 @@ numpy
 bs4
 praw
 tracery
+PIL
