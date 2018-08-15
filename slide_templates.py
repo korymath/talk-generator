@@ -103,8 +103,9 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
 
 
 def _add_image_or_text(slide, placeholder_id, image_url_or_text, original_image_size):
-    if ".jpg" in image_url_or_text.lower() or ".gif" in image_url_or_text.lower() \
-            or ".png" in image_url_or_text.lower():
+    lower_url = image_url_or_text.lower()
+    if ".jpg" in lower_url or ".gif" in lower_url \
+            or ".png" in lower_url or ".jpeg" in lower_url:
         return _add_image(slide, placeholder_id, image_url_or_text, original_image_size)
     else:
         return _add_text(slide, placeholder_id, image_url_or_text)
