@@ -110,3 +110,4 @@ venv.bak/
 .idea/
 output/
 data/auth/reddit.json
+test_output/
