@@ -1,3 +1,8 @@
+import random
+
+import requests
+
+import os_util
 import random_util
 
 
@@ -21,6 +26,31 @@ def create_static_generator(always_generate_this):
 
 def create_none_generator():
     return lambda _: None
+
+
+def create_from_list_generator(list_generator):
+    return lambda input: random_util.choice_optional(list_generator(input))
+
+
+def create_from_external_image_list_generator(image_url_generator, file_name_generator):
+    def generate_from_image_list(presentation_context):
+        images = image_url_generator(presentation_context)
+        while len(images) > 0:
+            chosen_image_url = random.choice(images)
+            downloaded_url = file_name_generator(chosen_image_url)
+            try:
+                os_util.download_image(chosen_image_url, downloaded_url)
+                return downloaded_url
+            except PermissionError:
+                print("Permission error when downloading", chosen_image_url)
+            except requests.exceptions.MissingSchema:
+                print("Missing schema for image ", chosen_image_url)
+            except OSError:
+                print("Non existing image for: ", chosen_image_url)
+            images.remove(chosen_image_url)
+        return None
+
+    return generate_from_image_list
 
 
 def combined_generator(weighted_generators):
