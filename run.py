@@ -1,6 +1,5 @@
 import argparse
 import math
-import ntpath
 import os.path
 import pathlib
 import random
@@ -16,15 +15,16 @@ from google_images_download import google_images_download
 import goodreads
 # Own modules:
 import language_util
+import os_util
+import random_util
 import reddit
+import shitpostbot
 import slide_templates
 import text_generator
 import wikihow
-import random_util
-import shitpostbot
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
-    seeded_identity_generator
+    seeded_identity_generator, create_from_external_image_list_generator
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
 MAX_PRESENTATION_SAVE_TRIES = 100
@@ -47,25 +47,6 @@ def _save_presentation_to_pptx(output_folder, file_name, prs, index=0):
     except PermissionError:
         index += 1
         return _save_presentation_to_pptx(output_folder, file_name, prs, index)
-
-
-def download_image(from_url, to_url):
-    """Download image from url to path."""
-    # Create the parent folder if it doesn't exist
-    pathlib.Path(os.path.dirname(to_url)).mkdir(parents=True, exist_ok=True)
-
-    # Download
-    f = open(to_url, 'wb')
-    f.write(requests.get(from_url).content)
-    f.close()
-
-
-def get_file_name(url):
-    return ntpath.basename(url)
-
-
-def read_lines(file):
-    return [line.rstrip('\n') for line in open(file)]
 
 
 # == MAIN ==
@@ -269,8 +250,13 @@ def create_reddit_image_generator(name):
 weird_image_generator = create_reddit_image_generator("hmmm+hmm+wtf+wtfstockphotos+photoshopbattles"
                                                       "+confusing_perspective+cursedimages+HybridAnimals")
 
+shitpostbot_image_generator = create_from_external_image_list_generator(
+    create_seeded_generator(shitpostbot.search_images),
+    lambda url: "/downloads/shitpostbot/{}".format(os_util.get_file_name(url))
+)
 
 # GOOGLE IMAGES
+
 
 def get_related_google_image(seed_word):
     # Get all image paths
