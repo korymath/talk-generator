@@ -53,6 +53,16 @@ def create_from_external_image_list_generator(image_url_generator, file_name_gen
     return generate_from_image_list
 
 
+def create_backup_generator(*generator_list):
+    def generate(context):
+        for generator in generator_list:
+            generated = generator(context)
+            if generated:
+                return generated
+
+    return generate
+
+
 def combined_generator(weighted_generators):
     def generate(seed):
         current_weighted_generators = list(weighted_generators)

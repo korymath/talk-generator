@@ -24,7 +24,7 @@ import text_generator
 import wikihow
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
-    seeded_identity_generator, create_from_external_image_list_generator
+    seeded_identity_generator, create_from_external_image_list_generator, create_backup_generator
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
 MAX_PRESENTATION_SAVE_TRIES = 100
@@ -71,6 +71,8 @@ def main(arguments):
 
     # Save presentation
     presentation_file = _save_presentation_to_pptx(arguments.output_folder, arguments.topic, presentation)
+
+    # Open the presentation
     if args.open_file and presentation_file is not None:
         path = os.path.realpath(presentation_file)
         os.startfile(path)
@@ -251,9 +253,14 @@ weird_image_generator = create_reddit_image_generator("hmmm+hmm+wtf+wtfstockphot
                                                       "+confusing_perspective+cursedimages+HybridAnimals")
 
 shitpostbot_image_generator = create_from_external_image_list_generator(
-    create_seeded_generator(shitpostbot.search_images),
+    create_seeded_generator(
+        create_backup_generator(
+            shitpostbot.search_images,
+            shitpostbot.get_random_images
+        )),
     lambda url: "/downloads/shitpostbot/{}".format(os_util.get_file_name(url))
 )
+
 
 # GOOGLE IMAGES
 

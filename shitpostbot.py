@@ -1,4 +1,5 @@
 import random
+import random_util
 from functools import lru_cache
 
 import requests
@@ -6,13 +7,14 @@ from bs4 import BeautifulSoup
 
 import scraper_util
 
-search_url = "https://www.shitpostbot.com/gallery/sourceimages?query={" \
-             "}&review_state=accepted&order=total_rating&direction=DESC&page={} "
+_MAX_RANDOM_PAGE = 150
+_SEARCH_URL = "https://www.shitpostbot.com/gallery/sourceimages?query={" \
+              "}&review_state=accepted&order=total_rating&direction=DESC&page={} "
 
 
 @lru_cache(maxsize=20)
 def _search_shitpostbot_page(search_term, page):
-    url = search_url.format(search_term, page, search_term.replace(' ', '+'))
+    url = _SEARCH_URL.format(search_term, page, search_term.replace(' ', '+'))
     page = requests.get(url)
     if page:
         soup = BeautifulSoup(page.content, 'html.parser')
@@ -22,7 +24,7 @@ def _search_shitpostbot_page(search_term, page):
         for entry in post_entries:
             # Check if author doesn't have the search term (False positive)
             user = entry.find("div", class_="caption").find_all("p")[1].find("a").get_text()
-            if search_term in user:
+            if bool(search_term) and search_term in user:
                 continue
 
             # Get real image url
@@ -30,7 +32,6 @@ def _search_shitpostbot_page(search_term, page):
             image_url = _get_source_image(image_url)
             image_urls.append(image_url)
 
-        print(image_urls)
         return image_urls
 
 
@@ -44,12 +45,13 @@ def _get_source_image(image_url):
     return source_image_prefix + image_file_name
 
 
-def get_random_image(_):
-    return random.choice(_search_shitpostbot_page("", random.choice(range(150))))
+def get_random_images(_):
+    images = _search_shitpostbot_page("", random.choice(range(_MAX_RANDOM_PAGE)))
+    return images
 
 
 _search_image_function = scraper_util.create_page_scraper(_search_shitpostbot_page)
 
 
 def search_images(search_term, amount=50):
-    return _search_image_function(search_term,amount)
+    return _search_image_function(search_term, amount)
