@@ -215,7 +215,7 @@ def get_random_inspirobot_image(_):
 
     # Download the image
     image_url = 'downloads/inspirobot/{}-{}.jpg'.format(dd, nnnn)
-    download_image(inspirobot_url, image_url)
+    os_util.download_image(inspirobot_url, image_url)
 
     return image_url
 
@@ -231,9 +231,9 @@ class RedditImageGenerator:
         while len(images) > 0:
             chosen_image = random.choice(images)
             chosen_image_url = chosen_image.url
-            downloaded_url = "downloads/reddit/" + self._subreddit + "/" + get_file_name(chosen_image_url)
+            downloaded_url = "downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(chosen_image_url)
             try:
-                download_image(chosen_image_url, downloaded_url)
+                os_util.download_image(chosen_image_url, downloaded_url)
                 return downloaded_url
             except PermissionError:
                 print("Permission error when downloading", chosen_image_url)
@@ -288,7 +288,7 @@ def get_related_giphy(seed_word):
             giphy_url = original.get('url')
             gif_name = os.path.basename(os.path.dirname(giphy_url))
             image_url = 'downloads/' + seed_word + '/gifs/' + gif_name + ".gif"
-            download_image(giphy_url, image_url)
+            os_util.download_image(giphy_url, image_url)
             return image_url
 
 
