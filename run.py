@@ -326,7 +326,7 @@ presentation_schema = PresentationSchema(
         # TITLE
         SlideGenerator(
             slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
-            weight_function=create_peaked_weight([0], 100000, 0),
+            weight_function=create_peaked_weight((0,), 100000, 0),
             name="Title slide"),
 
         # ABOUT ME
@@ -337,7 +337,7 @@ presentation_schema = PresentationSchema(
                 about_me_job_tuple_generator,
                 about_me_hobby_tuple_generator,
             ),
-            create_peaked_weight([1], 300, 0),
+            create_peaked_weight((1,), 300, 0),
             allowed_repeated_elements=3,
             name="About Me: Location-Job-WeirdHobby"),
 
@@ -347,7 +347,7 @@ presentation_schema = PresentationSchema(
                 about_me_location_or_country_tuple_generator,
                 about_me_job_tuple_generator,
             ),
-            create_peaked_weight([1], 100, 0),
+            create_peaked_weight((1,), 100, 0),
             allowed_repeated_elements=3,
             name="About Me: Location-Job"),
 
@@ -358,7 +358,7 @@ presentation_schema = PresentationSchema(
                 about_me_book_tuple_generator,
                 about_me_hobby_tuple_generator,
             ),
-            create_peaked_weight([1], 100, 0),
+            create_peaked_weight((1,), 100, 0),
             allowed_repeated_elements=0,
             name="About Me: Location-Book-WeirdHobby"),
 
@@ -366,7 +366,7 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_image_slide_tuple(
                 about_me_hobby_tuple_generator
             ),
-            create_peaked_weight([1, 2], 5, 0),
+            create_peaked_weight((1, 2), 5, 0),
             allowed_repeated_elements=0,
             name="Weird Hobby"),
 
@@ -379,7 +379,7 @@ presentation_schema = PresentationSchema(
                 none_generator,
                 create_goodreads_quote_generator(280)
             ),
-            weight_function=create_peaked_weight([2, 3], 10, 0.1),
+            weight_function=create_peaked_weight((2, 3), 10, 0.1),
             allowed_repeated_elements=0,
             name="Historical Figure Quote"),
 
@@ -391,7 +391,7 @@ presentation_schema = PresentationSchema(
                 none_generator,
                 vintage_picture_generator
             ),
-            weight_function=create_peaked_weight([2, 3], 4, 0.05),
+            weight_function=create_peaked_weight((2, 3), 4, 0.05),
             allowed_repeated_elements=0,
             name="Two History Pictures"),
 
@@ -430,7 +430,6 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_large_quote_slide(
                 generate_wikihow_bold_statement),
             name="Wikihow Bold Statement"),
-
 
         # TWO CAPTIONS VARIATIONS
         SlideGenerator(
