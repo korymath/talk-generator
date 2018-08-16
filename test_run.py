@@ -11,7 +11,7 @@ class TestStringMethods(unittest.TestCase):
         random.seed(1)
 
     def test_google_images(self):
-        self.assertTrue(bool(run.get_related_google_image({"seed": "cat"})))
+        self.assertTrue(bool(run.generate_google_image({"seed": "cat"})))
 
     def test_main(self):
         arguments = mock.Mock()

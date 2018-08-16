@@ -3,15 +3,12 @@ import math
 import os.path
 import pathlib
 import random
-from functools import lru_cache
-from os import listdir
-from os.path import isfile, join
 
 import numpy
 import safygiphy
-from google_images_download import google_images_download
 
 import goodreads
+import google_images
 # Own modules:
 import language_util
 import os_util
@@ -23,7 +20,8 @@ import text_generator
 import wikihow
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
-    seeded_identity_generator, create_from_external_image_list_generator, create_backup_generator
+    seeded_identity_generator, create_from_external_image_list_generator, create_from_list_generator, \
+    create_backup_generator
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
 MAX_PRESENTATION_SAVE_TRIES = 100
@@ -130,51 +128,6 @@ class SynonymTopicGenerator:
         return self._seeds[slide_nr]
 
 
-# == CONTENT GENERATORS ==
-# These functions generate content, sometimes related to given arguments
-
-def get_google_images(presentation_context, num_images=1):
-    word = presentation_context["seed"]
-    lp = 'downloads/' + word + '/'
-    paths = _get_google_image_cached(word, num_images, lp)
-
-    # If no local images, search on Google Image Search
-    if not bool(paths) or len(paths) == 0:
-        paths = []
-        # Get related images at 16x9 aspect ratio
-        response = google_images_download.googleimagesdownload()
-        arguments = {
-            'keywords': word,
-            'limit': num_images,
-            'print_urls': False,
-            'exact_size': '1600,900',
-        }
-        # passing the arguments to the function
-        paths_dict = response.download(arguments)
-        for value in paths_dict.values():
-            paths.extend(value)
-
-        # printing absolute paths of the downloaded images
-        # print('paths of images', paths)
-    return paths
-
-
-@lru_cache(maxsize=20)
-def _get_google_image_cached(word, num_image, lp):
-    try:
-        local_files = [lp + f for f in listdir(lp) if isfile(join(lp,
-                                                                  f))]
-        paths = local_files
-    except FileNotFoundError:
-        paths = []
-
-    if len(paths) > 0:
-        print('{} local images on {} found'.format(len(paths), word))
-
-    if len(paths) > num_image:
-        return paths
-
-
 # TITLE GENERATORS
 talk_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/talk_title.txt').generate
 talk_subtitle_generator = text_generator.TraceryTextGenerator('data/text-templates/talk_subtitle.json').generate
@@ -260,18 +213,10 @@ shitpostbot_image_generator = create_from_external_image_list_generator(
     lambda url: "./downloads/shitpostbot/{}".format(os_util.get_file_name(url))
 )
 
-
 # GOOGLE IMAGES
 
-
-def get_related_google_image(seed_word):
-    # Get all image paths
-    # img_paths = args.all_paths.get(word)
-    img_paths = get_google_images(seed_word, 1)
-    if img_paths:
-        # Pick one of the images
-        img_path = random.choice(img_paths)
-        return img_path
+generate_google_image = create_from_list_generator(create_seeded_generator(
+    google_images.get_google_images))
 
 
 # GIFS
@@ -385,7 +330,7 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
             name="Wikihow Bold Statement"),
         SlideGenerator(
-            slide_templates.generate_full_image_slide(seeded_identity_generator, get_related_google_image),
+            slide_templates.generate_full_image_slide(seeded_identity_generator, generate_google_image),
             name="Google Images"),
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(seeded_identity_generator,
