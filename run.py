@@ -94,8 +94,14 @@ historical_name_generator = text_generator.TraceryTextGenerator("./data/text-tem
                                                                 "title_name").generate
 full_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
                                                           "full_name").generate
-book_explanation_generator = text_generator.TraceryTextGenerator("./data/text-templates/about_me_facts.json",
+
+_about_me_facts_grammar = "./data/text-templates/about_me_facts.json"
+book_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
                                                                  "book_description").generate
+location_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
+                                                                     "location_description").generate
+hobby_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
+                                                                  "hobby_description").generate
 
 
 # QUOTES
@@ -298,11 +304,11 @@ test_schema = PresentationSchema(
         SlideGenerator(
             slide_templates.generate_three_column_images_slide(
                 about_me_title_generator,
-                none_generator,
+                location_description_generator,
                 reddit_location_image_generator,
-                book_explanation_generator,
+                book_description_generator,
                 reddit_book_cover_generator,
-                none_generator,
+                hobby_description_generator,
                 combined_generator(
                     (1, weird_image_generator),
                     (2, shitpostbot_image_generator)
