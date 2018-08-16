@@ -26,7 +26,7 @@ class RandomUtilTest(unittest.TestCase):
             results.add(random_util.weighted_random(possibilities))
         self.assertEqual({"one", "four", "six", "seven"}, results)
 
-    def test_weighted_random_all_appear_double_values(self):
+    def test_weighted_random_all_appear_double_values_appearances(self):
         possibilities = (.1, "one"), (.4, "four")
         ones = 0
         fours = 0

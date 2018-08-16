@@ -1,10 +1,10 @@
 """ This module helps creating specific type of slides using our template powerpoint using python-pptx """
 import os
 import sys
-import os_util
 
-from PIL import Image
 from pptx import Presentation
+
+import os_util
 
 # CONSTANTS
 # HEIGHT = 9
@@ -39,7 +39,8 @@ LAYOUT_TWO_TITLE_AND_IMAGE = 14
 LAYOUT_THREE_TITLE_AND_IMAGE = 15
 
 _PROHIBITED_IMAGES_DIR = "./data/images/prohibited/"
-PROHIBITED_IMAGES = list([os_util.open_image(_PROHIBITED_IMAGES_DIR + url) for url in os.listdir(_PROHIBITED_IMAGES_DIR)])
+PROHIBITED_IMAGES = list(
+    [os_util.open_image(_PROHIBITED_IMAGES_DIR + url) for url in os.listdir(_PROHIBITED_IMAGES_DIR)])
 
 
 # = HELPERS =

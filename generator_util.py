@@ -29,7 +29,7 @@ def create_none_generator():
 
 
 def create_from_list_generator(list_generator):
-    return lambda input: random_util.choice_optional(list_generator(input))
+    return lambda inp: random_util.choice_optional(list_generator(inp))
 
 
 def create_from_external_image_list_generator(image_url_generator, file_name_generator):
@@ -63,7 +63,7 @@ def create_backup_generator(*generator_list):
     return generate
 
 
-def combined_generator(weighted_generators):
+def combined_generator(*weighted_generators):
     def generate(seed):
         current_weighted_generators = list(weighted_generators)
         while len(current_weighted_generators) > 0:

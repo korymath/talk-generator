@@ -96,7 +96,6 @@ def can_format_with(template, variables_dictionary):
 
 def get_format_variables(template):
     """ Finds all the names of the variables used in the template """
-    matches = re.findall('{(\w+)[^}]*}', template)
     return {x[0] for x in get_format_variables_and_functions(template)}
 
 

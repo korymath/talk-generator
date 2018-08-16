@@ -1,5 +1,4 @@
 import random
-import random_util
 from functools import lru_cache
 
 import requests

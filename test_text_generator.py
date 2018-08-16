@@ -25,9 +25,9 @@ class TextGeneratorTest(unittest.TestCase):
         possible_templates = ["This is {adjective}", "This is {noun}"]
         templated_text_generator = text_generator.TemplatedTextGenerator(templates_list=possible_templates)
         for _ in range(100):
-            self.assertEqual("This is possible", templated_text_generator.generate({"adjective": "possible"}));
+            self.assertEqual("This is possible", templated_text_generator.generate({"adjective": "possible"}))
         for _ in range(100):
-            self.assertEqual("This is a test", templated_text_generator.generate({"noun": "a test"}));
+            self.assertEqual("This is a test", templated_text_generator.generate({"noun": "a test"}))
 
     def test_all_possible_outcomes(self):
         possible_templates = ["This is {adjective}", "This is {noun}"]

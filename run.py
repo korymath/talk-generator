@@ -186,7 +186,7 @@ history_title_generator = text_generator.TemplatedTextGenerator(
 history_person_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/history_person.txt").generate
 history_and_history_person_title_generator = combined_generator(
-    [(4, history_title_generator), (6, history_person_title_generator)])
+    (4, history_title_generator), (6, history_person_title_generator))
 about_me_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/about-me.txt").generate
 historical_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
@@ -194,7 +194,7 @@ historical_name_generator = text_generator.TraceryTextGenerator("./data/text-tem
 full_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
                                                           "full_name").generate
 book_explanation_generator = text_generator.TraceryTextGenerator("./data/text-templates/book_explanation.json",
-                                                          "origin").generate
+                                                                 "origin").generate
 
 
 # QUOTES
@@ -294,7 +294,7 @@ def get_related_giphy(seed_word):
 giphy_generator = create_seeded_generator(get_related_giphy)
 reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", "nonononoYES")
 
-combined_gif_generator = combined_generator([(.5, giphy_generator), (.5, reddit_gif_generator)])
+combined_gif_generator = combined_generator((.5, giphy_generator), (.5, reddit_gif_generator))
 
 # OLD
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")

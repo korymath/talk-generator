@@ -16,7 +16,7 @@ def wikihow_action_to_action(wikihow_title):
 
 def _remove_between_brackets(sentence):
     while True:
-        s_new = re.sub(r'\([^\(]*?\)', r'', sentence)
+        s_new = re.sub(r'\([^(]*?\)', r'', sentence)
         if s_new == sentence:
             break
         sentence = s_new

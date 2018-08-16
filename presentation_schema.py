@@ -115,8 +115,12 @@ class PresentationSchema:
 
         return presentation
 
-    def _generate_slide(self, presentation_context, slide_nr, num_slides, used_elements=set(),
-                        prohibited_generators=set()):
+    def _generate_slide(self, presentation_context, slide_nr, num_slides, used_elements=None,
+                        prohibited_generators=None):
+
+        # Default arguments: avoid mutable defaults
+        if prohibited_generators is None:
+            prohibited_generators = set()
 
         # Select the slide generator to generate with
         generator = self._select_generator(slide_nr, num_slides, prohibited_generators)
@@ -141,7 +145,7 @@ class PresentationSchema:
 
             return slide
         else:
-            print("No generator found to generate about ", presentation)
+            print("No generator found to generate about ", presentation_context["Presentation"])
 
     def _select_generator(self, slide_nr, total_slides, prohibited_generators):
         """Select a generator for a certain slide number"""
