@@ -52,7 +52,8 @@ def is_valid_image(image_url):
         if im in PROHIBITED_IMAGES:
             print(image_url, " IS DENIED")
             return False
-    except OSError:
+    except OSError as e:
+        print(e)
         return False
 
     return True

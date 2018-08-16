@@ -52,9 +52,10 @@ def create_from_external_image_list_generator(image_url_generator, file_name_gen
             chosen_image_url = random.choice(images)
             downloaded_url = file_name_generator(chosen_image_url)
             try:
-                if os_util.is_image(chosen_image_url) and os_util.is_valid_image(chosen_image_url):
+                if os_util.is_image(chosen_image_url):
                     os_util.download_image(chosen_image_url, downloaded_url)
-                    return downloaded_url
+                    if os_util.is_valid_image(downloaded_url):
+                        return downloaded_url
             except PermissionError:
                 print("Permission error when downloading", chosen_image_url)
             except requests.exceptions.MissingSchema:
