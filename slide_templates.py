@@ -37,6 +37,9 @@ LAYOUT_LARGE_QUOTE = 13
 LAYOUT_TWO_TITLE_AND_IMAGE = 14
 LAYOUT_THREE_TITLE_AND_IMAGE = 15
 
+_PROHIBITED_IMAGES_DIR = "./data/images/prohibited/"
+PROHIBITED_IMAGES = [Image.open(_PROHIBITED_IMAGES_DIR + url) for url in os.listdir(_PROHIBITED_IMAGES_DIR)]
+
 
 # HELPERS
 def _create_slide(prs, slide_type):
@@ -67,6 +70,9 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
         # Calculate the image size of the image
         try:
             im = Image.open(image_url)
+            if im in PROHIBITED_IMAGES:
+                print(image_url, "is in the set of prohibited images!")
+                return None
             width, height = im.size
         except OSError:
             return None

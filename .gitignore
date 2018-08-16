@@ -1,6 +1,5 @@
 .DS_Store
 downloads/*
-images/
 output/*.pptx
 
 # Byte-compiled / optimized / DLL files
