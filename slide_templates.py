@@ -65,8 +65,11 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:
         # Calculate the image size of the image
-        im = Image.open(image_url)
-        width, height = im.size
+        try:
+            im = Image.open(image_url)
+            width, height = im.size
+        except OSError:
+            return None
 
         # Make sure the placeholder doesn't zoom in
         placeholder.height = height
@@ -153,10 +156,11 @@ def create_two_column_images_slide(prs, title=None, caption_1=None, image_or_tex
         slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
         _add_title(slide, title)
         _add_text(slide, 1, caption_1)
-        _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
+        result_1 = _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
         _add_text(slide, 3, caption_2)
-        _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
-        return slide
+        result_2 = _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
+        if result_1 and result_2:
+            return slide
 
 
 def create_three_column_images_slide(prs, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
@@ -166,12 +170,13 @@ def create_three_column_images_slide(prs, title=None, caption_1=None, image_or_t
         slide = _create_slide(prs, LAYOUT_THREE_TITLE_AND_IMAGE)
         _add_title(slide, title)
         _add_text(slide, 1, caption_1)
-        _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
+        result_1 = _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
         _add_text(slide, 3, caption_2)
-        _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
+        result_2 = _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
         _add_text(slide, 15, caption_3)
-        _add_image_or_text(slide, 16, image_or_text_3, original_image_size)
-        return slide
+        result_3 = _add_image_or_text(slide, 16, image_or_text_3, original_image_size)
+        if result_1 and result_2 and result_3:
+            return slide
 
 
 # def create_two_column_images_slide_text_second(prs, title=None, caption_1=None, image_1=None, caption_2=None,
@@ -191,8 +196,9 @@ def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_im
     if image_url:
         slide = _create_slide(prs, slide_template_idx)
         _add_title(slide, title)
-        _add_image(slide, 1, image_url, fit_image)
-        return slide
+        result = _add_image(slide, 1, image_url, fit_image)
+        if result:
+            return slide
 
 
 # GENERATORS: Same as the template fillers above, but using generation functions
