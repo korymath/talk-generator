@@ -82,7 +82,7 @@ talk_title_generator = text_generator.TemplatedTextGenerator('data/text-template
 talk_subtitle_generator = text_generator.TraceryTextGenerator('data/text-templates/talk_subtitle.json').generate
 
 conclusion_title_generator = text_generator.TemplatedTextGenerator(
-    "data/text-templates/conclusion.txt").generate
+    "data/text-templates/conclusion_title.txt").generate
 inspiration_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/inspiration.txt").generate
 history_title_generator = text_generator.TemplatedTextGenerator(
@@ -464,7 +464,20 @@ presentation_schema = PresentationSchema(
                 weird_image_generator,
             ),
             weight_function=create_peaked_weight((-1,), 10000, 0),
-            allowed_repeated_elements=5,
+            allowed_repeated_elements=10,
+            name="Conclusion"),
+        SlideGenerator(
+            slide_templates.generate_three_column_images_slide(
+                conclusion_title_generator,
+                create_static_generator("Conclusion 1"),
+                generate_google_image,
+                none_generator("Conclusion 2"),
+                weird_image_generator,
+                create_static_generator("Conclusion 3"),
+                combined_gif_generator,
+            ),
+            weight_function=create_peaked_weight((-1,), 5000, 0),
+            allowed_repeated_elements=10,
             name="Conclusion"),
     ]
 )
