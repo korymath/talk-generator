@@ -58,11 +58,14 @@ class SlideGenerator:
 
                 if slide:
                     # Add notes about the generation
-                    slide.notes_slide.notes_text_frame.text = str(self) + " / " + str(
-                        presentation_context) + " / " + str(generated_elements)
-                    return slide, generated_elements
+                    slide.notes_slide.notes_text_frame.text = "Seed:" + presentation_context["seed"] \
+                                                              + str(self) \
+                                                              + " \n " \
+                                                              + str(presentation_context) \
+                                                              + " \n " \
+                                                              + str(generated_elements)
+                return slide, generated_elements
 
-    #
     def get_weight_for(self, slide_nr, total_slides):
         """The weight of the generator for a particular slide.
         Determines how much chance it has being picked for a particular slide number"""
