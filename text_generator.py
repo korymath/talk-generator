@@ -2,6 +2,7 @@
 import json
 import random
 import re
+from functools import lru_cache
 
 import tracery
 from tracery.modifiers import base_english
@@ -65,7 +66,7 @@ class TemplatedTextGenerator(AbstractTextGenerator):
 class TraceryTextGenerator(AbstractTextGenerator):
     def __init__(self, tracery_json, variable="origin"):
         with open(tracery_json) as grammar_file:
-            grammar = tracery.Grammar(json.load(grammar_file))
+            grammar = get_tracery_grammar(grammar_file)
             grammar.add_modifiers(base_english)
             self._grammar = grammar
             self._variable = variable
@@ -83,6 +84,11 @@ class TraceryTextGenerator(AbstractTextGenerator):
                 result = apply_variables_to_template(template, variables_dictionary)
                 if result:
                     return result
+
+
+@lru_cache(maxsize=20)
+def get_tracery_grammar(grammar_file):
+    return tracery.Grammar(json.load(grammar_file))
 
 
 # TODO(Thomas): Add TraceryTemplatedTextGenerator for better variations than a template list
