@@ -81,6 +81,8 @@ def main(arguments):
 talk_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/talk_title.txt').generate
 talk_subtitle_generator = text_generator.TraceryTextGenerator('data/text-templates/talk_subtitle.json').generate
 
+conclusion_title_generator = text_generator.TemplatedTextGenerator(
+    "data/text-templates/conclusion.txt").generate
 inspiration_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/inspiration.txt").generate
 history_title_generator = text_generator.TemplatedTextGenerator(
@@ -453,7 +455,7 @@ presentation_schema = PresentationSchema(
         # CONCLUSION:
         SlideGenerator(
             slide_templates.generate_two_column_images_slide(
-                create_static_generator("Conclusions"),
+                conclusion_title_generator,
                 create_static_generator("Conclusion 1"),
                 generate_google_image,
                 # none_generator("Conclusion 2"),
