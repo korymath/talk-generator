@@ -32,6 +32,10 @@ def create_from_list_generator(list_generator):
     return lambda inp: random_util.choice_optional(list_generator(inp))
 
 
+def remove_invalid_images_from_generator(list_generator):
+    return lambda inp: [item for item in list_generator(inp) if os_util.is_image(item) and os_util.is_valid_image(item)]
+
+
 def create_from_external_image_list_generator(image_url_generator, file_name_generator):
     def generate_from_image_list(presentation_context):
         images = image_url_generator(presentation_context)
@@ -39,8 +43,9 @@ def create_from_external_image_list_generator(image_url_generator, file_name_gen
             chosen_image_url = random.choice(images)
             downloaded_url = file_name_generator(chosen_image_url)
             try:
-                os_util.download_image(chosen_image_url, downloaded_url)
-                return downloaded_url
+                if os_util.is_image(chosen_image_url) and os_util.is_valid_image(chosen_image_url):
+                    os_util.download_image(chosen_image_url, downloaded_url)
+                    return downloaded_url
             except PermissionError:
                 print("Permission error when downloading", chosen_image_url)
             except requests.exceptions.MissingSchema:
