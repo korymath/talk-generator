@@ -8,7 +8,6 @@ from os import listdir
 from os.path import isfile, join
 
 import numpy
-import requests
 import safygiphy
 from google_images_download import google_images_download
 
@@ -227,25 +226,16 @@ def get_random_inspirobot_image(_):
 class RedditImageGenerator:
     def __init__(self, subreddit):
         self._subreddit = subreddit
+        self._generate = create_from_external_image_list_generator(create_seeded_generator(
+            lambda seed: [post.url for post in reddit.search_subreddit(
+                self._subreddit,
+                seed + " nsfw:no (url:.jpg OR url:.png OR url:.gif)")]
+        ),
+            lambda url: "./downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
+        )
 
     def generate(self, presentation_context):
-        seed = presentation_context["seed"]
-        images = reddit.search_subreddit(self._subreddit, seed + " nsfw:no (url:.jpg OR url:.png OR url:.gif)")
-        while len(images) > 0:
-            chosen_image = random.choice(images)
-            chosen_image_url = chosen_image.url
-            downloaded_url = "downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(chosen_image_url)
-            try:
-                os_util.download_image(chosen_image_url, downloaded_url)
-                return downloaded_url
-            except PermissionError:
-                print("Permission error when downloading", chosen_image_url)
-            except requests.exceptions.MissingSchema:
-                print("Missing schema for image ", chosen_image_url)
-            except OSError:
-                print("Non existing image for: ", chosen_image_url)
-            images.remove(chosen_image)
-        return None
+        return self._generate(presentation_context)
 
     def generate_random(self, _):
         return self.generate({"seed": ""})
