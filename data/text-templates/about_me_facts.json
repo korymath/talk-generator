@@ -1,10 +1,4 @@
 {
-  "location_description": [
-    "Birthplace",
-    "Where I go to rest",
-    "Where I get my inspiration",
-    "Hometown"
-  ],
   "book_description": [
     "#book_adjective# #publication#",
     "My #book_adjective# #publication#"
@@ -59,7 +53,13 @@
     "Work Experience",
     "What I do during the day"
   ],
+  "location_description": [
+    "Where I go to rest",
+    "Where I get my inspiration",
+    "Hometown"
+  ],
   "country_description": [
+    "Birthplace: ",
     "From ",
     "Born in ",
     "Natively "
