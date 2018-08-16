@@ -18,7 +18,7 @@ import text_generator
 import wikihow
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
-    seeded_identity_generator, create_from_external_image_list_generator, create_from_list_generator, \
+    create_from_external_image_list_generator, create_from_list_generator, \
     create_backup_generator, remove_invalid_images_from_generator, seeded_titled_identity_generator
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
@@ -305,7 +305,9 @@ presentation_schema = PresentationSchema(
             allowed_repeated_elements=1,
             name="Two History Pictures"),
         SlideGenerator(
-            slide_templates.generate_full_image_slide(seeded_identity_generator, combined_gif_generator),
+            slide_templates.generate_full_image_slide(
+                seeded_titled_identity_generator,
+                combined_gif_generator),
             name="Full Screen Giphy"),
         SlideGenerator(
             slide_templates.generate_image_slide(inspiration_title_generator, inspirobot_image_generator),
@@ -325,16 +327,18 @@ presentation_schema = PresentationSchema(
                 generate_wide_google_image),
             name="Google Images"),
         SlideGenerator(
-            slide_templates.generate_two_column_images_slide_tuple_caption(seeded_identity_generator,
-                                                                           create_double_image_captions,
-                                                                           combined_gif_generator,
-                                                                           combined_gif_generator),
+            slide_templates.generate_two_column_images_slide_tuple_caption(
+                seeded_titled_identity_generator,
+                create_double_image_captions,
+                combined_gif_generator,
+                combined_gif_generator),
             name="Two Captions Gifs"),
         SlideGenerator(
-            slide_templates.generate_two_column_images_slide_tuple_caption(seeded_identity_generator,
-                                                                           create_double_image_captions,
-                                                                           weird_image_generator,
-                                                                           weird_image_generator),
+            slide_templates.generate_two_column_images_slide_tuple_caption(
+                seeded_titled_identity_generator,
+                create_double_image_captions,
+                weird_image_generator,
+                weird_image_generator),
             name="Two Captions Weird Reddit"),
     ]
 )
