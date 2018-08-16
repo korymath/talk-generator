@@ -1,8 +1,10 @@
+import ntpath
 import os
 import pathlib
-import ntpath
+from functools import lru_cache
 
 import requests
+from PIL import Image
 
 
 def download_image(from_url, to_url):
@@ -20,5 +22,11 @@ def get_file_name(url):
     return ntpath.basename(url)
 
 
+@lru_cache(maxsize=20)
 def read_lines(file):
     return [line.rstrip('\n') for line in open(file)]
+
+
+@lru_cache(maxsize=20)
+def open_image(file):
+    return Image.open(file)
