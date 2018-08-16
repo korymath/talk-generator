@@ -20,12 +20,21 @@ def identity_generator(input_word):
     return input_word
 
 
+def titled_identity_generator(input_word):
+    if input_word:
+        return input_word.title()
+
+
 def create_static_generator(always_generate_this):
     return lambda _: always_generate_this
 
 
 def create_none_generator():
     return lambda _: None
+
+
+seeded_identity_generator = create_seeded_generator(identity_generator)
+seeded_titled_identity_generator = create_seeded_generator(titled_identity_generator)
 
 
 def create_from_list_generator(list_generator):
@@ -85,6 +94,3 @@ def _remove_object_from_weighted_list(current_weighted_generators, generator):
     for i in current_weighted_generators:
         if i and i[1] == generator:
             current_weighted_generators.remove(i)
-
-
-seeded_identity_generator = create_seeded_generator(identity_generator)
