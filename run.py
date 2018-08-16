@@ -20,7 +20,7 @@ import wikihow
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
     create_from_external_image_list_generator, create_from_list_generator, \
     create_backup_generator, remove_invalid_images_from_generator, seeded_titled_identity_generator, \
-    create_inspired_tuple_generator
+    create_inspired_tuple_generator, apply_function_to_generator, create_tupled_generator
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
 MAX_PRESENTATION_SAVE_TRIES = 100
@@ -103,6 +103,8 @@ location_description_generator = text_generator.TraceryTextGenerator(_about_me_f
                                                                      "location_description").generate
 hobby_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
                                                                   "hobby_description").generate
+job_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
+                                                                "job_description").generate
 job_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
                                                     "job").generate
 
@@ -181,6 +183,10 @@ generate_google_image = create_from_list_generator(
     remove_invalid_images_from_generator(
         create_seeded_generator(
             google_images.create_image_generator())))
+
+generate_google_image_from_word = create_from_list_generator(
+    remove_invalid_images_from_generator(
+        google_images.create_image_generator()))
 
 
 # GIFS
