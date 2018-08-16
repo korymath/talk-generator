@@ -1,7 +1,7 @@
 {
-  "origin": [
+  "book_description": [
     "My #publication#",
-    "My #adjective# #publication#"
+    "My #book_adjective# #publication#"
   ],
   "publication": [
     "Book",
@@ -13,7 +13,7 @@
     "Nonfiction",
     "Handbook"
   ],
-  "adjective": [
+  "book_adjective": [
     "First",
     "Latest",
     "Proudest",

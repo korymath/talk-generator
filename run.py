@@ -94,8 +94,8 @@ historical_name_generator = text_generator.TraceryTextGenerator("./data/text-tem
                                                                 "title_name").generate
 full_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
                                                           "full_name").generate
-book_explanation_generator = text_generator.TraceryTextGenerator("./data/text-templates/book_explanation.json",
-                                                                 "origin").generate
+book_explanation_generator = text_generator.TraceryTextGenerator("./data/text-templates/about_me_facts.json",
+                                                                 "book_description").generate
 
 
 # QUOTES
