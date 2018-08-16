@@ -105,8 +105,12 @@ hobby_description_generator = text_generator.TraceryTextGenerator(_about_me_fact
                                                                   "hobby_description").generate
 job_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
                                                                 "job_description").generate
+country_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
+                                                                    "country_description").generate
 job_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
                                                     "job").generate
+country_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
+                                                        "country").generate
 
 
 # QUOTES
@@ -255,6 +259,19 @@ def create_double_image_captions(presentation_context):
 
 
 # TUPLED ABOUT ME
+
+def _apply_job_prefix(job_name):
+    if random.uniform(0, 1) < 0.55:
+        return job_name
+    return job_description_generator() + ": " + job_name
+
+
+def _apply_country_prefix(country_name):
+    if random.uniform(0, 1) < 0.55:
+        return country_name
+    return country_description_generator() + country_name
+
+
 about_me_hobby_tuple_generator = create_tupled_generator(
     hobby_description_generator,
     weird_and_shitpost_generator
@@ -275,7 +292,20 @@ about_me_job_tuple_generator = apply_function_to_generator(
         ),
         generate_google_image_from_word
     ),
-    lambda x: (job_description_generator() + ": " + x[0], x[1])
+    lambda x: (_apply_job_prefix(x[0]), x[1])
+)
+
+about_me_country_tuple_generator = apply_function_to_generator(
+    create_inspired_tuple_generator(
+        country_generator,
+        generate_google_image_from_word
+    ),
+    lambda x: (_apply_country_prefix(x[0]), x[1])
+)
+
+about_me_location_or_country_tuple_generator = combined_generator(
+    (3, about_me_country_tuple_generator),
+    (1, about_me_location_tuple_generator),
 )
 
 # == SCHEMAS ==

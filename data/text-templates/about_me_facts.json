@@ -59,6 +59,13 @@
     "Work Experience",
     "What I do during the day"
   ],
+  "country_description": [
+    "From ",
+    "Born in ",
+    "Natively ",
+  ],
+
+
   "job": [
     "accountant",
     "actor",
