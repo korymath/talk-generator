@@ -248,12 +248,12 @@ class RedditImageGenerator:
         return None
 
 
-def create_reddit_image_generator(name):
-    return RedditImageGenerator(name).generate
+def create_reddit_image_generator(*name):
+    return RedditImageGenerator("+".join(name)).generate
 
 
-weird_image_generator = create_reddit_image_generator("hmmm+hmm+wtf+wtfstockphotos+photoshopbattles"
-                                                      "+confusing_perspective+cursedimages+HybridAnimals")
+weird_image_generator = create_reddit_image_generator("hmmm","hmm","wtf","wtfstockphotos","photoshopbattles",
+                                                      "confusing_perspective","cursedimages","HybridAnimals")
 
 shitpostbot_image_generator = create_from_external_image_list_generator(
     create_seeded_generator(
@@ -296,13 +296,13 @@ def get_related_giphy(seed_word):
 
 
 giphy_generator = create_seeded_generator(get_related_giphy)
-reddit_gif_generator = create_reddit_image_generator("gifs+gif+gifextra+nonononoYES")
+reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", "nonononoYES")
 
 combined_gif_generator = combined_generator([(.5, giphy_generator), (.5, reddit_gif_generator)])
 
 # OLD
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
-vintage_picture_generator = create_reddit_image_generator("TheWayWeWere+100yearsago+ColorizedHistory")
+vintage_picture_generator = create_reddit_image_generator("TheWayWeWere", "100yearsago", "ColorizedHistory")
 
 # BOLD_STATEMENT
 
