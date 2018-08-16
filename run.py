@@ -165,7 +165,7 @@ weird_and_shitpost_generator = combined_generator(
 # GOOGLE IMAGES
 
 generate_google_image = create_from_list_generator(create_seeded_generator(
-    google_images.get_google_images))
+    google_images.get_full_screen_google_image))
 
 
 # GIFS
