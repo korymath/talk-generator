@@ -4,18 +4,26 @@ presentation), and slide generators, that have functions for generating slides a
 
 """
 
+from functools import lru_cache
+
 import random_util
 
 
 # WEIGHT FUNCTIONS
 
 def create_peaked_weight(peak_values, weight, other_weight):
-    def weight_function(slide_nr, _):
-        if slide_nr in peak_values:
+    def weight_function(slide_nr, num_slides):
+        actual_peak_values = fix_indices(peak_values, num_slides)
+        if slide_nr in actual_peak_values:
             return weight
         return other_weight
 
     return weight_function
+
+
+@lru_cache(maxsize=30)
+def fix_indices(values, num_slides):
+    return [value % num_slides if value < 0 else value for value in values]
 
 
 def constant_weight(weight):
