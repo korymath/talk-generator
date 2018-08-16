@@ -38,37 +38,17 @@ LAYOUT_LARGE_QUOTE = 13
 LAYOUT_TWO_TITLE_AND_IMAGE = 14
 LAYOUT_THREE_TITLE_AND_IMAGE = 15
 
-_PROHIBITED_IMAGES_DIR = "./data/images/prohibited/"
-PROHIBITED_IMAGES = list(
-    [os_util.open_image(_PROHIBITED_IMAGES_DIR + url) for url in os.listdir(_PROHIBITED_IMAGES_DIR)])
 
 
 # = HELPERS =
 
 # VALIDITY CHECKING
 
-def _is_image(content):
-    if not bool(content):
-        return False
-    lower_url = content.lower()
-    return ".jpg" in lower_url or ".gif" in lower_url or ".png" in lower_url or ".jpeg" in lower_url
-
-
-def _is_valid_image(image_url):
-    try:
-        im = os_util.open_image(image_url)
-        if im in PROHIBITED_IMAGES:
-            print(image_url, " IS DENIED")
-            return False
-    except OSError:
-        return False
-
-    return True
 
 
 def _is_valid_content(content):
-    if _is_image(content):
-        return _is_valid_image(content)
+    if os_util.is_image(content):
+        return os_util.is_valid_image(content)
     return bool(content)
 
 
@@ -135,7 +115,7 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
 
 
 def _add_image_or_text(slide, placeholder_id, image_url_or_text, original_image_size):
-    if _is_image(image_url_or_text):
+    if os_util.is_image(image_url_or_text):
         return _add_image(slide, placeholder_id, image_url_or_text, original_image_size)
     else:
         return _add_text(slide, placeholder_id, image_url_or_text)
