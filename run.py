@@ -19,7 +19,7 @@ import wikihow
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
     seeded_identity_generator, create_from_external_image_list_generator, create_from_list_generator, \
-    create_backup_generator, remove_invalid_images_from_generator
+    create_backup_generator, remove_invalid_images_from_generator, seeded_titled_identity_generator
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
 MAX_PRESENTATION_SAVE_TRIES = 100
@@ -164,9 +164,20 @@ weird_and_shitpost_generator = combined_generator(
 
 # GOOGLE IMAGES
 
+generate_full_screen_google_image = create_from_list_generator(
+    remove_invalid_images_from_generator(
+        create_seeded_generator(
+            google_images.create_full_screen_image_generator())))
+
+generate_wide_google_image = create_from_list_generator(
+    remove_invalid_images_from_generator(
+        create_seeded_generator(
+            google_images.create_wide_image_generator())))
+
 generate_google_image = create_from_list_generator(
-    remove_invalid_images_from_generator(create_seeded_generator(
-        google_images.get_full_screen_google_image)))
+    remove_invalid_images_from_generator(
+        create_seeded_generator(
+            google_images.create_image_generator())))
 
 
 # GIFS
@@ -304,7 +315,14 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
             name="Wikihow Bold Statement"),
         SlideGenerator(
-            slide_templates.generate_full_image_slide(seeded_identity_generator, generate_google_image),
+            slide_templates.generate_full_image_slide(
+                none_generator,
+                generate_full_screen_google_image),
+            name="Google Images"),
+        SlideGenerator(
+            slide_templates.generate_full_image_slide(
+                seeded_titled_identity_generator,
+                generate_wide_google_image),
             name="Google Images"),
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(seeded_identity_generator,
