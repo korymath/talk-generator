@@ -362,10 +362,11 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_image_slide_tuple(
                 about_me_hobby_tuple_generator
             ),
-            create_peaked_weight([1, 2], 10, 0),
+            create_peaked_weight([1, 2], 5, 0),
             allowed_repeated_elements=0,
             name="Weird Hobby"),
 
+        # HISTORY
         SlideGenerator(
             slide_templates.generate_two_column_images_slide(
                 history_and_history_person_title_generator,
@@ -374,9 +375,10 @@ presentation_schema = PresentationSchema(
                 none_generator,
                 create_goodreads_quote_generator(280)
             ),
-            weight_function=create_peaked_weight([1, 2], 10, 0.4),
+            weight_function=create_peaked_weight([2, 3], 10, 0.4),
             allowed_repeated_elements=1,
             name="Historical Figure Quote"),
+
         SlideGenerator(
             slide_templates.generate_two_column_images_slide(
                 history_title_generator,
@@ -385,7 +387,7 @@ presentation_schema = PresentationSchema(
                 none_generator,
                 vintage_picture_generator
             ),
-            weight_function=create_peaked_weight([1, 2], 4, 0.2),
+            weight_function=create_peaked_weight([2, 3], 4, 0.2),
             allowed_repeated_elements=1,
             name="Two History Pictures"),
         SlideGenerator(
