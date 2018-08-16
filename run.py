@@ -293,23 +293,21 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
             weight_function=create_peaked_weight([0], 100000, 0),
             name="Title slide"),
+
         SlideGenerator(
-            slide_templates.generate_three_column_images_slide(
+            slide_templates.generate_three_column_images_slide_tuple(
                 about_me_title_generator,
-                location_description_generator,
-                reddit_location_image_generator,
-                book_description_generator,
-                reddit_book_cover_generator,
-                hobby_description_generator,
-                weird_and_shitpost_generator
+                about_me_location_tuple_generator,
+                about_me_book_tuple_generator,
+                about_me_hobby_tuple_generator,
             ),
-            create_peaked_weight([1], 2000, 0),
+            create_peaked_weight([1, 2], 100, 0),
             allowed_repeated_elements=0,
             name="About Me: Location-Book-WeirdHobby"),
+
         SlideGenerator(
-            slide_templates.generate_image_slide(
-                hobby_description_generator,
-                weird_and_shitpost_generator
+            slide_templates.generate_image_slide_tuple(
+                about_me_hobby_tuple_generator
             ),
             create_peaked_weight([1, 2], 10, 0),
             allowed_repeated_elements=0,
