@@ -192,11 +192,12 @@ generate_google_image_from_word = create_from_list_generator(
     remove_invalid_images_from_generator(
         google_images.create_image_generator()))
 
-
 # GIFS
 
+giphy = safygiphy.Giphy()
+
+
 def get_related_giphy(seed_word):
-    giphy = safygiphy.Giphy()
     response = giphy.random(tag=seed_word)
     if bool(response):
         data = response.get('data')
@@ -210,7 +211,10 @@ def get_related_giphy(seed_word):
             return image_url
 
 
-giphy_generator = create_seeded_generator(get_related_giphy)
+giphy_generator = create_backup_generator(
+    create_seeded_generator(get_related_giphy),
+    lambda _: giphy.random()
+)
 reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", "nonononoYES")
 
 combined_gif_generator = combined_generator((.5, giphy_generator), (.5, reddit_gif_generator))
