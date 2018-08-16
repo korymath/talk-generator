@@ -450,7 +450,20 @@ presentation_schema = PresentationSchema(
             weight_function=constant_weight(3),
             name="Two Captions Weird Reddit"),
 
-        # CONCLUSION: TODO
+        # CONCLUSION:
+        SlideGenerator(
+            slide_templates.generate_two_column_images_slide(
+                create_static_generator("Conclusions"),
+                create_static_generator("Conclusion 1"),
+                generate_google_image,
+                # none_generator("Conclusion 2"),
+                # generate_google_image,
+                create_static_generator("Conclusion 2"),
+                weird_image_generator,
+            ),
+            weight_function=create_peaked_weight((-1,), 10000, 0),
+            allowed_repeated_elements=5,
+            name="Conclusion"),
     ]
 )
 
