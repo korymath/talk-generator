@@ -254,6 +254,30 @@ def create_double_image_captions(presentation_context):
     return parts[0], parts[1]
 
 
+# TUPLED ABOUT ME
+about_me_hobby_tuple_generator = create_tupled_generator(
+    hobby_description_generator,
+    weird_and_shitpost_generator
+)
+about_me_book_tuple_generator = create_tupled_generator(
+    book_description_generator,
+    reddit_book_cover_generator,
+)
+about_me_location_tuple_generator = create_tupled_generator(
+    location_description_generator,
+    reddit_location_image_generator,
+)
+about_me_job_tuple_generator = apply_function_to_generator(
+    create_inspired_tuple_generator(
+        apply_function_to_generator(
+            job_generator,
+            str.title
+        ),
+        generate_google_image_from_word
+    ),
+    lambda x: (job_description_generator() + ": " + x[0], x[1])
+)
+
 # == SCHEMAS ==
 
 # This object holds all the information about how to generate the presentation
