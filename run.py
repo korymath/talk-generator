@@ -304,6 +304,10 @@ combined_gif_generator = combined_generator([(.5, giphy_generator), (.5, reddit_
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
 vintage_picture_generator = create_reddit_image_generator("TheWayWeWere", "100yearsago", "ColorizedHistory")
 
+# BOOKS
+book_cover_generator = create_reddit_image_generator("BookCovers", "fakebookcovers", "coverdesign", "bookdesign")
+
+
 # BOLD_STATEMENT
 
 bold_statement_templated_generator = text_generator.TemplatedTextGenerator('data/text-templates/bold-statements.txt')
