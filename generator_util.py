@@ -53,19 +53,6 @@ def create_from_external_image_list_generator(image_url_generator, file_name_gen
     return generate_from_image_list
 
 
-def create_from_list_generator(list_generator):
-    def generate_from_list(presentation_context):
-        generated_list = list_generator(presentation_context)
-        while len(generated_list) > 0:
-            element = random.choice(generated_list)
-            if element:
-                return element
-            generated_list.remove(element)
-        return None
-
-    return generate_from_list
-
-
 def create_backup_generator(*generator_list):
     def generate(context):
         for generator in generator_list:
