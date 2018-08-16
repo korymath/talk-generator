@@ -57,7 +57,6 @@ def _is_valid_image(image_url):
         if im in PROHIBITED_IMAGES:
             print(image_url, " IS DENIED")
             return False
-        print(image_url, "IS ALLOWED")
     except OSError:
         return False
 
@@ -185,7 +184,7 @@ def create_two_column_images_slide(prs, title=None, caption_1=None, image_or_tex
         _add_text(slide, 1, caption_1)
         _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
         _add_text(slide, 3, caption_2)
-        _(slide, 14, image_or_text_2, original_image_size)
+        _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
         return slide
 
 
