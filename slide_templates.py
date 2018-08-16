@@ -1,6 +1,7 @@
 """ This module helps creating specific type of slides using our template powerpoint using python-pptx """
 import os
 import sys
+import os_util
 
 from PIL import Image
 from pptx import Presentation
@@ -38,10 +39,38 @@ LAYOUT_TWO_TITLE_AND_IMAGE = 14
 LAYOUT_THREE_TITLE_AND_IMAGE = 15
 
 _PROHIBITED_IMAGES_DIR = "./data/images/prohibited/"
-PROHIBITED_IMAGES = [Image.open(_PROHIBITED_IMAGES_DIR + url) for url in os.listdir(_PROHIBITED_IMAGES_DIR)]
+PROHIBITED_IMAGES = list([os_util.open_image(_PROHIBITED_IMAGES_DIR + url) for url in os.listdir(_PROHIBITED_IMAGES_DIR)])
 
 
-# HELPERS
+# = HELPERS =
+
+# VALIDITY CHECKING
+
+def _is_image(content):
+    lower_url = content.lower()
+    return ".jpg" in lower_url or ".gif" in lower_url or ".png" in lower_url or ".jpeg" in lower_url
+
+
+def _is_valid_image(image_url):
+    try:
+        im = os_util.open_image(image_url)
+        if im in PROHIBITED_IMAGES:
+            print(image_url, " IS DENIED")
+            return False
+        print(image_url, "IS ALLOWED")
+    except OSError:
+        return False
+
+    return True
+
+
+def _is_valid_content(content):
+    if _is_image(content):
+        return _is_valid_image(content)
+    return bool(content)
+
+
+# CREATION
 def _create_slide(prs, slide_type):
     """ Creates a new slide in the given presentation using the slide_type template """
     return prs.slides.add_slide(prs.slide_layouts[slide_type])
@@ -68,14 +97,8 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:
         # Calculate the image size of the image
-        try:
-            im = Image.open(image_url)
-            if im in PROHIBITED_IMAGES:
-                print(image_url, "is in the set of prohibited images!")
-                return None
-            width, height = im.size
-        except OSError:
-            return None
+        im = os_util.open_image(image_url)
+        width, height = im.size
 
         # Make sure the placeholder doesn't zoom in
         placeholder.height = height
@@ -110,9 +133,7 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
 
 
 def _add_image_or_text(slide, placeholder_id, image_url_or_text, original_image_size):
-    lower_url = image_url_or_text.lower()
-    if ".jpg" in lower_url or ".gif" in lower_url \
-            or ".png" in lower_url or ".jpeg" in lower_url:
+    if _is_image(image_url_or_text):
         return _add_image(slide, placeholder_id, image_url_or_text, original_image_size)
     else:
         return _add_text(slide, placeholder_id, image_url_or_text)
@@ -158,31 +179,29 @@ def create_full_image_slide(prs, title=None, image_url=None, original_image_size
 
 def create_two_column_images_slide(prs, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
                                    image_or_text_2=None, original_image_size=True):
-    if bool(image_or_text_1) and bool(image_or_text_2):
+    if _is_valid_content(image_or_text_1) and _is_valid_content(image_or_text_2):
         slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
         _add_title(slide, title)
         _add_text(slide, 1, caption_1)
-        result_1 = _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
+        _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
         _add_text(slide, 3, caption_2)
-        result_2 = _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
-        if result_1 and result_2:
-            return slide
+        _(slide, 14, image_or_text_2, original_image_size)
+        return slide
 
 
 def create_three_column_images_slide(prs, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
                                      image_or_text_2=None, caption_3=None, image_or_text_3=None,
                                      original_image_size=True):
-    if bool(image_or_text_1) and bool(image_or_text_2) and bool(image_or_text_3):
+    if _is_valid_content(image_or_text_1) and _is_valid_content(image_or_text_2) and _is_valid_content(image_or_text_3):
         slide = _create_slide(prs, LAYOUT_THREE_TITLE_AND_IMAGE)
         _add_title(slide, title)
         _add_text(slide, 1, caption_1)
-        result_1 = _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
+        _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
         _add_text(slide, 3, caption_2)
-        result_2 = _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
+        _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
         _add_text(slide, 15, caption_3)
-        result_3 = _add_image_or_text(slide, 16, image_or_text_3, original_image_size)
-        if result_1 and result_2 and result_3:
-            return slide
+        _add_image_or_text(slide, 16, image_or_text_3, original_image_size)
+        return slide
 
 
 # def create_two_column_images_slide_text_second(prs, title=None, caption_1=None, image_1=None, caption_2=None,
@@ -199,12 +218,11 @@ def create_three_column_images_slide(prs, title=None, caption_1=None, image_or_t
 
 
 def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_image):
-    if image_url:
+    if _is_valid_content(image_url):
         slide = _create_slide(prs, slide_template_idx)
         _add_title(slide, title)
-        result = _add_image(slide, 1, image_url, fit_image)
-        if result:
-            return slide
+        _add_image_or_text(slide, 1, image_url, fit_image)
+        return slide
 
 
 # GENERATORS: Same as the template fillers above, but using generation functions
