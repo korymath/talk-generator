@@ -1,5 +1,3 @@
-from functools import lru_cache
-
 from google_images_download import google_images_download
 
 # == CONTENT GENERATORS ==
@@ -29,7 +27,6 @@ def create_image_generator(num_images=_DEFAULT_NUM_IMAGES):
     return lambda word: search_images(word, None, num_images)
 
 
-@lru_cache(maxsize=20)
 def search_images(word, extra_arguments_dict=None, num_images=_DEFAULT_NUM_IMAGES):
     # Get related images at 16x9 aspect ratio
     response = google_images_download.googleimagesdownload()
