@@ -247,13 +247,17 @@ class RedditImageGenerator:
             images.remove(chosen_image)
         return None
 
+    def generate_random(self, _):
+        return self.generate({"seed": ""})
+
 
 def create_reddit_image_generator(*name):
-    return RedditImageGenerator("+".join(name)).generate
+    reddit_generator = RedditImageGenerator("+".join(name))
+    return create_backup_generator(reddit_generator.generate, reddit_generator.generate_random)
 
 
-weird_image_generator = create_reddit_image_generator("hmmm","hmm","wtf","wtfstockphotos","photoshopbattles",
-                                                      "confusing_perspective","cursedimages","HybridAnimals")
+weird_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf", "wtfstockphotos", "photoshopbattles",
+                                                      "confusing_perspective", "cursedimages", "HybridAnimals")
 
 shitpostbot_image_generator = create_from_external_image_list_generator(
     create_seeded_generator(
@@ -305,8 +309,7 @@ vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
 vintage_picture_generator = create_reddit_image_generator("TheWayWeWere", "100yearsago", "ColorizedHistory")
 
 # BOOKS
-book_cover_generator = create_reddit_image_generator("BookCovers", "fakebookcovers", "coverdesign", "bookdesign")
-
+reddit_book_cover_generator = create_reddit_image_generator("BookCovers", "fakebookcovers", "coverdesign", "bookdesign")
 
 # BOLD_STATEMENT
 
