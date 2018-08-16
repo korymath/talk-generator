@@ -1,6 +1,13 @@
 {
+  "location_description": [
+    "Birthplace",
+    "Where I go to rest",
+    "Where I get my inspiration",
+    "Hometown",
+    "Favourite place"
+  ],
   "book_description": [
-    "My #publication#",
+    "#book_adjective# #publication#",
     "My #book_adjective# #publication#"
   ],
   "publication": [
@@ -11,13 +18,40 @@
     "Textbook",
     "Writing",
     "Nonfiction",
-    "Handbook"
+    "Handbook",
+    "Work"
   ],
   "book_adjective": [
     "First",
     "Latest",
     "Proudest",
     "Favourite",
-    "Recent"
+    "Recent",
+    "Inspirational"
+  ],
+  "hobby_description": [
+    "My Hobby",
+    "Hobby",
+    "How I spend my free time",
+    "Favourite thing in the world",
+    "Passion",
+    "Obsession",
+    "Secret passion",
+    "What I love doing",
+    "Favourite {seed.title} Memory",
+    "Favourite Memory about {seed.plural.title}",
+    "What I do besides researching {seed.plural}",
+    "What got me into {seed.plural}",
+    "Something I tend to do a lot",
+    "Something I often do",
+    "Unrelated passion"
+  ],
+  "job_description": [
+    "What I do for a living",
+    "Daytime job",
+    "Job"
   ]
+
+
+
 }
