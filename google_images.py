@@ -1,10 +1,8 @@
-
 from functools import lru_cache
 from os import listdir
 from os.path import isfile, join
 
 from google_images_download import google_images_download
-
 
 
 # == CONTENT GENERATORS ==

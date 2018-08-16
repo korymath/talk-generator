@@ -37,7 +37,7 @@ consider installing a version of [Visual Studio](https://docs.microsoft.com/en-u
 ## Run
 
 ```sh
-python3 run.py --topic 'bagels' --num_slides 5 --num_images 1
+python3 run.py --topic 'bagels' --num_slides 5
 ```
 
 ### Common Errors/Warnings:
