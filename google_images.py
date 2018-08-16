@@ -3,6 +3,7 @@ from google_images_download import google_images_download
 # == CONTENT GENERATORS ==
 # These functions generate content, sometimes related to given arguments
 
+_DEFAULT_NUM_IMAGES = 3
 
 _FULL_SCREEN_ARGUMENTS = {
     'exact_size': '1600,900',
@@ -14,19 +15,19 @@ _WIDE_ARGUMENTS = {
 }
 
 
-def create_full_screen_image_generator(num_images=5):
+def create_full_screen_image_generator(num_images=_DEFAULT_NUM_IMAGES):
     return lambda word: search_images(word, _FULL_SCREEN_ARGUMENTS, num_images)
 
 
-def create_wide_image_generator(num_images=5):
+def create_wide_image_generator(num_images=_DEFAULT_NUM_IMAGES):
     return lambda word: search_images(word, _WIDE_ARGUMENTS, num_images)
 
 
-def create_image_generator(num_images=5):
+def create_image_generator(num_images=_DEFAULT_NUM_IMAGES):
     return lambda word: search_images(word, None, num_images)
 
 
-def search_images(word, extra_arguments_dict=None, num_images=5):
+def search_images(word, extra_arguments_dict=None, num_images=_DEFAULT_NUM_IMAGES):
     # Get related images at 16x9 aspect ratio
     response = google_images_download.googleimagesdownload()
     arguments = {
