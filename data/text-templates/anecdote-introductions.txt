@@ -1,4 +1,4 @@
-My story about [[placeholder]]
-Funny thing that once happened with [[placeholder]]
-My [[placeholder]] experience
-How I got into [[placeholder_topic]]? [[placeholder]]!
+My story about {seed.title}
+Funny thing that once happened with {seed.a}
+My {seed.title} Experience
+How I got into {topic.title}? {seed.title}!

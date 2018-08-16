@@ -89,7 +89,7 @@ history_person_title_generator = text_generator.TemplatedTextGenerator(
 history_and_history_person_title_generator = combined_generator(
     (4, history_title_generator), (6, history_person_title_generator))
 about_me_title_generator = text_generator.TemplatedTextGenerator(
-    "data/text-templates/about-me.txt").generate
+    "data/text-templates/about_me_title.txt").generate
 historical_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
                                                                 "title_name").generate
 full_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
@@ -190,7 +190,7 @@ reddit_location_image_generator = create_reddit_image_generator("evilbuildings",
 
 # BOLD_STATEMENT
 
-bold_statement_templated_generator = text_generator.TemplatedTextGenerator('data/text-templates/bold-statements.txt')
+bold_statement_templated_generator = text_generator.TemplatedTextGenerator('data/text-templates/bold_statements.txt')
 
 
 def generate_wikihow_bold_statement(presentation_context):
@@ -213,7 +213,7 @@ def generate_wikihow_bold_statement(presentation_context):
 
 # DOUBLE CAPTIONS
 
-_double_captions_generator = text_generator.TemplatedTextGenerator("./data/text-templates/double-captions.txt")
+_double_captions_generator = text_generator.TemplatedTextGenerator("./data/text-templates/double_captions.txt")
 
 
 def create_double_image_captions(presentation_context):
