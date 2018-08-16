@@ -96,6 +96,21 @@ def _remove_object_from_weighted_list(current_weighted_generators, generator):
             current_weighted_generators.remove(i)
 
 
+def apply_function_to_generator(generator, *functions):
+    def generate(presentation_context):
+        generated = generator(presentation_context)
+        for func in functions:
+            generated = func(generated)
+        return generated
+
+    return generate
+
+
+def create_tupled_generator(*generators):
+    """ Creates a tuple generator that generates every tuple value independent from the others"""
+    return lambda x: tuple([generator(x) for generator in generators])
+
+
 def create_inspired_tuple_generator(generator_1, generator_2):
     """ The second generator will get the generator 1 as input, outputting the tuple """
 
