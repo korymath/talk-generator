@@ -487,32 +487,25 @@ test_schema = PresentationSchema(
     slide_templates.create_new_powerpoint,
     # Topic per slide generator
     # lambda topic, num_slides: slide_topic_generators.IdentityTopicGenerator(topic, num_slides),
-    slide_topic_generators.SynonymTopicGenerator,
+    slide_topic_generators.SideTrackingTopicGenerator,
     # Slide generators
     [
-        SlideGenerator(
-            slide_templates.generate_three_column_images_slide(
-                about_me_title_generator,
-                location_description_generator,
-                reddit_location_image_generator,
-                book_description_generator,
-                reddit_book_cover_generator,
-                hobby_description_generator,
-                combined_generator(
-                    (1, weird_image_generator),
-                    (2, shitpostbot_image_generator)
-                )
-            ),
-            weight_function=constant_weight(100000),
-            allowed_repeated_elements=3,
-            name="About Me"),
-        # Back up in case something goes wrong
 
+        SlideGenerator(
+            slide_templates.generate_large_quote_slide(
+                seeded_titled_identity_generator),
+            name="Topic test",
+            weight_function=constant_weight(10000),
+            allowed_repeated_elements=5
+        ),
+
+        # Back up in case something goes wrong
         SlideGenerator(
             slide_templates.generate_image_slide(
                 inspiration_title_generator,
                 create_static_generator("downloads/inspirobot/01-743.jpg")),
             allowed_repeated_elements=2,
+            weight_function=constant_weight(1),
             name="Fake Inspirobot")
     ])
 

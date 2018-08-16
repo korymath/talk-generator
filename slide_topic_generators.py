@@ -8,6 +8,44 @@ import language_util
 
 # == TOPIC GENERATORS ==
 
+class SideTrackingTopicGenerator:
+    """ This generator will make small side tracks around topics, but keeps returning every X slides"""
+
+    def __init__(self, topic, num_slides, topic_return_period_range=range(2, 4)):
+        self._topic = topic
+        self._num_slides = num_slides
+
+        seeds = [None] * num_slides
+
+        # Make it begin and end with the topic
+        if num_slides > 0:
+            seeds[0] = topic
+            seeds[-1] = topic
+
+        # Add the returning topic
+        idx = 0
+        while idx < num_slides:
+            seeds[idx] = topic
+            idx += random.choice(topic_return_period_range)
+
+        # Fill in the blanks with related topics
+        while None in seeds and random.uniform(0, 1) < 0.5:
+            fill_in_blank_topics_with_related(seeds)
+            print(seeds)
+
+        # Convert None's to literal none's for debugging purposes
+        seeds = [seed if seed else "None" for seed in seeds]
+
+        self._seeds = seeds
+
+    def generate_seed(self, slide_nr):
+        return self._seeds[slide_nr]
+
+
+def fill_in_blank_topics_with_related(seeds):
+    pass
+
+
 class IdentityTopicGenerator:
     """ Generates always the given topic as the seed for each slide """
 
