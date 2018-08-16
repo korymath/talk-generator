@@ -319,19 +319,42 @@ presentation_schema = PresentationSchema(
 
     # Slide generators
     [
+        # TITLE
         SlideGenerator(
             slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
             weight_function=create_peaked_weight([0], 100000, 0),
             name="Title slide"),
 
+        # ABOUT ME
         SlideGenerator(
             slide_templates.generate_three_column_images_slide_tuple(
                 about_me_title_generator,
-                about_me_location_tuple_generator,
+                about_me_location_or_country_tuple_generator,
+                about_me_job_tuple_generator,
+                about_me_hobby_tuple_generator,
+            ),
+            create_peaked_weight([1], 300, 0),
+            allowed_repeated_elements=3,
+            name="About Me: Location-Job-WeirdHobby"),
+
+        SlideGenerator(
+            slide_templates.generate_two_column_images_slide_tuple(
+                about_me_title_generator,
+                about_me_location_or_country_tuple_generator,
+                about_me_job_tuple_generator,
+            ),
+            create_peaked_weight([1], 100, 0),
+            allowed_repeated_elements=3,
+            name="About Me: Location-Job"),
+
+        SlideGenerator(
+            slide_templates.generate_three_column_images_slide_tuple(
+                about_me_title_generator,
+                about_me_location_or_country_tuple_generator,
                 about_me_book_tuple_generator,
                 about_me_hobby_tuple_generator,
             ),
-            create_peaked_weight([1, 2], 100, 0),
+            create_peaked_weight([1], 100, 0),
             allowed_repeated_elements=0,
             name="About Me: Location-Book-WeirdHobby"),
 
