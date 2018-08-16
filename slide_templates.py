@@ -47,6 +47,8 @@ PROHIBITED_IMAGES = list([os_util.open_image(_PROHIBITED_IMAGES_DIR + url) for u
 # VALIDITY CHECKING
 
 def _is_image(content):
+    if not bool(content):
+        return False
     lower_url = content.lower()
     return ".jpg" in lower_url or ".gif" in lower_url or ".png" in lower_url or ".jpeg" in lower_url
 
