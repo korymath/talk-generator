@@ -94,3 +94,14 @@ def _remove_object_from_weighted_list(current_weighted_generators, generator):
     for i in current_weighted_generators:
         if i and i[1] == generator:
             current_weighted_generators.remove(i)
+
+
+def create_inspired_tuple_generator(generator_1, generator_2):
+    """ The second generator will get the generator 1 as input, outputting the tuple """
+
+    def generate_tuple(presentation_context):
+        gen_1 = generator_1(presentation_context)
+        gen_2 = generator_2(gen_1)
+        return gen_1, gen_2
+
+    return generate_tuple

@@ -19,7 +19,8 @@ import wikihow
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
     create_from_external_image_list_generator, create_from_list_generator, \
-    create_backup_generator, remove_invalid_images_from_generator, seeded_titled_identity_generator
+    create_backup_generator, remove_invalid_images_from_generator, seeded_titled_identity_generator, \
+    create_inspired_tuple_generator
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
 MAX_PRESENTATION_SAVE_TRIES = 100

@@ -217,6 +217,17 @@ def generate_image_slide(title_generator, image_generator, original_image_size=T
     return generate_slide(create_image_slide, (title_generator, image_generator, lambda x: original_image_size))
 
 
+def generate_image_slide_tuple(tuple_generator, original_image_size=True):
+    def generate(presentation_context, used):
+        generated_tuple = tuple_generator(presentation_context)
+        generated = generated_tuple[0], generated_tuple[1], original_image_size
+
+        if _is_different_enough(generated, used):
+            return create_image_slide(get_presentation(presentation_context), *generated), generated
+
+    return generate
+
+
 def generate_title_slide(title_generator, subtitle_generator):
     return generate_slide(create_title_slide, (title_generator, subtitle_generator))
 
