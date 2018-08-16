@@ -35,7 +35,7 @@ def create_from_list_generator(list_generator):
 def create_from_external_image_list_generator(image_url_generator, file_name_generator):
     def generate_from_image_list(presentation_context):
         images = image_url_generator(presentation_context)
-        while len(images) > 0:
+        while bool(images) and len(images) > 0:
             chosen_image_url = random.choice(images)
             downloaded_url = file_name_generator(chosen_image_url)
             try:

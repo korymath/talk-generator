@@ -114,12 +114,19 @@ inspirobot_image_generator = inspirobot.get_random_inspirobot_image
 class RedditImageGenerator:
     def __init__(self, subreddit):
         self._subreddit = subreddit
-        self._generate = create_from_external_image_list_generator(create_seeded_generator(
-            lambda seed: [post.url for post in reddit.search_subreddit(
+
+        def generate(seed):
+            results = reddit.search_subreddit(
                 self._subreddit,
-                seed + " nsfw:no (url:.jpg OR url:.png OR url:.gif)")]
-        ),
-            lambda url: "./downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
+                str(seed) + " nsfw:no (url:.jpg OR url:.png OR url:.gif)")
+            if bool(results):
+                return [post.url for post in results]
+
+        self._generate = create_from_external_image_list_generator(
+            create_seeded_generator(generate),
+            lambda
+                url: "./downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(
+                url)
         )
 
     def generate(self, presentation_context):
