@@ -9,13 +9,13 @@ import safygiphy
 import goodreads
 import google_images
 import os_util
-import random_util
 import reddit
 import shitpostbot
 import slide_templates
 import slide_topic_generators
 import text_generator
 import wikihow
+import inspirobot
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
     seeded_identity_generator, create_from_external_image_list_generator, create_from_list_generator, \
@@ -76,7 +76,7 @@ def main(arguments):
     return presentation
 
 
-# TITLE GENERATORS
+# TEXT GENERATORS
 talk_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/talk_title.txt').generate
 talk_subtitle_generator = text_generator.TraceryTextGenerator('data/text-templates/talk_subtitle.json').generate
 
@@ -100,29 +100,14 @@ book_explanation_generator = text_generator.TraceryTextGenerator("./data/text-te
 
 # QUOTES
 def create_goodreads_quote_generator(max_quote_length):
-    def generator(presentation_context):
-        seed = presentation_context["seed"]
-        quotes = goodreads.search_quotes(seed, 50)
-        filtered_quotes = [quote for quote in quotes if len(quote) <= max_quote_length]
-        return random_util.choice_optional(filtered_quotes)
+    def generator(seed):
+        return [quote for quote in goodreads.search_quotes(seed, 50) if len(quote) <= max_quote_length]
 
-    return generator
+    return create_from_list_generator(create_seeded_generator(generator))
 
 
 # INSPIROBOT
-
-def get_random_inspirobot_image(_):
-    # Generate a random url to access inspirobot
-    dd = str(random.randint(1, 73)).zfill(2)
-    nnnn = random.randint(0, 9998)
-    inspirobot_url = ('http://generated.inspirobot.me/'
-                      '0{}/aXm{}xjU.jpg').format(dd, nnnn)
-
-    # Download the image
-    image_url = 'downloads/inspirobot/{}-{}.jpg'.format(dd, nnnn)
-    os_util.download_image(inspirobot_url, image_url)
-
-    return image_url
+inspirobot_image_generator = inspirobot.get_random_inspirobot_image
 
 
 # REDDIT
@@ -271,7 +256,7 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_full_image_slide(seeded_identity_generator, combined_gif_generator),
             name="Full Screen Giphy"),
         SlideGenerator(
-            slide_templates.generate_image_slide(inspiration_title_generator, get_random_inspirobot_image),
+            slide_templates.generate_image_slide(inspiration_title_generator, inspirobot_image_generator),
             weight_function=constant_weight(0.6),
             name="Inspirobot"),
         SlideGenerator(
