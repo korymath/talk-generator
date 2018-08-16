@@ -45,9 +45,11 @@ LAYOUT_THREE_TITLE_AND_IMAGE = 15
 
 
 def _is_valid_content(content):
+    if not bool(content):
+        return False
     if os_util.is_image(content):
         return os_util.is_valid_image(content)
-    return bool(content)
+    return True
 
 
 # CREATION
