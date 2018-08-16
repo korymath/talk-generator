@@ -17,6 +17,6 @@ Stereotype|Reality
 Don't|Do
 Do|Don't
 Bad|Worse
-Good|Best
+Good|Better
 Good|Bad
 Bad|Good
