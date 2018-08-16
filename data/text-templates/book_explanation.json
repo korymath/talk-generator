@@ -1,0 +1,17 @@
+{
+  "origin": [
+    "My #publication#",
+    "My #adjective# #publication#"
+  ],
+  "publication": [
+    "Book",
+    "Publication",
+    "Bestseller"
+  ],
+  "adjective": [
+    "First",
+    "Latest",
+    "Proudest",
+    "Favourite"
+  ]
+}
