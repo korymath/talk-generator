@@ -435,6 +435,7 @@ presentation_schema = PresentationSchema(
                 create_double_image_captions,
                 combined_gif_generator,
                 combined_gif_generator),
+            weight_function=constant_weight(3),
             name="Two Captions Gifs"),
 
         SlideGenerator(
@@ -443,6 +444,7 @@ presentation_schema = PresentationSchema(
                 create_double_image_captions,
                 weird_image_generator,
                 weird_and_shitpost_generator),
+            weight_function=constant_weight(3),
             name="Two Captions Weird Reddit"),
 
         # CONCLUSION: TODO
