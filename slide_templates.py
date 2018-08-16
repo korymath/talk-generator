@@ -39,11 +39,9 @@ LAYOUT_TWO_TITLE_AND_IMAGE = 14
 LAYOUT_THREE_TITLE_AND_IMAGE = 15
 
 
-
 # = HELPERS =
 
 # VALIDITY CHECKING
-
 
 
 def _is_valid_content(content):
@@ -87,7 +85,11 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
         placeholder.width = width
 
         # Insert the picture
-        placeholder = placeholder.insert_picture(image_url)
+        try:
+            placeholder = placeholder.insert_picture(image_url)
+        except ValueError as e:
+            print(e)
+            return None
 
         # Calculate ratios and compare
         image_ratio = width / height
@@ -243,6 +245,19 @@ def generate_two_column_images_slide(title_generator, caption_1_generator, image
                                                            image_2_generator))
 
 
+def generate_two_column_images_slide_tuple(title_generator, tuple_1_generator, tuple_2_generator):
+    def generate(presentation_context, used):
+        generated_tuple_1 = tuple_1_generator(presentation_context)
+        generated_tuple_2 = tuple_2_generator(presentation_context)
+        generated = title_generator(presentation_context), generated_tuple_1[0], generated_tuple_1[1], \
+                    generated_tuple_2[0], generated_tuple_2[1]
+
+        if _is_different_enough(generated, used):
+            return create_two_column_images_slide(get_presentation(presentation_context), *generated), generated
+
+    return generate
+
+
 def generate_two_column_images_slide_tuple_caption(title_generator, captions_generator, image_1_generator,
                                                    image_2_generator):
     def generate(presentation_context, used):
@@ -262,6 +277,21 @@ def generate_three_column_images_slide(title_generator, caption_1_generator, ima
                                                              image_1_generator, caption_2_generator,
                                                              image_2_generator, caption_3_generator,
                                                              image_3_generator))
+
+
+def generate_three_column_images_slide_tuple(title_generator, tuple_1_generator, tuple_2_generator, tuple_3_generator):
+    def generate(presentation_context, used):
+        generated_tuple_1 = tuple_1_generator(presentation_context)
+        generated_tuple_2 = tuple_2_generator(presentation_context)
+        generated_tuple_3 = tuple_3_generator(presentation_context)
+        generated = title_generator(presentation_context), generated_tuple_1[0], generated_tuple_1[1], \
+                    generated_tuple_2[0], generated_tuple_2[1], \
+                    generated_tuple_3[0], generated_tuple_3[1]
+
+        if _is_different_enough(generated, used):
+            return create_three_column_images_slide(get_presentation(presentation_context), *generated), generated
+
+    return generate
 
 
 # HELPERS
