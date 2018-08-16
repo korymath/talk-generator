@@ -1,5 +1,7 @@
 import random
+
 import os_util
+
 
 def get_random_inspirobot_image(_):
     # Generate a random url to access inspirobot
