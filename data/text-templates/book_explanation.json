@@ -6,12 +6,18 @@
   "publication": [
     "Book",
     "Publication",
-    "Bestseller"
+    "Bestseller",
+    "Essay",
+    "Textbook",
+    "Writing",
+    "Nonfiction",
+    "Handbook"
   ],
   "adjective": [
     "First",
     "Latest",
     "Proudest",
-    "Favourite"
+    "Favourite",
+    "Recent"
   ]
 }
