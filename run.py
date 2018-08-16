@@ -102,6 +102,8 @@ location_description_generator = text_generator.TraceryTextGenerator(_about_me_f
                                                                      "location_description").generate
 hobby_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
                                                                   "hobby_description").generate
+job_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
+                                                    "job").generate
 
 
 # QUOTES
