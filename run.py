@@ -471,7 +471,7 @@ presentation_schema = PresentationSchema(
                 conclusion_title_generator,
                 create_static_generator("Conclusion 1"),
                 generate_google_image,
-                none_generator("Conclusion 2"),
+                create_static_generator("Conclusion 2"),
                 weird_image_generator,
                 create_static_generator("Conclusion 3"),
                 combined_gif_generator,
