@@ -8,6 +8,7 @@ import safygiphy
 # Own modules:
 import goodreads
 import google_images
+import inspirobot
 import os_util
 import reddit
 import shitpostbot
@@ -15,7 +16,6 @@ import slide_templates
 import slide_topic_generators
 import text_generator
 import wikihow
-import inspirobot
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
     seeded_identity_generator, create_from_external_image_list_generator, create_from_list_generator, \
@@ -124,9 +124,7 @@ class RedditImageGenerator:
 
         self._generate = create_from_external_image_list_generator(
             create_seeded_generator(generate),
-            lambda
-                url: "./downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(
-                url)
+            lambda url: "./downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
         )
 
     def generate(self, presentation_context):
@@ -185,8 +183,10 @@ combined_gif_generator = combined_generator((.5, giphy_generator), (.5, reddit_g
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
 vintage_picture_generator = create_reddit_image_generator("TheWayWeWere", "100yearsago", "ColorizedHistory")
 
-# BOOKS
 reddit_book_cover_generator = create_reddit_image_generator("BookCovers", "fakebookcovers", "coverdesign", "bookdesign")
+
+reddit_location_image_generator = create_reddit_image_generator("evilbuildings", "itookapicture", "SkyPorn",
+                                                                "EarthPorn")
 
 # BOLD_STATEMENT
 
@@ -291,26 +291,33 @@ test_schema = PresentationSchema(
     # Basic powerpoint generator
     slide_templates.create_new_powerpoint,
     # Topic per slide generator
-    lambda topic, num_slides: slide_topic_generators.IdentityTopicGenerator(topic, num_slides),
+    # lambda topic, num_slides: slide_topic_generators.IdentityTopicGenerator(topic, num_slides),
+    slide_topic_generators.SynonymTopicGenerator,
     # Slide generators
     [
         SlideGenerator(
-            slide_templates.generate_two_column_images_slide(
+            slide_templates.generate_three_column_images_slide(
                 about_me_title_generator,
                 none_generator,
+                reddit_location_image_generator,
+                book_explanation_generator,
+                reddit_book_cover_generator,
                 none_generator,
-                none_generator,
-                none_generator
+                combined_generator(
+                    (1, weird_image_generator),
+                    (2, shitpostbot_image_generator)
+                )
             ),
             weight_function=constant_weight(100000),
             allowed_repeated_elements=3,
             name="About Me"),
         # Back up in case something goes wrong
+
         SlideGenerator(
             slide_templates.generate_image_slide(
                 inspiration_title_generator,
                 create_static_generator("downloads/inspirobot/01-743.jpg")),
-            allowed_repeated_elements=1,
+            allowed_repeated_elements=2,
             name="Fake Inspirobot")
     ])
 
