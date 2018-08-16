@@ -134,6 +134,7 @@ class PresentationSchema:
 
             # Try again if slide is None, and prohibit generator for generating for this topic
             if not bool(slide):
+                print("Failed to generated using:", generator)
                 prohibited_generators.add(generator)
 
                 return self._generate_slide(presentation_context=presentation_context,
