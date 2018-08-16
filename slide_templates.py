@@ -226,8 +226,7 @@ def generate_image_slide_tuple(tuple_generator, original_image_size=True):
         generated_tuple = tuple_generator(presentation_context)
         generated = generated_tuple[0], generated_tuple[1], original_image_size
 
-        if _is_different_enough(generated, used):
-            return create_image_slide(get_presentation(presentation_context), *generated), generated
+        return _generate_if_different_enough(create_image_slide, presentation_context, generated, used)
 
     return generate
 
@@ -254,8 +253,7 @@ def generate_two_column_images_slide_tuple(title_generator, tuple_1_generator, t
         generated = title_generator(presentation_context), generated_tuple_1[0], generated_tuple_1[1], \
                     generated_tuple_2[0], generated_tuple_2[1]
 
-        if _is_different_enough(generated, used):
-            return create_two_column_images_slide(get_presentation(presentation_context), *generated), generated
+        return _generate_if_different_enough(create_two_column_images_slide, presentation_context, generated, used)
 
     return generate
 
@@ -266,9 +264,7 @@ def generate_two_column_images_slide_tuple_caption(title_generator, captions_gen
         generated_tuple = captions_generator(presentation_context)
         generated = title_generator(presentation_context), generated_tuple[0], image_1_generator(
             presentation_context), generated_tuple[1], image_2_generator(presentation_context)
-
-        if _is_different_enough(generated, used):
-            return create_two_column_images_slide(get_presentation(presentation_context), *generated), generated
+        return _generate_if_different_enough(create_two_column_images_slide, presentation_context, generated, used)
 
     return generate
 
@@ -290,8 +286,7 @@ def generate_three_column_images_slide_tuple(title_generator, tuple_1_generator,
                     generated_tuple_2[0], generated_tuple_2[1], \
                     generated_tuple_3[0], generated_tuple_3[1]
 
-        if _is_different_enough(generated, used):
-            return create_three_column_images_slide(get_presentation(presentation_context), *generated), generated
+        return _generate_if_different_enough(create_three_column_images_slide, presentation_context, generated, used)
 
     return generate
 
@@ -300,11 +295,16 @@ def generate_three_column_images_slide_tuple(title_generator, tuple_1_generator,
 
 def generate_slide(slide_template, generators):
     def generate(presentation_context, used):
-        generated = [content_generator(presentation_context) if content_generator else None for content_generator in generators]
-        if _is_different_enough(generated, used):
-            return slide_template(get_presentation(presentation_context), *generated), generated
+        generated = [content_generator(presentation_context) if content_generator else None for content_generator in
+                     generators]
+        return _generate_if_different_enough(slide_template, presentation_context, generated, used)
 
     return generate
+
+
+def _generate_if_different_enough(slide_template, presentation_context, generated, used):
+    if _is_different_enough(generated, used):
+        return slide_template(get_presentation(presentation_context), *generated), generated
 
 
 def get_presentation(presentation_context):

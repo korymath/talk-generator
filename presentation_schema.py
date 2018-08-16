@@ -64,7 +64,7 @@ class SlideGenerator:
                                                               + str(presentation_context) \
                                                               + " \n " \
                                                               + str(generated_elements)
-                return slide, generated_elements
+                    return slide, generated_elements
 
     def get_weight_for(self, slide_nr, total_slides):
         """The weight of the generator for a particular slide.
