@@ -526,6 +526,16 @@ def get_schema(name):
     return schemas[name]
 
 
+# From https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse
+def str2bool(v):
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('--topic', help="Topic of presentation.",
@@ -539,8 +549,8 @@ if __name__ == '__main__':
     parser.add_argument('--output_folder', help="The folder to output the generated presentations",
                         default="./output/", type=str)
     parser.add_argument('--save_ppt', help="If this flag is true, the generated powerpoint will be saved",
-                        default=True, type=bool)
+                        default=True, type=str2bool)
     parser.add_argument('--open_ppt', help="If this flag is true, the generated powerpoint will automatically open",
-                        default=True, type=bool)
+                        default=True, type=str2bool)
     args = parser.parse_args()
     main(args)
