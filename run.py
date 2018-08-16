@@ -390,18 +390,18 @@ presentation_schema = PresentationSchema(
             weight_function=create_peaked_weight([2, 3], 4, 0.2),
             allowed_repeated_elements=1,
             name="Two History Pictures"),
+
+        # FULL SCREEN RELATED IMAGES
         SlideGenerator(
             slide_templates.generate_full_image_slide(
-                seeded_titled_identity_generator,
+                none_generator,
                 combined_gif_generator),
             name="Full Screen Giphy"),
         SlideGenerator(
-            slide_templates.generate_image_slide(inspiration_title_generator, inspirobot_image_generator),
-            weight_function=constant_weight(0.6),
-            name="Inspirobot"),
-        SlideGenerator(
-            slide_templates.generate_large_quote_slide(generate_wikihow_bold_statement),
-            name="Wikihow Bold Statement"),
+            slide_templates.generate_image_slide(
+                seeded_titled_identity_generator,
+                combined_gif_generator),
+            name="Full Screen Giphy"),
         SlideGenerator(
             slide_templates.generate_full_image_slide(
                 none_generator,
@@ -412,6 +412,23 @@ presentation_schema = PresentationSchema(
                 seeded_titled_identity_generator,
                 generate_wide_google_image),
             name="Google Images"),
+
+        # WISE STATEMENTS
+
+        SlideGenerator(
+            slide_templates.generate_image_slide(
+                inspiration_title_generator,
+                inspirobot_image_generator),
+            weight_function=constant_weight(0.6),
+            name="Inspirobot"),
+
+        SlideGenerator(
+            slide_templates.generate_large_quote_slide(
+                generate_wikihow_bold_statement),
+            name="Wikihow Bold Statement"),
+
+
+        # TWO CAPTIONS VARIATIONS
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(
                 seeded_titled_identity_generator,
@@ -419,13 +436,16 @@ presentation_schema = PresentationSchema(
                 combined_gif_generator,
                 combined_gif_generator),
             name="Two Captions Gifs"),
+
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(
                 seeded_titled_identity_generator,
                 create_double_image_captions,
                 weird_image_generator,
-                weird_image_generator),
+                weird_and_shitpost_generator),
             name="Two Captions Weird Reddit"),
+
+        # CONCLUSION: TODO
     ]
 )
 
