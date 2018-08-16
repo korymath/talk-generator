@@ -298,7 +298,7 @@ def generate_three_column_images_slide_tuple(title_generator, tuple_1_generator,
 
 def generate_slide(slide_template, generators):
     def generate(presentation_context, used):
-        generated = [content_generator(presentation_context) for content_generator in generators]
+        generated = [content_generator(presentation_context) if content_generator else None for content_generator in generators]
         if _is_different_enough(generated, used):
             return slide_template(get_presentation(presentation_context), *generated), generated
 

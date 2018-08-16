@@ -5,7 +5,7 @@ import random
 import run
 
 
-class TestStringMethods(unittest.TestCase):
+class TestTalkGenerator(unittest.TestCase):
 
     def setUp(self):
         random.seed(1)
