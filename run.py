@@ -200,7 +200,12 @@ giphy = safygiphy.Giphy()
 
 
 def get_related_giphy(seed_word):
-    response = giphy.random(tag=seed_word)
+    response = None
+    if bool(seed_word):
+        response = giphy.random(tag=seed_word)
+    else:
+        response = giphy.random()
+
     if bool(response):
         data = response.get('data')
         if bool(data):
@@ -215,7 +220,7 @@ def get_related_giphy(seed_word):
 
 giphy_generator = create_backup_generator(
     create_seeded_generator(get_related_giphy),
-    lambda _: giphy.random()
+    lambda _: get_related_giphy(None)
 )
 reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", "nonononoYES")
 
