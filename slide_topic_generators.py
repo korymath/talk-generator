@@ -54,32 +54,33 @@ def _fill_in(seeds, i, distance=1):
 
         # Check for neighbours
         neighbours = _get_neighbours(seeds, i, distance)
-        random.shuffle(neighbours)
+        if len(neighbours) > 0:
+            random.shuffle(neighbours)
 
-        # Find related
-        for neighbour in neighbours:
-            related = conceptnet.get_weighted_related_words(neighbour, 200)
-            filtered_related = [word for word in related if not conceptnet.normalise(word[1]) in seeds]
+            # Find related
+            for neighbour in neighbours:
+                related = conceptnet.get_weighted_related_words(neighbour, 200)
+                filtered_related = [word for word in related if not conceptnet.normalise(word[1]) in seeds]
 
-            if len(filtered_related) > 0:
-                seeds[i] = conceptnet.normalise(
-                    random_util.weighted_random(
-                        filtered_related
+                if len(filtered_related) > 0:
+                    seeds[i] = conceptnet.normalise(
+                        random_util.weighted_random(
+                            filtered_related
+                        )
                     )
-                )
-                break
+                    break
 
-        # Check if unassigned
-        if len(neighbours) == 2 and seeds[i] is None:
-            _fill_in(seeds, i, distance + 1)
+            # Check if unassigned
+            if len(neighbours) == 1 and seeds[i] is None:
+                _fill_in(seeds, i, distance + 1)
 
 
 def _get_neighbours(seeds, i, distance=1):
     neighbours = []
     if i - distance >= 0 and seeds[i - distance]:
         neighbours.append(seeds[i - distance])
-    if i + distance <= len(seeds) and seeds[i + distance]:
-        neighbours.append(seeds[i + distance])
+    # if i + distance <= len(seeds) and seeds[i + distance]:
+    #     neighbours.append(seeds[i + distance])
 
     return neighbours
 
