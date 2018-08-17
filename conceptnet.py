@@ -19,12 +19,13 @@ _DEFAULT_ARGUMENTS = {
 
 
 # HELPERS
+_PROHIBITED_SEARCH_TERMS = "a", "your", "my", "her", "his", "be"
 
 def _get_data(word, arguments=None):
     if not arguments:
         arguments = _DEFAULT_ARGUMENTS
-    word = ("     " + word + "     ").replace(" my ", "").replace(" a ", "").strip()
-    search_term = "_".join(word.split(" "))
+    splitted_word = [part for part in word.split(" ") if part not in _PROHIBITED_SEARCH_TERMS]
+    search_term = "_".join(splitted_word)
     url = URL.format(search_term) + urlencode(arguments, False, "/")
     return requests.get(url).json()
 
