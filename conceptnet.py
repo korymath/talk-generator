@@ -13,6 +13,8 @@ _DEFAULT_ARGUMENTS = {
 }
 
 
+# HELPERS
+
 def _get_data(word, arguments=None):
     if not arguments:
         arguments = _DEFAULT_ARGUMENTS
@@ -24,15 +26,20 @@ def _get_edges(word, arguments=None):
     return _get_data(word, arguments)["edges"]
 
 
-def get_related_locations(word):
-    edges = _get_edges(word, _RELATED_LOCATION_ARGUMENTS)
-    locations = [_get_weight_and_label(edge) for edge in edges if edge["rel"]["label"] == "AtLocation"]
-    # pp.pprint(locations)
-    return locations
-
-
-def _get_weight_and_label(edge):
+def _get_weight_and_word(edge):
     return edge["weight"], edge["end"]["label"]
 
 
-print(get_related_locations("cat"))
+def _get_relation_label(edge):
+    return edge["rel"]["label"]
+
+
+# EXTRACTING INFO
+
+def get_weighted_related_locations(word):
+    edges = _get_edges(word, _RELATED_LOCATION_ARGUMENTS)
+    locations = [_get_weight_and_word(edge) for edge in edges if _get_relation_label(edge) == "AtLocation"]
+    return locations
+
+
+print(get_weighted_related_locations("cat"))
