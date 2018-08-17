@@ -77,11 +77,17 @@ def main(arguments):
     return presentation
 
 
-# TEXT GENERATORS
+# = TEXT GENERATORS=
+
+# TITLES
 talk_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/talk_title.txt').generate
 talk_subtitle_generator = text_generator.TraceryTextGenerator('data/text-templates/talk_subtitle.json').generate
 
-default_slide_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/default_slide_title.txt').generate
+default_slide_title_generator = text_generator.TemplatedTextGenerator(
+    'data/text-templates/default_slide_title.txt').generate
+
+anticipation_title_generator = text_generator.TemplatedTextGenerator(
+    'data/text-templates/anticipation_title.txt').generate
 
 conclusion_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/conclusion_title.txt").generate
@@ -95,11 +101,14 @@ history_and_history_person_title_generator = combined_generator(
     (4, history_title_generator), (6, history_person_title_generator))
 about_me_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/about_me_title.txt").generate
+
+# NAMES
 historical_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
                                                                 "title_name").generate
 full_name_generator = text_generator.TraceryTextGenerator("./data/text-templates/name.json",
                                                           "full_name").generate
 
+# ABOUT ME
 _about_me_facts_grammar = "./data/text-templates/about_me_facts.json"
 book_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
                                                                  "book_description").generate
@@ -406,24 +415,24 @@ presentation_schema = PresentationSchema(
         # FULL SCREEN RELATED IMAGES
         SlideGenerator(
             slide_templates.generate_full_image_slide(
-                none_generator,
+                anticipation_title_generator,
                 combined_gif_generator),
             name="Full Screen Giphy"),
         SlideGenerator(
             slide_templates.generate_image_slide(
                 default_slide_title_generator,
                 combined_gif_generator),
-            name="Full Screen Giphy"),
+            name="Single Image Giphy"),
         SlideGenerator(
             slide_templates.generate_full_image_slide(
                 none_generator,
                 generate_full_screen_google_image),
-            name="Google Images"),
+            name="Full Screen Google Images"),
         SlideGenerator(
             slide_templates.generate_full_image_slide(
                 default_slide_title_generator,
                 generate_wide_google_image),
-            name="Google Images"),
+            name="Wide Google Images"),
 
         # WISE STATEMENTS
 
