@@ -58,12 +58,12 @@ class SlideGenerator:
 
                 if slide:
                     # Add notes about the generation
-                    slide.notes_slide.notes_text_frame.text = "Seed:" + presentation_context["seed"] \
-                                                              + "\nGenerator:" \
+                    slide.notes_slide.notes_text_frame.text = "Seed: " + presentation_context["seed"] \
+                                                              + "\nGenerator: " \
                                                               + str(self) \
                                                               + " \n Context: " \
                                                               + str(presentation_context) \
-                                                              + " \n Generated Elements:" \
+                                                              + " \n Generated Elements: " \
                                                               + str(generated_elements)
                     return slide, generated_elements
 
