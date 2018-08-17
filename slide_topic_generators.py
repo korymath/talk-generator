@@ -4,8 +4,8 @@ import random
 import numpy
 
 import conceptnet
-
 import language_util
+import random_util
 
 
 # == TOPIC GENERATORS ==
@@ -13,7 +13,7 @@ import language_util
 class SideTrackingTopicGenerator:
     """ This generator will make small side tracks around topics, but keeps returning every X slides"""
 
-    def __init__(self, topic, num_slides, topic_return_period_range=range(2, 4)):
+    def __init__(self, topic, num_slides, topic_return_period_range=range(3, 5)):
         self._topic = topic
         self._num_slides = num_slides
 
@@ -31,7 +31,7 @@ class SideTrackingTopicGenerator:
             idx += random.choice(topic_return_period_range)
 
         # Fill in the blanks with related topics
-        while None in seeds and random.uniform(0, 1) < 0.5:
+        while None in seeds:
             fill_in_blank_topics_with_related(seeds)
             print(seeds)
 
@@ -45,7 +45,31 @@ class SideTrackingTopicGenerator:
 
 
 def fill_in_blank_topics_with_related(seeds):
-    pass
+    for i in range(len(seeds)):
+        if seeds[i] is None:
+
+            # Check for neighbours
+            neighbours = []
+            if i > 0 and seeds[i - 1]:
+                neighbours.append(seeds[i - 1])
+            if i < len(seeds) - 1 and seeds[i + 1]:
+                neighbours.append(seeds[i + 1])
+
+            # Find related
+            if len(neighbours) > 0:
+                related = conceptnet.get_weighted_related_words(random.choice(neighbours), 100)
+                filtered_related = [word for word in related if not conceptnet.normalise(word[1]) in seeds]
+
+                pick_from = filtered_related
+                if len(pick_from) == 0:
+                    pick_from = related
+
+                if len(pick_from) > 0:
+                    seeds[i] = conceptnet.normalise(
+                        random_util.weighted_random(
+                            pick_from
+                        )
+                    )
 
 
 class IdentityTopicGenerator:

@@ -325,7 +325,7 @@ presentation_schema = PresentationSchema(
     # Basic powerpoint generator
     slide_templates.create_new_powerpoint,
     # Topic per slide generator
-    lambda topic, num_slides: slide_topic_generators.SynonymTopicGenerator(topic, num_slides),
+    slide_topic_generators.SideTrackingTopicGenerator,
 
     # Slide generators
     [
