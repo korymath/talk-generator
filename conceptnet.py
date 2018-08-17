@@ -17,7 +17,7 @@ _DEFAULT_ARGUMENTS = {
 }
 
 # HELPERS
-_PROHIBITED_SEARCH_TERMS = "a", "your", "my", "her", "his", "its", "their", "be", "an"
+_PROHIBITED_SEARCH_TERMS = "a", "your", "my", "her", "his", "its", "their", "be", "an", "the", "you", "are"
 
 
 def _remove_prohibited_words(word):
@@ -25,7 +25,7 @@ def _remove_prohibited_words(word):
 
 
 def normalise(word):
-    return " ".join(_remove_prohibited_words(word))
+    return " ".join(_remove_prohibited_words(word)).lower()
 
 
 def _get_data(word, arguments=None):
