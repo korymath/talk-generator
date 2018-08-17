@@ -81,6 +81,8 @@ def main(arguments):
 talk_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/talk_title.txt').generate
 talk_subtitle_generator = text_generator.TraceryTextGenerator('data/text-templates/talk_subtitle.json').generate
 
+default_slide_title_generator = text_generator.TemplatedTextGenerator('data/text-templates/default_slide_title.txt').generate
+
 conclusion_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/conclusion_title.txt").generate
 inspiration_title_generator = text_generator.TemplatedTextGenerator(
@@ -409,7 +411,7 @@ presentation_schema = PresentationSchema(
             name="Full Screen Giphy"),
         SlideGenerator(
             slide_templates.generate_image_slide(
-                seeded_titled_identity_generator,
+                default_slide_title_generator,
                 combined_gif_generator),
             name="Full Screen Giphy"),
         SlideGenerator(
@@ -419,7 +421,7 @@ presentation_schema = PresentationSchema(
             name="Google Images"),
         SlideGenerator(
             slide_templates.generate_full_image_slide(
-                seeded_titled_identity_generator,
+                default_slide_title_generator,
                 generate_wide_google_image),
             name="Google Images"),
 
@@ -440,7 +442,7 @@ presentation_schema = PresentationSchema(
         # TWO CAPTIONS VARIATIONS
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(
-                seeded_titled_identity_generator,
+                default_slide_title_generator,
                 create_double_image_captions,
                 combined_gif_generator,
                 combined_gif_generator),
@@ -449,7 +451,7 @@ presentation_schema = PresentationSchema(
 
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(
-                seeded_titled_identity_generator,
+                default_slide_title_generator,
                 create_double_image_captions,
                 weird_image_generator,
                 weird_and_shitpost_generator),
