@@ -1,5 +1,6 @@
 import math
 import random
+import re
 
 import numpy
 
@@ -60,10 +61,11 @@ def _fill_in(seeds, i, distance=1):
             # Find related
             for neighbour in neighbours:
                 related = conceptnet.get_weighted_related_words(neighbour, 200)
-                filtered_related = [word for word in related if not conceptnet.normalise(word[1]) in seeds]
+                filtered_related = [word for word in related if
+                                    not normalise_seed(word[1]) in seeds and len(normalise_seed(word[1])) > 2]
 
                 if len(filtered_related) > 0:
-                    seeds[i] = conceptnet.normalise(
+                    seeds[i] = normalise_seed(
                         random_util.weighted_random(
                             filtered_related
                         )
@@ -73,6 +75,12 @@ def _fill_in(seeds, i, distance=1):
             # Check if unassigned
             if len(neighbours) == 1 and seeds[i] is None:
                 _fill_in(seeds, i, distance + 1)
+
+
+def normalise_seed(seed):
+    normalised = conceptnet.normalise(seed).lower()
+    normalised = re.sub('[^a-z _-]+', '', normalised)
+    return normalised
 
 
 def _get_neighbours(seeds, i, distance=1):
