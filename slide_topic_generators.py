@@ -44,32 +44,44 @@ class SideTrackingTopicGenerator:
         return self._seeds[slide_nr]
 
 
-def fill_in_blank_topics_with_related(seeds):
+def fill_in_blank_topics_with_related(seeds, distance=1):
     for i in range(len(seeds)):
-        if seeds[i] is None:
+        _fill_in(seeds, i)
 
-            # Check for neighbours
-            neighbours = []
-            if i > 0 and seeds[i - 1]:
-                neighbours.append(seeds[i - 1])
-            if i < len(seeds) - 1 and seeds[i + 1]:
-                neighbours.append(seeds[i + 1])
 
-            # Find related
-            if len(neighbours) > 0:
-                related = conceptnet.get_weighted_related_words(random.choice(neighbours), 100)
-                filtered_related = [word for word in related if not conceptnet.normalise(word[1]) in seeds]
+def _fill_in(seeds, i, distance=1):
+    if seeds[i] is None:
 
-                pick_from = filtered_related
-                if len(pick_from) == 0:
-                    pick_from = related
+        # Check for neighbours
+        neighbours = _get_neighbours(seeds, i, distance)
+        random.shuffle(neighbours)
 
-                if len(pick_from) > 0:
-                    seeds[i] = conceptnet.normalise(
-                        random_util.weighted_random(
-                            pick_from
-                        )
+        # Find related
+        for neighbour in neighbours:
+            related = conceptnet.get_weighted_related_words(neighbour, 200)
+            filtered_related = [word for word in related if not conceptnet.normalise(word[1]) in seeds]
+
+            if len(filtered_related) > 0:
+                seeds[i] = conceptnet.normalise(
+                    random_util.weighted_random(
+                        filtered_related
                     )
+                )
+                break
+
+        # Check if unassigned
+        if len(neighbours) == 2 and seeds[i] is None:
+            _fill_in(seeds, i, distance + 1)
+
+
+def _get_neighbours(seeds, i, distance=1):
+    neighbours = []
+    if i - distance >= 0 and seeds[i - distance]:
+        neighbours.append(seeds[i - distance])
+    if i + distance <= len(seeds) and seeds[i + distance]:
+        neighbours.append(seeds[i + distance])
+
+    return neighbours
 
 
 class IdentityTopicGenerator:
