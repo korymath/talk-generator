@@ -1,4 +1,3 @@
-import pprint as pp
 from urllib.parse import urlencode
 
 import requests
@@ -17,14 +16,22 @@ _DEFAULT_ARGUMENTS = {
     "limit": 200
 }
 
-
 # HELPERS
-_PROHIBITED_SEARCH_TERMS = "a", "your", "my", "her", "his", "be"
+_PROHIBITED_SEARCH_TERMS = "a", "your", "my", "her", "his", "its", "their", "be", "an"
+
+
+def _remove_prohibited_words(word):
+    return [part for part in word.split(" ") if part not in _PROHIBITED_SEARCH_TERMS]
+
+
+def normalise(word):
+    return " ".join(_remove_prohibited_words(word))
+
 
 def _get_data(word, arguments=None):
     if not arguments:
         arguments = _DEFAULT_ARGUMENTS
-    splitted_word = [part for part in word.split(" ") if part not in _PROHIBITED_SEARCH_TERMS]
+    splitted_word = _remove_prohibited_words(word)
     search_term = "_".join(splitted_word)
     url = URL.format(search_term) + urlencode(arguments, False, "/")
     return requests.get(url).json()
@@ -50,9 +57,9 @@ def _get_from_relation(word, edges, relation_name):
 
 # EXTRACTING INFO
 
-def get_weighted_words(word, limit=50):
+def get_weighted_related_words(word, limit=50):
     edges = _get_edges(word, {"limit": limit})
-    return [edge["end"]["label"] for edge in edges if edge["end"]["label"] != word]
+    return [(edge["weight"], edge["end"]["label"]) for edge in edges if edge["end"]["label"] != word]
 
 
 def get_weighted_related_locations(word):
@@ -74,5 +81,4 @@ def get_weighted_antonyms(word):
     edges = _get_edges(word)
     return _get_from_relation(word, edges, "Antonym")
 
-
-pp.pprint(get_weighted_words("cat", 45))
+# pp.pprint(get_weighted_related_words("cat", 45))
