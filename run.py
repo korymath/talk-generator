@@ -270,13 +270,21 @@ def generate_wikihow_bold_statement(presentation_context):
 
 # DOUBLE CAPTIONS
 
+def split_captions_generator(generator):
+    def create_double_image_captions(presentation_context):
+        line = generator.generate(presentation_context)
+        parts = line.split("|")
+        return parts[0], parts[1]
+
+    return create_double_image_captions
+
+
 _double_captions_generator = text_generator.TemplatedTextGenerator("./data/text-templates/double_captions.txt")
+_historic_double_captions_generator = text_generator.TemplatedTextGenerator(
+    "./data/text-templates/historic_double_captions.txt")
 
-
-def create_double_image_captions(presentation_context):
-    line = _double_captions_generator.generate(presentation_context)
-    parts = line.split("|")
-    return parts[0], parts[1]
+double_captions_generator = split_captions_generator(_double_captions_generator)
+historic_double_captions_generator = split_captions_generator(_historic_double_captions_generator)
 
 
 # TUPLED ABOUT ME
@@ -401,11 +409,10 @@ presentation_schema = PresentationSchema(
             name="Historical Figure Quote"),
 
         SlideGenerator(
-            slide_templates.generate_two_column_images_slide(
+            slide_templates.generate_two_column_images_slide_tuple_caption(
                 history_title_generator,
-                none_generator,
+                historic_double_captions_generator,
                 vintage_picture_generator,
-                none_generator,
                 vintage_picture_generator
             ),
             weight_function=create_peaked_weight((2, 3), 12, 0.05),
@@ -452,7 +459,7 @@ presentation_schema = PresentationSchema(
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(
                 default_slide_title_generator,
-                create_double_image_captions,
+                double_captions_generator,
                 combined_gif_generator,
                 combined_gif_generator),
             weight_function=constant_weight(3),
@@ -461,7 +468,7 @@ presentation_schema = PresentationSchema(
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(
                 default_slide_title_generator,
-                create_double_image_captions,
+                double_captions_generator,
                 weird_image_generator,
                 weird_and_shitpost_generator),
             weight_function=constant_weight(3),

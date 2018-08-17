@@ -10,10 +10,10 @@ The Power of {seed.plural.title}
 10 Things You Didn't Know About {seed.plural.title}
 Why We Do What We Do To {seed.wikihow_action.title}
 This Is What Happens When You {seed.plural.title}
-{seed.plural.title} Isn't Everything. Believe Me.
+{seed.plural.title} Aren't Everything. Believe Me.
 The Puzzle of {seed.plural.title}
 The {seed.plural.title} Conundrum
-How to Spot a {seed.plural.title}
+How to Spot {seed.title.a}
 What makes a good {seed.singular.title}? Lessons from the longest study.
 The Happy Secret to Better {seed.plural.title}
 The Thrilling Potential of {seed.plural.title}

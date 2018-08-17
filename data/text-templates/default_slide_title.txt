@@ -6,3 +6,4 @@ About {seed.plural.title}
 About {seed.plural.title}
 What about {seed.plural.title}?
 Let's look at {seed.plural.title}
+Let's Discuss {seed.plural.title}
