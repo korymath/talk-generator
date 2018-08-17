@@ -498,7 +498,7 @@ test_schema = PresentationSchema(
         SlideGenerator(
             slide_templates.generate_large_quote_slide(
                 seeded_titled_identity_generator),
-            name="Topic test",
+            name="Topic Seed Displayer",
             weight_function=constant_weight(10000),
             allowed_repeated_elements=5
         ),

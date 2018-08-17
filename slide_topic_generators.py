@@ -3,6 +3,8 @@ import random
 
 import numpy
 
+import conceptnet
+
 import language_util
 
 
