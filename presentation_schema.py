@@ -36,13 +36,18 @@ def constant_weight(weight):
 class SlideGenerator:
     """ Responsible for providing the slide generator and other attributes, such as its name and weight"""
 
-    def __init__(self, generator, weight_function=constant_weight(1), retries=5, allowed_repeated_elements=0,
+    def __init__(self, generator,
+                 weight_function=constant_weight(1),
+                 retries=5,
+                 allowed_repeated_elements=0,
+                 tags=(),
                  name=None):
         self._generator = generator
         self._weight_function = weight_function
         self._retries = retries
         self._name = name
         self._allowed_repeated_elements = allowed_repeated_elements
+        self._tags = tags
 
     def generate(self, presentation_context, used_elements):
         """Generate a slide for a given presentation using the given seed."""
@@ -85,10 +90,13 @@ class PresentationSchema:
     """ Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
     each slide is generated """
 
-    def __init__(self, powerpoint_creator, seed_generator, slide_generators):
+    def __init__(self, powerpoint_creator, seed_generator, slide_generators, max_allowed_tags=None):
         self._powerpoint_creator = powerpoint_creator
         self._seed_generator = seed_generator
         self._slide_generators = slide_generators
+        if max_allowed_tags is None:
+            max_allowed_tags = {}
+        self._max_allowed_tags = max_allowed_tags
 
     def generate_presentation(self, topic, num_slides, presenter=None):
         """Generate a presentation about a certain topic with a certain number of slides"""
@@ -107,7 +115,7 @@ class PresentationSchema:
 
         used_elements = set()
         for slide_nr in range(num_slides):
-            # TODO: This can be done in parallel. There might be race conditions with the used_elements set,
+            # TODO: This could possibly be done in parallel. There might be race conditions with the used_elements set,
             # and the order of slides must still happen in the same order, so the slide_nr should be passed as
             # argument to slide generator's content generator
 
