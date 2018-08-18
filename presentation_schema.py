@@ -40,13 +40,15 @@ class SlideGenerator:
                  weight_function=constant_weight(1),
                  retries=5,
                  allowed_repeated_elements=0,
-                 tags=(),
+                 tags=None,
                  name=None):
         self._generator = generator
         self._weight_function = weight_function
         self._retries = retries
         self._name = name
         self._allowed_repeated_elements = allowed_repeated_elements
+        if not tags:
+            tags = set()
         self._tags = tags
 
     def generate(self, presentation_context, used_elements):

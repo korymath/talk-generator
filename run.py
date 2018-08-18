@@ -508,28 +508,36 @@ test_schema = PresentationSchema(
     # Basic powerpoint generator
     slide_templates.create_new_powerpoint,
     # Topic per slide generator
-    # lambda topic, num_slides: slide_topic_generators.IdentityTopicGenerator(topic, num_slides),
-    slide_topic_generators.SideTrackingTopicGenerator,
+    seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
     # Slide generators
-    [
-
+    slide_generators=[
         SlideGenerator(
             slide_templates.generate_large_quote_slide(
                 seeded_titled_identity_generator),
             name="Topic Seed Displayer",
             weight_function=constant_weight(10000),
-            allowed_repeated_elements=5
+            allowed_repeated_elements=5,
+            tags=["seed_displayer"]
         ),
 
         # Back up in case something goes wrong
         SlideGenerator(
             slide_templates.generate_image_slide(
                 inspiration_title_generator,
-                create_static_generator("downloads/inspirobot/01-743.jpg")),
+                create_static_generator("./data/images/error_placeholder.png")),
             allowed_repeated_elements=2,
             weight_function=constant_weight(1),
-            name="Fake Inspirobot")
-    ])
+            name="Error Placeholder")
+    ],
+    # Max tags
+    max_allowed_tags={
+        "title": 1,
+        "about_me": 1,
+        "history": 1,
+        "gif": 5,
+        "seed_displayer": 3
+    },
+)
 
 schemas = {
     "default": presentation_schema,
