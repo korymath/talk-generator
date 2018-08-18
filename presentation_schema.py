@@ -129,7 +129,7 @@ class PresentationSchema:
             # Generate a topic for the next slide
             seed = seed_generator.generate_seed(slide_nr)
 
-            prohibited_generators = self._calculate_prohibited_generators(used_tags)
+            prohibited_generators = self._calculate_prohibited_generators(used_tags, num_slides)
 
             # Generate the slide
             slide_results = self._generate_slide(
@@ -202,12 +202,21 @@ class PresentationSchema:
 
         return random_util.weighted_random(weighted_generators)
 
-    def _calculate_prohibited_generators(self, used_tags):
+    def _calculate_prohibited_generators(self, used_tags, num_slides):
         prohibited_tags = set()
         for key, value in used_tags.items():
             if key in self._max_allowed_tags:
                 max_tag = self._max_allowed_tags[key]
-                if max_tag <= value:
+
+                # Assumes integer maximum
+                max_number_of_slides = max_tag
+
+                # If Procentua/Double ratio:
+                if 0 < max_tag < 1:
+                    max_number_of_slides = int(max_tag*num_slides)
+
+                # Check if currently over the max allowed slides of this tag
+                if value >= max_number_of_slides:
                     prohibited_tags.add(key)
 
         prohibited_generators = set()
