@@ -352,6 +352,7 @@ presentation_schema = PresentationSchema(
         SlideGenerator(
             slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
             weight_function=create_peaked_weight((0,), 100000, 0),
+            tags=["title"],
             name="Title slide"),
 
         # ABOUT ME
@@ -364,6 +365,7 @@ presentation_schema = PresentationSchema(
             ),
             create_peaked_weight((1,), 300, 0),
             allowed_repeated_elements=3,
+            tags=["about_me"],
             name="About Me: Location-Job-WeirdHobby"),
 
         SlideGenerator(
@@ -374,6 +376,7 @@ presentation_schema = PresentationSchema(
             ),
             create_peaked_weight((1,), 100, 0),
             allowed_repeated_elements=3,
+            tags=["about_me"],
             name="About Me: Location-Job"),
 
         SlideGenerator(
@@ -385,6 +388,7 @@ presentation_schema = PresentationSchema(
             ),
             create_peaked_weight((1,), 100, 0),
             allowed_repeated_elements=0,
+            tags=["about_me"],
             name="About Me: Location-Book-WeirdHobby"),
 
         SlideGenerator(
@@ -393,6 +397,7 @@ presentation_schema = PresentationSchema(
             ),
             create_peaked_weight((1, 2), 5, 0),
             allowed_repeated_elements=0,
+            tags=["about_me"],
             name="Weird Hobby"),
 
         # HISTORY
@@ -406,6 +411,7 @@ presentation_schema = PresentationSchema(
             ),
             weight_function=create_peaked_weight((2, 3), 30, 0.1),
             allowed_repeated_elements=0,
+            tags=["history", "quote"],
             name="Historical Figure Quote"),
 
         SlideGenerator(
@@ -417,6 +423,7 @@ presentation_schema = PresentationSchema(
             ),
             weight_function=create_peaked_weight((2, 3), 12, 0.05),
             allowed_repeated_elements=0,
+            tags=["history", "two_images"],
             name="Two History Pictures"),
 
         # FULL SCREEN RELATED IMAGES
@@ -424,21 +431,25 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_full_image_slide(
                 anticipation_title_generator,
                 combined_gif_generator),
+            tags=["full_image", "gif"],
             name="Full Screen Giphy"),
         SlideGenerator(
             slide_templates.generate_image_slide(
                 default_slide_title_generator,
                 combined_gif_generator),
+            tags=["single_image", "gif"],
             name="Single Image Giphy"),
         SlideGenerator(
             slide_templates.generate_full_image_slide(
                 none_generator,
                 generate_full_screen_google_image),
+            tags=["full_image", "google_images"],
             name="Full Screen Google Images"),
         SlideGenerator(
             slide_templates.generate_full_image_slide(
                 default_slide_title_generator,
                 generate_wide_google_image),
+            tags=["full_image", "google_images"],
             name="Wide Google Images"),
 
         # WISE STATEMENTS
@@ -448,11 +459,13 @@ presentation_schema = PresentationSchema(
                 inspiration_title_generator,
                 inspirobot_image_generator),
             weight_function=constant_weight(0.6),
+            tags=["inspiration", "statement"],
             name="Inspirobot"),
 
         SlideGenerator(
             slide_templates.generate_large_quote_slide(
                 generate_wikihow_bold_statement),
+            tags=["bold_statement", "statement"],
             name="Wikihow Bold Statement"),
 
         # TWO CAPTIONS VARIATIONS
@@ -463,6 +476,7 @@ presentation_schema = PresentationSchema(
                 combined_gif_generator,
                 combined_gif_generator),
             weight_function=constant_weight(3),
+            tags=["two_captions", "gif"],
             name="Two Captions Gifs"),
 
         SlideGenerator(
@@ -472,6 +486,7 @@ presentation_schema = PresentationSchema(
                 weird_image_generator,
                 weird_and_shitpost_generator),
             weight_function=constant_weight(3),
+            tags=["two_captions", "reddit"],
             name="Two Captions Weird Reddit"),
 
         # CONCLUSION:
@@ -487,6 +502,7 @@ presentation_schema = PresentationSchema(
             ),
             weight_function=create_peaked_weight((-1,), 10000, 0),
             allowed_repeated_elements=10,
+            tags=["conclusion"],
             name="Conclusion"),
         SlideGenerator(
             slide_templates.generate_three_column_images_slide(
@@ -500,8 +516,18 @@ presentation_schema = PresentationSchema(
             ),
             weight_function=create_peaked_weight((-1,), 5000, 0),
             allowed_repeated_elements=10,
+            tags=["conclusion"],
             name="Conclusion"),
-    ]
+    ],
+    # Max tags
+    max_allowed_tags={
+        "title": 1,
+        "about_me": 1,
+        "history": 1,
+        # "two_captions": 3,
+        # "gif": 5,
+        # "weird": 5,
+    },
 )
 
 test_schema = PresentationSchema(
@@ -529,14 +555,6 @@ test_schema = PresentationSchema(
             weight_function=constant_weight(1),
             name="Error Placeholder")
     ],
-    # Max tags
-    max_allowed_tags={
-        "title": 1,
-        "about_me": 1,
-        "history": 1,
-        "gif": 5,
-        "seed_displayer": 3
-    },
 )
 
 schemas = {
