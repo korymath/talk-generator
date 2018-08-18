@@ -79,6 +79,9 @@ class SlideGenerator:
         Determines how much chance it has being picked for a particular slide number"""
         return self._weight_function(slide_nr, total_slides)
 
+    def get_tags(self):
+        return self._tags
+
     def __str__(self):
         if bool(self._name):
             return str(self._name)
@@ -115,6 +118,8 @@ class PresentationSchema:
             "presenter": presenter
         }
 
+        used_tags = {}
+
         used_elements = set()
         for slide_nr in range(num_slides):
             # TODO: This could possibly be done in parallel. There might be race conditions with the used_elements set,
@@ -124,16 +129,26 @@ class PresentationSchema:
             # Generate a topic for the next slide
             seed = seed_generator.generate_seed(slide_nr)
 
+            prohibited_generators = self._calculate_prohibited_generators(used_tags)
+
             # Generate the slide
             slide_results = self._generate_slide(
-                create_slide_presentation_context(main_presentation_context, seed),
-                slide_nr, num_slides, used_elements, set())
+                presentation_context=create_slide_presentation_context(main_presentation_context, seed),
+                slide_nr=slide_nr,
+                num_slides=num_slides,
+                used_elements=used_elements,
+                prohibited_generators=prohibited_generators)
             if slide_results:
                 # Add new generated content
-                slide, generated_elements = slide_results
+                slide, generated_elements, slide_generator = slide_results
+
+                # Add generated items to used_elements list
                 generated_elements = set(generated_elements)
                 _filter_generated_elements(generated_elements)
                 used_elements.update(generated_elements)
+
+                # Add generator tags to used_tags list
+                add_tags(used_tags, slide_generator.get_tags())
 
         return presentation
 
@@ -152,10 +167,10 @@ class PresentationSchema:
                 slide_nr + 1,
                 presentation_context["seed"],
                 generator))
-            slide = generator.generate(presentation_context, used_elements)
+            slide_result = generator.generate(presentation_context, used_elements)
 
             # Try again if slide is None, and prohibit generator for generating for this topic
-            if not bool(slide):
+            if not bool(slide_result):
                 print("Failed to generated using:", generator)
                 prohibited_generators.add(generator)
 
@@ -166,7 +181,9 @@ class PresentationSchema:
                                             prohibited_generators=prohibited_generators)
                 # TODO: Remove slide from presentation if there was a slide generated
 
-            return slide
+            slide, generated_elements = slide_result
+
+            return slide, generated_elements, generator
         else:
             print("No generator found to generate about ", presentation_context["Presentation"])
 
@@ -184,6 +201,21 @@ class PresentationSchema:
             raise ValueError("No generators left to generate slides with!")
 
         return random_util.weighted_random(weighted_generators)
+
+    def _calculate_prohibited_generators(self, used_tags):
+        prohibited_tags = set()
+        for key, value in used_tags.items():
+            if key in self._max_allowed_tags:
+                max_tag = self._max_allowed_tags[key]
+                if max_tag <= value:
+                    prohibited_tags.add(key)
+
+        prohibited_generators = set()
+        for generator in self._slide_generators:
+            if set(generator.get_tags()) & prohibited_tags:
+                prohibited_generators.add(generator)
+
+        return prohibited_generators
 
 
 # Helper functions
@@ -208,3 +240,11 @@ def _filter_generated_elements(generated_elements):
         generated_elements.remove(True)
     if False in generated_elements:
         generated_elements.remove(False)
+
+
+def add_tags(used_tags, tags):
+    for tag in tags:
+        if tag not in used_tags:
+            used_tags[tag] = 1
+        else:
+            used_tags[tag] += 1
