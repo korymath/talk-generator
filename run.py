@@ -521,12 +521,15 @@ presentation_schema = PresentationSchema(
     ],
     # Max tags
     max_allowed_tags={
+        # Absolute maxima
         "title": 1,
         "about_me": 1,
         "history": 1,
-        # "two_captions": 3,
-        # "gif": 5,
-        # "weird": 5,
+
+        # Procentual maxima
+        "two_captions": 0.3,
+        "gif": 0.5,
+        "weird": 0.5,
     },
 )
 
