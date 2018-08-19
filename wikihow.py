@@ -11,6 +11,7 @@ def wikihow_action_to_action(wikihow_title):
     index_of_to = wikihow_title.find('to')
     action = wikihow_title[index_of_to + 3:]
     action = _remove_between_brackets(action)
+    action = _remove_trademarks(action)
     return action
 
 
@@ -21,6 +22,12 @@ def _remove_between_brackets(sentence):
             break
         sentence = s_new
     return sentence
+
+
+def _remove_trademarks(action):
+    if " - wikihow.com" in action:
+        return re.sub(" - wikihow.com", "", action)
+    return action
 
 
 @lru_cache(maxsize=20)
