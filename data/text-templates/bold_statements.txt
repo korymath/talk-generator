@@ -2,7 +2,7 @@ Don't We All {action}?
 What's the Best Way to {action}?
 I hate {action.ing.title}
 Is There a Way to Avoid Having to {action}?
-The Hidden Link Between {topic} and {action.ing.title}
+The Hidden Link Between {topic.plural.title} and {action.ing.title}
 But What's the Effect of {action.ing} on {topic.plural}?
 Don't {action}. Just {step}!
 It's Hard to {action} in {location}

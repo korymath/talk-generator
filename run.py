@@ -542,12 +542,9 @@ test_schema = PresentationSchema(
     slide_generators=[
         SlideGenerator(
             slide_templates.generate_large_quote_slide(
-                seeded_titled_identity_generator),
-            name="Topic Seed Displayer",
-            weight_function=constant_weight(10000),
-            allowed_repeated_elements=5,
-            tags=["seed_displayer"]
-        ),
+                generate_wikihow_bold_statement),
+            tags=["bold_statement", "statement"],
+            name="Wikihow Bold Statement"),
 
         # Back up in case something goes wrong
         SlideGenerator(
@@ -555,7 +552,7 @@ test_schema = PresentationSchema(
                 inspiration_title_generator,
                 create_static_generator("./data/images/error_placeholder.png")),
             allowed_repeated_elements=2,
-            weight_function=constant_weight(1),
+            weight_function=constant_weight(0.0001),
             name="Error Placeholder")
     ],
 )
