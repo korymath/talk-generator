@@ -31,17 +31,17 @@ def _remove_trademarks(action):
 
 
 @lru_cache(maxsize=20)
-def search_wikihow(search_words):
+def basic_search_wikihow(search_words):
     return requests.get(
         'https://en.wikihow.com/wikiHowTo?search='
         + search_words.replace(' ', '+'))
 
 
-def get_related_wikihow_actions(seed_word):
-    page = search_wikihow(seed_word)
+def get_related_wikihow_actions_basic_search(seed_word):
+    page = basic_search_wikihow(seed_word)
     # Try again but with plural if nothing is found
     if not page:
-        page = search_wikihow(inflect.engine().plural(seed_word))
+        page = basic_search_wikihow(inflect.engine().plural(seed_word))
 
     soup = BeautifulSoup(page.content, 'html.parser')
     actions_elements = soup.find_all('a', class_='result_link')
