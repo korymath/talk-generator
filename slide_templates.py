@@ -153,7 +153,10 @@ def create_large_quote_slide(prs, title, text, background_image=None):
             _add_title(slide, title)
         _add_text(slide, 1, text)
         if background_image:
-            _add_image(slide, 10, background_image)
+            _add_image(slide, 10, background_image, False)
+
+        # Add black transparent image for making other image behind it transparent (missing feature in python-pptx)
+        _add_image(slide, 11, "./data/images/black-transparent.png", False)
 
         return slide
 
@@ -241,7 +244,8 @@ def generate_title_slide(title_generator, subtitle_generator):
     return generate_slide(create_title_slide, (title_generator, subtitle_generator))
 
 
-def generate_large_quote_slide(title_generator, text_generator, background_image_generator=generator_util.none_generator):
+def generate_large_quote_slide(title_generator, text_generator,
+                               background_image_generator=generator_util.none_generator):
     return generate_slide(create_large_quote_slide, (title_generator, text_generator, background_image_generator))
 
 
