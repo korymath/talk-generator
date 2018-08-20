@@ -71,10 +71,7 @@ def get_related_wikihow_actions_basic_search(seed_word):
 
     soup = BeautifulSoup(page.content, 'html.parser')
     actions_elements = soup.find_all('a', class_='result_link')
-    actions = \
-        list(
-            map(wikihow_action_to_action,
-                filter(lambda x: not x.startswith("Category"),
-                       map(lambda x: x.get_text(), actions_elements))))
+    actions = [wikihow_action_to_action(x.get_text()) for x in actions_elements if
+                 x is not None and not x.get_text().startswith("Category")]
 
     return actions
