@@ -28,6 +28,16 @@ class LanguageUtilTest(unittest.TestCase):
         self.assertEqual("fleeing", language_util.to_ing_form("flee"))
         self.assertEqual("making", language_util.to_ing_form("make"))
 
+    def test_Replace(self):
+        self.assertEqual("this is your test", language_util.replace_word("this is my test", "my", "your"))
+        self.assertEqual("test if morphed, before comma",
+                         language_util.replace_word("test if changed, before comma", "changed", "morphed"))
+        self.assertEqual("Success capital", language_util.replace_word("Test capital", "test", "success"))
+        self.assertEqual("Your test is testing if your, is changed",
+                         language_util.replace_word("My test is testing if my, is changed", "my", "your"))
+        self.assertEqual("Last word is morphed",
+                         language_util.replace_word("Last word is changed", "changed", "morphed"))
+
 
 if __name__ == '__main__':
     unittest.main()

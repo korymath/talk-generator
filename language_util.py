@@ -1,4 +1,5 @@
 """ Module providing language-related operations to manipulate strings"""
+import re
 import string
 
 import inflect
@@ -7,6 +8,22 @@ from nltk.corpus import wordnet as wn
 
 import random_util
 
+
+# Helpers
+
+def _replace_word_one_case(sentence, word, replacement, flags=0):
+    return re.sub('(^|\W)' + word + '(\W|$)', r'\1' + replacement + r'\2', sentence, flags=flags)
+
+
+def replace_word(sentence, word, replacement):
+    lowered = _replace_word_one_case(sentence, word.lower(), replacement.lower())
+    upper = _replace_word_one_case(lowered, word.upper(), replacement.upper())
+    titled = _replace_word_one_case(upper, word.title(), replacement.title())
+    result = _replace_word_one_case(titled, word, replacement, re.I)
+    return result
+
+
+# Verbs
 
 def to_present_participle_first_word(action):
     words = action.split(" ")
