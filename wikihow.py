@@ -14,7 +14,8 @@ _SESSION_COOKIE_NAME = "wiki_shared_session"
 
 
 def log_in(username, password):
-    res = requests.post(_LOG_IN_URL, None, {"wpName": username, "wpPassword": password})
+    log_in_credentials={"wpName": username, "wpPassword": password}
+    res = requests.post(_LOG_IN_URL, None, log_in_credentials)
     log_in_cookie = res.cookies[_SESSION_COOKIE_NAME]
 
     return log_in_cookie
@@ -23,6 +24,9 @@ def log_in(username, password):
 def get_wikihow_session():
     try:
         wikihow_credentials = json.load(open("./data/auth/wikihow.json"))
+        if "session" in wikihow_credentials.keys():
+            print("Found Wikihow Session object in credentials, skipping loggin in")
+            return wikihow_credentials["session"]
         return log_in(**wikihow_credentials)
     except FileNotFoundError:
         print(
