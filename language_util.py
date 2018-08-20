@@ -10,7 +10,7 @@ import random_util
 
 def to_present_participle_first_word(action):
     words = action.split(" ")
-    first_word = make_ing_form(words[0])
+    first_word = to_ing_form(words[0])
     if len(words) == 1:
         return first_word
     return first_word + " " + " ".join(words[1:])
@@ -25,7 +25,7 @@ def to_present_participle(text):
     for tag in pos_tags:
         if not seen_verb and tag[1] == 'VB':
             seen_verb = True
-            result += make_ing_form(" " + tag[0])
+            result += to_ing_form(" " + tag[0])
         result += " " + tag[0]
     return result.strip()
 
@@ -48,6 +48,10 @@ def _make_ing_form(passed_string):
         passed_string = passed_string[:-2]
         return passed_string + 'ying'
 
+    elif passed_string.endswith('y'):
+        passed_string = passed_string[:-2]
+        return passed_string + 'ing'
+
     elif passed_string[-1] in consonant and passed_string[-2] in vowel and passed_string[-3] in consonant:
         passed_string += passed_string[-1]
         return passed_string + 'ing'
@@ -55,7 +59,7 @@ def _make_ing_form(passed_string):
         return passed_string + 'ing'
 
 
-def make_ing_form(passed_string):
+def to_ing_form(passed_string):
     result = _make_ing_form(passed_string)
     if passed_string.islower():
         return result.lower()
