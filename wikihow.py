@@ -67,6 +67,19 @@ def basic_search_wikihow(search_words):
         + search_words.replace(' ', '+'))
 
 
+@lru_cache(maxsize=20)
+def advanced_search_wikihow(search_words):
+    cookies = {
+        "wiki_shared_session": wikihow_session
+    }
+    url = _ADVANCED_SEARCH_URL.format(search_words.replace(' ', '+'))
+    resp = requests.get(url, cookies,
+                        cookies=cookies, allow_redirects=True)
+    if "Login Required - wikiHow" in str(resp.content):
+        print("WARNING: Invalid log in on Wikihow!")
+    return resp
+
+
 def get_related_wikihow_actions_basic_search(seed_word):
     page = basic_search_wikihow(seed_word)
     # Try again but with plural if nothing is found
@@ -76,6 +89,21 @@ def get_related_wikihow_actions_basic_search(seed_word):
     soup = BeautifulSoup(page.content, 'html.parser')
     actions_elements = soup.find_all('a', class_='result_link')
     actions = [wikihow_action_to_action(x.get_text()) for x in actions_elements if
-                 x is not None and not x.get_text().startswith("Category")]
-
+               x is not None and not x.get_text().startswith("Category")]
     return actions
+
+
+def get_related_wikihow_actions_advanced_search(seed_word):
+    page = advanced_search_wikihow(seed_word)
+    # Try again but with plural if nothing is found
+    if not page:
+        page = advanced_search_wikihow(inflect.engine().plural(seed_word))
+
+    soup = BeautifulSoup(page.content, 'html.parser')
+    # print(soup)
+    actions_elements = soup.find_all('div', class_='mw-search-result-heading')
+    actions = [x.find("a")["title"] for x in actions_elements]
+    return actions
+
+
+print(get_related_wikihow_actions_advanced_search("hug"))
