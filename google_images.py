@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from google_images_download import google_images_download
 
 # == CONTENT GENERATORS ==
@@ -16,15 +18,30 @@ _WIDE_ARGUMENTS = {
 
 
 def create_full_screen_image_generator(num_images=_DEFAULT_NUM_IMAGES):
-    return lambda word: search_images(word, _FULL_SCREEN_ARGUMENTS, num_images)
+    return lambda word: _search_full_screen(word, num_images)
+
+
+@lru_cache(maxsize=20)
+def _search_full_screen(word, num_images=_DEFAULT_NUM_IMAGES):
+    return search_images(word, _FULL_SCREEN_ARGUMENTS, num_images)
 
 
 def create_wide_image_generator(num_images=_DEFAULT_NUM_IMAGES):
-    return lambda word: search_images(word, _WIDE_ARGUMENTS, num_images)
+    return lambda word: _search_wide(word, num_images)
+
+
+@lru_cache(maxsize=20)
+def _search_wide(word, num_images=_DEFAULT_NUM_IMAGES):
+    return search_images(word, _WIDE_ARGUMENTS, num_images)
 
 
 def create_image_generator(num_images=_DEFAULT_NUM_IMAGES):
-    return lambda word: search_images(word, None, num_images)
+    return lambda word: _search_normal_image(word, num_images)
+
+
+@lru_cache(maxsize=20)
+def _search_normal_image(word, num_images=_DEFAULT_NUM_IMAGES):
+    return search_images(word, None, num_images)
 
 
 def search_images(word, extra_arguments_dict=None, num_images=_DEFAULT_NUM_IMAGES):
