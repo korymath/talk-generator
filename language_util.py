@@ -180,3 +180,10 @@ def add_article(word):
     if word.startswith("a") or word.startswith("e") or word.startswith("i") or word.startswith("o"):
         article = "an"
     return article + " " + word
+
+
+def second_to_first_pronouns(sentence):
+    sentence = replace_word(sentence, "yours", "mine")
+    sentence = replace_word(sentence, "your", "my")
+    sentence = replace_word(sentence, "you", "me")
+    return sentence

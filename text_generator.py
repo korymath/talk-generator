@@ -22,6 +22,7 @@ known_functions = {
     "plural": language_util.to_plural,
     "singular": language_util.to_singular,
     "synonym": language_util.get_random_synonym,
+    "2_to_1_pronouns": language_util.second_to_first_pronouns,
     "wikihow_action": lambda seed: random_util.choice_optional(wikihow.get_related_wikihow_actions(seed)),
 }
 
