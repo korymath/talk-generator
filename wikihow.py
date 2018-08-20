@@ -34,10 +34,12 @@ def get_wikihow_session():
 
 wikihow_session = get_wikihow_session()
 
-
-def wikihow_action_to_action(wikihow_title):
+def remove_how_to(wikihow_title):
     index_of_to = wikihow_title.find('to')
-    action = wikihow_title[index_of_to + 3:]
+    return wikihow_title[index_of_to + 3:]
+
+
+def clean_wikihow_action(action):
     action = _remove_between_brackets(action)
     action = _remove_trademarks(action)
     return action
@@ -83,7 +85,7 @@ def get_related_wikihow_actions_basic_search(seed_word):
 
     soup = BeautifulSoup(page.content, 'html.parser')
     actions_elements = soup.find_all('a', class_='result_link')
-    actions = [wikihow_action_to_action(x.get_text()) for x in actions_elements if
+    actions = [clean_wikihow_action(remove_how_to(x.get_text())) for x in actions_elements if
                x is not None and not x.get_text().startswith("Category")]
     return actions
 
@@ -97,7 +99,7 @@ def get_related_wikihow_actions_advanced_search(seed_word):
     soup = BeautifulSoup(page.content, 'html.parser')
     # print(soup)
     actions_elements = soup.find_all('div', class_='mw-search-result-heading')
-    actions = [x.find("a")["title"] for x in actions_elements]
+    actions = [clean_wikihow_action(x.find("a")["title"]) for x in actions_elements]
     return actions
 
 
