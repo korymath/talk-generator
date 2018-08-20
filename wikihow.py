@@ -34,6 +34,7 @@ def get_wikihow_session():
 
 wikihow_session = get_wikihow_session()
 
+
 def remove_how_to(wikihow_title):
     index_of_to = wikihow_title.find('to')
     return wikihow_title[index_of_to + 3:]
@@ -70,11 +71,13 @@ def basic_search_wikihow(search_words):
 @lru_cache(maxsize=20)
 def advanced_search_wikihow(search_words):
     session = get_wikihow_session()
-    url = _ADVANCED_SEARCH_URL.format(search_words.replace(' ', '+'))
-    resp = session.get(url, allow_redirects=True)
-    if "Login Required - wikiHow" in str(resp.content):
-        print("WARNING: Invalid log in on Wikihow!")
-    return resp
+    if session:
+        url = _ADVANCED_SEARCH_URL.format(search_words.replace(' ', '+'))
+        resp = session.get(url, allow_redirects=True)
+        if "Login Required - wikiHow" in str(resp.content):
+            print("WARNING: Invalid log in on Wikihow!")
+        return resp
+    return None
 
 
 def get_related_wikihow_actions_basic_search(seed_word):
@@ -95,12 +98,13 @@ def get_related_wikihow_actions_advanced_search(seed_word):
     # Try again but with plural if nothing is found
     if not page:
         page = advanced_search_wikihow(inflect.engine().plural(seed_word))
-
-    soup = BeautifulSoup(page.content, 'html.parser')
-    # print(soup)
-    actions_elements = soup.find_all('div', class_='mw-search-result-heading')
-    actions = [clean_wikihow_action(x.find("a")["title"]) for x in actions_elements]
-    return actions
+    if page:
+        soup = BeautifulSoup(page.content, 'html.parser')
+        # print(soup)
+        actions_elements = soup.find_all('div', class_='mw-search-result-heading')
+        actions = [clean_wikihow_action(x.find("a")["title"]) for x in actions_elements]
+        return actions
+    return []
 
 
 def get_related_wikihow_actions(seed_word):
