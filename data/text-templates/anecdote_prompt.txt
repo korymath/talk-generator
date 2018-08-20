@@ -1,3 +1,5 @@
-About the time I got to {seed.wikihow_action.lower}
-My first time {seed.wikihow_action.ing.lower}
-What happened during my first time {seed.wikihow_action.ing.lower}
+About the time I got to {seed.wikihow_action.2_to_1_pronouns.lower}
+My first time {seed.wikihow_action.ing.2_to_1_pronouns.lower}
+What happened during my first time {seed.wikihow_action.ing.2_to_1_pronouns.lower}
+When did I learn how to {seed.wikihow_action.ing.2_to_1_pronouns.lower}?
+My {seed.title} Accident

@@ -485,6 +485,14 @@ presentation_schema = PresentationSchema(
             tags=["quote", "statement"],
             name="Goodreads Quote"),
 
+        SlideGenerator(
+            slide_templates.generate_large_quote_slide(
+                title_generator=none_generator,
+                text_generator=anecdote_prompt_generator,
+                background_image_generator=generate_full_screen_google_image
+            ),
+            tags=["anecdote"],
+            name="Anecdote"),
 
         # TWO CAPTIONS VARIATIONS
         SlideGenerator(
@@ -565,7 +573,8 @@ test_schema = PresentationSchema(
             slide_templates.generate_large_quote_slide(
                 title_generator=none_generator,
                 text_generator=anecdote_prompt_generator,
-                background_image_generator=generate_full_screen_google_image),
+                # background_image_generator=generate_full_screen_google_image
+            ),
             tags=["Anecdote"],
             name="Anecdote"),
 
