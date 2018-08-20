@@ -99,3 +99,11 @@ def get_related_wikihow_actions_advanced_search(seed_word):
     actions_elements = soup.find_all('div', class_='mw-search-result-heading')
     actions = [x.find("a")["title"] for x in actions_elements]
     return actions
+
+
+def get_related_wikihow_actions(seed_word):
+    """ Uses the advanced search unless it doesn't return anything """
+    actions = get_related_wikihow_actions_advanced_search(seed_word)
+    if actions:
+        return actions
+    return get_related_wikihow_actions_basic_search(seed_word)

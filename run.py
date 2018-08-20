@@ -258,7 +258,7 @@ def generate_wikihow_bold_statement(presentation_context):
     # }
     template_values = presentation_context
     # TODO: Sometimes "Articles Form Wikihow" is being scraped as an action, this is a bug
-    related_actions = wikihow.get_related_wikihow_actions_basic_search(presentation_context["seed"])
+    related_actions = wikihow.get_related_wikihow_actions(presentation_context["seed"])
     if related_actions:
         action = random.choice(related_actions)
         template_values.update({'action': action.title(),
