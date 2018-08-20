@@ -10,15 +10,13 @@ from bs4 import BeautifulSoup
 _LOG_IN_URL = "https://www.wikihow.com/index.php?title=Special:UserLogin&action=submitlogin&type=login"
 _ADVANCED_SEARCH_URL = "https://www.wikihow.com/index.php?title=Special%3ASearch&profile=default&search={}" \
                        "&fulltext=Search&ss=relevance&so=desc&ffriy=1&ffrin=1&fft=ffta&fftsi=&profile=default"
-_SESSION_COOKIE_NAME = "wiki_shared_session"
 
 
-def log_in(username, password):
-    log_in_credentials={"wpName": username, "wpPassword": password}
-    res = requests.post(_LOG_IN_URL, None, log_in_credentials)
-    log_in_cookie = res.cookies[_SESSION_COOKIE_NAME]
-
-    return log_in_cookie
+def create_log_in_session(username, password):
+    log_in_credentials = {"wpName": username, "wpPassword": password}
+    session = requests.session()
+    session.post(_LOG_IN_URL, log_in_credentials, log_in_credentials)
+    return session
 
 
 def get_wikihow_session():
@@ -27,7 +25,7 @@ def get_wikihow_session():
         if "session" in wikihow_credentials.keys():
             print("Found Wikihow Session object in credentials, skipping loggin in")
             return wikihow_credentials["session"]
-        return log_in(**wikihow_credentials)
+        return create_log_in_session(**wikihow_credentials)
     except FileNotFoundError:
         print(
             "Warning: No login credentials were found for Wikihow, the program might not run as it's supposed to."
@@ -69,12 +67,9 @@ def basic_search_wikihow(search_words):
 
 @lru_cache(maxsize=20)
 def advanced_search_wikihow(search_words):
-    cookies = {
-        "wiki_shared_session": wikihow_session
-    }
+    session = get_wikihow_session()
     url = _ADVANCED_SEARCH_URL.format(search_words.replace(' ', '+'))
-    resp = requests.get(url, cookies,
-                        cookies=cookies, allow_redirects=True)
+    resp = session.get(url, allow_redirects=True)
     if "Login Required - wikiHow" in str(resp.content):
         print("WARNING: Invalid log in on Wikihow!")
     return resp
@@ -104,6 +99,3 @@ def get_related_wikihow_actions_advanced_search(seed_word):
     actions_elements = soup.find_all('div', class_='mw-search-result-heading')
     actions = [x.find("a")["title"] for x in actions_elements]
     return actions
-
-
-print(get_related_wikihow_actions_advanced_search("hug"))
