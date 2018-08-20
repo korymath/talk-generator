@@ -93,6 +93,8 @@ conclusion_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/conclusion_title.txt").generate
 inspiration_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/inspiration.txt").generate
+anecdote_title_generator = text_generator.TemplatedTextGenerator(
+    "data/text-templates/anecdote_title.txt").generate
 history_title_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/history.txt").generate
 history_person_title_generator = text_generator.TemplatedTextGenerator(

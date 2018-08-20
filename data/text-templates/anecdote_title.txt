@@ -1,4 +1,6 @@
 My story about {seed.title}
 Funny thing that once happened with {seed.a}
 My {seed.title} Experience
-How I got into {topic.title}? {seed.title}!
+How I got into {topic.title}? {seed.plural.title}!
+Anecdote Time!
+Little Anecdote
