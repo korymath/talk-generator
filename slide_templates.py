@@ -4,6 +4,7 @@ import sys
 
 from pptx import Presentation
 
+import generator_util
 import os_util
 
 # CONSTANTS
@@ -109,10 +110,10 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
             placeholder.crop_bottom = -difference_on_each_side
             placeholder.crop_top = -difference_on_each_side
 
-        return True
+        return placeholder
     else:
         try:
-            placeholder.insert_picture(image_url)
+            return placeholder.insert_picture(image_url)
         except OSError:
             print("Unexpected error inserting image:", image_url, ":", sys.exc_info()[0])
             return None
@@ -145,10 +146,13 @@ def create_title_slide(prs, title, subtitle):
     return slide
 
 
-def create_large_quote_slide(prs, text):
+def create_large_quote_slide(prs, text, background_image=None):
     if bool(text):
         slide = _create_slide(prs, LAYOUT_LARGE_QUOTE)
         _add_text(slide, 1, text)
+        if background_image:
+            image = _add_image(slide, 10, background_image)
+
         return slide
 
 
@@ -235,8 +239,8 @@ def generate_title_slide(title_generator, subtitle_generator):
     return generate_slide(create_title_slide, (title_generator, subtitle_generator))
 
 
-def generate_large_quote_slide(text_generator):
-    return generate_slide(create_large_quote_slide, (text_generator,))
+def generate_large_quote_slide(text_generator, background_image_generator=generator_util.none_generator):
+    return generate_slide(create_large_quote_slide, (text_generator, background_image_generator))
 
 
 def generate_two_column_images_slide(title_generator, caption_1_generator, image_1_generator, caption_2_generator,

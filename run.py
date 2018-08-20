@@ -464,7 +464,8 @@ presentation_schema = PresentationSchema(
 
         SlideGenerator(
             slide_templates.generate_large_quote_slide(
-                generate_wikihow_bold_statement),
+                generate_wikihow_bold_statement,
+                generate_full_screen_google_image),
             tags=["bold_statement", "statement"],
             name="Wikihow Bold Statement"),
 
@@ -542,7 +543,8 @@ test_schema = PresentationSchema(
     slide_generators=[
         SlideGenerator(
             slide_templates.generate_large_quote_slide(
-                generate_wikihow_bold_statement),
+                generate_wikihow_bold_statement,
+                generate_full_screen_google_image),
             tags=["bold_statement", "statement"],
             name="Wikihow Bold Statement"),
 
