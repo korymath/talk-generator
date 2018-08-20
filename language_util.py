@@ -6,8 +6,6 @@ import inflect
 import nltk
 from nltk.corpus import wordnet as wn
 
-import random_util
-
 
 # Helpers
 
@@ -25,12 +23,16 @@ def replace_word(sentence, word, replacement):
 
 # Verbs
 
-def to_present_participle_first_word(action):
+def apply_function_to_verb(action, function):
     words = action.split(" ")
-    first_word = to_ing_form(words[0])
+    first_word = function(words[0])
     if len(words) == 1:
         return first_word
     return first_word + " " + " ".join(words[1:])
+
+
+def to_present_participle_first_word(action):
+    apply_function_to_verb(action, to_ing_form)
 
 
 def to_present_participle(text):
@@ -109,10 +111,6 @@ def get_synonyms(word):
     all_synonyms.append(word)
     all_synonyms = list(set(all_synonyms))
     return all_synonyms
-
-
-def get_random_synonym(word):
-    return random_util.choice_optional(get_synonyms(word))
 
 
 def get_relations(word):

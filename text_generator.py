@@ -21,7 +21,7 @@ known_functions = {
     "ing": language_util.to_present_participle_first_word,
     "plural": language_util.to_plural,
     "singular": language_util.to_singular,
-    "synonym": language_util.get_random_synonym,
+    "synonym": generator_util.create_from_list_generator(language_util.get_synonyms),
     "2_to_1_pronouns": language_util.second_to_first_pronouns,
     "wikihow_action": lambda seed: random_util.choice_optional(wikihow.get_related_wikihow_actions(seed)),
 }
