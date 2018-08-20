@@ -1,10 +1,36 @@
 """ Module for interacting with Wikihow """
+import json
 import re
 from functools import lru_cache
 
 import inflect
 import requests
 from bs4 import BeautifulSoup
+
+_LOG_IN_URL = "https://www.wikihow.com/index.php?title=Special:UserLogin&action=submitlogin&type=login"
+_ADVANCED_SEARCH_URL = "https://www.wikihow.com/index.php?title=Special%3ASearch&profile=default&search={}" \
+                       "&fulltext=Search&ss=relevance&so=desc&ffriy=1&ffrin=1&fft=ffta&fftsi=&profile=default"
+_SESSION_COOKIE_NAME = "wiki_shared_session"
+
+
+def log_in(username, password):
+    res = requests.post(_LOG_IN_URL, None, {"wpName": username, "wpPassword": password})
+    log_in_cookie = res.cookies[_SESSION_COOKIE_NAME]
+
+    return log_in_cookie
+
+
+def get_wikihow_session():
+    try:
+        wikihow_credentials = json.load(open("./data/auth/wikihow.json"))
+        return log_in(**wikihow_credentials)
+    except FileNotFoundError:
+        print(
+            "Warning: No login credentials were found for Wikihow, the program might not run as it's supposed to."
+            "Please add these credentials file to /data/auth/wikihow.json, having a 'username' and 'password' field")
+
+
+wikihow_session = get_wikihow_session()
 
 
 def wikihow_action_to_action(wikihow_title):

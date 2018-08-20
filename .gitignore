@@ -110,3 +110,4 @@ venv.bak/
 output/
 data/auth/reddit.json
 test_output/
+data/auth/wikihow.json
