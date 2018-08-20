@@ -472,6 +472,16 @@ presentation_schema = PresentationSchema(
             tags=["bold_statement", "statement"],
             name="Wikihow Bold Statement"),
 
+        SlideGenerator(
+            slide_templates.generate_large_quote_slide(
+                title_generator=none_generator,
+                text_generator=create_goodreads_quote_generator(250),
+                background_image_generator=generate_full_screen_google_image),
+            weight_function=constant_weight(0.6),
+            tags=["quote", "statement"],
+            name="Goodreads Quote"),
+
+
         # TWO CAPTIONS VARIATIONS
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(
@@ -529,11 +539,14 @@ presentation_schema = PresentationSchema(
         "title": 1,
         "about_me": 1,
         "history": 1,
+        "anecdote": 1,
 
         # Procentual maxima
         "two_captions": 0.3,
         "gif": 0.5,
         "weird": 0.5,
+        "quote": 0.1,
+        "statement": 0.2
     },
 )
 
