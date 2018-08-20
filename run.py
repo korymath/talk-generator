@@ -127,6 +127,10 @@ job_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
 country_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
                                                         "country").generate
 
+# PROMPTS & CHALLENGES
+
+anecdote_prompt_generator = text_generator.TemplatedTextGenerator(
+    "data/text-templates/anecdote_prompt.txt").generate
 
 # QUOTES
 def create_goodreads_quote_generator(max_quote_length):
@@ -560,10 +564,10 @@ test_schema = PresentationSchema(
         SlideGenerator(
             slide_templates.generate_large_quote_slide(
                 title_generator=none_generator,
-                text_generator=generate_wikihow_bold_statement,
+                text_generator=anecdote_prompt_generator,
                 background_image_generator=generate_full_screen_google_image),
-            tags=["bold_statement", "statement"],
-            name="Wikihow Bold Statement"),
+            tags=["Anecdote"],
+            name="Anecdote"),
 
         # Back up in case something goes wrong
         SlideGenerator(

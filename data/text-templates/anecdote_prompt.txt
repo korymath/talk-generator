@@ -1,0 +1,3 @@
+About the time I got to {seed.wikihow_action.lower}
+My first time {seed.wikihow_action.ing.lower}
+What happened during my first time {seed.wikihow_action.ing.lower}
