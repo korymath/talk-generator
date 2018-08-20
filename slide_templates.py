@@ -146,12 +146,14 @@ def create_title_slide(prs, title, subtitle):
     return slide
 
 
-def create_large_quote_slide(prs, text, background_image=None):
+def create_large_quote_slide(prs, title, text, background_image=None):
     if bool(text):
         slide = _create_slide(prs, LAYOUT_LARGE_QUOTE)
+        if title:
+            _add_title(slide, title)
         _add_text(slide, 1, text)
         if background_image:
-            image = _add_image(slide, 10, background_image)
+            _add_image(slide, 10, background_image)
 
         return slide
 
@@ -239,8 +241,8 @@ def generate_title_slide(title_generator, subtitle_generator):
     return generate_slide(create_title_slide, (title_generator, subtitle_generator))
 
 
-def generate_large_quote_slide(text_generator, background_image_generator=generator_util.none_generator):
-    return generate_slide(create_large_quote_slide, (text_generator, background_image_generator))
+def generate_large_quote_slide(title_generator, text_generator, background_image_generator=generator_util.none_generator):
+    return generate_slide(create_large_quote_slide, (title_generator, text_generator, background_image_generator))
 
 
 def generate_two_column_images_slide(title_generator, caption_1_generator, image_1_generator, caption_2_generator,
