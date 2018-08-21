@@ -18,7 +18,7 @@ known_functions = {
     "upper": str.upper,
     "dashes": lambda words: words.replace(" ", "-"),
     "a": lambda word: language_util.add_article(word),
-    "ing": language_util.to_present_participle_first_word,
+    "ing": language_util.to_present_participle,
     "plural": language_util.to_plural,
     "singular": language_util.to_singular,
     "synonym": generator_util.create_from_list_generator(language_util.get_synonyms),

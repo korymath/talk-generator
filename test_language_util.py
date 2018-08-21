@@ -28,7 +28,16 @@ class LanguageUtilTest(unittest.TestCase):
         self.assertEqual("fleeing", language_util.to_ing_form("flee"))
         self.assertEqual("making", language_util.to_ing_form("make"))
 
-    def test_Replace(self):
+    def test_verb_detection(self):
+        # self.assertEqual("ACT like a cat", language_util.apply_function_to_verb("act like a cat", str.upper))
+        # self.assertEqual("kitten PROOF your house",
+        #                  language_util.apply_function_to_verb("kitten proof your house", str.upper))
+
+    def test_to_present_participle(self):
+        self.assertEqual("acting like a cat", language_util.to_present_participle("act like a cat"))
+        self.assertEqual("quitly acting like a cat", language_util.to_present_participle("quitly act like a cat"))
+
+    def test_replace(self):
         self.assertEqual("this is your test", language_util.replace_word("this is my test", "my", "your"))
         self.assertEqual("test if morphed, before comma",
                          language_util.replace_word("test if changed, before comma", "changed", "morphed"))

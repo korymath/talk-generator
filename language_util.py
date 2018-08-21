@@ -23,30 +23,49 @@ def replace_word(sentence, word, replacement):
 
 # Verbs
 
-def apply_function_to_verb(action, function):
+def get_verb_index(words):
+    seen_adverb = False
+    for i in range(len(words)):
+        tags = nltk.pos_tag(nltk.word_tokenize(words[i]))
+        tags_strings = [tag[1] for tag in tags]
+        # Is verb: return
+        if 'VB' in tags_strings:
+            return i
+        # Is adverb: return next non adverb
+        if 'RB' in tags_strings:
+            seen_adverb = True
+            continue
+        # Something following an adverb thats not an adverb? See as verb
+        if seen_adverb:
+            return i
+    return 0
+
+
+def apply_function_to_verb(action, func):
     words = action.split(" ")
-    first_word = function(words[0])
+    verb_index = get_verb_index(words)
+    first_word = func(words[verb_index])
     if len(words) == 1:
         return first_word
-    return first_word + " " + " ".join(words[1:])
+    return (" ".join(words[:verb_index]) + " " + first_word + " " + " ".join(words[verb_index+1:])).strip()
 
 
-def to_present_participle_first_word(action):
-    apply_function_to_verb(action, to_ing_form)
+def to_present_participle(action):
+    return apply_function_to_verb(action, to_ing_form)
 
 
-def to_present_participle(text):
-    tokens = nltk.word_tokenize(text)
-    pos_tags = nltk.pos_tag(tokens)
-
-    result = ""
-    seen_verb = False
-    for tag in pos_tags:
-        if not seen_verb and tag[1] == 'VB':
-            seen_verb = True
-            result += to_ing_form(" " + tag[0])
-        result += " " + tag[0]
-    return result.strip()
+# def to_present_participle(text):
+#     tokens = nltk.word_tokenize(text)
+#     pos_tags = nltk.pos_tag(tokens)
+#
+#     result = ""
+#     seen_verb = False
+#     for tag in pos_tags:
+#         if not seen_verb and tag[1] == 'VB':
+#             seen_verb = True
+#             result += to_ing_form(" " + tag[0])
+#         result += " " + tag[0]
+#     return result.strip()
 
 
 # From https://github.com/arsho/46-Simple-Python-Exercises-Solutions/blob/master/problem_25.py
