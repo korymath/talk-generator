@@ -1,0 +1,9 @@
+{
+  "origin": [
+    "#question#"
+  ],
+  "question": [
+    "Would you like to {seed.wikihow_action}?",
+    "Are you afraid of {seed.wikihow_action.ing}?"
+  ]
+}

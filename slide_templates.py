@@ -120,9 +120,9 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
             return None
 
 
-def _add_chart(slide, placeholder_id, chart_data):
+def _add_chart(slide, placeholder_id, chart_type, chart_data):
     placeholder = slide.placeholders[placeholder_id]
-    return placeholder.insert_chart(*chart_data)
+    return placeholder.insert_chart(chart_type, chart_data)
 
 
 def _add_image_or_text(slide, placeholder_id, image_url_or_text, original_image_size):
@@ -226,12 +226,11 @@ def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_im
         return slide
 
 
-def create_chart_slide(prs, title, chart_data):
+def create_chart_slide(prs, title, chart_type, chart_data):
     slide = _create_slide(prs, LAYOUT_TITLE_AND_CHART)
     _add_title(slide, title)
-    _add_chart(slide, 10, chart_data)
-    chart = _add_chart(slide, 10, chart_data).chart
-    if chart_data[1].categories:
+    chart = _add_chart(slide, 10, chart_type, chart_data).chart
+    if chart_data.categories:
         chart.has_legend = True
     return slide
 
@@ -319,6 +318,14 @@ def generate_three_column_images_slide_tuple(title_generator, tuple_1_generator,
 
 def generate_chart_slide(title_generator, chart_generator):
     return generate_slide(create_chart_slide, (title_generator, chart_generator))
+
+
+def generate_chart_slide_tuple(chart_generator):
+    def generate(presentation_context, used):
+        return _generate_if_different_enough(create_chart_slide, presentation_context,
+                                             chart_generator(presentation_context), used)
+
+    return generate
 
 
 # HELPERS

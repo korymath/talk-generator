@@ -6,7 +6,7 @@ import random
 import safygiphy
 
 # Own modules:
-import charts
+import chart
 import goodreads
 import google_images
 import inspirobot
@@ -348,7 +348,7 @@ about_me_location_or_country_tuple_generator = combined_generator(
 # Charts
 
 
-chart_generator = create_seeded_generator(charts.generate_test_chart)
+# chart_generator = create_seeded_generator(charts.generate_test_chart)
 
 # == SCHEMAS ==
 
@@ -578,10 +578,8 @@ test_schema = PresentationSchema(
     # Slide generators
     slide_generators=[
         SlideGenerator(
-            slide_templates.generate_chart_slide(
-                seeded_titled_identity_generator,
-                chart_generator
-                # background_image_generator=generate_full_screen_google_image
+            slide_templates.generate_chart_slide_tuple(
+                chart.generate_yes_no_pie
             ),
             allowed_repeated_elements=4,
             tags=["chart"],
