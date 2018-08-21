@@ -29,7 +29,7 @@ class LanguageUtilTest(unittest.TestCase):
         self.assertEqual("making", language_util.to_ing_form("make"))
 
     def test_verb_detection(self):
-        # self.assertEqual("ACT like a cat", language_util.apply_function_to_verb("act like a cat", str.upper))
+        self.assertEqual("ACT like a cat", language_util.apply_function_to_verb("act like a cat", str.upper))
         # self.assertEqual("kitten PROOF your house",
         #                  language_util.apply_function_to_verb("kitten proof your house", str.upper))
 
