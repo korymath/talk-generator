@@ -38,6 +38,7 @@ LAYOUT_TITLE_AND_PICTURE = 12
 LAYOUT_LARGE_QUOTE = 13
 LAYOUT_TWO_TITLE_AND_IMAGE = 14
 LAYOUT_THREE_TITLE_AND_IMAGE = 15
+LAYOUT_TITLE_AND_CHART = 16
 
 
 # = HELPERS =
@@ -117,6 +118,12 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
         except OSError:
             print("Unexpected error inserting image:", image_url, ":", sys.exc_info()[0])
             return None
+
+
+def _add_chart(slide, placeholder_id, chart_data):
+    placeholder = slide.placeholders[placeholder_id]
+    print(placeholder.placeholder_format.type)
+    return placeholder.insert_chart(*chart_data)
 
 
 def _add_image_or_text(slide, placeholder_id, image_url_or_text, original_image_size):
@@ -220,6 +227,14 @@ def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_im
         return slide
 
 
+def create_chart_slide(prs, title, chart_data):
+    slide = _create_slide(prs, LAYOUT_TITLE_AND_CHART)
+    _print_all_placeholders(slide)
+    _add_title(slide, title)
+    _add_chart(slide, 10, chart_data)
+    return slide
+
+
 # GENERATORS: Same as the template fillers above, but using generation functions
 
 def generate_full_image_slide(title_generator, image_generator, original_image_size=True):
@@ -299,6 +314,10 @@ def generate_three_column_images_slide_tuple(title_generator, tuple_1_generator,
         return _generate_if_different_enough(create_three_column_images_slide, presentation_context, generated, used)
 
     return generate
+
+
+def generate_chart_slide(title_generator, chart_generator):
+    return generate_slide(create_chart_slide, (title_generator, chart_generator))
 
 
 # HELPERS
