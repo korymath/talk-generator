@@ -21,18 +21,25 @@ def replace_word(sentence, word, replacement):
     return result
 
 
+def get_pos_tags(word):
+    """ Returns all possible POS tags for a given word according to nltk """
+    tags = nltk.pos_tag(nltk.word_tokenize(word))
+    tags_strings = [tag[1] for tag in tags]
+    print(word, ":", tags_strings)
+    return tags_strings
+
+
 # Verbs
 
 def get_verb_index(words):
     seen_adverb = False
     for i in range(len(words)):
-        tags = nltk.pos_tag(nltk.word_tokenize(words[i]))
-        tags_strings = [tag[1] for tag in tags]
+        tags = get_pos_tags(words[i])
         # Is verb: return
-        if 'VB' in tags_strings:
+        if 'VB' in tags:
             return i
         # Is adverb: return next non adverb
-        if 'RB' in tags_strings:
+        if 'RB' in tags:
             seen_adverb = True
             continue
         # Something following an adverb thats not an adverb? See as verb
@@ -47,7 +54,7 @@ def apply_function_to_verb(action, func):
     first_word = func(words[verb_index])
     if len(words) == 1:
         return first_word
-    return (" ".join(words[:verb_index]) + " " + first_word + " " + " ".join(words[verb_index+1:])).strip()
+    return (" ".join(words[:verb_index]) + " " + first_word + " " + " ".join(words[verb_index + 1:])).strip()
 
 
 def to_present_participle(action):
@@ -199,8 +206,21 @@ def add_article(word):
     return article + " " + word
 
 
+# Pronouns
+
 def second_to_first_pronouns(sentence):
     sentence = replace_word(sentence, "yours", "mine")
     sentence = replace_word(sentence, "your", "my")
     sentence = replace_word(sentence, "you", "me")
     return sentence
+
+
+# POS tag checkers
+
+#TODO: These don't work well, but might be useful features in our text generation language
+def is_noun(word):
+    return 'NN' in get_pos_tags(word)
+
+
+def is_verb(word):
+    return 'VB' in get_pos_tags(word)

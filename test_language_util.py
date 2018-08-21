@@ -47,6 +47,22 @@ class LanguageUtilTest(unittest.TestCase):
         self.assertEqual("Last word is morphed",
                          language_util.replace_word("Last word is changed", "changed", "morphed"))
 
+    # def test_is_noun(self):
+    #     self.assertTrue(language_util.is_noun("cat"))
+    #     self.assertTrue(language_util.is_noun("dog"))
+    #     self.assertTrue(language_util.is_noun("food"))
+    #     self.assertTrue(language_util.is_noun("pet"))
+    
+    # def test_is_verb(self):
+    #     self.assertTrue(language_util.is_verb("act"))
+    #     self.assertTrue(language_util.is_verb("pet"))
+    #     self.assertTrue(language_util.is_verb("kiss"))
+
+    # def test_is_verb_action(self):
+    #     self.assertTrue(language_util.is_verb("kill a mockingbird"))
+    #     self.assertTrue(language_util.is_verb("act like a cat"))
+    #     self.assertTrue(language_util.is_verb("speak English"))
+
 
 if __name__ == '__main__':
     unittest.main()
