@@ -34,6 +34,10 @@ On that page, select the right lxml version for your platform and Python version
 In case installing the dependencies complain about Visual C++ version while resolving the python-pptx dependency,
 consider installing a version of [Visual Studio](https://docs.microsoft.com/en-us/visualstudio/install/install-visual-studio).
 
+If pip complains about a missing mysql.h, you need to `pip install wheel`,
+go to [mysql wheel download]( http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python) to download the wheel
+and run `pip install mysqlclient-1.3.8-cp36-cp36m-win_amd64.whl`
+
 ## Run
 
 ```sh
