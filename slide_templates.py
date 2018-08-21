@@ -122,7 +122,6 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
 
 def _add_chart(slide, placeholder_id, chart_data):
     placeholder = slide.placeholders[placeholder_id]
-    print(placeholder.placeholder_format.type)
     return placeholder.insert_chart(*chart_data)
 
 
@@ -229,7 +228,6 @@ def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_im
 
 def create_chart_slide(prs, title, chart_data):
     slide = _create_slide(prs, LAYOUT_TITLE_AND_CHART)
-    _print_all_placeholders(slide)
     _add_title(slide, title)
     _add_chart(slide, 10, chart_data)
     return slide
