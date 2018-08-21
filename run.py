@@ -6,6 +6,7 @@ import random
 import safygiphy
 
 # Own modules:
+import charts
 import goodreads
 import google_images
 import inspirobot
@@ -131,6 +132,7 @@ country_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
 
 anecdote_prompt_generator = text_generator.TemplatedTextGenerator(
     "data/text-templates/anecdote_prompt.txt").generate
+
 
 # QUOTES
 def create_goodreads_quote_generator(max_quote_length):
@@ -342,6 +344,11 @@ about_me_location_or_country_tuple_generator = combined_generator(
     (3, about_me_country_tuple_generator),
     (1, about_me_location_tuple_generator),
 )
+
+# Charts
+
+
+chart_generator = create_seeded_generator(charts.generate_test_chart)
 
 # == SCHEMAS ==
 
@@ -566,17 +573,19 @@ test_schema = PresentationSchema(
     # Basic powerpoint generator
     slide_templates.create_new_powerpoint,
     # Topic per slide generator
-    seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
+    # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
+    seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
     slide_generators=[
         SlideGenerator(
-            slide_templates.generate_large_quote_slide(
-                title_generator=none_generator,
-                text_generator=anecdote_prompt_generator,
+            slide_templates.generate_chart_slide(
+                seeded_titled_identity_generator,
+                chart_generator
                 # background_image_generator=generate_full_screen_google_image
             ),
-            tags=["Anecdote"],
-            name="Anecdote"),
+            allowed_repeated_elements=4,
+            tags=["chart"],
+            name="Chart"),
 
         # Back up in case something goes wrong
         SlideGenerator(
