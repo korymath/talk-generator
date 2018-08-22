@@ -44,7 +44,7 @@ def generate_yes_no_large_funny_answer_chart_data(presentation_context):
     title = yes_no_question_generator(presentation_context)
 
     categories = ['Yes', 'No', funny_yes_no_answer_generator(presentation_context)]
-    series_data = create_equal_data_with_outlier_end(len(categories), .7, 1, 4, 0.5, 15)
+    series_data = create_equal_data_with_outlier_end(len(categories), .7, 1, 3, 1, 15)
 
     chart_data = ChartData()
     chart_data.categories = categories
@@ -59,4 +59,4 @@ def generate_yes_no_single_answer_chart_data(presentation_context):
 
 def generate_yes_no_pie(presentation_context):
     title, chart_data = generate_yes_no_large_funny_answer_chart_data(presentation_context)
-    return title, XL_CHART_TYPE.PIE, chart_data
+    return title, random.choice([XL_CHART_TYPE.PIE, XL_CHART_TYPE.COLUMN_CLUSTERED]), chart_data
