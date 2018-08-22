@@ -230,6 +230,7 @@ def create_chart_slide(prs, title, chart_type, chart_data):
     slide = _create_slide(prs, LAYOUT_TITLE_AND_CHART)
     _add_title(slide, title)
     chart = _add_chart(slide, 10, chart_type, chart_data).chart
+    # print("chart methods:", dir(chart))
     if chart_data.categories:
         chart.has_legend = True
     return slide

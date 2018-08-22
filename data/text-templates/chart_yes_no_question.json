@@ -1,9 +1,20 @@
 {
   "origin": [
-    "#question#"
+    "#yes_no_question#"
   ],
-  "question": [
-    "Would you like to {seed.wikihow_action}?",
-    "Are you afraid of {seed.wikihow_action.ing}?"
-  ]
+  "yes_no_question": [
+    "Would you like to {seed.wikihow_action.lower}?",
+    "Are you afraid of {seed.wikihow_action.ing.lower}?"
+  ],
+  "funny_yes_no_answer": [
+    "Absolutely",
+    "Absolutely not",
+    "I'd rather die",
+    "What does this have to do with {seed.plural}#?#",
+    "What does this have to do with {topic.plural}#?#",
+    "Can I just {seed.wikihow_action.lower} instead?",
+    "But sir, I *AM* {seed.a}",
+    "{seed.plural}?"
+  ],
+  "?": ["?","??","???"]
 }

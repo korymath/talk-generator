@@ -5,16 +5,42 @@ from pptx.enum.chart import XL_CHART_TYPE
 
 import text_generator
 
-yes_no_question_generator = talk_subtitle_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_yes_no_question.json').generate
+yes_no_question_generator = text_generator.TraceryTextGenerator(
+    'data/text-templates/chart_yes_no_question.json', "yes_no_question").generate
+funny_yes_no_answer_generator = text_generator.TraceryTextGenerator(
+    'data/text-templates/chart_yes_no_question.json', "funny_yes_no_answer").generate
 
 
 def generate_yes_no_pie(presentation_context):
     title = yes_no_question_generator(presentation_context)
 
+    categories = ['Yes', 'No', funny_yes_no_answer_generator(presentation_context)]
+    series_data = create_equal_data_with_outlier_end(len(categories), .7, 1, 4, 1, 20)
+
     chart_data = ChartData()
-    chart_data.categories = ['Yes', 'No']
-    chart_data.add_series('Answers', (random.randint(0, 100), random.randint(0, 100)))
-    print(dir(chart_data))
+    chart_data.categories = categories
+    chart_data.add_series('Answers', series_data)
+    # print(dir(chart_data))
 
     return title, XL_CHART_TYPE.PIE, chart_data
+
+
+def create_equal_data_with_outlier_end(size, noise_factor, normal_min, normal_max, outlier_min_size, outlier_max_size):
+    # Create data with same number between normal_min and normal_max everywhere
+    datapoints = [random.uniform(normal_min, normal_max) for _ in range(0, size)]
+
+    # Make last number an outlier
+    datapoints[-1] = random.uniform(outlier_min_size, outlier_max_size)
+
+    # Apply noise
+    datapoints = add_noise_to_points(noise_factor, datapoints)
+
+    return datapoints
+
+
+def add_noise_to_points(max_noise_ratio, datapoints):
+    return [add_noise_to_point(max_noise_ratio, point) for point in datapoints]
+
+
+def add_noise_to_point(max_noise_ratio, datapoint):
+    return max(0, datapoint + (datapoint * random.uniform(-max_noise_ratio, max_noise_ratio)))
