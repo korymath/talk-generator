@@ -347,6 +347,7 @@ about_me_location_or_country_tuple_generator = combined_generator(
 
 # Charts
 
+reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funnycharts", "charts")
 
 # chart_generator = create_seeded_generator(charts.generate_test_chart)
 
@@ -522,6 +523,17 @@ presentation_schema = PresentationSchema(
             tags=["two_captions", "reddit"],
             name="Two Captions Weird Reddit"),
 
+        # CHARTS
+
+        SlideGenerator(
+            slide_templates.generate_full_image_slide(
+                none_generator,
+                reddit_chart_generator),
+            weight_function=constant_weight(1.5),
+            allowed_repeated_elements=0,
+            tags=["chart"],
+            name="Reddit Chart"),
+
         # CONCLUSION:
         SlideGenerator(
             slide_templates.generate_two_column_images_slide(
@@ -565,7 +577,8 @@ presentation_schema = PresentationSchema(
         "gif": 0.5,
         "weird": 0.5,
         "quote": 0.1,
-        "statement": 0.2
+        "statement": 0.2,
+        "chart": 0.2
     },
 )
 
