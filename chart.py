@@ -77,7 +77,7 @@ _YES_NO_CHART_TYPES = PIE, PROCENT_HISTOGRAM
 def generate_yes_no_large_funny_answer_chart_data(presentation_context):
     title = yes_no_question_generator(presentation_context)
 
-    presentation_context["chart_title": title]
+    presentation_context["chart_title"] = title
 
     categories = ['Yes', 'No', funny_yes_no_answer_generator(presentation_context)]
     series_data = normalise_data(create_equal_data_with_outlier_end(len(categories), .7, 1, 3, 1, 15))
