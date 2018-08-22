@@ -13,12 +13,11 @@
     "Absolutely",
     "Absolutely not",
     "I'd rather die",
-    "What does this have to do with {seed.plural}#?#",
+    "Err...",
     "What does this have to do with {topic.plural}#?#",
     "Can I just {seed.wikihow_action.lower} instead?",
     "But sir, I *AM* {seed.a}",
-    "{seed.plural.title}?",
-    "{seed.a.title}?"
+    "{chart_title.get_last_noun_and_article.title}?"
   ],
   "?": [
     "?",
