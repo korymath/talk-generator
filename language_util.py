@@ -234,14 +234,16 @@ def get_last_noun_and_article(sentence):
 
     noun = None
     for tag in reversed(tags):
-        # If a noun was found
-        if bool(noun):
-            # If encountering an article while there is a noun found
+        if "NN" in tag[1]:
+            if noun:
+                noun = (tag[0] + " " + noun).strip()
+            else:
+                noun = tag[0]
+
+        # If encountering an article while there is a noun found
+        elif bool(noun):
             if "DT" in tag[1] or "PRP$" in tag[1]:
                 return tag[0] + " " + noun
             return noun
-
-        if "NN" in tag[1]:
-            noun = tag[0]
 
     return None
