@@ -230,12 +230,14 @@ def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_im
 _CHARTS_REQUIRING_LEGEND = XL_CHART_TYPE.PIE,
 
 
-def create_chart_slide(prs, title, chart_type, chart_data):
+def create_chart_slide(prs, title, chart_type, chart_data, chart_modifier=None):
     slide = _create_slide(prs, LAYOUT_TITLE_AND_CHART)
     _add_title(slide, title)
     chart = _add_chart(slide, 10, chart_type, chart_data).chart
     if chart_data.categories and chart_type in _CHARTS_REQUIRING_LEGEND:
         chart.has_legend = True
+    if chart_modifier:
+        chart = chart_modifier(chart)
     return slide
 
 
