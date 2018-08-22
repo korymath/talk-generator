@@ -47,12 +47,18 @@ class LanguageUtilTest(unittest.TestCase):
         self.assertEqual("Last word is morphed",
                          language_util.replace_word("Last word is changed", "changed", "morphed"))
 
+    def test_get_last_noun_and_article(self):
+        self.assertEqual("a cat", language_util.get_last_noun_and_article("introduce your family to a cat"))
+        self.assertEqual("the family", language_util.get_last_noun_and_article("show your cat to the family"))
+        self.assertEqual("my cat", language_util.get_last_noun_and_article("What to do with my cat"))
+        self.assertEqual("your cat", language_util.get_last_noun_and_article("do you like your cat"))
+
     # def test_is_noun(self):
     #     self.assertTrue(language_util.is_noun("cat"))
     #     self.assertTrue(language_util.is_noun("dog"))
     #     self.assertTrue(language_util.is_noun("food"))
     #     self.assertTrue(language_util.is_noun("pet"))
-    
+
     # def test_is_verb(self):
     #     self.assertTrue(language_util.is_verb("act"))
     #     self.assertTrue(language_util.is_verb("pet"))
