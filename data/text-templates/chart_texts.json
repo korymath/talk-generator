@@ -17,10 +17,13 @@
     "Err...",
     "Can you repeat the question?",
     "Can I instead just {seed.wikihow_action.2_to_1_pronouns.lower}?",
+    "I'd rather {seed.wikihow_action.2_to_1_pronouns.lower}"
     "But sir, I *AM* {seed.a}",
-    "{chart_title.get_last_noun_and_article.title}#?#",
-    "HOW DARE YOU SPEAK OF {chart_title.get_last_noun_and_article.upper}#?#",
-    "My beliefs don't allow that"
+    "{chart_title.get_last_noun_and_article.2_to_1_pronouns.title}#?#",
+    "HOW DARE YOU SPEAK ABOUT {chart_title.get_last_noun_and_article.2_to_1_pronouns.upper}#?#",
+    "I'd rather not talk about {chart_title.get_last_noun_and_article.2_to_1_pronouns.lower}#?#",
+    "My beliefs don't allow that",
+    "My #family_member# doesn't allow me that"
   ],
   "?": [
     "?",
