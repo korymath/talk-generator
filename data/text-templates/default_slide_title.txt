@@ -1,10 +1,14 @@
 {seed.plural.title}
 {seed.plural.title}
-About {seed.plural.title}
-About {seed.plural.title}
-About {seed.plural.title}
-About {seed.plural.title}
-What about {seed.plural.title}?
-Let's look at {seed.plural.title}
-Let's Discuss {seed.plural.title}
-Getting {seed.plural.title} involved
+About {seed.is_noun.plural.title}
+About {seed.is_noun.plural.title}
+About {seed.is_noun.plural.title}
+About {seed.is_noun.plural.title}
+What about {seed.is_noun.plural.title}?
+What about {seed.is_verb.ing.title}?
+Let's look at {seed.is_noun.plural.title}
+Let's Discuss {seed.is_noun.plural.title}
+Let's look at {seed.is_verb.ing.title}
+Let's Discuss {seed.is_verb.ing.title}
+Getting {seed.is_noun.plural.title} involved
+Getting {seed.is_verb.ing.title} involved

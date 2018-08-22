@@ -25,7 +25,7 @@ def get_pos_tags(word):
     """ Returns all possible POS tags for a given word according to nltk """
     tags = nltk.pos_tag(nltk.word_tokenize(word))
     tags_strings = [tag[1] for tag in tags]
-    print(word, ":", tags_strings)
+    # print(word, ":", tags_strings)
     return tags_strings
 
 

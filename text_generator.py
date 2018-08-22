@@ -24,6 +24,10 @@ known_functions = {
     "synonym": generator_util.create_from_list_generator(language_util.get_synonyms),
     "2_to_1_pronouns": language_util.second_to_first_pronouns,
     "wikihow_action": lambda seed: random_util.choice_optional(wikihow.get_related_wikihow_actions(seed)),
+
+    # Checkers
+    "is_noun": lambda word: word if language_util.is_noun(word) else None,
+    "is_verb": lambda word: word if language_util.is_verb(word) else None,
 }
 
 
