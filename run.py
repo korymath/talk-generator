@@ -192,27 +192,6 @@ weird_and_shitpost_generator = combined_generator(
     (2, shitpostbot_image_generator)
 )
 
-# GOOGLE IMAGES
-
-generate_full_screen_google_image = create_from_list_generator(
-    remove_invalid_images_from_generator(
-        create_seeded_generator(
-            google_images.create_full_screen_image_generator())))
-
-generate_wide_google_image = create_from_list_generator(
-    remove_invalid_images_from_generator(
-        create_seeded_generator(
-            google_images.create_wide_image_generator())))
-
-generate_google_image = create_from_list_generator(
-    remove_invalid_images_from_generator(
-        create_seeded_generator(
-            google_images.create_image_generator())))
-
-generate_google_image_from_word = create_from_list_generator(
-    remove_invalid_images_from_generator(
-        google_images.create_image_generator()))
-
 # GIFS
 
 giphy = safygiphy.Giphy()
@@ -244,7 +223,34 @@ reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", 
 
 combined_gif_generator = combined_generator((.5, giphy_generator), (.5, reddit_gif_generator))
 
-# OLD
+weird_and_shitpost_and_gif_generator = combined_generator(
+    (1, weird_image_generator),
+    (1, shitpostbot_image_generator),
+    (1, combined_gif_generator)
+)
+
+# GOOGLE IMAGES
+
+generate_full_screen_google_image = create_from_list_generator(
+    remove_invalid_images_from_generator(
+        create_seeded_generator(
+            google_images.create_full_screen_image_generator())))
+
+generate_wide_google_image = create_from_list_generator(
+    remove_invalid_images_from_generator(
+        create_seeded_generator(
+            google_images.create_wide_image_generator())))
+
+generate_google_image = create_from_list_generator(
+    remove_invalid_images_from_generator(
+        create_seeded_generator(
+            google_images.create_image_generator())))
+
+generate_google_image_from_word = create_from_list_generator(
+    remove_invalid_images_from_generator(
+        google_images.create_image_generator()))
+
+# OLD/VINTAGE
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
 vintage_picture_generator = create_reddit_image_generator("TheWayWeWere", "100yearsago", "ColorizedHistory")
 
@@ -282,16 +288,18 @@ def split_captions_generator(generator):
     def create_double_image_captions(presentation_context):
         line = generator.generate(presentation_context)
         parts = line.split("|")
-        return parts[0], parts[1]
+        return parts
 
     return create_double_image_captions
 
 
 _double_captions_generator = text_generator.TemplatedTextGenerator("./data/text-templates/double_captions.txt")
+_triple_captions_generator = text_generator.TemplatedTextGenerator("./data/text-templates/triple_captions.txt")
 _historic_double_captions_generator = text_generator.TemplatedTextGenerator(
     "./data/text-templates/historic_double_captions.txt")
 
 double_captions_generator = split_captions_generator(_double_captions_generator)
+triple_captions_generator = split_captions_generator(_triple_captions_generator)
 historic_double_captions_generator = split_captions_generator(_historic_double_captions_generator)
 
 
@@ -523,6 +531,18 @@ presentation_schema = PresentationSchema(
             tags=["two_captions", "reddit"],
             name="Two Captions Weird Reddit"),
 
+        SlideGenerator(
+            slide_templates.generate_three_column_images_slide_tuple_caption(
+                default_slide_title_generator,
+                triple_captions_generator,
+                weird_and_shitpost_and_gif_generator,
+                weird_and_shitpost_and_gif_generator,
+                weird_and_shitpost_generator),
+            weight_function=constant_weight(1),
+            allowed_repeated_elements=4,
+            tags=["multi_caption", "three_captions", "reddit"],
+            name="Three Captions Weird"),
+
         # CHARTS
 
         SlideGenerator(
@@ -574,6 +594,8 @@ presentation_schema = PresentationSchema(
 
         # Procentual maxima
         "two_captions": 0.3,
+        "three_captions": 0.2,
+        "multi_captions": 0.3,
         "gif": 0.5,
         "weird": 0.5,
         "quote": 0.1,

@@ -317,6 +317,18 @@ def generate_three_column_images_slide_tuple(title_generator, tuple_1_generator,
     return generate
 
 
+def generate_three_column_images_slide_tuple_caption(title_generator, captions_generator, image_1_generator,
+                                                     image_2_generator, image_3_generator):
+    def generate(presentation_context, used):
+        generated_tuple = captions_generator(presentation_context)
+        generated = title_generator(presentation_context), generated_tuple[0], image_1_generator(
+            presentation_context), generated_tuple[1], image_2_generator(presentation_context), \
+                    generated_tuple[2], image_3_generator(presentation_context)
+        return _generate_if_different_enough(create_three_column_images_slide, presentation_context, generated, used)
+
+    return generate
+
+
 def generate_chart_slide(title_generator, chart_generator):
     return generate_slide(create_chart_slide, (title_generator, chart_generator))
 
