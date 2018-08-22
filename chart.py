@@ -2,7 +2,7 @@ import random
 
 from pptx.chart.data import ChartData
 from pptx.enum.chart import XL_CHART_TYPE
-from pptx.enum.chart import XL_LEGEND_POSITION
+from pptx.enum.chart import XL_LABEL_POSITION
 from pptx.enum.chart import XL_TICK_MARK
 
 import text_generator
@@ -46,7 +46,7 @@ def create_equal_data_with_outlier_end(size, noise_factor, normal_min, normal_ma
 
 
 # CHART TYPES PROPERTIES SETTING
-def set_histogram_properties(chart):
+def set_histogram_properties(chart, chart_data):
     value_axis = chart.value_axis
     value_axis.mayor_tick_mark = XL_TICK_MARK.NONE
     value_axis.minor_tick_mark = XL_TICK_MARK.NONE
@@ -55,14 +55,37 @@ def set_histogram_properties(chart):
     # value_axis.visible = False
 
     tick_labels = value_axis.tick_labels
-    tick_labels.number_format = "#,##0%"
+    tick_labels.number_format = '0%'
 
     return chart
 
 
-def set_pie_properties(chart):
-    chart.legend.position = XL_LEGEND_POSITION.RIGHT
-    chart.legend.include_in_layout = False
+def set_pie_properties(chart, chart_data):
+    if chart and chart_data:
+        # chart.legend.position = XL_LEGEND_POSITION.RIGHT
+        # chart.legend.include_in_layout = False
+
+        chart.plots[0].has_data_labels = True
+        data_labels = chart.plots[0].data_labels
+        data_labels.number_format = '0%'
+        data_labels.position = XL_LABEL_POSITION.CENTER
+
+        chart.has_legend = False
+
+        # Data points
+        series = chart.series[0]
+        # Check if there are small values that can't be contained on the pie piece
+        label_position = XL_LABEL_POSITION.OUTSIDE_END if any(
+            t < 0.10 for t in series.values) else XL_LABEL_POSITION.CENTER
+
+        # set labels to contain category and value
+        for i in range(len(chart_data.categories)):
+            point = series.points[i]
+            value = series.values[i]
+            point.data_label.text_frame.text = "{} ({:.0%})".format(chart_data.categories[i].label,
+                                                                    value)
+
+            point.data_label.position = label_position
 
 
 # CHART TYPES
@@ -80,7 +103,7 @@ def generate_yes_no_large_funny_answer_chart_data(presentation_context):
     presentation_context["chart_title"] = title
 
     categories = ['Yes', 'No', funny_yes_no_answer_generator(presentation_context)]
-    series_data = normalise_data(create_equal_data_with_outlier_end(len(categories), .7, 1, 3, 1, 15))
+    series_data = normalise_data(create_equal_data_with_outlier_end(len(categories), .8, 1, 3, 1, 20))
 
     chart_data = ChartData()
     chart_data.categories = categories
