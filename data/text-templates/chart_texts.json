@@ -3,6 +3,7 @@
     "#yes_no_question#"
   ],
   "yes_no_question": [
+    "Do you like {seed.wikihow_action.ing.lower}?",
     "Would you like to {seed.wikihow_action.lower}?",
     "Are you afraid of {seed.wikihow_action.ing.lower}?",
     "Would you accept it if your #family_member# started to {seed.wikihow_action.lower}?",
@@ -14,10 +15,12 @@
     "Absolutely not",
     "I'd rather die",
     "Err...",
+    "Can you repeat the question?",
     "What does this have to do with {topic.plural}#?#",
-    "Can I just {seed.wikihow_action.lower} instead?",
+    "Can I instead just {seed.wikihow_action.2_to_1_pronouns.lower}?",
     "But sir, I *AM* {seed.a}",
-    "{chart_title.get_last_noun_and_article.title}?"
+    "{chart_title.get_last_noun_and_article.title}#?#",
+    "HOW DARE YOU SPEAK OF {chart_title.get_last_noun_and_article.upper}#?#"
   ],
   "?": [
     "?",
