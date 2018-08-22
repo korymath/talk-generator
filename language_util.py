@@ -217,10 +217,31 @@ def second_to_first_pronouns(sentence):
 
 # POS tag checkers
 
-#TODO: These don't work well, but might be useful features in our text generation language
+# TODO: These don't work well, but might be useful features in our text generation language
 def is_noun(word):
     return 'NN' in get_pos_tags(word)
 
 
 def is_verb(word):
     return 'VB' in get_pos_tags(word)
+
+
+# Special operators
+
+def get_last_noun_and_article(sentence):
+    tokens = nltk.word_tokenize(sentence)
+    tags = nltk.pos_tag(tokens)
+
+    noun = None
+    for tag in reversed(tags):
+        # If a noun was found
+        if bool(noun):
+            # If encountering an article while there is a noun found
+            if "DT" in tag[1] or "PRP$" in tag[1]:
+                return tag[0] + " " + noun
+            return noun
+
+        if "NN" in tag[1]:
+            noun = tag[0]
+
+    return None
