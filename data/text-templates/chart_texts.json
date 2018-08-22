@@ -4,7 +4,10 @@
   ],
   "yes_no_question": [
     "Would you like to {seed.wikihow_action.lower}?",
-    "Are you afraid of {seed.wikihow_action.ing.lower}?"
+    "Are you afraid of {seed.wikihow_action.ing.lower}?",
+    "Would you accept it if your #family_member# started to {seed.wikihow_action.lower}?",
+    "Do you want to learn how to {seed.wikihow_action.lower}?",
+    "Do you know how to {seed.wikihow_action.lower}?"
   ],
   "funny_yes_no_answer": [
     "Absolutely",
@@ -14,7 +17,18 @@
     "What does this have to do with {topic.plural}#?#",
     "Can I just {seed.wikihow_action.lower} instead?",
     "But sir, I *AM* {seed.a}",
-    "{seed.plural.title}?"
+    "{seed.plural.title}?",
+    "{seed.a.title}?"
   ],
-  "?": ["?","??","???"]
+  "?": [
+    "?",
+    "??",
+    "???"
+  ],
+  "family_member": [
+    "kid",
+    "daughter",
+    "son",
+    "loved one"
+  ]
 }
