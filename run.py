@@ -517,8 +517,8 @@ presentation_schema = PresentationSchema(
                 double_captions_generator,
                 combined_gif_generator,
                 combined_gif_generator),
-            weight_function=constant_weight(3),
-            tags=["two_captions", "gif"],
+            weight_function=constant_weight(2),
+            tags=["multi_caption", "two_captions", "gif"],
             name="Two Captions Gifs"),
 
         SlideGenerator(
@@ -527,9 +527,19 @@ presentation_schema = PresentationSchema(
                 double_captions_generator,
                 weird_image_generator,
                 weird_and_shitpost_generator),
-            weight_function=constant_weight(3),
-            tags=["two_captions", "reddit"],
+            weight_function=constant_weight(2),
+            tags=["multi_caption", "two_captions", "reddit"],
             name="Two Captions Weird Reddit"),
+
+        SlideGenerator(
+            slide_templates.generate_two_column_images_slide_tuple_caption(
+                default_slide_title_generator,
+                double_captions_generator,
+                weird_and_shitpost_and_gif_generator,
+                weird_and_shitpost_and_gif_generator),
+            weight_function=constant_weight(2),
+            tags=["multi_caption", "two_captions", "reddit"],
+            name="Two Captions Weird"),
 
         SlideGenerator(
             slide_templates.generate_three_column_images_slide_tuple_caption(
@@ -539,7 +549,7 @@ presentation_schema = PresentationSchema(
                 weird_and_shitpost_and_gif_generator,
                 weird_and_shitpost_generator),
             weight_function=constant_weight(1),
-            allowed_repeated_elements=4,
+            allowed_repeated_elements=3,
             tags=["multi_caption", "three_captions", "reddit"],
             name="Three Captions Weird"),
 
