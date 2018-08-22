@@ -2,6 +2,7 @@ import random
 
 from pptx.chart.data import ChartData
 from pptx.enum.chart import XL_CHART_TYPE
+from pptx.enum.chart import XL_LEGEND_POSITION
 from pptx.enum.chart import XL_TICK_MARK
 
 import text_generator
@@ -25,7 +26,8 @@ def add_noise_to_point(max_noise_ratio, datapoint):
 
 def normalise_data(datapoints):
     total_sum = sum(datapoints)
-    return [datapoint/total_sum for datapoint in datapoints]
+    return [datapoint / total_sum for datapoint in datapoints]
+
 
 # DATA SET CREATION
 
@@ -58,8 +60,13 @@ def set_histogram_properties(chart):
     return chart
 
 
+def set_pie_properties(chart):
+    chart.legend.position = XL_LEGEND_POSITION.RIGHT
+    chart.legend.include_in_layout = False
+
+
 # CHART TYPES
-PIE = XL_CHART_TYPE.PIE, lambda chart: chart
+PIE = XL_CHART_TYPE.PIE, set_pie_properties
 PROCENT_HISTOGRAM = XL_CHART_TYPE.COLUMN_CLUSTERED, set_histogram_properties
 
 # CHART DATA GENERATOR
