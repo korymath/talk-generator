@@ -14,7 +14,7 @@
     "What does this have to do with {topic.plural}#?#",
     "Can I just {seed.wikihow_action.lower} instead?",
     "But sir, I *AM* {seed.a}",
-    "{seed.plural}?"
+    "{seed.plural.title}?"
   ],
   "?": ["?","??","???"]
 }

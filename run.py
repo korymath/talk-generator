@@ -549,7 +549,7 @@ presentation_schema = PresentationSchema(
                 weird_and_shitpost_and_gif_generator,
                 weird_and_shitpost_generator),
             weight_function=constant_weight(1),
-            allowed_repeated_elements=3,
+            allowed_repeated_elements=4,
             tags=["multi_caption", "three_captions", "reddit"],
             name="Three Captions Weird"),
 

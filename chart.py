@@ -6,16 +6,16 @@ from pptx.enum.chart import XL_CHART_TYPE
 import text_generator
 
 yes_no_question_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_yes_no_question.json', "yes_no_question").generate
+    'data/text-templates/chart_texts.json', "yes_no_question").generate
 funny_yes_no_answer_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_yes_no_question.json', "funny_yes_no_answer").generate
+    'data/text-templates/chart_texts.json', "funny_yes_no_answer").generate
 
 
 def generate_yes_no_pie(presentation_context):
     title = yes_no_question_generator(presentation_context)
 
     categories = ['Yes', 'No', funny_yes_no_answer_generator(presentation_context)]
-    series_data = create_equal_data_with_outlier_end(len(categories), .7, 1, 4, 1, 20)
+    series_data = create_equal_data_with_outlier_end(len(categories), .7, 1, 4, 0.5, 15)
 
     chart_data = ChartData()
     chart_data.categories = categories
