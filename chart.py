@@ -18,6 +18,8 @@ location_question_generator = text_generator.TraceryTextGenerator(
     'data/text-templates/chart_texts.json', "location_question").generate
 property_question_generator = text_generator.TraceryTextGenerator(
     'data/text-templates/chart_texts.json', "property_question").generate
+correlation_title_generator = text_generator.TraceryTextGenerator(
+    'data/text-templates/chart_texts.json', "correlation_title").generate
 
 
 # DATA POINTS HELPERS
@@ -34,6 +36,11 @@ def add_noise_to_point(max_noise_ratio, datapoint):
 def normalise_data(datapoints):
     total_sum = sum(datapoints)
     return [datapoint / total_sum for datapoint in datapoints]
+
+
+def is_too_similar_for_axes(word1, word2):
+    """ Checks if the words contain each other """
+    return word1 in word2 or word2 in word1
 
 
 # DATA SET CREATION

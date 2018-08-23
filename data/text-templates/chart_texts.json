@@ -22,6 +22,11 @@
     "What I admire most about {seed.plural}",
     "What {seed.plural} mostly are"
   ],
+  "correlation_title": [
+    "Correlation between {x_label.plural} and {y_label.plural}",
+    "Relation between {x_label.plural} and {y_label.plural}",
+    "Influence of {x_label.plural} on {y_label.plural}"
+  ],
   "funny_yes_no_answer": [
     "Absolutely",
     "Absolutely not",

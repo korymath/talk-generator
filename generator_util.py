@@ -155,7 +155,6 @@ def create_walking_generator(inner_generator, steps):
             if generated:
                 current = generated
                 history.add(current)
-                print(i, current)
 
         return current
 
