@@ -7,9 +7,10 @@ from functools import lru_cache
 import tracery
 from tracery.modifiers import base_english
 
+import conceptnet
+import generator_util
 import language_util
 import random_util
-import generator_util
 import wikihow
 
 known_functions = {
@@ -25,6 +26,9 @@ known_functions = {
     "2_to_1_pronouns": language_util.second_to_first_pronouns,
     "wikihow_action": lambda seed: random_util.choice_optional(wikihow.get_related_wikihow_actions(seed)),
     "get_last_noun_and_article": language_util.get_last_noun_and_article,
+
+    # Conceptnet
+    "conceptnet_location": conceptnet.related_location_generator,
 
     # Checkers
     "is_noun": lambda word: word if language_util.is_noun(word) else None,

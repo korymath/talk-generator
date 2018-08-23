@@ -2,6 +2,8 @@ from urllib.parse import urlencode
 
 import requests
 
+import generator_util
+
 URL = "http://api.conceptnet.io/c/en/{}?"
 
 _LOCATION_ARGUMENTS = {
@@ -81,4 +83,8 @@ def get_weighted_antonyms(word):
     edges = _get_edges(word)
     return _get_from_relation(word, edges, "Antonym")
 
+
 # pp.pprint(get_weighted_related_words("cat", 45))
+
+
+related_location_generator = generator_util.create_weighted_generator(get_weighted_related_locations)
