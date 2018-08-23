@@ -126,6 +126,26 @@ def create_inspired_tuple_generator(generator_1, generator_2):
 def create_weighted_generator(weighted_list_creator):
     def generate(argument):
         weighted_list = weighted_list_creator(argument)
-        return random_util.weighted_random(weighted_list)
+        if weighted_list:
+            return random_util.weighted_random(weighted_list)
+
+    return generate
+
+
+def create_walking_generator(inner_generator, steps):
+    """ This type of generator uses its output as input for a next step, taking concepts a few steps away """
+
+    def generate(seed):
+        history = set()
+        history.add(seed)
+        current = seed
+        for i in range(steps):
+            generated = inner_generator(current)
+            if generated:
+                current = generated
+                history.add(current)
+                print(i, current)
+
+        return current
 
     return generate
