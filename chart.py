@@ -39,7 +39,7 @@ def add_gaussian_noise_to_multidim_points(max_noise_ratio, datapoints):
 
 
 def _add_gaussian_noise_to_multidim_point(max_noise_ratio, datapoint):
-    return [value * (1 + random.gauss(0, max_noise_ratio)) for value in datapoint]
+    return [value * random.gauss(1, max_noise_ratio) for value in datapoint]
 
 
 def normalise_data(datapoints):
@@ -56,17 +56,18 @@ def create_interesting_curve_function():
     # Build an optional list
 
     # random small integer
-    i = random.uniform(0.001, 10)
+    a = random.uniform(-10, 10)
+    b = random.uniform(0.001, 10)
 
     # random relative
     r = random.uniform(0, 1)
 
-    interesting_functions = [lambda x: i * x,
-                             lambda x: i / x,
-                             lambda x: i + x,
-                             lambda x: i - x,
-                             lambda x: i ** x,
-                             lambda x: x ** i,
+    interesting_functions = [lambda x: a * x,
+                             lambda x: a / x,
+                             lambda x: a + x,
+                             lambda x: a - x,
+                             lambda x: min(float(5e8), float(a ** math.log(x))),
+                             lambda x: min(float(5e8), float(x ** math.log(a))),
                              lambda x: math.sin(x)]
 
     chosen = random.choice(interesting_functions)
@@ -281,6 +282,11 @@ def generate_correlation_curve(presentation_context):
         x_label = "time"
     presentation_context.update({"x_label": x_label, "y_label": y_label})
 
+    title = correlation_title_generator(presentation_context)
+
+    if not title:
+        return None
+
     chart_data = XyChartData()
 
     serie = chart_data.add_series('Model')
@@ -289,17 +295,16 @@ def generate_correlation_curve(presentation_context):
     xs = generate_random_x(0, 2 ** random.uniform(1, 10), int(2 ** random.uniform(3, 8)))
 
     # Generate y
-    datapoints = generate_y(xs, create_interesting_curve_function())
+    data_points = generate_y(xs, create_interesting_curve_function())
 
     max_x = max(xs)
 
-    datapoints = add_gaussian_noise_to_multidim_points(random.uniform(0, 2 ** (math.log(max_x) / 300)), datapoints)
+    data_points = add_gaussian_noise_to_multidim_points(1.5 * random.uniform(0, max_x/10), data_points)
 
     # Remove negatives
-    datapoints = [datapoint for datapoint in datapoints if all(value > 0 for value in datapoint)]
+    data_points = [(abs(datapoint[0]), abs(datapoint[1])) for datapoint in data_points]
 
-    add_data_to_series(serie, datapoints)
+    add_data_to_series(serie, data_points)
 
-    return correlation_title_generator(
-        presentation_context), XL_CHART_TYPE.XY_SCATTER, chart_data, create_set_scatter_properties(
+    return title, XL_CHART_TYPE.XY_SCATTER, chart_data, create_set_scatter_properties(
         x_label, y_label)

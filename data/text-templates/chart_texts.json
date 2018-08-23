@@ -23,9 +23,13 @@
     "What {seed.plural} mostly are"
   ],
   "correlation_title": [
-    "Correlation between {x_label.plural} and {y_label.plural}",
-    "Relation between {x_label.plural} and {y_label.plural}",
-    "Influence of {x_label.plural} on {y_label.plural}"
+    "Correlation between {x_label.get_last_noun_and_article.plural} and {y_label.plural}",
+    "Relation between {x_label.get_last_noun_and_article.plural} and {y_label.plural}",
+    "Influence of {x_label.get_last_noun_and_article.plural} on {y_label.plural}",
+    "Correlation between {x_label.is_verb.ing} and {y_label.plural}",
+    "Relation between {x_label.is_verb.ing} and {y_label.plural}",
+    "Influence of {x_label.is_verb.ing} on {y_label.plural}",
+    "{x_label} VS {y_label.plural}"
   ],
   "funny_yes_no_answer": [
     "Absolutely",
