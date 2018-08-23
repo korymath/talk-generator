@@ -121,3 +121,11 @@ def create_inspired_tuple_generator(generator_1, generator_2):
         return gen_1, gen_2
 
     return generate_tuple
+
+
+def create_weighted_generator(weighted_list_creator):
+    def generate(argument):
+        weighted_list = weighted_list_creator(argument)
+        return random_util.weighted_random(weighted_list)
+
+    return generate
