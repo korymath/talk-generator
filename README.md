@@ -257,4 +257,5 @@ with help from [Piotr Mirowski](https://github.com/piotrmirowski) and Julian Fai
 
 ## License
 
-MIT License. Copyright (c) 2018 Kory Mathewson and Thomas Winters.
+MIT License. Copyright (c) 2018 [Kory Mathewson](https://github.com/korymath)
+and [Thomas Winters](https://github.com/TWinters).
