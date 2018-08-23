@@ -176,7 +176,8 @@ def create_reddit_image_generator(*name):
 
 
 weird_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf", "wtfstockphotos", "photoshopbattles",
-                                                      "confusing_perspective", "cursedimages", "HybridAnimals")
+                                                      "confusing_perspective", "cursedimages", "HybridAnimals",
+                                                      "EyeBleach", "natureismetal")
 
 shitpostbot_image_generator = create_from_external_image_list_generator(
     create_seeded_generator(
