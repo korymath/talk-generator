@@ -179,9 +179,25 @@ checking part of speech, getting synonyms etc.
 
 - `scraper_util`: Provides some common functionalities for the page scrapers.
 
+- `os_util`: Contains some methods dealing with the operating system, such as saving and checking files.
+
 - `cache_util`: Contains a hashable dictionary class, which is necessary for caching certain functions.
 
 
+### Content generators 
+
+There are a lot of different services providing content to our generator.
+Usually, the content scrapers below are used in `run.py` to craft a real concent generator
+used in the slides generators.
+
+- `chart.py`: Generates random powerpoint charts using text templates and random math functions.
+- `conceptnet.py`: Explores the graph of related concepts to certain seeds
+- `goodreads.py`: Used for retrieving quotes related to a seed
+- `google_images.py`: Used for retrieving relevant images for certain seeds (e.g. as background image)
+- `inspirobot.py`: Used for retrieving nonsensical quote images
+- `reddit.py`: Used for scraping reddit images, as there are many interesting subreddits to scrape images from.
+- `shitpostbot.py`: Used for retrieving "interesting"/weird images
+- `wikihow.py`: Used for finding related actions to a certain seed.
 
 
 
