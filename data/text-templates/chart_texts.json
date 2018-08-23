@@ -8,16 +8,16 @@
     "Are you afraid of {seed.wikihow_action.ing.lower}?",
     "Would you accept it if your #family_member# started to {seed.wikihow_action.lower}?",
     "Do you want to learn how to {seed.wikihow_action.lower}?",
-    "Do you know how to {seed.wikihow_action.lower}?"
+    "Do you know how to {seed.wikihow_action.lower}?",
+    "Do you agree that {seed.a} belongs in {seed.conceptnet_location}"
   ],
   "funny_yes_no_answer": [
     "Absolutely",
     "Absolutely not",
     "I'd rather die",
-    "Err...",
     "Can you repeat the question?",
     "Can I instead just {seed.wikihow_action.2_to_1_pronouns.lower}?",
-    "I'd rather {seed.wikihow_action.2_to_1_pronouns.lower}"
+    "I'd rather {seed.wikihow_action.2_to_1_pronouns.lower}",
     "But sir, I *AM* {seed.a}",
     "{chart_title.get_last_noun_and_article.2_to_1_pronouns.title}#?#",
     "HOW DARE YOU SPEAK ABOUT {chart_title.get_last_noun_and_article.2_to_1_pronouns.upper}#?#",
