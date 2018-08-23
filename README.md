@@ -236,6 +236,13 @@ used in the slides generators.
 - `shitpostbot.py`: Used for retrieving "interesting"/weird images
 - `wikihow.py`: Used for finding related actions to a certain seed.
 
+#### Prohibited images
+Sometimes, certain content providers return a default image when no image is found for that url
+(usually when an image got deleted).
+These types of images are stored in our repository in `data/images/prohibited/*`.
+This folder gets automatically scanned, and all images in the generated presentation are compared to images
+from this folder, to ensure that none gets added to the final presentation.
+
 ### Tests
 There are a lot of tests present in this repository.
 These `.py` files are prefixed with `test_`, and use the `unittest` module.
