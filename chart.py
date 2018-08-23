@@ -1,11 +1,13 @@
 import random
 
 from pptx.chart.data import ChartData
+from pptx.chart.data import XyChartData
 from pptx.enum.chart import XL_CHART_TYPE
 from pptx.enum.chart import XL_LABEL_POSITION
 from pptx.enum.chart import XL_TICK_MARK
 
 import conceptnet
+import generator_util
 import text_generator
 
 yes_no_question_generator = text_generator.TraceryTextGenerator(
@@ -50,7 +52,21 @@ def create_equal_data_with_outlier_end(size, noise_factor, normal_min, normal_ma
     return datapoints
 
 
+def generate_random_x(lower_bound, upper_bound, number):
+    return [random.uniform(lower_bound, upper_bound) for _ in range(number)]
+
+
+def generate_y(xs, function):
+    return [(x, function(x)) for x in xs]
+
+
 # CHART TYPES PROPERTIES SETTING
+
+def add_data_to_series(serie, data_points):
+    for data_point in data_points:
+        x, y = data_point
+        serie.add_data_point(x, y)
+
 
 def _set_pie_label_positions(chart, series, chart_data, label_position):
     chart.plots[0].has_data_labels = True
