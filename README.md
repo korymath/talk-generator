@@ -72,7 +72,7 @@ py run.py --topic cat --num_slides 10
 
 ## Program structure
 
-There are several main parts of this software, namely:
+In this section, we discuss the many parts of this software.
 
 ### Powerpoint Template
 - `data/powerpoint/template.pptx`: This Powerpoint file contains the powerpoint presentation to start from. 
@@ -112,7 +112,55 @@ the topic and presenter of the presentation, the used content and the `seed` for
 
 ### Custom Text Template Language: `text_generator`
 
-TODO: Add explanation of its interface
+We wrote our own custom templated text generation language to easily generate texts.
+They're mostly based on Python's `str.format` and Tracery, but come with some extra functionalities
+(see also `language_util`)
+
+The template files themselves are stored in `/data/text-templates/*`
+
+#### TemplatedTextGenerator
+
+On construction, this object is given the name of a file that contains a text template on a new line, usually in a 
+`.txt` file.
+Similar to the build-in `str.format` function, these text templates can contain named variables between curly brackets
+`{variable_name}`.
+Usually, the `presentation_context` dictionary is used as an argument.
+This means that in these text generators `{seed}` will be the variable containing the slide topic seed.
+This dictionary can also be extended before generating the text, such that more, custom variables are also possible.
+
+A difference is that our custom language also provides some functions that can be easily called within the template.
+If a function returns None, or the variable is not present in the given dictionary, the text generator will keep
+retrying to generate until no templates are left.
+An example of such a function is `{seed.plural.title}`, which will pluralise the seed, and then apply title casing.
+
+Listed below are some possible functions in our text generation language.
+The up-to-date list of function can be found in `text_generator.py`.
+
+| Function               | Description               |
+| ---------------------- | ------------------------- |
+| `title` | Converts the string to title casing |
+| `lower` | Converts the string to lower casing |
+| `upper` | Converts the string to upper casing |
+| `dashes` | Replaces the spaces of the string with dashes |
+| `a` | Adds the "a" article, or "an" if the word starts with a vowel (except *u*) |
+| `ing` | Converts a verb to the present participle |
+| `plural` | Converts a noun to plural |
+| `singular` | Converts a noun to singular |
+| `synonym` | Converts the noun to a random synonym |
+| `2_to_1_pronouns` | Changes 2nd person pronouns to 1st person pronouns in a sentence (e.g. you->my) |
+| `wikihow_action` | Retrieves a random action based on the string using Wikihow |
+| `get_last_noun_and_article` | Extracts the last noun from a sentence |
+| `conceptnet_location` | Retrieves a location related to the string using Conceptnet |
+| `is_noun` | Checks if the string can be a noun |
+| `is_verb` | Checks if the string can be a verb |
+
+
+#### TraceryTextGenerator
+Allows the same things `TemplatedTextGenerator` does, but using a
+[Tracery grammar](https://github.com/aparrish/pytracery).
+This means that the file is saved as a JSON file, and that local variables can be declared, for easily creating a large
+possibility space of possible texts.
+
 
 ### Utilities
 
