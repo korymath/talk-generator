@@ -236,7 +236,11 @@ used in the slides generators.
 - `shitpostbot.py`: Used for retrieving "interesting"/weird images
 - `wikihow.py`: Used for finding related actions to a certain seed.
 
-
+### Tests
+There are a lot of tests present in this repository.
+These `.py` files are prefixed with `test_`, and use the `unittest` module.
+They can easily be run all together when using PyCharm by right clicking on `talk-generator`
+and pressing *Run 'Unittests in talk-generator'*
 
 ## Credits
 
