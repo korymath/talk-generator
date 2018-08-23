@@ -1,3 +1,4 @@
+import math
 import random
 
 from pptx.chart.data import ChartData
@@ -33,6 +34,14 @@ def add_noise_to_point(max_noise_ratio, datapoint):
     return max(0, datapoint + (datapoint * random.uniform(-max_noise_ratio, max_noise_ratio)))
 
 
+def add_gaussian_noise_to_multidim_points(max_noise_ratio, datapoints):
+    return [_add_gaussian_noise_to_multidim_point(max_noise_ratio, point) for point in datapoints]
+
+
+def _add_gaussian_noise_to_multidim_point(max_noise_ratio, datapoint):
+    return [value * (1 + random.gauss(0, max_noise_ratio)) for value in datapoint]
+
+
 def normalise_data(datapoints):
     total_sum = sum(datapoints)
     return [datapoint / total_sum for datapoint in datapoints]
@@ -41,6 +50,37 @@ def normalise_data(datapoints):
 def is_too_similar_for_axes(word1, word2):
     """ Checks if the words contain each other """
     return word1 in word2 or word2 in word1
+
+
+def create_interesting_curve_function():
+    # Build an optional list
+
+    # random small integer
+    i = random.uniform(0.001, 10)
+
+    # random relative
+    r = random.uniform(0, 1)
+
+    interesting_functions = [lambda x: i * x,
+                             lambda x: i / x,
+                             lambda x: i + x,
+                             lambda x: i - x,
+                             lambda x: i ** x,
+                             lambda x: x ** i,
+                             lambda x: math.sin(x)]
+
+    chosen = random.choice(interesting_functions)
+
+    # Add chance of adding another function
+    # random_number = random.uniform(0, 1)
+    # if random_number < 0.4:
+    #     chosen = lambda x: random.choice(interesting_functions)(chosen(x))
+    # elif random_number < 0.8:
+    #     chosen = lambda x: random.choice(interesting_functions)(x) * chosen(x)
+    # else:
+    #     chosen = lambda x: random.choice(interesting_functions)(x) + chosen(x)
+
+    return chosen
 
 
 # DATA SET CREATION
@@ -120,6 +160,19 @@ def set_doughnut_properties(chart, chart_data):
         chart.has_legend = False
         series = chart.series[0]
         _set_pie_label_positions(chart, series, chart_data, None)
+
+
+def create_set_scatter_properties(x_label, y_label):
+    def set_scatter_properties(chart, chart_data):
+        chart.has_legend = False
+        x_axis = chart.category_axis
+        y_axis = chart.value_axis
+
+        # TODO: Fix it so that this actually has a title
+        # x_axis.has_title = True
+        # y_axis.has_title = True
+
+    return set_scatter_properties
 
 
 # CHART TYPES
@@ -207,3 +260,46 @@ def generate_property_pie(presentation_context):
         title, chart_data = result
         chart_type, chart_modifier = random.choice(_YES_NO_CHART_TYPES)
         return title, chart_type, chart_data, chart_modifier
+
+
+_CORRELATION_WORD_GENERATOR = generator_util.create_walking_generator(
+    generator_util.combined_generator(
+        (2, conceptnet.unweighted_antonym_generator),
+        (1, conceptnet.unweighted_related_word_generator)
+    ),
+    steps=5
+)
+
+
+def generate_correlation_curve(presentation_context):
+    x_label = presentation_context["topic"]
+    y_label = presentation_context["seed"]
+
+    if is_too_similar_for_axes(x_label, y_label):
+        x_label = _CORRELATION_WORD_GENERATOR(y_label)
+    if is_too_similar_for_axes(x_label, y_label):
+        x_label = "time"
+    presentation_context.update({"x_label": x_label, "y_label": y_label})
+
+    chart_data = XyChartData()
+
+    serie = chart_data.add_series('Model')
+
+    # Generate some Xs, with chance of exponential differences in size between generated x axes
+    xs = generate_random_x(0, 2 ** random.uniform(1, 10), int(2 ** random.uniform(3, 8)))
+
+    # Generate y
+    datapoints = generate_y(xs, create_interesting_curve_function())
+
+    max_x = max(xs)
+
+    datapoints = add_gaussian_noise_to_multidim_points(random.uniform(0, 2 ** (math.log(max_x) / 300)), datapoints)
+
+    # Remove negatives
+    datapoints = [datapoint for datapoint in datapoints if all(value > 0 for value in datapoint)]
+
+    add_data_to_series(serie, datapoints)
+
+    return correlation_title_generator(
+        presentation_context), XL_CHART_TYPE.XY_SCATTER, chart_data, create_set_scatter_properties(
+        x_label, y_label)

@@ -559,7 +559,7 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_full_image_slide(
                 none_generator,
                 reddit_chart_generator),
-            weight_function=constant_weight(1),
+            weight_function=constant_weight(2),
             allowed_repeated_elements=0,
             tags=["chart"],
             name="Reddit Chart"),
@@ -570,7 +570,7 @@ presentation_schema = PresentationSchema(
             ),
             retries=1,
             allowed_repeated_elements=4,
-            weight_function=constant_weight(1),
+            weight_function=constant_weight(2),
             tags=["pie_chart", "yes_no_chart", "chart"],
             name="Yes/No/Funny Chart"),
 
@@ -592,6 +592,15 @@ presentation_schema = PresentationSchema(
             weight_function=constant_weight(0.05),
             tags=["property_chart", "pie_chart", "chart"],
             name="Property Chart"),
+        SlideGenerator(
+            slide_templates.generate_chart_slide_tuple(
+                chart.generate_correlation_curve
+            ),
+            allowed_repeated_elements=4,
+            retries=1,
+            weight_function=constant_weight(0.5),
+            tags=["curve", "chart"],
+            name="Correlation Curve"),
 
         # CONCLUSION:
         SlideGenerator(
@@ -648,19 +657,19 @@ test_schema = PresentationSchema(
     # Basic powerpoint generator
     slide_templates.create_new_powerpoint,
     # Topic per slide generator
-    seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
-    # seed_generator=slide_topic_generators.IdentityTopicGenerator,
+    # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
+    seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
     slide_generators=[
         SlideGenerator(
             slide_templates.generate_chart_slide_tuple(
-                chart.generate_property_pie
+                chart.generate_correlation_curve
             ),
             allowed_repeated_elements=4,
             retries=1,
-            weight_function=constant_weight(0.1),
-            tags=["property_chart", "pie_chart", "chart"],
-            name="Property Chart"),
+            weight_function=constant_weight(1),
+            tags=["curve", "chart"],
+            name="Correlation Curve"),
 
         # Back up in case something goes wrong
         SlideGenerator(
