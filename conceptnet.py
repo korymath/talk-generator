@@ -1,22 +1,24 @@
+from functools import lru_cache
 from urllib.parse import urlencode
 
 import requests
 
+import cache_util
 import generator_util
 
 URL = "http://api.conceptnet.io/c/en/{}?"
 
-_LOCATION_ARGUMENTS = {
-    "rel": "/r/AtLocation",
-    "limit": 100
-}
-_HASA_ARGUMENTS = {
-    "rel": "/r/HasA",
-    "limit": 200
-}
-_DEFAULT_ARGUMENTS = {
-    "limit": 200
-}
+_LOCATION_ARGUMENTS = cache_util.HashableDict(
+    rel="/r/AtLocation",
+    limit=100
+)
+_HASA_ARGUMENTS = cache_util.HashableDict(
+    rel="/r/HasA",
+    limit=200
+)
+_DEFAULT_ARGUMENTS = cache_util.HashableDict(
+    limit=200
+)
 
 # HELPERS
 _PROHIBITED_SEARCH_TERMS = "a", "your", "my", "her", "his", "its", "their", "be", "an", "the", "you", "are"
@@ -30,6 +32,7 @@ def normalise(word):
     return " ".join(_remove_prohibited_words(word)).lower()
 
 
+@lru_cache(maxsize=20)
 def _get_data(word, arguments=None):
     if not arguments:
         arguments = _DEFAULT_ARGUMENTS
@@ -60,7 +63,7 @@ def _get_from_relation(word, edges, relation_name):
 # EXTRACTING INFO
 
 def get_weighted_related_words(word, limit=50):
-    edges = _get_edges(word, {"limit": limit})
+    edges = _get_edges(word, cache_util.HashableDict(limit=limit))
     return [(edge["weight"], edge["end"]["label"]) for edge in edges if edge["end"]["label"] != word]
 
 
