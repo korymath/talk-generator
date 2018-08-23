@@ -129,7 +129,12 @@ def get_weighted_antonyms(word):
 
 # pp.pprint(get_weighted_related_words("cat", 45))
 
+# Weighted
+weighted_location_generator = generator_util.create_weighted_generator(get_weighted_related_locations)
+weighted_antonym_generator = generator_util.create_weighted_generator(get_weighted_antonyms)
+weighted_related_word_generator = generator_util.create_weighted_generator(get_weighted_related_words)
 
-related_location_generator = generator_util.create_weighted_generator(get_weighted_related_locations)
-antonym_generator = generator_util.create_weighted_generator(get_weighted_antonyms)
-related_word_generator = generator_util.create_weighted_generator(get_weighted_related_words)
+# Unweighted
+unweighted_location_generator = generator_util.create_unweighted_generator(get_weighted_related_locations)
+unweighted_antonym_generator = generator_util.create_unweighted_generator(get_weighted_antonyms)
+unweighted_related_word_generator = generator_util.create_unweighted_generator(get_weighted_related_words)

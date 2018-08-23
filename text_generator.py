@@ -28,7 +28,7 @@ known_functions = {
     "get_last_noun_and_article": language_util.get_last_noun_and_article,
 
     # Conceptnet
-    "conceptnet_location": conceptnet.related_location_generator,
+    "conceptnet_location": conceptnet.weighted_location_generator,
 
     # Checkers
     "is_noun": lambda word: word if language_util.is_noun(word) else None,

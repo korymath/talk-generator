@@ -132,6 +132,17 @@ def create_weighted_generator(weighted_list_creator):
     return generate
 
 
+def create_unweighted_generator(weighted_list_creator):
+    """ Makes a generator that gets a weighted list as input, but discards the weights when choosing an option """
+
+    def generate(argument):
+        weighted_list = weighted_list_creator(argument)
+        if weighted_list:
+            return random_util.choice_optional([element[1] for element in weighted_list])
+
+    return generate
+
+
 def create_walking_generator(inner_generator, steps):
     """ This type of generator uses its output as input for a next step, taking concepts a few steps away """
 
