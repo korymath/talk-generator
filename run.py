@@ -645,13 +645,13 @@ test_schema = PresentationSchema(
     slide_generators=[
         SlideGenerator(
             slide_templates.generate_chart_slide_tuple(
-                chart.generate_location_pie
+                chart.generate_property_pie
             ),
             allowed_repeated_elements=4,
             retries=1,
             weight_function=constant_weight(0.1),
-            tags=["location_chart", "pie_chart", "chart"],
-            name="Location Chart"),
+            tags=["property_chart", "pie_chart", "chart"],
+            name="Property Chart"),
 
         # Back up in case something goes wrong
         SlideGenerator(

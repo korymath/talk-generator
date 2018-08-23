@@ -17,6 +17,11 @@
     "Places you will find {seed.plural.lower}",
     "{seed.a.title}'s Favourite Location"
   ],
+  "property_question": [
+    "My favourite properties of {seed.a}",
+    "What I admire most about {seed.plural}",
+    "What {seed.plural} mostly are"
+  ],
   "funny_yes_no_answer": [
     "Absolutely",
     "Absolutely not",

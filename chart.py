@@ -10,10 +10,12 @@ import text_generator
 
 yes_no_question_generator = text_generator.TraceryTextGenerator(
     'data/text-templates/chart_texts.json', "yes_no_question").generate
-location_question_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_texts.json', "location_question").generate
 funny_yes_no_answer_generator = text_generator.TraceryTextGenerator(
     'data/text-templates/chart_texts.json', "funny_yes_no_answer").generate
+location_question_generator = text_generator.TraceryTextGenerator(
+    'data/text-templates/chart_texts.json', "location_question").generate
+property_question_generator = text_generator.TraceryTextGenerator(
+    'data/text-templates/chart_texts.json', "property_question").generate
 
 
 # DATA POINTS HELPERS
@@ -121,24 +123,24 @@ def generate_yes_no_large_funny_answer_chart_data(presentation_context):
     return title, chart_data
 
 
-def generate_location_data(presentation_context):
+def _generate_conceptnet_data(presentation_context, title_generator, conceptnet_function):
     seed = presentation_context["seed"]
-    title = location_question_generator(presentation_context)
+    title = title_generator(presentation_context)
 
     presentation_context["chart_title"] = title
 
-    related_locations = conceptnet.get_weighted_related_locations(seed)
+    conceptnet_relations = conceptnet_function(seed)
 
-    if related_locations:
-        print(related_locations)
-        related_locations = conceptnet.remove_duplicates(related_locations)
-        related_locations = conceptnet.remove_containing(related_locations, seed)
-        random.shuffle(related_locations)
+    if conceptnet_relations:
+        print("conceptnet:", conceptnet_relations)
+        conceptnet_relations = conceptnet.remove_duplicates(conceptnet_relations)
+        conceptnet_relations = conceptnet.remove_containing(conceptnet_relations, seed)
+        random.shuffle(conceptnet_relations)
 
-        related_locations = related_locations[0:random.randint(2, 5)]
-        print(related_locations)
-        categories = [location[1] for location in related_locations]
-        values = [float(location[0]) ** 2 for location in related_locations]
+        conceptnet_relations = conceptnet_relations[0:random.randint(2, 5)]
+        print("conceptnet after", conceptnet_relations)
+        categories = [location[1] for location in conceptnet_relations]
+        values = [float(location[0]) ** 2 for location in conceptnet_relations]
 
         if len(categories) == 0:
             return None
@@ -148,6 +150,16 @@ def generate_location_data(presentation_context):
         chart_data.categories = categories
         chart_data.add_series("", series_data)
         return title, chart_data
+
+
+def generate_location_data(presentation_context):
+    return _generate_conceptnet_data(presentation_context, location_question_generator,
+                                     conceptnet.get_weighted_related_locations)
+
+
+def generate_property_data(presentation_context):
+    return _generate_conceptnet_data(presentation_context, property_question_generator,
+                                     conceptnet.get_weighted_properties)
 
 
 # FULL CHART GENERATORS
@@ -160,6 +172,14 @@ def generate_yes_no_pie(presentation_context):
 
 def generate_location_pie(presentation_context):
     result = generate_location_data(presentation_context)
+    if result:
+        title, chart_data = result
+        chart_type, chart_modifier = random.choice(_YES_NO_CHART_TYPES)
+        return title, chart_type, chart_data, chart_modifier
+
+
+def generate_property_pie(presentation_context):
+    result = generate_property_data(presentation_context)
     if result:
         title, chart_data = result
         chart_type, chart_modifier = random.choice(_YES_NO_CHART_TYPES)
