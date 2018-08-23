@@ -187,6 +187,8 @@ def is_plural(word):
 
 def to_plural(word):
     if is_singular(word):
+        if word.startswith("a "):
+            word = word[2:]
         return inflect_engine.plural(word)
     return word
 

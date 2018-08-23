@@ -13,6 +13,7 @@ class LanguageUtilTest(unittest.TestCase):
         self.assertEqual(30, len(synonyms))
 
     def test_to_plural(self):
+        self.assertEqual("cats", language_util.to_plural("a cat"))
         self.assertEqual("cats", language_util.to_plural("cat"))
         self.assertEqual("cats", language_util.to_plural("cats"))
 
