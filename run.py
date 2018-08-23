@@ -583,6 +583,15 @@ presentation_schema = PresentationSchema(
             weight_function=constant_weight(0.1),
             tags=["location_chart", "pie_chart", "chart"],
             name="Location Chart"),
+        SlideGenerator(
+            slide_templates.generate_chart_slide_tuple(
+                chart.generate_property_pie
+            ),
+            allowed_repeated_elements=4,
+            retries=1,
+            weight_function=constant_weight(0.05),
+            tags=["property_chart", "pie_chart", "chart"],
+            name="Property Chart"),
 
         # CONCLUSION:
         SlideGenerator(
