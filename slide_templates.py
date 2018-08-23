@@ -361,6 +361,8 @@ def get_presentation(presentation_context):
 
 
 def _is_different_enough(generated, used):
-    (used_elements, allowed_repeated_elements) = used
-    intersection = set(generated) & used_elements
-    return allowed_repeated_elements >= len(intersection)
+    if generated:
+        (used_elements, allowed_repeated_elements) = used
+        intersection = set(generated) & used_elements
+        return allowed_repeated_elements >= len(intersection)
+    return False
