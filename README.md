@@ -72,6 +72,67 @@ py run.py --topic cat --num_slides 10
 
 ## Program structure
 
+There are several main parts of this software, namely:
+
+### Powerpoint Template
+- `data/powerpoint/template.pptx`: This Powerpoint file contains the powerpoint presentation to start from. 
+The interesting part of this file is when opening the model view, as you can edit the slide templates and their
+placeholders.
+
+- `slide_templates.py`: This Python module is responsible for filling in the `template.pptx` with values.
+There are also functions present which you can give as arguments functions that generates content when given
+a `presentation_context` dictionary.
+It will then generate the content, and if certain conditions (e.g. originality) are satisfied, it will create and
+add a slide to the presentation.
+
+### Presentation Schema elements
+
+- **PresentationSchema**: This class controls the parameters of the powerpoint generator.
+It contains information about which slide generators to use, which slide topic generator and
+a dictionary `max_allowed_tags` that contains information about how many times slide generators with certain tags
+are allowed to generate in one presentation.
+We might add different presentation schemas for different types of presentation generators in the future.
+The PresentationSchema class can be found in `presentation_schema.py`.
+
+- **SlideGenerator**: This class contains information about how to generate a particular type of slide.
+It holds a generating function for this purpose, as well as meta-data. For example, it contains a `weight_function`
+to calculate the chance of being used for a certain slide number, a name and tags for the generator, the allowed number 
+of elements that have already been used in the presentation and the number of retries the slide generator is allowed
+to make in case it fails to generate a slide.
+The SlideGenerator class can be found in `presentation_schema.py`.
+
+- **SlideTopicGenerator**: This is type of class that has a `generate_seed(slide_nr)` function, which generates a 
+seed for the given slide number, which tends to be based on the topic of the presentation (as entered by the user).
+This slide `seed` will then be given to a Slide Generator as an inspiration point for the content of the slide.
+There are several types of topic generators, such as a slide topic generator that just returns the presentation topic,
+one that gives synonyms and one that makes little side tracks using related concepts on `ConceptNet`
+
+- `presentation_context`: This is an object that is created by the Presentation Schema, containing information about
+the topic and presenter of the presentation, the used content and the `seed` for the current slide
+
+### Custom Text Template Language: `text_generator`
+
+TODO: Add explanation of its interface
+
+### Utilities
+
+- `random_util`: This module helps with dealing better with randomness. It has a function to deal with picking from a
+list with weighted elements, as well as `choice_optional(list)`, which is like `random.choice`, except it returns None
+if the list is empty
+
+- `generator_util`: This module provides lots of utilities for creating generators. Since some content generators
+return (image or textual) lists, there are functions for converting them to normal single output generators.
+There are also methods for converting methods that only take a string `seed` as input to one that takes a
+`presentation_context`, namely `create_seeded_generator(generator)`.
+There are also more exotic generators such as weighted generators and walking generators.
+
+- `language_util`: Contains many language functionalities, such as converting to singular/plural, changing tense,
+checking part of speech, getting synonyms etc.
+
+- `scraper_util`: Provides some common functionalities for the page scrapers.
+
+- `cache_util`: Contains a hashable dictionary class, which is necessary for caching certain functions.
+
 
 
 
