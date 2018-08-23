@@ -58,6 +58,17 @@ def remove_containing(entries, prohibited_word):
                 result.append(entry)
         return result
 
+
+def remove_nones(entries):
+    if entries:
+        result = []
+        for entry in entries:
+            if entry:
+                result.append(entry)
+        return result
+    return []
+
+
 # RETRIEVING DATA
 
 @lru_cache(maxsize=20)
@@ -85,7 +96,8 @@ def _get_relation_label(edge):
 
 
 def _get_from_relation(word, edges, relation_name):
-    return [_get_weight_and_word(edge, word) for edge in edges if _get_relation_label(edge) == relation_name]
+    return remove_nones(
+        [_get_weight_and_word(edge, word) for edge in edges if _get_relation_label(edge) == relation_name])
 
 
 # EXTRACTING INFO
@@ -119,4 +131,5 @@ def get_weighted_antonyms(word):
 
 
 related_location_generator = generator_util.create_weighted_generator(get_weighted_related_locations)
-
+antonym_generator = generator_util.create_weighted_generator(get_weighted_antonyms)
+related_word_generator = generator_util.create_weighted_generator(get_weighted_related_words)
