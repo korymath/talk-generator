@@ -253,7 +253,7 @@ and pressing *Run 'Unittests in talk-generator'*
 
 This ``Talk Generator`` is made by [Kory Mathewson](https://github.com/korymath)
 and [Thomas Winters](https://github.com/TWinters),
-with help from [Piotr Mirowski](https://github.com/piotrmirowski) and Julian Faid.
+with help from [Piotr Mirowski](https://github.com/piotrmirowski) and [Julian Faid](https://github.com/jfaid).
 
 ## License
 
