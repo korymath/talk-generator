@@ -11,6 +11,7 @@ import random_util
 
 # == TOPIC GENERATORS ==
 
+
 class SideTrackingTopicGenerator:
     """ This generator will make small side tracks around topics, but keeps returning every X slides"""
 
@@ -32,9 +33,14 @@ class SideTrackingTopicGenerator:
             idx += random.choice(topic_return_period_range)
 
         # Fill in the blanks with related topics
+        previous = seeds.copy()
         while None in seeds:
             fill_in_blank_topics_with_related(seeds)
             print(seeds)
+            if seeds == previous:
+                fill_in_blanks_with(seeds, topic)
+                break
+            previous = seeds.copy()
 
         # Convert None's to literal none's for debugging purposes
         seeds = [seed if seed else "None" for seed in seeds]
@@ -50,30 +56,32 @@ def fill_in_blank_topics_with_related(seeds, distance=1):
         _fill_in(seeds, i)
 
 
+def fill_in_blanks_with(seeds, topic):
+    for i in range(len(seeds)):
+        if not seeds[i]:
+            seeds[i] = topic
+
+
 def _fill_in(seeds, i, distance=1):
     if seeds[i] is None:
 
         # Check for neighbours
-        neighbours = _get_neighbours(seeds, i, distance)
-        if len(neighbours) > 0:
-            random.shuffle(neighbours)
+        if i - distance >= 0 and seeds[i - distance]:
+            neighbour = seeds[i - distance]
 
-            # Find related
-            for neighbour in neighbours:
-                related = conceptnet.get_weighted_related_words(neighbour, 200)
-                filtered_related = [word for word in related if
-                                    not normalise_seed(word[1]) in seeds and len(normalise_seed(word[1])) > 2]
+            related = conceptnet.get_weighted_related_words(neighbour, 200)
+            filtered_related = [word for word in related if
+                                not normalise_seed(word[1]) in seeds and len(normalise_seed(word[1])) > 2]
 
-                if len(filtered_related) > 0:
-                    seeds[i] = normalise_seed(
-                        random_util.weighted_random(
-                            filtered_related
-                        )
+            if len(filtered_related) > 0:
+                seeds[i] = normalise_seed(
+                    random_util.weighted_random(
+                        filtered_related
                     )
-                    break
+                )
 
-            # Check if unassigned
-            if len(neighbours) == 1 and seeds[i] is None:
+            # Check if still unassigned
+            if seeds[i] is None:
                 _fill_in(seeds, i, distance + 1)
 
 
@@ -81,16 +89,6 @@ def normalise_seed(seed):
     normalised = conceptnet.normalise(seed).lower()
     normalised = re.sub('[^a-z\s\b _-]+', '', normalised)
     return normalised
-
-
-def _get_neighbours(seeds, i, distance=1):
-    neighbours = []
-    if i - distance >= 0 and seeds[i - distance]:
-        neighbours.append(seeds[i - distance])
-    # if i + distance <= len(seeds) and seeds[i + distance]:
-    #     neighbours.append(seeds[i + distance])
-
-    return neighbours
 
 
 class IdentityTopicGenerator:
