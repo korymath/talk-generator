@@ -78,7 +78,9 @@ py run.py --topic cat --num_slides 10
 
 ## Credits
 
-This ``Talk Generator`` is made by Kory Mathewson and Thomas Winters, with help from Piotr Mirowski and Julian Faid.
+This ``Talk Generator`` is made by [Kory Mathewson](https://github.com/korymath)
+and [Thomas Winters](https://github.com/TWinters),
+with help from [Piotr Mirowski](https://github.com/piotrmirowski) and Julian Faid.
 
 ## License
 
