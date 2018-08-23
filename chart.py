@@ -5,10 +5,13 @@ from pptx.enum.chart import XL_CHART_TYPE
 from pptx.enum.chart import XL_LABEL_POSITION
 from pptx.enum.chart import XL_TICK_MARK
 
+import conceptnet
 import text_generator
 
 yes_no_question_generator = text_generator.TraceryTextGenerator(
     'data/text-templates/chart_texts.json', "yes_no_question").generate
+location_question_generator = text_generator.TraceryTextGenerator(
+    'data/text-templates/chart_texts.json', "location_question").generate
 funny_yes_no_answer_generator = text_generator.TraceryTextGenerator(
     'data/text-templates/chart_texts.json', "funny_yes_no_answer").generate
 
@@ -118,9 +121,46 @@ def generate_yes_no_large_funny_answer_chart_data(presentation_context):
     return title, chart_data
 
 
+def generate_location_data(presentation_context):
+    seed = presentation_context["seed"]
+    title = location_question_generator(presentation_context)
+
+    presentation_context["chart_title"] = title
+
+    related_locations = conceptnet.get_weighted_related_locations(seed)
+
+    if related_locations:
+        print(related_locations)
+        related_locations = conceptnet.remove_duplicates(related_locations)
+        related_locations = conceptnet.remove_containing(related_locations, seed)
+        random.shuffle(related_locations)
+
+        related_locations = related_locations[0:random.randint(2, 5)]
+        print(related_locations)
+        categories = [location[1] for location in related_locations]
+        values = [float(location[0]) ** 2 for location in related_locations]
+
+        if len(categories) == 0:
+            return None
+        series_data = normalise_data(values)
+
+        chart_data = ChartData()
+        chart_data.categories = categories
+        chart_data.add_series("", series_data)
+        return title, chart_data
+
+
 # FULL CHART GENERATORS
 
 def generate_yes_no_pie(presentation_context):
     title, chart_data = generate_yes_no_large_funny_answer_chart_data(presentation_context)
     chart_type, chart_modifier = random.choice(_YES_NO_CHART_TYPES)
     return title, chart_type, chart_data, chart_modifier
+
+
+def generate_location_pie(presentation_context):
+    result = generate_location_data(presentation_context)
+    if result:
+        title, chart_data = result
+        chart_type, chart_modifier = random.choice(_YES_NO_CHART_TYPES)
+        return title, chart_type, chart_data, chart_modifier

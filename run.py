@@ -20,8 +20,8 @@ import wikihow
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
     create_from_external_image_list_generator, create_from_list_generator, \
-    create_backup_generator, remove_invalid_images_from_generator, seeded_titled_identity_generator, \
-    create_inspired_tuple_generator, apply_function_to_generator, create_tupled_generator
+    create_backup_generator, remove_invalid_images_from_generator, create_inspired_tuple_generator, \
+    apply_function_to_generator, create_tupled_generator
 from presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
 MAX_PRESENTATION_SAVE_TRIES = 100
@@ -568,10 +568,21 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_chart_slide_tuple(
                 chart.generate_yes_no_pie
             ),
+            retries=1,
             allowed_repeated_elements=4,
             weight_function=constant_weight(1),
             tags=["pie_chart", "yes_no_chart", "chart"],
             name="Yes/No/Funny Chart"),
+
+        SlideGenerator(
+            slide_templates.generate_chart_slide_tuple(
+                chart.generate_location_pie
+            ),
+            allowed_repeated_elements=4,
+            retries=1,
+            weight_function=constant_weight(0.1),
+            tags=["location_chart", "pie_chart", "chart"],
+            name="Location Chart"),
 
         # CONCLUSION:
         SlideGenerator(
@@ -610,6 +621,7 @@ presentation_schema = PresentationSchema(
         "about_me": 1,
         "history": 1,
         "anecdote": 1,
+        "location_chart": 1,
 
         # Relative (procentual) maxima
         "two_captions": 0.3,
@@ -627,17 +639,19 @@ test_schema = PresentationSchema(
     # Basic powerpoint generator
     slide_templates.create_new_powerpoint,
     # Topic per slide generator
-    # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
-    seed_generator=slide_topic_generators.IdentityTopicGenerator,
+    seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
+    # seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
     slide_generators=[
         SlideGenerator(
             slide_templates.generate_chart_slide_tuple(
-                chart.generate_yes_no_pie
+                chart.generate_location_pie
             ),
             allowed_repeated_elements=4,
-            tags=["pie_chart", "yes_no_chart", "chart"],
-            name="Yes/No/Funny Chart"),
+            retries=1,
+            weight_function=constant_weight(0.1),
+            tags=["location_chart", "pie_chart", "chart"],
+            name="Location Chart"),
 
         # Back up in case something goes wrong
         SlideGenerator(

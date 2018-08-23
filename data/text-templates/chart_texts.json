@@ -12,6 +12,11 @@
     "Do you know how to {seed.wikihow_action.lower}?",
     "Do you agree that {seed.a} belongs in {seed.conceptnet_location}"
   ],
+  "location_question": [
+    "Places where you can find {seed.singular.a.lower}",
+    "Places you will find {seed.plural.lower}",
+    "{seed.a.title}'s Favourite Location"
+  ],
   "funny_yes_no_answer": [
     "Absolutely",
     "Absolutely not",
