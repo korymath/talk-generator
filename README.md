@@ -25,6 +25,43 @@ For more details, feel free to see the [project details and technical descriptio
 source setup.sh
 ```
 
+### Setting up required authentication
+
+Our program relies on certain APIs that require authentication in order to use it.
+There are two files that need to be created and place in the folder `data/auth/*`,
+namely `reddit.json` and `wikihow.json`:
+
+#### Reddit authentication: `reddit.json`
+The file looks like this:
+```json
+{
+  "client_id": "CLIENT_ID_CODE",
+  "client_secret": "CLIENT_SECRET",
+  "user_agent": "python:https://github.com/korymath/talk-generator:v0.0.1 by /u/REDDIT_USERNAME)"
+}
+```
+You can create this file by following the next steps:
+- Create a [Reddit](https://reddit.com) account
+- Go to your [App prefenrences](https://ssl.reddit.com/prefs/apps/)
+- Pressing "create app"
+- Filling in a name and other details
+- Filling in the `CLIENT_ID_CODE` above using the id under the name of the app,
+the `CLIENT_SECRET` using the text next to `secret` in the app card 
+and `REDDIT_USERNAME` with your Reddit username.
+- Save it as `data/auth/reddit.json`
+
+
+#### Wikihow authentication: `wikihow.json`
+```json
+{
+  "username": "WIKIHOW_USERNAME",
+  "password": "WIKIHOW_PASSWORD"
+}
+```
+You can create this file by following the next steps:
+- Create a [Wikihow](https://wikihow.com) account.
+- Fill in `WIKIHOW_USERNAME` with your username, and `WIKIHOW_PASSWORD` with your password.
+- Save it as `data/auth/wikihow.json`
 
 ### Common Errors/Warnings:
 
