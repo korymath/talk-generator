@@ -3,6 +3,7 @@
     "#yes_no_question#"
   ],
   "yes_no_question": [
+    "Do you know what {seed.a} is?",
     "Do you like {seed.wikihow_action.ing.lower}?",
     "Would you like to {seed.wikihow_action.lower}?",
     "Are you afraid of {seed.wikihow_action.ing.lower}?",
@@ -21,7 +22,7 @@
     "But sir, I *AM* {seed.a}",
     "{chart_title.get_last_noun_and_article.2_to_1_pronouns.title}#?#",
     "HOW DARE YOU SPEAK ABOUT {chart_title.get_last_noun_and_article.2_to_1_pronouns.upper}#?#",
-    "I'd rather not talk about {chart_title.get_last_noun_and_article.2_to_1_pronouns.lower}#?#",
+    "I'd rather not talk about {chart_title.get_last_noun_and_article.2_to_1_pronouns.lower}",
     "My beliefs don't allow that",
     "My #family_member# doesn't allow me that"
   ],
