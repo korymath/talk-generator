@@ -559,10 +559,19 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_full_image_slide(
                 none_generator,
                 reddit_chart_generator),
-            weight_function=constant_weight(1.5),
+            weight_function=constant_weight(1),
             allowed_repeated_elements=0,
             tags=["chart"],
             name="Reddit Chart"),
+
+        SlideGenerator(
+            slide_templates.generate_chart_slide_tuple(
+                chart.generate_yes_no_pie
+            ),
+            allowed_repeated_elements=4,
+            weight_function=constant_weight(1),
+            tags=["pie_chart", "yes_no_chart", "chart"],
+            name="Yes/No/Funny Chart"),
 
         # CONCLUSION:
         SlideGenerator(
@@ -602,7 +611,7 @@ presentation_schema = PresentationSchema(
         "history": 1,
         "anecdote": 1,
 
-        # Procentual maxima
+        # Relative (procentual) maxima
         "two_captions": 0.3,
         "three_captions": 0.2,
         "multi_captions": 0.3,
@@ -627,8 +636,8 @@ test_schema = PresentationSchema(
                 chart.generate_yes_no_pie
             ),
             allowed_repeated_elements=4,
-            tags=["chart"],
-            name="Chart"),
+            tags=["pie_chart", "yes_no_chart", "chart"],
+            name="Yes/No/Funny Chart"),
 
         # Back up in case something goes wrong
         SlideGenerator(
