@@ -24,6 +24,7 @@ _DEFAULT_ARGUMENTS = cache_util.HashableDict(
 _PROHIBITED_SEARCH_TERMS = "a", "your", "my", "her", "his", "its", "their", "be", "an", "the", "you", "are"
 
 
+# Helpers
 def _remove_prohibited_words(word):
     return [part for part in word.split(" ") if part not in _PROHIBITED_SEARCH_TERMS]
 
@@ -31,6 +32,33 @@ def _remove_prohibited_words(word):
 def normalise(word):
     return " ".join(_remove_prohibited_words(word)).lower()
 
+
+def remove_duplicates(entries):
+    if entries:
+        checked = set()
+        result = []
+        for entry in entries:
+            if entry:
+                key = entry[1]
+                if key in checked:
+                    continue
+                checked.add(key)
+                result.append(entry)
+        return result
+
+
+def remove_containing(entries, prohibited_word):
+    if entries:
+        result = []
+        for entry in entries:
+            if entry:
+                key = entry[1]
+                if prohibited_word in key:
+                    continue
+                result.append(entry)
+        return result
+
+# RETRIEVING DATA
 
 @lru_cache(maxsize=20)
 def _get_data(word, arguments=None):
@@ -91,3 +119,4 @@ def get_weighted_antonyms(word):
 
 
 related_location_generator = generator_util.create_weighted_generator(get_weighted_related_locations)
+
