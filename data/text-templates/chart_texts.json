@@ -24,7 +24,8 @@
     "HOW DARE YOU SPEAK ABOUT {chart_title.get_last_noun_and_article.2_to_1_pronouns.upper}#?#",
     "I'd rather not talk about {chart_title.get_last_noun_and_article.2_to_1_pronouns.lower}",
     "My beliefs don't allow that",
-    "My #family_member# doesn't allow me that"
+    "My #family_member# doesn't allow me that",
+    "Who wouldn't?"
   ],
   "?": [
     "?",

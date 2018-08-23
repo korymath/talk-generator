@@ -110,7 +110,7 @@ def generate_yes_no_large_funny_answer_chart_data(presentation_context):
     presentation_context["chart_title"] = title
 
     categories = ['Yes', 'No', funny_yes_no_answer_generator(presentation_context)]
-    series_data = normalise_data(create_equal_data_with_outlier_end(len(categories), .8, 1, 3, 1, 20))
+    series_data = normalise_data(create_equal_data_with_outlier_end(len(categories), .7, 1, 2.5, 1, 20))
 
     chart_data = ChartData()
     chart_data.categories = categories
@@ -118,10 +118,7 @@ def generate_yes_no_large_funny_answer_chart_data(presentation_context):
     return title, chart_data
 
 
-def generate_yes_no_single_answer_chart_data(presentation_context):
-    # TODO: Only one answer, takes up whole answer
-    pass
-
+# FULL CHART GENERATORS
 
 def generate_yes_no_pie(presentation_context):
     title, chart_data = generate_yes_no_large_funny_answer_chart_data(presentation_context)

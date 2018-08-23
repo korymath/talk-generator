@@ -14,7 +14,7 @@ This Is What Happens When You {seed.plural.title}
 The Puzzle of {seed.plural.title}
 The {seed.plural.title} Conundrum
 How to Spot {seed.title.a}
-What makes a good {seed.singular.title}? Lessons from the longest study.
+What makes a good {seed.singular.lower}? Lessons from the longest study.
 The Happy Secret to Better {seed.plural.title}
 The Thrilling Potential of {seed.plural.title}
 How I Held My {seed.plural.title} for 17 Minutes
