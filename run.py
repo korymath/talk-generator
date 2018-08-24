@@ -1,3 +1,6 @@
+import os
+import sys
+import subprocess
 import argparse
 import os.path
 import pathlib
@@ -45,6 +48,13 @@ def _save_presentation_to_pptx(output_folder, file_name, prs, index=0):
         index += 1
         return _save_presentation_to_pptx(output_folder, file_name, prs, index)
 
+def open_file(filename):
+    """Platform independent open method to cover different OS."""
+    if sys.platform == "win32":
+        os.startfile(filename)
+    else:
+        opener ="open" if sys.platform == "darwin" else "xdg-open"
+        subprocess.call([opener, filename])
 
 # == MAIN ==
 
@@ -73,7 +83,7 @@ def main(arguments):
         # Open the presentation
         if arguments.open_ppt and presentation_file is not None:
             path = os.path.realpath(presentation_file)
-            os.startfile(path)
+            open_file(path)
 
     return presentation
 
