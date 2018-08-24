@@ -45,6 +45,7 @@ You can create this file by following the next steps:
 - Go to your [App prefenrences](https://ssl.reddit.com/prefs/apps/)
 - Pressing "create app"
 - Filling in a name and other details
+- name: 'talk-generator', 'script', description: 'talk-generator', about url: 'https://github.com/korymath/talk-generator', redirect url: 'https://github.com/korymath/talk-generator'
 - Filling in the `CLIENT_ID_CODE` above using the id under the name of the app,
 the `CLIENT_SECRET` using the text next to `secret` in the app card 
 and `REDDIT_USERNAME` with your Reddit username.
@@ -91,7 +92,7 @@ and run `pip install mysqlclient-1.3.8-cp36-cp36m-win_amd64.whl`
 ## Running the generator
 
 ```sh
-py run.py --topic cat --num_slides 10
+python run.py --topic cat --num_slides 10
 ```
 
 ### Available arguments
