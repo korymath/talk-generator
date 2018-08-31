@@ -9,7 +9,7 @@ How {seed.plural.title} Inspires Action
 The Power of {seed.plural.title}
 10 Things You Didn't Know About {seed.plural.title}
 Why We Do What We Do To {seed.wikihow_action.title}
-This Is What Happens When You {seed.plural.title}
+This Is What Happens When You {seed.wikihow_action.title}
 {seed.plural.title} Aren't Everything. Believe Me.
 The Puzzle of {seed.plural.title}
 The {seed.plural.title} Conundrum

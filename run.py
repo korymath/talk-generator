@@ -86,6 +86,10 @@ talk_subtitle_generator = text_generator.TraceryTextGenerator('data/text-templat
 
 default_slide_title_generator = text_generator.TemplatedTextGenerator(
     'data/text-templates/default_slide_title.txt').generate
+default_or_no_title_generator = combined_generator(
+    (1, default_slide_title_generator),
+    (1, none_generator)
+)
 
 anticipation_title_generator = text_generator.TemplatedTextGenerator(
     'data/text-templates/anticipation_title.txt').generate
@@ -386,7 +390,7 @@ presentation_schema = PresentationSchema(
                 about_me_job_tuple_generator,
                 about_me_hobby_tuple_generator,
             ),
-            create_peaked_weight((1,), 300, 0),
+            create_peaked_weight((1,), 100, 0),
             allowed_repeated_elements=3,
             tags=["about_me"],
             name="About Me: Location-Job-WeirdHobby"),
@@ -397,7 +401,7 @@ presentation_schema = PresentationSchema(
                 about_me_location_or_country_tuple_generator,
                 about_me_job_tuple_generator,
             ),
-            create_peaked_weight((1,), 100, 0),
+            create_peaked_weight((1,), 30, 0),
             allowed_repeated_elements=3,
             tags=["about_me"],
             name="About Me: Location-Job"),
@@ -409,7 +413,7 @@ presentation_schema = PresentationSchema(
                 about_me_book_tuple_generator,
                 about_me_hobby_tuple_generator,
             ),
-            create_peaked_weight((1,), 100, 0),
+            create_peaked_weight((1,), 30, 0),
             allowed_repeated_elements=0,
             tags=["about_me"],
             name="About Me: Location-Book-WeirdHobby"),
@@ -418,7 +422,7 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_image_slide_tuple(
                 about_me_hobby_tuple_generator
             ),
-            create_peaked_weight((1, 2), 5, 0),
+            create_peaked_weight((1, 2), 3, 0),
             allowed_repeated_elements=0,
             tags=["about_me"],
             name="Weird Hobby"),
@@ -514,7 +518,7 @@ presentation_schema = PresentationSchema(
         # TWO CAPTIONS VARIATIONS
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(
-                default_slide_title_generator,
+                default_or_no_title_generator,
                 double_captions_generator,
                 combined_gif_generator,
                 combined_gif_generator),
@@ -524,7 +528,7 @@ presentation_schema = PresentationSchema(
 
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(
-                default_slide_title_generator,
+                default_or_no_title_generator,
                 double_captions_generator,
                 weird_image_generator,
                 weird_and_shitpost_generator),
@@ -534,7 +538,7 @@ presentation_schema = PresentationSchema(
 
         SlideGenerator(
             slide_templates.generate_two_column_images_slide_tuple_caption(
-                default_slide_title_generator,
+                default_or_no_title_generator,
                 double_captions_generator,
                 weird_and_shitpost_and_gif_generator,
                 weird_and_shitpost_and_gif_generator),
@@ -544,7 +548,7 @@ presentation_schema = PresentationSchema(
 
         SlideGenerator(
             slide_templates.generate_three_column_images_slide_tuple_caption(
-                default_slide_title_generator,
+                default_or_no_title_generator,
                 triple_captions_generator,
                 weird_and_shitpost_and_gif_generator,
                 weird_and_shitpost_and_gif_generator,

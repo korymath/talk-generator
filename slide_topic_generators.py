@@ -15,7 +15,7 @@ import random_util
 class SideTrackingTopicGenerator:
     """ This generator will make small side tracks around topics, but keeps returning every X slides"""
 
-    def __init__(self, topic, num_slides, topic_return_period_range=range(3, 5)):
+    def __init__(self, topic, num_slides, topic_return_period_range=range(3, 6)):
         self._topic = topic
         self._num_slides = num_slides
 
