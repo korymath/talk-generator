@@ -26,3 +26,5 @@ Inside the Mind of a Master {seed.plural.title}
 How to Make {seed.plural.title} for Your Friend
 Underwater {seed.plural.title}
 The Danger of a Single {seed.plural.title}
+You are {seed.wikihow_action.ing} (and don't even know it)
+Inside the mind of {seed.singular.title.a}

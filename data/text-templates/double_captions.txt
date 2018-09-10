@@ -20,3 +20,4 @@ Bad|Worse
 Good|Better
 Good|Bad
 Bad|Good
+Expectation|Reality
