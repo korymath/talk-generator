@@ -111,3 +111,4 @@ output/
 data/auth/reddit.json
 test_output/
 data/auth/wikihow.json
+data/auth/pexels.json
