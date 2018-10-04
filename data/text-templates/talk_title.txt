@@ -3,7 +3,7 @@ What Your Choice in {seed.plural.title} Says About You
 How to Get Rid of {seed.plural.title}
 Why {seed.plural.title} Will Ruin Your Life
 The Biggest Concerns About {seed.plural.title}
-{seed.plural.title} Kills Creativity
+{seed.plural.title} Kill Creativity
 Your {seed.plural.title} May Shape Who You Are
 How {seed.plural.title} Inspires Action
 The Power of {seed.plural.title}
