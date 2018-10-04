@@ -400,7 +400,7 @@ presentation_schema = PresentationSchema(
                 about_me_job_tuple_generator,
                 about_me_hobby_tuple_generator,
             ),
-            create_peaked_weight((1,), 100, 0),
+            create_peaked_weight((1,), 10, 0),
             allowed_repeated_elements=3,
             tags=["about_me"],
             name="About Me: Location-Job-WeirdHobby"),
@@ -411,7 +411,7 @@ presentation_schema = PresentationSchema(
                 about_me_location_or_country_tuple_generator,
                 about_me_job_tuple_generator,
             ),
-            create_peaked_weight((1,), 30, 0),
+            create_peaked_weight((1,), 4, 0),
             allowed_repeated_elements=3,
             tags=["about_me"],
             name="About Me: Location-Job"),
@@ -423,7 +423,7 @@ presentation_schema = PresentationSchema(
                 about_me_book_tuple_generator,
                 about_me_hobby_tuple_generator,
             ),
-            create_peaked_weight((1,), 30, 0),
+            create_peaked_weight((1,), 4, 0),
             allowed_repeated_elements=0,
             tags=["about_me"],
             name="About Me: Location-Book-WeirdHobby"),
@@ -574,7 +574,7 @@ presentation_schema = PresentationSchema(
             slide_templates.generate_full_image_slide(
                 none_generator,
                 reddit_chart_generator),
-            weight_function=constant_weight(2),
+            weight_function=constant_weight(4),
             allowed_repeated_elements=0,
             tags=["chart"],
             name="Reddit Chart"),
@@ -585,7 +585,7 @@ presentation_schema = PresentationSchema(
             ),
             retries=1,
             allowed_repeated_elements=4,
-            weight_function=constant_weight(2),
+            weight_function=constant_weight(3),
             tags=["pie_chart", "yes_no_chart", "chart"],
             name="Yes/No/Funny Chart"),
 
@@ -662,9 +662,9 @@ presentation_schema = PresentationSchema(
         "multi_captions": 0.3,
         "gif": 0.5,
         "weird": 0.5,
-        "quote": 0.1,
+        "quote": 0.2,
         "statement": 0.2,
-        "chart": 0.2
+        "chart": 0.3
     },
 )
 
