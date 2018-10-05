@@ -642,34 +642,52 @@ all_slide_generators = [
         name="Conclusion"),
 ]
 
+default_max_allowed_tags = {
+    # Absolute maxima
+    "title": 1,
+    "about_me": 1,
+    "history": 1,
+    "anecdote": 1,
+    "location_chart": 1,
+
+    # Relative (procentual) maxima
+    "two_captions": 0.3,
+    "three_captions": 0.2,
+    "multi_captions": 0.3,
+    "gif": 0.5,
+    "weird": 0.5,
+    "quote": 0.2,
+    "statement": 0.2,
+    "chart": 0.3
+}
+
 # This object holds all the information about how to generate the presentation
 presentation_schema = PresentationSchema(
     # Basic powerpoint generator
-    slide_templates.create_new_powerpoint,
+    powerpoint_creator=slide_templates.create_new_powerpoint,
     # Topic per slide generator
-    slide_topic_generators.SideTrackingTopicGenerator,
+    seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
 
     # Slide generators
-    all_slide_generators,
+    slide_generators=all_slide_generators,
     # Max tags
-    max_allowed_tags={
-        # Absolute maxima
-        "title": 1,
-        "about_me": 1,
-        "history": 1,
-        "anecdote": 1,
-        "location_chart": 1,
+    max_allowed_tags=default_max_allowed_tags,
+)
 
-        # Relative (procentual) maxima
-        "two_captions": 0.3,
-        "three_captions": 0.2,
-        "multi_captions": 0.3,
-        "gif": 0.5,
-        "weird": 0.5,
-        "quote": 0.2,
-        "statement": 0.2,
-        "chart": 0.3
-    },
+# Interview schema: Disallow about_me slides
+interview_max_allowed_tags = default_max_allowed_tags.copy();
+interview_max_allowed_tags["about_me"] = 0
+
+interview_schema = PresentationSchema(
+    # Basic powerpoint generator
+    powerpoint_creator=slide_templates.create_new_powerpoint,
+    # Topic per slide generator
+    seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
+
+    # Slide generators
+    slide_generators=all_slide_generators,
+    # Max tags
+    max_allowed_tags=interview_max_allowed_tags,
 )
 
 # Test schema: for testing purposes
@@ -682,15 +700,22 @@ test_schema = PresentationSchema(
     seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
     slide_generators=[
+
+        # TITLE
         SlideGenerator(
-            slide_templates.generate_chart_slide_tuple(
-                chart.generate_correlation_curve
-            ),
-            allowed_repeated_elements=4,
-            retries=1,
-            weight_function=constant_weight(1),
-            tags=["curve", "chart"],
-            name="Correlation Curve"),
+            slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
+            weight_function=create_peaked_weight((0,), 100000, 0),
+            tags=["title"],
+            name="Title slide"),
+        # SlideGenerator(
+        #     slide_templates.generate_chart_slide_tuple(
+        #         chart.generate_correlation_curve
+        #     ),
+        #     allowed_repeated_elements=4,
+        #     retries=1,
+        #     weight_function=constant_weight(1),
+        #     tags=["curve", "chart"],
+        #     name="Correlation Curve"),
 
         # Back up in case something goes wrong
         SlideGenerator(
@@ -705,6 +730,7 @@ test_schema = PresentationSchema(
 
 schemas = {
     "default": presentation_schema,
+    "interview": interview_schema,
     "test": test_schema
 }
 
