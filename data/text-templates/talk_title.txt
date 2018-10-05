@@ -13,7 +13,7 @@ This Is What Happens When You {seed.wikihow_action.title}
 {seed.plural.title} Aren't Everything. Believe Me.
 The Puzzle of {seed.plural.title}
 The {seed.plural.title} Conundrum
-How to Spot {seed.title.a}
+How to Spot {seed.singular.a.title}
 What makes a good {seed.singular.lower}? Lessons from the longest study.
 The Happy Secret to Better {seed.plural.title}
 The Thrilling Potential of {seed.plural.title}
@@ -23,8 +23,30 @@ The Art of {seed.wikihow_action.ing.title}
 The Surprising Science of {seed.plural.title}
 The Surprising Science of {seed.wikihow_action.ing.title}
 Inside the Mind of a Master {seed.plural.title}
-How to Make {seed.plural.title} for Your Friend
+How to Make {seed.plural.title} Your Friend
 Underwater {seed.plural.title}
 The Danger of a Single {seed.plural.title}
 You are {seed.wikihow_action.ing} (and don't even know it)
-Inside the mind of {seed.singular.title.a}
+Inside the Mind of {seed.singular.a.title}
+The Worst Thing about {seed.plural.title} You Never Noticed
+We need to talk about {seed.plural.title}
+Why We All Love {seed.wikihow_action.ing.title}
+How to Let {seed.plural.title} Be Your Guide
+My Hobby: {seed.wikihow_action.ing.title}
+What Your {seed.singular.title} Says About You
+The Happy Secret To Better {seed.plural.title}
+Never, Ever {seed.wikihow_action.title}
+Want to Be Happy? {seed.wikihow_action.title}!
+The 3 {seed.first_letter.title}'s of {seed.plural.title}
+More {seed.title}, More Happiness
+Less {seed.title}, More Happiness
+Why We All Need to {seed.wikihow_action.title}
+{seed.title}, No Matter What
+In Praise of {seed.plural.title}
+The Way We Think about {seed.plural.title} is Dead Wrong
+Want to be Happier? {seed.wikihow_action.title}!
+The True Meaning of {seed.plural.title}
+The Suprising Science of {seed.plural.title}
+How a {seed.singular.title} Made Me Feel like a Millionaire
+My Favourite {seed.singular.title} Lifehacks
+I HATE {seed.plural.upper}

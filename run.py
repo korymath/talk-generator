@@ -704,7 +704,8 @@ test_schema = PresentationSchema(
         # TITLE
         SlideGenerator(
             slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
-            weight_function=create_peaked_weight((0,), 100000, 0),
+            allowed_repeated_elements=4,
+            weight_function=constant_weight(1),
             tags=["title"],
             name="Title slide"),
         # SlideGenerator(
