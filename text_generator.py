@@ -18,6 +18,7 @@ known_functions = {
     "lower": str.lower,
     "upper": str.upper,
     "dashes": lambda words: words.replace(" ", "-"),
+    "first_letter": lambda words: words[0],
     "a": lambda word: language_util.add_article(word),
     "ing": language_util.to_present_participle,
     "plural": language_util.to_plural,
