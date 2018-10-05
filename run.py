@@ -1,10 +1,10 @@
-import os
-import sys
-import subprocess
 import argparse
+import os
 import os.path
 import pathlib
 import random
+import subprocess
+import sys
 
 import safygiphy
 
@@ -48,13 +48,15 @@ def _save_presentation_to_pptx(output_folder, file_name, prs, index=0):
         index += 1
         return _save_presentation_to_pptx(output_folder, file_name, prs, index)
 
+
 def open_file(filename):
     """Platform independent open method to cover different OS."""
     if sys.platform == "win32":
         os.startfile(filename)
     else:
-        opener ="open" if sys.platform == "darwin" else "xdg-open"
+        opener = "open" if sys.platform == "darwin" else "xdg-open"
         subprocess.call([opener, filename])
+
 
 # == MAIN ==
 
