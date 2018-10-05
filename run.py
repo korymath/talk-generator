@@ -579,7 +579,7 @@ all_slide_generators = [
         ),
         retries=1,
         allowed_repeated_elements=4,
-        weight_function=constant_weight(3),
+        weight_function=constant_weight(2.5),
         tags=["pie_chart", "yes_no_chart", "chart"],
         name="Yes/No/Funny Chart"),
 
@@ -589,7 +589,7 @@ all_slide_generators = [
         ),
         allowed_repeated_elements=4,
         retries=1,
-        weight_function=constant_weight(0.1),
+        weight_function=constant_weight(0.08),
         tags=["location_chart", "pie_chart", "chart"],
         name="Location Chart"),
     SlideGenerator(
@@ -598,7 +598,7 @@ all_slide_generators = [
         ),
         allowed_repeated_elements=4,
         retries=1,
-        weight_function=constant_weight(0.05),
+        weight_function=constant_weight(0.04),
         tags=["property_chart", "pie_chart", "chart"],
         name="Property Chart"),
     SlideGenerator(
