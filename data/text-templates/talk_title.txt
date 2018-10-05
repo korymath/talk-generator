@@ -22,11 +22,11 @@ The Art of {seed.plural.title}
 The Art of {seed.wikihow_action.ing.title}
 The Surprising Science of {seed.plural.title}
 The Surprising Science of {seed.wikihow_action.ing.title}
-Inside the Mind of a Master {seed.plural.title}
+Inside the Mind of a Master {seed.singular.title}
 How to Make {seed.plural.title} Your Friend
 Underwater {seed.plural.title}
-The Danger of a Single {seed.plural.title}
-You are {seed.wikihow_action.ing} (and don't even know it)
+The Danger of a Single {seed.singular.title}
+You are {seed.wikihow_action.ing} (and Don't Even Know It)
 Inside the Mind of {seed.singular.a.title}
 The Worst Thing about {seed.plural.title} You Never Noticed
 We need to talk about {seed.plural.title}
@@ -38,8 +38,8 @@ The Happy Secret To Better {seed.plural.title}
 Never, Ever {seed.wikihow_action.title}
 Want to Be Happy? {seed.wikihow_action.title}!
 The 3 {seed.first_letter.title}'s of {seed.plural.title}
-More {seed.title}, More Happiness
-Less {seed.title}, More Happiness
+More {seed.plural.title}, More Happiness
+Less {seed.plural.title}, More Happiness
 Why We All Need to {seed.wikihow_action.title}
 {seed.title}, No Matter What
 In Praise of {seed.plural.title}
@@ -50,3 +50,7 @@ The Suprising Science of {seed.plural.title}
 How a {seed.singular.title} Made Me Feel like a Millionaire
 My Favourite {seed.singular.title} Lifehacks
 I HATE {seed.plural.upper}
+How {seed.plural.title} Caused My Bankruptcy
+My Irrational Fear of {seed.plural.title}
+Why I Disallow My Children to {seed.wikihow_action.title} (and so should you)
+I quit {seed.wikihow_action.ing.title} (and so should you)
