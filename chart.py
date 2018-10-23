@@ -66,8 +66,8 @@ def create_interesting_curve_function():
                              lambda x: a / x,
                              lambda x: a + x,
                              lambda x: a - x,
-                             lambda x: min(float(5e8), float(a ** math.log(x))),
-                             lambda x: min(float(5e8), float(x ** math.log(a))),
+                             # lambda x: min(float(5e8), float(a ** math.log(x))),
+                             # lambda x: min(float(5e8), float(x ** math.log(a))),
                              lambda x: math.sin(x)]
 
     chosen = random.choice(interesting_functions)
