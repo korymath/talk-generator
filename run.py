@@ -20,6 +20,7 @@ import slide_templates
 import slide_topic_generators
 import text_generator
 import wikihow
+from pathlib import Path
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
     create_from_external_image_list_generator, create_from_list_generator, \
@@ -38,15 +39,20 @@ def _save_presentation_to_pptx(output_folder, file_name, prs, index=0):
 
     suffix = "_" + str(index) if index > 0 else ""
     fp = os.path.join(output_folder, str(file_name) + str(suffix) + ".pptx")
+
+    # If file already exists, don't overwrite it:
+    if Path(fp).is_file():
+        return _save_presentation_to_pptx(output_folder, file_name, prs, index+1)
+
     # Create the parent folder if it doesn't exist
     pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
+
     try:
         prs.save(fp)
         print('Saved talk to {}'.format(fp))
         return fp
     except PermissionError:
-        index += 1
-        return _save_presentation_to_pptx(output_folder, file_name, prs, index)
+        return _save_presentation_to_pptx(output_folder, file_name, prs, index + 1)
 
 
 def open_file(filename):
