@@ -5,6 +5,7 @@ import requests
 
 import cache_util
 import generator_util
+# import time
 
 URL = "http://api.conceptnet.io/c/en/{}?"
 
@@ -78,7 +79,11 @@ def _get_data(word, arguments=None):
     splitted_word = _remove_prohibited_words(word)
     search_term = "_".join(splitted_word)
     url = URL.format(search_term) + urlencode(arguments, False, "/")
-    return requests.get(url).json()
+    # start = time.perf_counter()
+    result = requests.get(url).json()
+    # end = time.perf_counter()
+    # print("Took {} seconds to poll conceptnet".format(str(end-start)))
+    return result
 
 
 def _get_edges(word, arguments=None):

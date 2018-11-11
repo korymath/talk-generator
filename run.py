@@ -708,12 +708,53 @@ test_schema = PresentationSchema(
     slide_generators=[
 
         # TITLE
+
         SlideGenerator(
-            slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
+            slide_templates.generate_full_image_slide(
+                none_generator,
+                reddit_chart_generator),
+            weight_function=constant_weight(4),
+            allowed_repeated_elements=0,
+            tags=["chart"],
+            name="Reddit Chart"),
+
+        SlideGenerator(
+            slide_templates.generate_chart_slide_tuple(
+                chart.generate_yes_no_pie
+            ),
+            retries=1,
             allowed_repeated_elements=4,
-            weight_function=constant_weight(1),
-            tags=["title"],
-            name="Title slide"),
+            weight_function=constant_weight(2.5),
+            tags=["pie_chart", "yes_no_chart", "chart"],
+            name="Yes/No/Funny Chart"),
+
+        SlideGenerator(
+            slide_templates.generate_chart_slide_tuple(
+                chart.generate_location_pie
+            ),
+            allowed_repeated_elements=4,
+            retries=1,
+            weight_function=constant_weight(0.08),
+            tags=["location_chart", "pie_chart", "chart"],
+            name="Location Chart"),
+        SlideGenerator(
+            slide_templates.generate_chart_slide_tuple(
+                chart.generate_property_pie
+            ),
+            allowed_repeated_elements=4,
+            retries=1,
+            weight_function=constant_weight(0.04),
+            tags=["property_chart", "pie_chart", "chart"],
+            name="Property Chart"),
+        SlideGenerator(
+            slide_templates.generate_chart_slide_tuple(
+                chart.generate_correlation_curve
+            ),
+            allowed_repeated_elements=4,
+            retries=1,
+            weight_function=constant_weight(0.5),
+            tags=["curve", "chart"],
+            name="Correlation Curve"),
         # SlideGenerator(
         #     slide_templates.generate_chart_slide_tuple(
         #         chart.generate_correlation_curve
@@ -756,7 +797,7 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
-if __name__ == '__main__':
+def get_argument_parser():
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('--topic', help="Topic of presentation.",
                         default='cat', type=str)
@@ -772,5 +813,9 @@ if __name__ == '__main__':
                         default=True, type=str2bool)
     parser.add_argument('--open_ppt', help="If this flag is true, the generated powerpoint will automatically open",
                         default=True, type=str2bool)
-    args = parser.parse_args()
+    return parser
+
+
+if __name__ == '__main__':
+    args = get_argument_parser().parse_args()
     main(args)
