@@ -6,12 +6,16 @@ certifi==2018.10.15
 chardet==3.0.4
 Click==7.0
 coverage==4.5.2
+Flask==1.0.2
 futures==3.1.1
 google-images-download==2.4.2
 goslate==1.5.1
 idna==2.7
 inflect==1.0.1
+itsdangerous==1.1.0
+Jinja2==2.10
 lxml==4.2.5
+MarkupSafe==1.1.0
 more-itertools==4.3.0
 nltk==3.3
 numpy==1.15.3
@@ -32,4 +36,5 @@ six==1.11.0
 tracery==0.1.1
 update-checker==0.16
 urllib3==1.24
+Werkzeug==0.14.1
 XlsxWriter==1.1.2
