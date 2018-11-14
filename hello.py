@@ -1,6 +1,7 @@
+import os
 from flask import Flask
 from flask_sslify import SSLify
-from flask import Flask, render_template, flash, request
+from flask import Flask, render_template, flash, request, send_from_directory
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 
 
@@ -8,11 +9,18 @@ from wtforms import Form, TextField, TextAreaField, validators, StringField, Sub
 DEBUG = True
 app = Flask(__name__)
 sslify = SSLify(app)
+
 app.config.from_object(__name__)
-app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
+app.config['SECRET_KEY'] = '101710171017'
+app.config['OUTPUT_FOLDER'] = 'output'
 
 class ReusableForm(Form):
     talk_topic = TextField('Topic: ', validators=[validators.required()])
+
+@app.route('/output/<path:filename>', methods=['GET', 'POST'])
+def download(filename):
+    outputs = os.path.join(app.root_path, app.config['OUTPUT_FOLDER'])
+    return send_from_directory(directory=outputs, filename=filename)
 
 @app.route("/", methods=['GET', 'POST'])
 def hello():
