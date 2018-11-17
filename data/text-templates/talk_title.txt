@@ -53,4 +53,4 @@ I HATE {seed.plural.upper}
 How {seed.plural.title} Caused My Bankruptcy
 My Irrational Fear of {seed.plural.title}
 Why I Disallow My Children to {seed.wikihow_action.title} (and so should you)
-I quit {seed.wikihow_action.ing.title} (and so should you)
+I Quit {seed.wikihow_action.ing.title} (and so should you)

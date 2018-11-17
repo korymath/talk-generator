@@ -97,7 +97,7 @@ def _make_ing_form(passed_string):
     elif passed_string.endswith('y'):
         return passed_string + 'ing'
 
-    elif passed_string[-1] in consonant and passed_string[-2] in vowel and passed_string[-3] in consonant:
+    elif len(passed_string) >= 3 and passed_string[-1] in consonant and passed_string[-2] in vowel and passed_string[-3] in consonant:
         passed_string += passed_string[-1]
         return passed_string + 'ing'
     else:

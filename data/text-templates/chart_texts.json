@@ -15,7 +15,7 @@
   "location_question": [
     "Places where you can find {seed.singular.a.lower}",
     "Places you will find {seed.plural.lower}",
-    "{seed.a.title}'s Favourite Location"
+    "{seed.singular.a.title}'s Favourite Location"
   ],
   "property_question": [
     "My favourite properties of {seed.a}",
