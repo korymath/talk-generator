@@ -245,10 +245,22 @@ This folder gets automatically scanned, and all images in the generated presenta
 from this folder, to ensure that none gets added to the final presentation.
 
 ### Tests
-There are a lot of tests present in this repository.
-These `.py` files are prefixed with `test_`, and use the `unittest` module.
-They can easily be run all together when using PyCharm by right clicking on `talk-generator`
-and pressing *Run 'Unittests in talk-generator'*
+There are a lot of tests present in this repository. These `.py` files are prefixed with `test_`, and use the `unittest` module.
+They can easily be run all together when using PyCharm by right clicking on `talk-generator` and pressing *Run 'Unittests in talk-generator'*
+
+```sh
+source setup.sh
+pytest
+```
+
+Test coverage is handled by `coverage`.
+
+```sh
+coverage run --omit */venv/* -m unittest test_run.py
+coverage html
+```
+
+Tests are automatically run with CircleCI based on the `.yml` file in the `.circleci` directory.
 
 ## Credits
 
