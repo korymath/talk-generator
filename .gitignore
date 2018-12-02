@@ -1,8 +1,15 @@
-data/eval/timings.txt
 
+# VSCode Files (IDE) 
+.vscode
+*.code-workspace
+
+# Mac hygiene
 .DS_Store
+
+# Runtime generated files
 downloads/*
 output/*.pptx
+data/eval/timings.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
