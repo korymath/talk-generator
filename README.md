@@ -89,6 +89,29 @@ If `pip` complains about a missing `mysql.h`, you need to `pip install wheel`,
 go to [mysql wheel download]( http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python) to download the wheel
 and run `pip install mysqlclient-1.3.8-cp36-cp36m-win_amd64.whl`
 
+## Docker Instructions (optional)
+
+*slaps the hood of the container* Yep this bad boy runs on [Docker](https://www.docker.com/products/docker-desktop).
+
+Do not push this image to a public repository. It contains code that can't be made public. Just build and run folks.
+
+### Building the Image
+
+Build the image, and tag it as talkgen.
+
+`docker build -t talkgen .`
+
+### Running the Image
+
+Run the image tagged as talkgen. The container /output directory maps to your 
+current working directory. 
+
+`docker run -v ``pwd``/output:/output talkgen`
+
+Reasonable defaults have been provided. To override, simply pass the command-line parameter. Override the the topic and number of slides.
+
+`docker run -v ``pwd``/output:/output talkgen --topic love --num_slides 12`
+
 ## Running the generator
 
 ```sh

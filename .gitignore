@@ -6,6 +6,9 @@
 # Mac hygiene
 .DS_Store
 
+# AWS Keys
+.aws
+
 # Runtime generated files
 downloads/*
 output/*.pptx
