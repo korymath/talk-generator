@@ -1,6 +1,6 @@
 import json
 from functools import lru_cache
-
+import settings
 import praw
 
 singleton_reddit = None
@@ -10,8 +10,7 @@ def get_reddit():
     reddit = singleton_reddit
     if not bool(reddit):
         try:
-            reddit_login = json.load(open("./data/auth/reddit.json"))
-            reddit = praw.Reddit(**reddit_login)
+            reddit = praw.Reddit(**settings.reddit_auth())
         except FileNotFoundError:
             print(
                 "No login file for Reddit exists. Please put a JSON containing 'client_id', 'client_secret' and "
