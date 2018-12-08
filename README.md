@@ -137,6 +137,13 @@ python run.py --topic cat --num_slides 10
 | `save_ppt` | If this flag is true(*default*), the generated powerpoint will be saved on the computer in the `output_folder`|
 | `open_ppt` | If this flag is true (*default*), the generated powerpoint will automatically open after generating|
 
+## Running the generator as a microservice
+
+Run the generator as a microservice at 0.0.0.0:5687.
+
+`sh python run_web.py`
+
+You can then hit `http://0.0.0.0:5687?topic=sometopic`. This will kick the main.py off. 
 
 ## Program structure
 
