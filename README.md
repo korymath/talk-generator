@@ -28,41 +28,46 @@ source setup.sh
 ### Setting up required authentication
 
 Our program relies on certain APIs that require authentication in order to use it.
-There are two files that need to be created and place in the folder `data/auth/*`,
-namely `reddit.json` and `wikihow.json`:
+Create a file named `.env` (don't forget the period) in your project directory.
 
-#### Reddit authentication: `reddit.json`
-The file looks like this:
-```json
-{
-  "client_id": "CLIENT_ID_CODE",
-  "client_secret": "CLIENT_SECRET",
-  "user_agent": "python:https://github.com/korymath/talk-generator:v0.0.1 by /u/REDDIT_USERNAME)"
-}
 ```
-You can create this file by following the next steps:
+# Reddit Authentication
+REDDIT_CLIENT_ID=
+REDDIT_CLIENT_SECRET=
+REDDIT_USER_AGENT="" #use quotes here
+
+# Wikihow Authentication
+WIKIHOW_USERNAME=
+WIKIHOW_PASSWORD=
+
+# OPTIONAL: If you want to save to Amazon S3, define your params here
+AWS_TALK_BUCKET_KEY=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=
+```
+
+#### Reddit authentication: Getting your keys
+
+Get your Reddit authentication keys by following these steps.
 - Create a [Reddit](https://reddit.com) account
 - Go to your [App prefenrences](https://ssl.reddit.com/prefs/apps/)
 - Pressing "create app"
 - Filling in a name and other details
 - name: 'talk-generator', 'script', description: 'talk-generator', about url: 'https://github.com/korymath/talk-generator', redirect url: 'https://github.com/korymath/talk-generator'
-- Filling in the `CLIENT_ID_CODE` above using the id under the name of the app,
-the `CLIENT_SECRET` using the text next to `secret` in the app card 
-and `REDDIT_USERNAME` with your Reddit username.
-- Save it as `data/auth/reddit.json`
+- Open `.env`
+- Fill in the `REDDIT_CLIENT_ID` above using the id under the name of the app,
+the `REDDIT_CLIENT_SECRET` using the text next to `secret` in the app card. 
+
+The `REDDIT_USERAGENT` can be set to "python:https://github.com/korymath/talk-generator:v0.0.1 by /u/REDDIT_USERNAME)" and replace the REDDIT_USERNAME with your Reddit username.
 
 
-#### Wikihow authentication: `wikihow.json`
-```json
-{
-  "username": "WIKIHOW_USERNAME",
-  "password": "WIKIHOW_PASSWORD"
-}
-```
+#### Wikihow authentication: Getting your keys
+
 You can create this file by following the next steps:
 - Create a [Wikihow](https://wikihow.com) account.
+- Open `.env`
 - Fill in `WIKIHOW_USERNAME` with your username, and `WIKIHOW_PASSWORD` with your password.
-- Save it as `data/auth/wikihow.json`
 
 ### Common Errors/Warnings:
 
@@ -88,6 +93,31 @@ consider installing a version of [Visual Studio](https://docs.microsoft.com/en-u
 If `pip` complains about a missing `mysql.h`, you need to `pip install wheel`,
 go to [mysql wheel download]( http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python) to download the wheel
 and run `pip install mysqlclient-1.3.8-cp36-cp36m-win_amd64.whl`
+
+## Docker Instructions (optional)
+
+*slaps the hood of the container* Yep this bad boy runs on [Docker](https://www.docker.com/products/docker-desktop).
+
+Do not `docker push` this image to a public repository. It contains code that can't be made public. Just build the image locally and run. 
+
+### Building the Image
+
+Build the image, and tag it as talkgen.
+
+`docker build -t talkgen .`
+
+### Running the Image
+
+Run the image tagged as talkgen. The container /output directory maps to your 
+current working directory. 
+
+`docker run --env-file .env -v ``pwd``/output:/output talkgen run.py --open_ppt false`
+
+Reasonable defaults have been provided. To override, simply pass the command-line parameter. Here we are overriding the the topic and number of slides.
+
+`docker run --env-file .env -v ``pwd``/output:/output talkgen run.py --topic 'climate change' --num_slides 12 --open_ppt false`
+
+* be sure that open_ppt is false when running as a docker process.
 
 ## Running the generator
 

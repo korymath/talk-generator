@@ -7,6 +7,8 @@ import inflect
 import requests
 from bs4 import BeautifulSoup
 
+import settings 
+
 _LOG_IN_URL = "https://www.wikihow.com/index.php?title=Special:UserLogin&action=submitlogin&type=login"
 _ADVANCED_SEARCH_URL = "https://www.wikihow.com/index.php?title=Special%3ASearch&profile=default&search={}" \
                        "&fulltext=Search&ss=relevance&so=desc&ffriy=1&ffrin=1&fft=ffta&fftsi=&profile=default"
@@ -21,7 +23,7 @@ def create_log_in_session(username, password):
 
 def get_wikihow_session():
     try:
-        wikihow_credentials = json.load(open("./data/auth/wikihow.json"))
+        wikihow_credentials = settings.wikihow_auth()
         if "session" in wikihow_credentials.keys():
             print("Found Wikihow Session object in credentials, skipping loggin in")
             return wikihow_credentials["session"]

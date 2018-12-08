@@ -20,6 +20,9 @@ import slide_templates
 import slide_topic_generators
 import text_generator
 import wikihow
+import settings
+
+
 from pathlib import Path
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
@@ -71,7 +74,7 @@ def main(arguments):
     # Print status details
     print('******************************************')
     print("Making {} slide talk on: {}".format(arguments.num_slides, arguments.topic))
-
+    print("S3 Enabled: {}".format(settings.AWS_S3_ENABLED))
     # Retrieve the schema to generate the presentation with
     schema = get_schema(arguments.schema)
 
@@ -85,7 +88,7 @@ def main(arguments):
                                                 presenter=arguments.presenter)
 
     # Save presentation
-    if arguments.save_ppt:
+    if arguments.save_ppt or settings.AWS_S3_ENABLED:
         presentation_file = _save_presentation_to_pptx(arguments.output_folder, arguments.topic, presentation)
 
         # Open the presentation
@@ -93,6 +96,12 @@ def main(arguments):
             path = os.path.realpath(presentation_file)
             open_file(path)
 
+    if settings.AWS_S3_ENABLED:
+        import aws_s3
+        #if aws_s3.check_for_object(settings.BUCKET, arguments.topic):
+        aws_s3.store_file(bucket=settings.BUCKET, 
+            key=arguments.topic+".pptx", 
+            file=os.path.realpath(presentation_file))  
     return presentation
 
 
