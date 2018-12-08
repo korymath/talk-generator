@@ -98,6 +98,7 @@ def main(arguments):
 
     if settings.AWS_S3_ENABLED:
         import aws_s3
+        print("Saving slides to S3 key {}".format(arguments.topic+".pptx"))
         #if aws_s3.check_for_object(settings.BUCKET, arguments.topic):
         aws_s3.store_file(bucket=settings.BUCKET, 
             key=arguments.topic+".pptx", 
