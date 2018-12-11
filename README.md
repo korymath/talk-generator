@@ -51,7 +51,7 @@ AWS_DEFAULT_REGION=
 
 Get your Reddit authentication keys by following these steps.
 - Create a [Reddit](https://reddit.com) account
-- Go to your [App prefenrences](https://ssl.reddit.com/prefs/apps/)
+- Go to your [App preferences](https://ssl.reddit.com/prefs/apps/)
 - Pressing "create app"
 - Filling in a name and other details
 - name: 'talk-generator', 'script', description: 'talk-generator', about url: 'https://github.com/korymath/talk-generator', redirect url: 'https://github.com/korymath/talk-generator'
@@ -70,6 +70,9 @@ You can create this file by following the next steps:
 - Fill in `WIKIHOW_USERNAME` with your username, and `WIKIHOW_PASSWORD` with your password.
 
 ### Common Errors/Warnings:
+
+#### prawcore.exceptions.ResponseException: received 401 HTTP response
+From the [Reddit API documentation](https://github.com/reddit-archive/reddit/wiki/OAuth2#retrieving-the-access-token), it sounds like the 401 error is given when your client id/secret are incorrect. Are you using the correct values from the app page?
 
 #### BeautifulSoup lxml warning
 * Add parser for BeautifulSoup
