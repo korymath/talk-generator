@@ -1,5 +1,8 @@
 import json
 from functools import lru_cache
+
+from prawcore import ResponseException
+
 import settings
 import praw
 
@@ -32,6 +35,9 @@ def get_subreddit(name):
 @lru_cache(maxsize=20)
 def search_subreddit(name, query, sort="relevance", limit=500):
     if has_reddit_access():
-        return list(get_subreddit(name).search(query, sort=sort, limit=limit))
+        try:
+            return list(get_subreddit(name).search(query, sort=sort, limit=limit))
+        except ResponseException as err:
+            print("Exception with accessing Reddit: {}".format(err))
     else:
         print("WARNING: No reddit access!")
