@@ -22,7 +22,6 @@ import text_generator
 import wikihow
 import settings
 
-
 from pathlib import Path
 # Import a lot from generator_util to make schema creation easier
 from generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
@@ -45,7 +44,7 @@ def _save_presentation_to_pptx(output_folder, file_name, prs, index=0):
 
     # If file already exists, don't overwrite it:
     if Path(fp).is_file():
-        return _save_presentation_to_pptx(output_folder, file_name, prs, index+1)
+        return _save_presentation_to_pptx(output_folder, file_name, prs, index + 1)
 
     # Create the parent folder if it doesn't exist
     pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
@@ -96,13 +95,13 @@ def main(arguments):
             path = os.path.realpath(presentation_file)
             open_file(path)
 
-    if settings.AWS_S3_ENABLED:
-        import aws_s3
-        print("Saving slides to S3 key {}".format(arguments.topic+".pptx"))
-        #if aws_s3.check_for_object(settings.BUCKET, arguments.topic):
-        aws_s3.store_file(bucket=settings.BUCKET, 
-            key=arguments.topic+".pptx", 
-            file=os.path.realpath(presentation_file))  
+        if settings.AWS_S3_ENABLED:
+            import aws_s3
+            print("Saving slides to S3 key {}".format(arguments.topic + ".pptx"))
+            # if aws_s3.check_for_object(settings.BUCKET, arguments.topic):
+            aws_s3.store_file(bucket=settings.BUCKET,
+                              key=arguments.topic + ".pptx",
+                              file=os.path.realpath(presentation_file))
     return presentation
 
 
