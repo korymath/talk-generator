@@ -67,12 +67,13 @@ You can create this file by following the next steps:
 - Open `.env`
 - Fill in `WIKIHOW_USERNAME` with your username, and `WIKIHOW_PASSWORD` with your password.
 
-#### Installing punkt
+#### Installing nltk
 
 Type into Python console:
 ```
 >>> import nltk
 >>> nltk.download('punkt')
+>>> nltk.download('averaged_perceptron_tagger')
 ```
 
 ### Common Errors/Warnings:
