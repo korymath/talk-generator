@@ -69,11 +69,12 @@ You can create this file by following the next steps:
 
 #### Installing nltk
 
-Type into Python console:
+We require several NTLK packages, which can be downloaded by running the following code in to the Python console:
 ```
->>> import nltk
->>> nltk.download('punkt')
->>> nltk.download('averaged_perceptron_tagger')
+import nltk
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
 ```
 
 ### Common Errors/Warnings:
