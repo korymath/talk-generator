@@ -2,8 +2,6 @@
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/korymath/britbot/blob/master/LICENSE.md)
 
 # Talk Powerpoint Generator 
-[//]: # "I find puns such as 'AutomaTED' or 'GeneraTED' to be a bit more descriptive than TEDRIC tbh :) -Thomas"
-
 
 ## Description
 
