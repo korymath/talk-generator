@@ -3,6 +3,7 @@ from unittest import mock
 import random
 
 import run
+import schemas
 
 
 class TestTalkGenerator(unittest.TestCase):
@@ -11,7 +12,7 @@ class TestTalkGenerator(unittest.TestCase):
         random.seed(1)
 
     def test_google_images(self):
-        self.assertTrue(bool(run.generate_full_screen_google_image({"seed": "cat"})))
+        self.assertTrue(bool(schemas.generate_full_screen_google_image({"seed": "cat"})))
 
     def test_main(self):
         arguments = mock.Mock()
