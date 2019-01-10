@@ -67,6 +67,14 @@ You can create this file by following the next steps:
 - Open `.env`
 - Fill in `WIKIHOW_USERNAME` with your username, and `WIKIHOW_PASSWORD` with your password.
 
+#### Installing punkt
+
+Type into Python console:
+```
+>>> import nltk
+>>> nltk.download('punkt')
+```
+
 ### Common Errors/Warnings:
 
 #### prawcore.exceptions.ResponseException: received 401 HTTP response
