@@ -631,75 +631,7 @@ test_schema = PresentationSchema(
     # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
     seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
-    slide_generators=[
-
-        # TITLE
-
-        SlideGenerator(
-            slide_templates.generate_full_image_slide(
-                none_generator,
-                reddit_chart_generator),
-            weight_function=constant_weight(4),
-            allowed_repeated_elements=0,
-            tags=["chart"],
-            name="Reddit Chart"),
-
-        SlideGenerator(
-            slide_templates.generate_chart_slide_tuple(
-                chart.generate_yes_no_pie
-            ),
-            retries=1,
-            allowed_repeated_elements=4,
-            weight_function=constant_weight(2.5),
-            tags=["pie_chart", "yes_no_chart", "chart"],
-            name="Yes/No/Funny Chart"),
-
-        SlideGenerator(
-            slide_templates.generate_chart_slide_tuple(
-                chart.generate_location_pie
-            ),
-            allowed_repeated_elements=4,
-            retries=1,
-            weight_function=constant_weight(0.08),
-            tags=["location_chart", "pie_chart", "chart"],
-            name="Location Chart"),
-        SlideGenerator(
-            slide_templates.generate_chart_slide_tuple(
-                chart.generate_property_pie
-            ),
-            allowed_repeated_elements=4,
-            retries=1,
-            weight_function=constant_weight(0.04),
-            tags=["property_chart", "pie_chart", "chart"],
-            name="Property Chart"),
-        SlideGenerator(
-            slide_templates.generate_chart_slide_tuple(
-                chart.generate_correlation_curve
-            ),
-            allowed_repeated_elements=4,
-            retries=1,
-            weight_function=constant_weight(0.5),
-            tags=["curve", "chart"],
-            name="Correlation Curve"),
-        # SlideGenerator(
-        #     slide_templates.generate_chart_slide_tuple(
-        #         chart.generate_correlation_curve
-        #     ),
-        #     allowed_repeated_elements=4,
-        #     retries=1,
-        #     weight_function=constant_weight(1),
-        #     tags=["curve", "chart"],
-        #     name="Correlation Curve"),
-
-        # Back up in case something goes wrong
-        SlideGenerator(
-            slide_templates.generate_image_slide(
-                inspiration_title_generator,
-                create_static_generator("./data/images/error_placeholder.png")),
-            allowed_repeated_elements=2,
-            weight_function=constant_weight(0.0001),
-            name="Error Placeholder")
-    ],
+    slide_generators=all_slide_generators,
 )
 
 schemas = {
