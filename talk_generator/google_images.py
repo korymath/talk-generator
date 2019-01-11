@@ -52,7 +52,7 @@ def search_images(word, extra_arguments_dict=None, num_images=_DEFAULT_NUM_IMAGE
         'limit': num_images,
         'print_urls': False,
         'print_paths': False,
-        'output_directory': './downloads/google_images/',
+        'output_directory': '../downloads/google_images/',
         'language': 'English',
         'safe_search': True,
         'no_numbering': True,

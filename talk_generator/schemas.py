@@ -107,7 +107,7 @@ class RedditImageGenerator:
 
         self._generate = create_from_external_image_list_generator(
             create_seeded_generator(generate),
-            lambda url: "./downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
+            lambda url: "../downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
         )
 
     def generate(self, presentation_context):
@@ -132,7 +132,7 @@ shitpostbot_image_generator = create_from_external_image_list_generator(
             shitpostbot.search_images,
             shitpostbot.get_random_images
         )),
-    lambda url: "./downloads/shitpostbot/{}".format(os_util.get_file_name(url))
+    lambda url: "../downloads/shitpostbot/{}".format(os_util.get_file_name(url))
 )
 
 weird_and_shitpost_generator = combined_generator(
