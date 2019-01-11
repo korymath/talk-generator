@@ -19,7 +19,7 @@ class TestTalkGenerator(unittest.TestCase):
         arguments.configure_mock(topic='cat')
         arguments.configure_mock(num_slides=10)
         arguments.configure_mock(schema='default')
-        arguments.configure_mock(output_folder="./test_output/")
+        arguments.configure_mock(output_folder="../test_output/")
         arguments.configure_mock(open_ppt=False)
         arguments.configure_mock(save_ppt=True)
         ppt = run.main(arguments)

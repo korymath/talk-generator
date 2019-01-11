@@ -108,7 +108,7 @@ def get_argument_parser():
     parser.add_argument('--presenter', help="The full name of the presenter, leave blank to randomise",
                         default=None, type=str)
     parser.add_argument('--output_folder', help="The folder to output the generated presentations",
-                        default="./output/", type=str)
+                        default="../output/", type=str)
     parser.add_argument('--save_ppt', help="If this flag is true, the generated powerpoint will be saved",
                         default=True, type=str2bool)
     parser.add_argument('--open_ppt', help="If this flag is true, the generated powerpoint will automatically open",
