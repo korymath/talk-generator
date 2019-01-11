@@ -4,7 +4,7 @@ from functools import lru_cache
 import requests
 from bs4 import BeautifulSoup
 
-from talk_generator import scraper_util
+from talkgenerator import scraper_util
 
 _MAX_RANDOM_PAGE = 150
 _SEARCH_URL = "https://www.shitpostbot.com/gallery/sourceimages?query={" \

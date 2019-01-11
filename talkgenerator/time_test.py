@@ -1,7 +1,7 @@
 import time
 
-from talk_generator import os_util
-from talk_generator import run
+from talkgenerator import os_util
+from talkgenerator import run
 
 words = os_util.read_lines("../data/eval/common_words.txt")[0:3]
 result_file = open("../data/eval/timings.txt", "a+")

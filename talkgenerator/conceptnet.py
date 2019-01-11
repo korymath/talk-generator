@@ -3,8 +3,8 @@ from urllib.parse import urlencode
 
 import requests
 
-from talk_generator import cache_util
-from talk_generator import generator_util
+from talkgenerator import cache_util
+from talkgenerator import generator_util
 # import time
 
 URL = "http://api.conceptnet.io/c/en/{}?"

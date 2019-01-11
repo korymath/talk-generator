@@ -4,8 +4,8 @@ import sys
 
 from pptx import Presentation
 
-from talk_generator import generator_util
-from talk_generator import os_util
+from talkgenerator import generator_util
+from talkgenerator import os_util
 
 # CONSTANTS
 # HEIGHT = 9

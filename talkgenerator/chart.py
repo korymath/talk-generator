@@ -7,9 +7,9 @@ from pptx.enum.chart import XL_CHART_TYPE
 from pptx.enum.chart import XL_LABEL_POSITION
 from pptx.enum.chart import XL_TICK_MARK
 
-from talk_generator import conceptnet
-from talk_generator import generator_util
-from talk_generator import text_generator
+from talkgenerator import conceptnet
+from talkgenerator import generator_util
+from talkgenerator import text_generator
 
 yes_no_question_generator = text_generator.TraceryTextGenerator(
     '../data/text-templates/chart_texts.json', "yes_no_question").generate

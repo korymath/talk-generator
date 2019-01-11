@@ -6,7 +6,7 @@ import inflect
 import requests
 from bs4 import BeautifulSoup
 
-from talk_generator import settings
+from talkgenerator import settings
 
 _LOG_IN_URL = "https://www.wikihow.com/index.php?title=Special:UserLogin&action=submitlogin&type=login"
 _ADVANCED_SEARCH_URL = "https://www.wikihow.com/index.php?title=Special%3ASearch&profile=default&search={}" \

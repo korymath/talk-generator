@@ -3,9 +3,9 @@ from flask import request
 import pprint
 import json
 
-import talk_generator.random_word_util
-from talk_generator.flask_util import notify_error
-from talk_generator.run import get_argument_parser, main
+import talkgenerator.random_word_util
+from talkgenerator.flask_util import notify_error
+from talkgenerator.run import get_argument_parser, main
 
 
 app = Flask("talkgen")

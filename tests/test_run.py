@@ -2,8 +2,8 @@ import unittest
 from unittest import mock
 import random
 
-from talk_generator import run
-from talk_generator import schemas
+from talkgenerator import run
+from talkgenerator import schemas
 
 
 class TestTalkGenerator(unittest.TestCase):

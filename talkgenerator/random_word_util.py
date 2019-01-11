@@ -1,4 +1,4 @@
-from talk_generator.random_util import choice_optional
+from talkgenerator.random_util import choice_optional
 import nltk
 
 WORDS = nltk.Text(nltk.corpus.wordnet.words()) # Get text from wordnet

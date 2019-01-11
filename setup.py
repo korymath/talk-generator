@@ -12,7 +12,7 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='talk_generator',
+    name='talkgenerator',
     version='0.0.1',
     description='Automatically generating PowerPoint presentation slide decks',
     long_description=readme,
