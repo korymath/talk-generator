@@ -7,6 +7,7 @@ from functools import lru_cache
 import tracery
 from tracery.modifiers import base_english
 
+from talkgenerator import os_util
 from talkgenerator import conceptnet
 from talkgenerator import generator_util
 from talkgenerator import language_util
@@ -77,7 +78,7 @@ class TemplatedTextGenerator(AbstractTextGenerator):
 
 class TraceryTextGenerator(AbstractTextGenerator):
     def __init__(self, tracery_json, variable="origin"):
-        with open(tracery_json) as grammar_file:
+        with open(os_util.to_actual_file(tracery_json)) as grammar_file:
             grammar = get_tracery_grammar(grammar_file)
             grammar.add_modifiers(base_english)
             self._grammar = grammar
@@ -178,4 +179,4 @@ def apply_functions_to_variables(template, variables_dictionary, variables_and_f
 
 def read_lines(file):
     """ Reads all the string lines from a file """
-    return [line.rstrip('\n') for line in open(file)]
+    return os_util.read_lines(file)

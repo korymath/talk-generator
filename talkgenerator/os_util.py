@@ -22,9 +22,16 @@ def get_file_name(url):
     return ntpath.basename(url)
 
 
+def to_actual_file(file):
+    this_folder = os.path.dirname(os.path.abspath(__file__))
+    actual_file = os.path.join(this_folder, file)
+    return actual_file
+
+
 @lru_cache(maxsize=20)
 def read_lines(file):
-    return [line.rstrip('\n') for line in open(file)]
+    actual_file = to_actual_file(file)
+    return [line.rstrip('\n') for line in open(actual_file)]
 
 
 @lru_cache(maxsize=20)
@@ -37,8 +44,9 @@ _PROHIBITED_IMAGES_DIR = "../data/images/prohibited/"
 
 @lru_cache(maxsize=1)
 def getProhibitedImages():
+    actual_dir = to_actual_file(_PROHIBITED_IMAGES_DIR)
     return list(
-            [open_image(_PROHIBITED_IMAGES_DIR + url) for url in os.listdir(_PROHIBITED_IMAGES_DIR)])
+            [open_image(actual_dir + url) for url in os.listdir(actual_dir)])
 
 
 @lru_cache(maxsize=20)
