@@ -10,7 +10,7 @@ from nltk.corpus import wordnet as wn
 # Helpers
 
 def _replace_word_one_case(sentence, word, replacement, flags=0):
-    return re.sub('(^|\W)' + word + '(\W|$)', r'\1' + replacement + r'\2', sentence, flags=flags)
+    return re.sub(r'(^|\W)' + word + r'(\W|$)', r'\1' + replacement + r'\2', sentence, flags=flags)
 
 
 def replace_word(sentence, word, replacement):

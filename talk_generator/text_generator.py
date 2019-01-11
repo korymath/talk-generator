@@ -119,7 +119,7 @@ def get_format_variables(template):
 
 def get_format_variables_and_functions(template):
     """ Finds all the names of the variables used in the template with their functions in a large tuple"""
-    matches = re.findall('{(\w+)((?:[.]\w+)*)}', template)
+    matches = re.findall(r'{(\w+)((?:[.]\w+)*)}', template)
     return set(matches)
 
 
