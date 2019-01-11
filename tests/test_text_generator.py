@@ -1,6 +1,6 @@
 import unittest
 
-import text_generator
+from .context import text_generator
 
 
 class TextGeneratorTest(unittest.TestCase):

@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 import random
 
-import run
+from .context import run
 import schemas
 
 
