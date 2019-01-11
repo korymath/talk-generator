@@ -32,7 +32,7 @@ def open_image(file):
     return Image.open(file)
 
 
-_PROHIBITED_IMAGES_DIR = "./data/images/prohibited/"
+_PROHIBITED_IMAGES_DIR = "../data/images/prohibited/"
 PROHIBITED_IMAGES = list(
     [open_image(_PROHIBITED_IMAGES_DIR + url) for url in os.listdir(_PROHIBITED_IMAGES_DIR)])
 

@@ -4,9 +4,9 @@ import re
 
 import numpy
 
-import conceptnet
-import language_util
-import random_util
+from talk_generator import conceptnet
+from talk_generator import language_util
+from talk_generator import random_util
 
 
 # == TOPIC GENERATORS ==

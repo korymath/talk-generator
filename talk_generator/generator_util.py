@@ -2,8 +2,8 @@ import random
 
 import requests
 
-import os_util
-import random_util
+from talk_generator import os_util
+from talk_generator import random_util
 
 
 # == TRIVIAL GENERATORS ==

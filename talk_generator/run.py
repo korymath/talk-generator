@@ -5,12 +5,12 @@ import pathlib
 import subprocess
 import sys
 
-import settings
+from talk_generator import settings
 
 from pathlib import Path
 
 # Own modules
-import schemas
+from talk_generator import schemas
 
 MAX_PRESENTATION_SAVE_TRIES = 100
 

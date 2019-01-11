@@ -1,7 +1,7 @@
 import random
 import unittest
 
-import random_util
+from talk_generator import random_util
 
 
 class RandomUtilTest(unittest.TestCase):

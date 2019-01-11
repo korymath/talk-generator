@@ -1,6 +1,6 @@
 import unittest
 
-import goodreads
+from talk_generator import goodreads
 
 
 class GoodReadsTest(unittest.TestCase):

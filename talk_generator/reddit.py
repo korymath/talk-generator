@@ -1,9 +1,8 @@
-import json
 from functools import lru_cache
 
 from prawcore import ResponseException
 
-import settings
+from talk_generator import settings
 import praw
 
 singleton_reddit = None

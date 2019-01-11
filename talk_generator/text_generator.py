@@ -7,11 +7,11 @@ from functools import lru_cache
 import tracery
 from tracery.modifiers import base_english
 
-import conceptnet
-import generator_util
-import language_util
-import random_util
-import wikihow
+from talk_generator import conceptnet
+from talk_generator import generator_util
+from talk_generator import language_util
+from talk_generator import random_util
+from talk_generator import wikihow
 
 known_functions = {
     "title": str.title,

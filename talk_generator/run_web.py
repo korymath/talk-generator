@@ -1,13 +1,11 @@
 from flask import Flask
 from flask import request
 import pprint
-import logging
-from logging.handlers import RotatingFileHandler
 import json
 
-import random_word_util
-from flask_util import notify_error, log_api_call
-from run import get_argument_parser, main
+import talk_generator.random_word_util
+from talk_generator.flask_util import notify_error
+from talk_generator.run import get_argument_parser, main
 
 
 app = Flask("talkgen")

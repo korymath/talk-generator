@@ -1,11 +1,10 @@
-import argparse
 import time
 
-import os_util
-import run
+from talk_generator import os_util
+from talk_generator import run
 
-words = os_util.read_lines("data/eval/common_words.txt")[0:3]
-result_file = open("data/eval/timings.txt", "a+")
+words = os_util.read_lines("../data/eval/common_words.txt")[0:3]
+result_file = open("../data/eval/timings.txt", "a+")
 
 for topic in words:
     arguments = run.get_argument_parser().parse_args(

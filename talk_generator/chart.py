@@ -7,20 +7,20 @@ from pptx.enum.chart import XL_CHART_TYPE
 from pptx.enum.chart import XL_LABEL_POSITION
 from pptx.enum.chart import XL_TICK_MARK
 
-import conceptnet
-import generator_util
-import text_generator
+from talk_generator import conceptnet
+from talk_generator import generator_util
+from talk_generator import text_generator
 
 yes_no_question_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_texts.json', "yes_no_question").generate
+    '../data/text-templates/chart_texts.json', "yes_no_question").generate
 funny_yes_no_answer_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_texts.json', "funny_yes_no_answer").generate
+    '../data/text-templates/chart_texts.json', "funny_yes_no_answer").generate
 location_question_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_texts.json', "location_question").generate
+    '../data/text-templates/chart_texts.json', "location_question").generate
 property_question_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_texts.json', "property_question").generate
+    '../data/text-templates/chart_texts.json', "property_question").generate
 correlation_title_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_texts.json', "correlation_title").generate
+    '../data/text-templates/chart_texts.json', "correlation_title").generate
 
 
 # DATA POINTS HELPERS

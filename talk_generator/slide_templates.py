@@ -4,8 +4,8 @@ import sys
 
 from pptx import Presentation
 
-import generator_util
-import os_util
+from talk_generator import generator_util
+from talk_generator import os_util
 
 # CONSTANTS
 # HEIGHT = 9
@@ -21,7 +21,7 @@ import os_util
 # CMS_TO_EMU = 360000
 
 # Location of powerpoint template
-POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
+POWERPOINT_TEMPLATE_FILE = '../data/powerpoint/template.pptx'
 
 # Layouts index in template
 LAYOUT_TITLE_SLIDE = 0
@@ -162,7 +162,7 @@ def create_large_quote_slide(prs, title, text, background_image=None):
             _add_image(slide, 10, background_image, False)
 
         # Add black transparent image for making other image behind it transparent (missing feature in python-pptx)
-        _add_image(slide, 11, "./data/images/black-transparent.png", False)
+        _add_image(slide, 11, "../data/images/black-transparent.png", False)
 
         return slide
 

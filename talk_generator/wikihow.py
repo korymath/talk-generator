@@ -1,5 +1,4 @@
 """ Module for interacting with Wikihow """
-import json
 import re
 from functools import lru_cache
 
@@ -7,7 +6,7 @@ import inflect
 import requests
 from bs4 import BeautifulSoup
 
-import settings 
+from talk_generator import settings
 
 _LOG_IN_URL = "https://www.wikihow.com/index.php?title=Special:UserLogin&action=submitlogin&type=login"
 _ADVANCED_SEARCH_URL = "https://www.wikihow.com/index.php?title=Special%3ASearch&profile=default&search={}" \
