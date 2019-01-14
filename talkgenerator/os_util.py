@@ -23,11 +23,15 @@ def get_file_name(url):
 
 
 def to_actual_file(file):
-    if file.startswith('..'):
-        this_folder = os.path.dirname(os.path.abspath(__file__))
-        actual_file = os.path.join(this_folder, file)
-        return actual_file
-    return file
+    # if file.startswith('..'):
+    this_folder = os.path.dirname(os.path.abspath(__file__))
+    folder = this_folder
+    while file.startswith('../'):
+        folder = os.path.dirname(folder)
+        file = file[3:]
+    actual_file = os.path.join(folder, file)
+    return actual_file
+    # return file
 
 
 @lru_cache(maxsize=20)
