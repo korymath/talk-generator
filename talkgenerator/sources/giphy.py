@@ -18,7 +18,7 @@ def get_related_giphy(seed_word):
             original = images.get('original')
             giphy_url = original.get('url')
             gif_name = os.path.basename(os.path.dirname(giphy_url))
-            image_url = '../downloads/giphy/' + str(seed_word) + "/" + gif_name + ".gif"
+            image_url = os_util.to_actual_file('../downloads/giphy/' + str(seed_word) + "/" + gif_name + ".gif", __file__)
             os_util.download_image(giphy_url, image_url)
             return image_url
 
