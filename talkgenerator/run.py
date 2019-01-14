@@ -10,7 +10,7 @@ from talkgenerator import settings
 from pathlib import Path
 
 # Own modules
-from talkgenerator import schemas
+from talkgenerator.schema import schemas
 
 MAX_PRESENTATION_SAVE_TRIES = 100
 

@@ -2,18 +2,17 @@ import random
 
 # Own modules:
 from talkgenerator.util import os_util
-from talkgenerator import reddit
-from talkgenerator.sources import shitpostbot, wikihow, google_images, inspirobot, chart, goodreads, giphy
+from talkgenerator.sources import shitpostbot, wikihow, google_images, inspirobot, chart, goodreads, giphy, reddit, \
+    text_generator
 from talkgenerator import slide_templates
-from talkgenerator import slide_topic_generators
-from talkgenerator import text_generator
+from talkgenerator.schema import slide_topic_generators
 
 # Import a lot from generator_util to make schema creation easier
 from talkgenerator.util.generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
     create_from_external_image_list_generator, create_from_list_generator, \
     create_backup_generator, remove_invalid_images_from_generator, create_inspired_tuple_generator, \
     apply_function_to_generator, create_tupled_generator
-from talkgenerator.presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
+from talkgenerator.schema.presentation_schema import PresentationSchema, SlideGenerator, constant_weight, create_peaked_weight
 
 # = TEXT GENERATORS=
 

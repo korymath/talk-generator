@@ -4,7 +4,7 @@ import random
 
 from talkgenerator import run
 from talkgenerator.util import os_util
-from talkgenerator import schemas
+from talkgenerator.schema import schemas
 
 
 class TestTalkGenerator(unittest.TestCase):
