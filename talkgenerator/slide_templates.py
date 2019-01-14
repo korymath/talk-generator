@@ -26,7 +26,7 @@ _POWERPOINT_TEMPLATE_FILE = '../data/powerpoint/template.pptx'
 
 
 @lru_cache(maxsize=1)
-def get_prohibited_images():
+def get_powerpoint_template_file():
     return os_util.to_actual_file(_POWERPOINT_TEMPLATE_FILE, __file__)
 
 
@@ -156,7 +156,7 @@ def _print_all_placeholders(slide):
 # and create layouted slides with these inputs
 
 def create_new_powerpoint():
-    return Presentation(get_prohibited_images())
+    return Presentation(get_powerpoint_template_file())
 
 
 def create_title_slide(prs, title, subtitle):
