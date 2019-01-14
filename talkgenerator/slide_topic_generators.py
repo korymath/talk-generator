@@ -87,7 +87,7 @@ def _fill_in(seeds, i, distance=1):
 
 def normalise_seed(seed):
     normalised = conceptnet.normalise(seed).lower()
-    normalised = re.sub('[^a-z\s\b _-]+', '', normalised)
+    normalised = re.sub(r'[^a-z\s\b _-]+', '', normalised)
     return normalised
 
 
