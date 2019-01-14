@@ -8,7 +8,8 @@ from talkgenerator import slide_templates
 from talkgenerator.schema import slide_topic_generators
 
 # Import a lot from generator_util to make schema creation easier
-from talkgenerator.util.generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \
+from talkgenerator.util.generator_util import create_seeded_generator, none_generator, create_static_generator, \
+    combined_generator, \
     create_from_external_image_list_generator, create_from_list_generator, \
     create_backup_generator, remove_invalid_images_from_generator, create_inspired_tuple_generator, \
     apply_function_to_generator, create_tupled_generator
@@ -101,7 +102,8 @@ class RedditImageGenerator:
 
         self._generate = create_from_external_image_list_generator(
             create_seeded_generator(generate),
-            lambda url: "../../downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
+            lambda url: os_util.to_actual_file(
+                "../../downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url), __file__)
         )
 
     def generate(self, presentation_context):
@@ -126,7 +128,7 @@ shitpostbot_image_generator = create_from_external_image_list_generator(
             shitpostbot.search_images,
             shitpostbot.get_random_images
         )),
-    lambda url: "../../downloads/shitpostbot/{}".format(os_util.get_file_name(url))
+    lambda url: os_util.to_actual_file("../../downloads/shitpostbot/{}".format(os_util.get_file_name(url)), __file__)
 )
 
 weird_and_shitpost_generator = combined_generator(
@@ -182,7 +184,8 @@ reddit_location_image_generator = create_reddit_image_generator("evilbuildings",
 
 # BOLD_STATEMENT
 
-bold_statement_templated_generator = text_generator.TemplatedTextGenerator('../../data/text-templates/bold_statements.txt')
+bold_statement_templated_generator = text_generator.TemplatedTextGenerator(
+    '../../data/text-templates/bold_statements.txt')
 
 
 def generate_wikihow_bold_statement(presentation_context):
