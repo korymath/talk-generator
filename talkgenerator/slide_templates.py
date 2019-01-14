@@ -85,6 +85,9 @@ def _add_text(slide, placeholder_id, text):
 def _add_image(slide, placeholder_id, image_url, original_image_size=True):
     if not os.path.isfile(image_url):
         return None
+
+    image_url = os_util.to_actual_file(image_url)
+
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:
         # Calculate the image size of the image
