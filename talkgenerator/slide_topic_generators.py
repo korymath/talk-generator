@@ -5,8 +5,7 @@ import re
 import numpy
 
 from talkgenerator import conceptnet
-from talkgenerator import language_util
-from talkgenerator import random_util
+from talkgenerator.util import language_util, random_util
 
 
 # == TOPIC GENERATORS ==

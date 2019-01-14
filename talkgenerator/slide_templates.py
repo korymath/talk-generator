@@ -6,8 +6,7 @@ from functools import lru_cache
 from lxml.etree import XMLSyntaxError
 from pptx import Presentation
 
-from talkgenerator import generator_util
-from talkgenerator import os_util
+from talkgenerator.util import generator_util, os_util
 
 # CONSTANTS
 # HEIGHT = 9
@@ -28,7 +27,7 @@ _POWERPOINT_TEMPLATE_FILE = '../data/powerpoint/template.pptx'
 
 @lru_cache(maxsize=1)
 def get_prohibited_images():
-    return os_util.to_actual_file(_POWERPOINT_TEMPLATE_FILE)
+    return os_util.to_actual_file(_POWERPOINT_TEMPLATE_FILE, __file__)
 
 
 # Layouts index in template
@@ -87,7 +86,7 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
     if not os.path.isfile(image_url):
         return None
 
-    image_url = os_util.to_actual_file(image_url)
+    image_url = os_util.to_actual_file(image_url, __file__)
 
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:

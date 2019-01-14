@@ -3,7 +3,6 @@ from flask import request
 import pprint
 import json
 
-import talkgenerator.random_word_util
 from talkgenerator.flask_util import notify_error
 from talkgenerator.run import get_argument_parser, main
 

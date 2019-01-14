@@ -3,7 +3,7 @@ from functools import lru_cache
 import requests
 from bs4 import BeautifulSoup
 
-from talkgenerator import scraper_util
+from talkgenerator.util import scraper_util
 
 quote_search_url = "https://www.goodreads.com/search?page={}&q={" \
                    "}&search%5Bsource%5D=goodreads&search_type=quotes&tab=quotes "

@@ -6,7 +6,7 @@ presentation), and slide generators, that have functions for generating slides a
 
 from functools import lru_cache
 
-from talkgenerator import random_util
+from talkgenerator.util import random_util
 
 
 # WEIGHT FUNCTIONS

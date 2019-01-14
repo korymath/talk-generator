@@ -1,7 +1,7 @@
 import time
 
-from talkgenerator import os_util
 from talkgenerator import run
+from talkgenerator.util import os_util
 
 
 def run_time_test(number_of_times):

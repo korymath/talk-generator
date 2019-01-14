@@ -1,6 +1,6 @@
 import unittest
 
-from talkgenerator import language_util
+from talkgenerator.util import language_util
 
 
 class LanguageUtilTest(unittest.TestCase):
