@@ -1,18 +1,12 @@
 import random
 
 # Own modules:
-from talkgenerator import giphy
 from talkgenerator.util import os_util
-from talkgenerator import chart
-from talkgenerator import goodreads
-from talkgenerator import google_images
-from talkgenerator import inspirobot
 from talkgenerator import reddit
-from talkgenerator import shitpostbot
+from talkgenerator.sources import shitpostbot, wikihow, google_images, inspirobot, chart, goodreads, giphy
 from talkgenerator import slide_templates
 from talkgenerator import slide_topic_generators
 from talkgenerator import text_generator
-from talkgenerator import wikihow
 
 # Import a lot from generator_util to make schema creation easier
 from talkgenerator.util.generator_util import create_seeded_generator, none_generator, create_static_generator, combined_generator, \

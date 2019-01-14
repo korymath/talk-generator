@@ -7,9 +7,8 @@ from functools import lru_cache
 import tracery
 from tracery.modifiers import base_english
 
-from talkgenerator import conceptnet
 from talkgenerator.util import generator_util, language_util, random_util, os_util
-from talkgenerator import wikihow
+from talkgenerator.sources import wikihow, conceptnet
 
 known_functions = {
     "title": str.title,

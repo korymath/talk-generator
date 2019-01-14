@@ -4,7 +4,7 @@ import re
 
 import numpy
 
-from talkgenerator import conceptnet
+from talkgenerator.sources import conceptnet
 from talkgenerator.util import language_util, random_util
 
 

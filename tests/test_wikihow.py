@@ -1,5 +1,5 @@
 import unittest
-from talkgenerator import wikihow
+from talkgenerator.sources import wikihow
 
 
 class MyTestCase(unittest.TestCase):

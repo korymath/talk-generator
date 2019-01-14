@@ -3,7 +3,7 @@ from flask import request
 import pprint
 import json
 
-from talkgenerator.flask_util import notify_error
+from talkgenerator.server.flask_util import notify_error
 from talkgenerator.run import get_argument_parser, main
 
 
