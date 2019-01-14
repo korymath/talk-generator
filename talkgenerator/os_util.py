@@ -43,7 +43,7 @@ _PROHIBITED_IMAGES_DIR = "../data/images/prohibited/"
 
 
 @lru_cache(maxsize=1)
-def getProhibitedImages():
+def get_prohibited_images():
     actual_dir = to_actual_file(_PROHIBITED_IMAGES_DIR)
     return list(
             [open_image(actual_dir + url) for url in os.listdir(actual_dir)])
@@ -61,7 +61,7 @@ def is_image(content):
 def is_valid_image(image_url):
     try:
         im = open_image(image_url)
-        if im in getProhibitedImages():
+        if im in get_prohibited_images():
             print(image_url, " IS DENIED")
             return False
     except OSError as e:
