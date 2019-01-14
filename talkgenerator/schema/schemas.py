@@ -16,64 +16,66 @@ from talkgenerator.util.generator_util import create_seeded_generator, none_gene
 from talkgenerator.schema.presentation_schema import PresentationSchema
 from talkgenerator.schema.slide_generator import SlideGenerator, constant_weight, create_peaked_weight
 
+
 # = TEXT GENERATORS=
 
-# TITLES
-talk_title_generator = text_generator.TemplatedTextGenerator('../../data/text-templates/talk_title.txt').generate
-talk_subtitle_generator = text_generator.TraceryTextGenerator('../../data/text-templates/talk_subtitle.json').generate
+def createTemplatedTextGenerator(file):
+    actual_file = os_util.to_actual_file(file, __file__)
+    return text_generator.TemplatedTextGenerator(actual_file).generate
 
-default_slide_title_generator = text_generator.TemplatedTextGenerator(
-    '../../data/text-templates/default_slide_title.txt').generate
+
+def createTraceryGenerator(file, main="origin"):
+    actual_file = os_util.to_actual_file(file, __file__)
+    return text_generator.TraceryTextGenerator(actual_file, main).generate
+
+
+# TITLES
+talk_title_generator = createTemplatedTextGenerator("../../data/text-templates/talk_title.txt")
+talk_subtitle_generator = createTraceryGenerator("../../data/text-templates/talk_subtitle.json")
+
+default_slide_title_generator = createTemplatedTextGenerator("../../data/text-templates/default_slide_title.txt")
+
 default_or_no_title_generator = combined_generator(
     (1, default_slide_title_generator),
     (1, none_generator)
 )
 
-anticipation_title_generator = text_generator.TemplatedTextGenerator(
-    '../../data/text-templates/anticipation_title.txt').generate
+anticipation_title_generator = createTemplatedTextGenerator(
+    '../../data/text-templates/anticipation_title.txt')
 
-conclusion_title_generator = text_generator.TemplatedTextGenerator(
-    "../../data/text-templates/conclusion_title.txt").generate
-inspiration_title_generator = text_generator.TemplatedTextGenerator(
-    "../../data/text-templates/inspiration.txt").generate
-anecdote_title_generator = text_generator.TemplatedTextGenerator(
-    "../../data/text-templates/anecdote_title.txt").generate
-history_title_generator = text_generator.TemplatedTextGenerator(
-    "../../data/text-templates/history.txt").generate
-history_person_title_generator = text_generator.TemplatedTextGenerator(
-    "../../data/text-templates/history_person.txt").generate
+conclusion_title_generator = createTemplatedTextGenerator(
+    "../../data/text-templates/conclusion_title.txt")
+inspiration_title_generator = createTemplatedTextGenerator(
+    "../../data/text-templates/inspiration.txt")
+anecdote_title_generator = createTemplatedTextGenerator(
+    "../../data/text-templates/anecdote_title.txt")
+history_title_generator = createTemplatedTextGenerator(
+    "../../data/text-templates/history.txt")
+history_person_title_generator = createTemplatedTextGenerator(
+    "../../data/text-templates/history_person.txt")
 history_and_history_person_title_generator = combined_generator(
     (4, history_title_generator), (6, history_person_title_generator))
-about_me_title_generator = text_generator.TemplatedTextGenerator(
-    "../../data/text-templates/about_me_title.txt").generate
+about_me_title_generator = createTemplatedTextGenerator(
+    "../../data/text-templates/about_me_title.txt")
 
 # NAMES
-historical_name_generator = text_generator.TraceryTextGenerator("../../data/text-templates/name.json",
-                                                                "title_name").generate
-full_name_generator = text_generator.TraceryTextGenerator("../../data/text-templates/name.json",
-                                                          "full_name").generate
+historical_name_generator = createTraceryGenerator("../../data/text-templates/name.json", "title_name")
+full_name_generator = createTraceryGenerator("../../data/text-templates/name.json", "full_name")
 
 # ABOUT ME
 _about_me_facts_grammar = "../../data/text-templates/about_me_facts.json"
-book_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
-                                                                 "book_description").generate
-location_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
-                                                                     "location_description").generate
-hobby_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
-                                                                  "hobby_description").generate
-job_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
-                                                                "job_description").generate
-country_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
-                                                                    "country_description").generate
-job_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
-                                                    "job").generate
-country_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
-                                                        "country").generate
+book_description_generator = createTraceryGenerator(_about_me_facts_grammar, "book_description")
+location_description_generator = createTraceryGenerator(_about_me_facts_grammar, "location_description")
+hobby_description_generator = createTraceryGenerator(_about_me_facts_grammar, "hobby_description")
+job_description_generator = createTraceryGenerator(_about_me_facts_grammar, "job_description")
+country_description_generator = createTraceryGenerator(_about_me_facts_grammar, "country_description")
+job_generator = createTraceryGenerator(_about_me_facts_grammar, "job")
+country_generator = createTraceryGenerator(_about_me_facts_grammar, "country")
 
 # PROMPTS & CHALLENGES
 
-anecdote_prompt_generator = text_generator.TemplatedTextGenerator(
-    "../../data/text-templates/anecdote_prompt.txt").generate
+anecdote_prompt_generator = createTemplatedTextGenerator(
+    "../../data/text-templates/anecdote_prompt.txt")
 
 
 # QUOTES
@@ -183,9 +185,8 @@ reddit_location_image_generator = create_reddit_image_generator("evilbuildings",
                                                                 "EarthPorn")
 
 # BOLD_STATEMENT
-
-bold_statement_templated_generator = text_generator.TemplatedTextGenerator(
-    '../../data/text-templates/bold_statements.txt')
+bold_statement_templated_file = os_util.to_actual_file('../../data/text-templates/bold_statements.txt', __file__)
+bold_statement_templated_generator = createTemplatedTextGenerator(bold_statement_templated_file)
 
 
 def generate_wikihow_bold_statement(presentation_context):
@@ -203,23 +204,23 @@ def generate_wikihow_bold_statement(presentation_context):
                                 # TODO: Make a scraper that scrapes a step related to this action on wikihow.
                                 'step': 'Do Whatever You Like'})
 
-    return bold_statement_templated_generator.generate(template_values)
+    return bold_statement_templated_generator(template_values)
 
 
 # DOUBLE CAPTIONS
 
 def split_captions_generator(generator):
     def create_double_image_captions(presentation_context):
-        line = generator.generate(presentation_context)
+        line = generator(presentation_context)
         parts = line.split("|")
         return parts
 
     return create_double_image_captions
 
 
-_double_captions_generator = text_generator.TemplatedTextGenerator("../../data/text-templates/double_captions.txt")
-_triple_captions_generator = text_generator.TemplatedTextGenerator("../../data/text-templates/triple_captions.txt")
-_historic_double_captions_generator = text_generator.TemplatedTextGenerator(
+_double_captions_generator = createTemplatedTextGenerator("../../data/text-templates/double_captions.txt")
+_triple_captions_generator = createTemplatedTextGenerator("../../data/text-templates/triple_captions.txt")
+_historic_double_captions_generator = createTemplatedTextGenerator(
     "../../data/text-templates/historic_double_captions.txt")
 
 double_captions_generator = split_captions_generator(_double_captions_generator)
