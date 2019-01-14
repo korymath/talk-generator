@@ -93,37 +93,41 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:
         # Calculate the image size of the image
-        im = os_util.open_image(image_url)
-        width, height = im.size
-
-        # Make sure the placeholder doesn't zoom in
-        placeholder.height = height
-        placeholder.width = width
-
-        # Insert the picture
         try:
-            placeholder = placeholder.insert_picture(image_url)
-        except ValueError as e:
-            print(e)
+            im = os_util.open_image(image_url)
+            width, height = im.size
+
+            # Make sure the placeholder doesn't zoom in
+            placeholder.height = height
+            placeholder.width = width
+
+            # Insert the picture
+            try:
+                placeholder = placeholder.insert_picture(image_url)
+            except ValueError as e:
+                print(e)
+                return None
+
+            # Calculate ratios and compare
+            image_ratio = width / height
+            placeholder_ratio = placeholder.width / placeholder.height
+            ratio_difference = placeholder_ratio - image_ratio
+
+            # Placeholder width too wide:
+            if ratio_difference > 0:
+                difference_on_each_side = ratio_difference / 2
+                placeholder.crop_left = -difference_on_each_side
+                placeholder.crop_right = -difference_on_each_side
+            # Placeholder height too high
+            else:
+                difference_on_each_side = -ratio_difference / 2
+                placeholder.crop_bottom = -difference_on_each_side
+                placeholder.crop_top = -difference_on_each_side
+
+            return placeholder
+        except FileNotFoundError as fnfe:
+            print(fnfe)
             return None
-
-        # Calculate ratios and compare
-        image_ratio = width / height
-        placeholder_ratio = placeholder.width / placeholder.height
-        ratio_difference = placeholder_ratio - image_ratio
-
-        # Placeholder width too wide:
-        if ratio_difference > 0:
-            difference_on_each_side = ratio_difference / 2
-            placeholder.crop_left = -difference_on_each_side
-            placeholder.crop_right = -difference_on_each_side
-        # Placeholder height too high
-        else:
-            difference_on_each_side = -ratio_difference / 2
-            placeholder.crop_bottom = -difference_on_each_side
-            placeholder.crop_top = -difference_on_each_side
-
-        return placeholder
     else:
         try:
             return placeholder.insert_picture(image_url)
