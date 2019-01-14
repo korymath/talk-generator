@@ -3,6 +3,7 @@ import os
 import sys
 from functools import lru_cache
 
+from lxml.etree import XMLSyntaxError
 from pptx import Presentation
 
 from talkgenerator import generator_util
@@ -104,7 +105,7 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
             # Insert the picture
             try:
                 placeholder = placeholder.insert_picture(image_url)
-            except ValueError as e:
+            except (ValueError, XMLSyntaxError) as e:
                 print(e)
                 return None
 
