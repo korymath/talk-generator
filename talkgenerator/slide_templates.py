@@ -1,6 +1,7 @@
 """ This module helps creating specific type of slides using our template powerpoint using python-pptx """
 import os
 import sys
+from functools import lru_cache
 
 from pptx import Presentation
 
@@ -21,7 +22,13 @@ from talkgenerator import os_util
 # CMS_TO_EMU = 360000
 
 # Location of powerpoint template
-POWERPOINT_TEMPLATE_FILE = '../data/powerpoint/template.pptx'
+_POWERPOINT_TEMPLATE_FILE = '../data/powerpoint/template.pptx'
+
+
+@lru_cache(maxsize=1)
+def get_prohibited_images():
+    return os_util.to_actual_file(_POWERPOINT_TEMPLATE_FILE)
+
 
 # Layouts index in template
 LAYOUT_TITLE_SLIDE = 0
@@ -142,7 +149,7 @@ def _print_all_placeholders(slide):
 # and create layouted slides with these inputs
 
 def create_new_powerpoint():
-    return Presentation(POWERPOINT_TEMPLATE_FILE)
+    return Presentation(get_prohibited_images())
 
 
 def create_title_slide(prs, title, subtitle):

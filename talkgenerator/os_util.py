@@ -23,9 +23,11 @@ def get_file_name(url):
 
 
 def to_actual_file(file):
-    this_folder = os.path.dirname(os.path.abspath(__file__))
-    actual_file = os.path.join(this_folder, file)
-    return actual_file
+    if file.startswith('..'):
+        this_folder = os.path.dirname(os.path.abspath(__file__))
+        actual_file = os.path.join(this_folder, file)
+        return actual_file
+    return file
 
 
 @lru_cache(maxsize=20)
@@ -46,7 +48,7 @@ _PROHIBITED_IMAGES_DIR = "../data/images/prohibited/"
 def get_prohibited_images():
     actual_dir = to_actual_file(_PROHIBITED_IMAGES_DIR)
     return list(
-            [open_image(actual_dir + url) for url in os.listdir(actual_dir)])
+        [open_image(actual_dir + url) for url in os.listdir(actual_dir)])
 
 
 @lru_cache(maxsize=20)
