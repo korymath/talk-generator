@@ -20,5 +20,6 @@ setup(
     author_email='info@thomaswinters.be',
     url='https://github.com/korymath/talk-generator',
     license=license,
-    packages=find_packages(exclude=('tests', 'docs'))
+    packages=find_packages(exclude=('tests', 'docs')),
+    include_package_data=True
 )
