@@ -17,42 +17,42 @@ from talkgenerator.schema.presentation_schema import PresentationSchema, SlideGe
 # = TEXT GENERATORS=
 
 # TITLES
-talk_title_generator = text_generator.TemplatedTextGenerator('../data/text-templates/talk_title.txt').generate
-talk_subtitle_generator = text_generator.TraceryTextGenerator('../data/text-templates/talk_subtitle.json').generate
+talk_title_generator = text_generator.TemplatedTextGenerator('../../data/text-templates/talk_title.txt').generate
+talk_subtitle_generator = text_generator.TraceryTextGenerator('../../data/text-templates/talk_subtitle.json').generate
 
 default_slide_title_generator = text_generator.TemplatedTextGenerator(
-    '../data/text-templates/default_slide_title.txt').generate
+    '../../data/text-templates/default_slide_title.txt').generate
 default_or_no_title_generator = combined_generator(
     (1, default_slide_title_generator),
     (1, none_generator)
 )
 
 anticipation_title_generator = text_generator.TemplatedTextGenerator(
-    '../data/text-templates/anticipation_title.txt').generate
+    '../../data/text-templates/anticipation_title.txt').generate
 
 conclusion_title_generator = text_generator.TemplatedTextGenerator(
-    "../data/text-templates/conclusion_title.txt").generate
+    "../../data/text-templates/conclusion_title.txt").generate
 inspiration_title_generator = text_generator.TemplatedTextGenerator(
-    "../data/text-templates/inspiration.txt").generate
+    "../../data/text-templates/inspiration.txt").generate
 anecdote_title_generator = text_generator.TemplatedTextGenerator(
-    "../data/text-templates/anecdote_title.txt").generate
+    "../../data/text-templates/anecdote_title.txt").generate
 history_title_generator = text_generator.TemplatedTextGenerator(
-    "../data/text-templates/history.txt").generate
+    "../../data/text-templates/history.txt").generate
 history_person_title_generator = text_generator.TemplatedTextGenerator(
-    "../data/text-templates/history_person.txt").generate
+    "../../data/text-templates/history_person.txt").generate
 history_and_history_person_title_generator = combined_generator(
     (4, history_title_generator), (6, history_person_title_generator))
 about_me_title_generator = text_generator.TemplatedTextGenerator(
-    "../data/text-templates/about_me_title.txt").generate
+    "../../data/text-templates/about_me_title.txt").generate
 
 # NAMES
-historical_name_generator = text_generator.TraceryTextGenerator("../data/text-templates/name.json",
+historical_name_generator = text_generator.TraceryTextGenerator("../../data/text-templates/name.json",
                                                                 "title_name").generate
-full_name_generator = text_generator.TraceryTextGenerator("../data/text-templates/name.json",
+full_name_generator = text_generator.TraceryTextGenerator("../../data/text-templates/name.json",
                                                           "full_name").generate
 
 # ABOUT ME
-_about_me_facts_grammar = "../data/text-templates/about_me_facts.json"
+_about_me_facts_grammar = "../../data/text-templates/about_me_facts.json"
 book_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
                                                                  "book_description").generate
 location_description_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
@@ -71,7 +71,7 @@ country_generator = text_generator.TraceryTextGenerator(_about_me_facts_grammar,
 # PROMPTS & CHALLENGES
 
 anecdote_prompt_generator = text_generator.TemplatedTextGenerator(
-    "../data/text-templates/anecdote_prompt.txt").generate
+    "../../data/text-templates/anecdote_prompt.txt").generate
 
 
 # QUOTES
@@ -100,7 +100,7 @@ class RedditImageGenerator:
 
         self._generate = create_from_external_image_list_generator(
             create_seeded_generator(generate),
-            lambda url: "../downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
+            lambda url: "../../downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
         )
 
     def generate(self, presentation_context):
@@ -125,7 +125,7 @@ shitpostbot_image_generator = create_from_external_image_list_generator(
             shitpostbot.search_images,
             shitpostbot.get_random_images
         )),
-    lambda url: "../downloads/shitpostbot/{}".format(os_util.get_file_name(url))
+    lambda url: "../../downloads/shitpostbot/{}".format(os_util.get_file_name(url))
 )
 
 weird_and_shitpost_generator = combined_generator(
@@ -181,7 +181,7 @@ reddit_location_image_generator = create_reddit_image_generator("evilbuildings",
 
 # BOLD_STATEMENT
 
-bold_statement_templated_generator = text_generator.TemplatedTextGenerator('../data/text-templates/bold_statements.txt')
+bold_statement_templated_generator = text_generator.TemplatedTextGenerator('../../data/text-templates/bold_statements.txt')
 
 
 def generate_wikihow_bold_statement(presentation_context):
@@ -213,10 +213,10 @@ def split_captions_generator(generator):
     return create_double_image_captions
 
 
-_double_captions_generator = text_generator.TemplatedTextGenerator("../data/text-templates/double_captions.txt")
-_triple_captions_generator = text_generator.TemplatedTextGenerator("../data/text-templates/triple_captions.txt")
+_double_captions_generator = text_generator.TemplatedTextGenerator("../../data/text-templates/double_captions.txt")
+_triple_captions_generator = text_generator.TemplatedTextGenerator("../../data/text-templates/triple_captions.txt")
 _historic_double_captions_generator = text_generator.TemplatedTextGenerator(
-    "../data/text-templates/historic_double_captions.txt")
+    "../../data/text-templates/historic_double_captions.txt")
 
 double_captions_generator = split_captions_generator(_double_captions_generator)
 triple_captions_generator = split_captions_generator(_triple_captions_generator)
