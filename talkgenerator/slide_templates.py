@@ -1,7 +1,7 @@
 """ This module helps creating specific type of slides using our template powerpoint using python-pptx """
 from talkgenerator.util import generator_util
 
-from talkgenerator.ppt import powerpoint_slide_creator
+from talkgenerator.slide import powerpoint_slide_creator
 
 
 # GENERATORS: Same as the template fillers above, but using generation functions

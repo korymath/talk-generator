@@ -140,7 +140,7 @@ def _print_all_placeholders(slide):
 
 # FORMAT GENERATORS
 # These are functions that get some inputs (texts, images...)
-# and create layouted slides with these inputs
+# and create layouted slide with these inputs
 
 def create_new_powerpoint():
     return Presentation(get_powerpoint_template_file())
