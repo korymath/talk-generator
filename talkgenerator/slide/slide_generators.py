@@ -46,6 +46,94 @@ class TitleSlideGenerator(SlideGenerator):
         return slides.TitleSlide
 
 
+class LarqeQuoteSlideGenerator(SlideGenerator):
+    def __init__(self, slide_content_generator):
+        super().__init__(slide_content_generator)
+
+    @classmethod
+    def of(cls, title_generator, text_generator, background_imag_generator):
+        return cls(combine_generators(title_generator, text_generator, background_imag_generator))
+
+    @property
+    def slide_type(self):
+        return slides.LarqeQuoteSlide
+
+
+class ImageSlideGenerator(SlideGenerator):
+    def __init__(self, slide_content_generator):
+        super().__init__(slide_content_generator)
+
+    @classmethod
+    def of(cls, title_generator, image_generator=None, original_image_size=True):
+        return cls(combine_generators(title_generator, image_generator, lambda void: original_image_size))
+
+    @property
+    def slide_type(self):
+        return slides.ImageSlide
+
+
+class FullImageSlideGenerator(SlideGenerator):
+    def __init__(self, slide_content_generator):
+        super().__init__(slide_content_generator)
+
+    @classmethod
+    def of(cls, title_generator, image_generator=None, original_image_size=True):
+        return cls(combine_generators(title_generator, image_generator, lambda void: original_image_size))
+
+    @property
+    def slide_type(self):
+        return slides.FullImageSlide
+
+
+class TwoColumnImageSlide(SlideGenerator):
+    def __init__(self, slide_content_generator):
+        super().__init__(slide_content_generator)
+
+    @classmethod
+    def of(cls, title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
+           image_or_text_2_generator, original_image_size=True):
+        return cls(
+            combine_generators(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
+                               image_or_text_2_generator, lambda void: original_image_size))
+
+    @property
+    def slide_type(self):
+        return slides.TwoColumnImageSlide
+
+
+class ThreeColumnImageSlide(SlideGenerator):
+    def __init__(self, slide_content_generator):
+        super().__init__(slide_content_generator)
+
+    @classmethod
+    def of(cls, title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
+           image_or_text_2_generator, caption_3_generator,
+           image_or_text_3_generator, original_image_size=True):
+        return cls(
+            combine_generators(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
+                               image_or_text_2_generator, caption_3_generator,
+                               image_or_text_3_generator, lambda void: original_image_size))
+
+    @property
+    def slide_type(self):
+        return slides.ThreeColumnImageSlide
+
+
+class ChartSlide(SlideGenerator):
+    def __init__(self, slide_content_generator):
+        super().__init__(slide_content_generator)
+
+    @classmethod
+    def of(cls, title_generator, chart_type_generator, chart_data_generator, chart_modifier=None):
+        return cls(
+            combine_generators(title_generator, chart_type_generator, chart_data_generator,
+                               lambda void: chart_modifier))
+
+    @property
+    def slide_type(self):
+        return slides.ChartSlide
+
+
 # HELPERS
 def combine_generators(*generators):
     return lambda presentation_context: [content_generator(presentation_context)
