@@ -11,13 +11,18 @@ class Slide(metaclass=ABCMeta):
 
     @property
     @abstractmethod
-    def slide_type(self):
+    def ppt_slide_creator(self):
+        """ The function converting it to powerpoint"""
         pass
 
+    @property
     @abstractmethod
+    def arguments(self):
+        pass
+
     def create_powerpoint_slide(self, prs):
         """ Should generate a slide in the powerpoint """
-        pass
+        return self.ppt_slide_creator(prs, **self.arguments)
 
 
 class TitleSlide(Slide):
@@ -25,8 +30,13 @@ class TitleSlide(Slide):
         self._title = title
         self._subtitle = subtitle
 
-    def slide_type(self):
-        return powerpoint_slide_creator.LAYOUT_TITLE_SLIDE
+    @property
+    def ppt_slide_creator(self):
+        return powerpoint_slide_creator.create_title_slide
 
-    def create_powerpoint_slide(self, prs):
-        return powerpoint_slide_creator.create_title_slide(prs, self._title, self._subtitle)
+    @property
+    def arguments(self):
+        return {
+            'title': self._title,
+            'subtitle': self._subtitle
+        }

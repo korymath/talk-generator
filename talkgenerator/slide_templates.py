@@ -1,7 +1,7 @@
 """ This module helps creating specific type of slides using our template powerpoint using python-pptx """
 from talkgenerator.util import generator_util
 
-from talkgenerator.slide import powerpoint_slide_creator
+from talkgenerator.slide import powerpoint_slide_creator, slides
 
 
 # GENERATORS: Same as the template fillers above, but using generation functions
@@ -28,7 +28,11 @@ def generate_image_slide_tuple(tuple_generator, original_image_size=True):
 
 
 def generate_title_slide(title_generator, subtitle_generator):
-    return generate_slide(powerpoint_slide_creator.create_title_slide, (title_generator, subtitle_generator))
+    return generate_slide(
+        lambda prs, title, subtitle: slides.TitleSlide(title, subtitle).create_powerpoint_slide(prs),
+        # (title, subtitle) => slides.
+        # powerpoint_slide_creator.create_title_slide,
+        (title_generator, subtitle_generator))
 
 
 def generate_large_quote_slide(title_generator, text_generator,
