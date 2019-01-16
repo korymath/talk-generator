@@ -290,7 +290,7 @@ reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funny
 all_slide_generators = [
     # TITLE
     SlideGeneratorData(
-        slide_generators.TitleSlideGenerator.of(talk_title_generator, talk_subtitle_generator).generate_ppt_slide,
+        slide_generators.TitleSlideGenerator.of(talk_title_generator, talk_subtitle_generator),
         weight_function=create_peaked_weight((0,), 100000, 0),
         tags=["title"],
         name="Title slide"),
@@ -298,12 +298,12 @@ all_slide_generators = [
     # ABOUT ME
     SlideGeneratorData(
         # slide_templates.generate_three_column_images_slide_tuple(
-        slide_generators.ThreeColumnImageSlide.of_tupled_captioned_images(
+        slide_generators.ThreeColumnImageSlideGenerator.of_tupled_captioned_images(
             about_me_title_generator,
             about_me_location_or_country_tuple_generator,
             about_me_job_tuple_generator,
             about_me_hobby_tuple_generator,
-        ).generate_ppt_slide,
+        ),
         create_peaked_weight((1,), 10, 0),
         allowed_repeated_elements=3,
         tags=["about_me"],
@@ -312,11 +312,11 @@ all_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_two_column_images_slide_tuple(
 
-        slide_generators.TwoColumnImageSlide.of_tupled_captioned_images(
+        slide_generators.TwoColumnImageSlideGenerator.of_tupled_captioned_images(
             about_me_title_generator,
             about_me_location_or_country_tuple_generator,
             about_me_job_tuple_generator,
-        ).generate_ppt_slide,
+        ),
         create_peaked_weight((1,), 4, 0),
         allowed_repeated_elements=3,
         tags=["about_me"],
@@ -324,12 +324,12 @@ all_slide_generators = [
 
     SlideGeneratorData(
         # slide_templates.generate_three_column_images_slide_tuple(
-        slide_generators.ThreeColumnImageSlide.of_tupled_captioned_images(
+        slide_generators.ThreeColumnImageSlideGenerator.of_tupled_captioned_images(
             about_me_title_generator,
             about_me_location_or_country_tuple_generator,
             about_me_book_tuple_generator,
             about_me_hobby_tuple_generator,
-        ).generate_ppt_slide,
+        ),
         create_peaked_weight((1,), 4, 0),
         allowed_repeated_elements=0,
         tags=["about_me"],
@@ -339,7 +339,7 @@ all_slide_generators = [
         # slide_templates.generate_image_slide_tuple(
         slide_generators.ImageSlideGenerator.of_tupled_captioned_image(
             about_me_hobby_tuple_generator
-        ).generate_ppt_slide,
+        ),
         create_peaked_weight((1, 2), 3, 0),
         allowed_repeated_elements=0,
         tags=["about_me"],
@@ -348,13 +348,13 @@ all_slide_generators = [
     # HISTORY
     SlideGeneratorData(
         # slide_templates.generate_two_column_images_slide(
-        slide_generators.TwoColumnImageSlide.of(
+        slide_generators.TwoColumnImageSlideGenerator.of(
             history_and_history_person_title_generator,
             historical_name_generator,
             vintage_person_generator,
             none_generator,
             create_goodreads_quote_generator(280)
-        ).generate_ppt_slide,
+        ),
         weight_function=create_peaked_weight((2, 3), 20, 0.3),
         allowed_repeated_elements=0,
         tags=["history", "quote"],
@@ -362,12 +362,12 @@ all_slide_generators = [
 
     SlideGeneratorData(
         # slide_templates.generate_two_column_images_slide_tuple_caption(
-        slide_generators.TwoColumnImageSlide.of_images_and_tupled_captions(
+        slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             history_title_generator,
             historic_double_captions_generator,
             vintage_picture_generator,
             vintage_picture_generator
-        ).generate_ppt_slide,
+        ),
         weight_function=create_peaked_weight((2, 3), 12, 0.1),
         allowed_repeated_elements=0,
         tags=["history", "two_images"],
@@ -378,28 +378,28 @@ all_slide_generators = [
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
             anticipation_title_generator,
-            combined_gif_generator).generate_ppt_slide,
+            combined_gif_generator),
         tags=["full_image", "gif"],
         name="Full Screen Giphy"),
     SlideGeneratorData(
         # slide_templates.generate_image_slide(
         slide_generators.ImageSlideGenerator.of(
             default_slide_title_generator,
-            combined_gif_generator).generate_ppt_slide,
+            combined_gif_generator),
         tags=["single_image", "gif"],
         name="Single Image Giphy"),
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
             none_generator,
-            generate_full_screen_google_image).generate_ppt_slide,
+            generate_full_screen_google_image),
         tags=["full_image", "google_images"],
         name="Full Screen Google Images"),
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
             default_slide_title_generator,
-            generate_wide_google_image).generate_ppt_slide,
+            generate_wide_google_image),
         tags=["full_image", "google_images"],
         name="Wide Google Images"),
 
@@ -409,7 +409,7 @@ all_slide_generators = [
         # slide_templates.generate_image_slide(
         slide_generators.ImageSlideGenerator.of(
             inspiration_title_generator,
-            inspirobot_image_generator).generate_ppt_slide,
+            inspirobot_image_generator),
         weight_function=constant_weight(0.6),
         tags=["inspiration", "statement"],
         name="Inspirobot"),
@@ -419,7 +419,7 @@ all_slide_generators = [
         slide_generators.LarqeQuoteSlideGenerator.of(
             title_generator=none_generator,
             text_generator=generate_wikihow_bold_statement,
-            background_image_generator=generate_full_screen_google_image).generate_ppt_slide,
+            background_image_generator=generate_full_screen_google_image),
         tags=["bold_statement", "statement"],
         name="Wikihow Bold Statement"),
 
@@ -428,7 +428,7 @@ all_slide_generators = [
         slide_generators.LarqeQuoteSlideGenerator.of(
             title_generator=none_generator,
             text_generator=create_goodreads_quote_generator(250),
-            background_image_generator=generate_full_screen_google_image).generate_ppt_slide,
+            background_image_generator=generate_full_screen_google_image),
         weight_function=constant_weight(0.6),
         tags=["quote", "statement"],
         name="Goodreads Quote"),
@@ -439,52 +439,52 @@ all_slide_generators = [
             title_generator=none_generator,
             text_generator=anecdote_prompt_generator,
             background_image_generator=generate_full_screen_google_image
-        ).generate_ppt_slide,
+        ),
         tags=["anecdote"],
         name="Anecdote"),
 
     # TWO CAPTIONS VARIATIONS
     SlideGeneratorData(
         # slide_templates.generate_two_column_images_slide_tuple_caption(
-        slide_generators.TwoColumnImageSlide.of_images_and_tupled_captions(
+        slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             double_captions_generator,
             combined_gif_generator,
-            combined_gif_generator).generate_ppt_slide,
+            combined_gif_generator),
         weight_function=constant_weight(2),
         tags=["multi_caption", "two_captions", "gif"],
         name="Two Captions Gifs"),
 
     SlideGeneratorData(
         # slide_templates.generate_two_column_images_slide_tuple_caption(
-        slide_generators.TwoColumnImageSlide.of_images_and_tupled_captions(
+        slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             double_captions_generator,
             weird_image_generator,
-            weird_and_shitpost_generator).generate_ppt_slide,
+            weird_and_shitpost_generator),
         weight_function=constant_weight(2),
         tags=["multi_caption", "two_captions", "reddit"],
         name="Two Captions Weird Reddit"),
 
     SlideGeneratorData(
         # slide_templates.generate_two_column_images_slide_tuple_caption(
-        slide_generators.TwoColumnImageSlide.of_images_and_tupled_captions(
+        slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             double_captions_generator,
             weird_and_shitpost_and_gif_generator,
-            weird_and_shitpost_and_gif_generator).generate_ppt_slide(),
+            weird_and_shitpost_and_gif_generator),
         weight_function=constant_weight(2),
         tags=["multi_caption", "two_captions", "reddit"],
         name="Two Captions Weird"),
 
     SlideGeneratorData(
         # slide_templates.generate_three_column_images_slide_tuple_caption(
-        slide_generators.ThreeColumnImageSlide.of_images_and_tupled_captions(
+        slide_generators.ThreeColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             triple_captions_generator,
             weird_and_shitpost_and_gif_generator,
             weird_and_shitpost_and_gif_generator,
-            weird_and_shitpost_generator).generate_ppt_slide,
+            weird_and_shitpost_generator),
         weight_function=constant_weight(1),
         allowed_repeated_elements=4,
         tags=["multi_caption", "three_captions", "reddit"],
@@ -496,7 +496,7 @@ all_slide_generators = [
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
             none_generator,
-            reddit_chart_generator).generate_ppt_slide(),
+            reddit_chart_generator),
         weight_function=constant_weight(4),
         allowed_repeated_elements=0,
         tags=["chart"],
@@ -506,7 +506,7 @@ all_slide_generators = [
         # slide_templates.generate_chart_slide_tuple(
         slide_generators.ChartSlideGenerator(
             chart.generate_yes_no_pie
-        ).generate_ppt_slide,
+        ),
         retries=1,
         allowed_repeated_elements=4,
         weight_function=constant_weight(2.5),
@@ -517,7 +517,7 @@ all_slide_generators = [
         # slide_templates.generate_chart_slide_tuple(
         slide_generators.ChartSlideGenerator(
             chart.generate_location_pie
-        ).generate_ppt_slide,
+        ),
         allowed_repeated_elements=4,
         retries=1,
         weight_function=constant_weight(0.08),
@@ -527,7 +527,7 @@ all_slide_generators = [
         # slide_templates.generate_chart_slide_tuple(
         slide_generators.ChartSlideGenerator(
             chart.generate_property_pie
-        ).generate_ppt_slide,
+        ),
         allowed_repeated_elements=4,
         retries=1,
         weight_function=constant_weight(0.04),
@@ -537,7 +537,7 @@ all_slide_generators = [
         # slide_templates.generate_chart_slide_tuple(
         slide_generators.ChartSlideGenerator(
             chart.generate_correlation_curve
-        ).generate_ppt_slide,
+        ),
         allowed_repeated_elements=4,
         retries=1,
         weight_function=constant_weight(0.5),
@@ -547,7 +547,7 @@ all_slide_generators = [
     # CONCLUSION:
     SlideGeneratorData(
         # slide_templates.generate_two_column_images_slide(
-        slide_generators.TwoColumnImageSlide.of(
+        slide_generators.TwoColumnImageSlideGenerator.of(
             conclusion_title_generator,
             create_static_generator("Conclusion 1"),
             generate_google_image,
@@ -562,7 +562,7 @@ all_slide_generators = [
         name="Conclusion"),
     SlideGeneratorData(
         # slide_templates.generate_three_column_images_slide(
-        slide_generators.ThreeColumnImageSlide.of(
+        slide_generators.ThreeColumnImageSlideGenerator.of(
             conclusion_title_generator,
             create_static_generator("Conclusion 1"),
             generate_google_image,

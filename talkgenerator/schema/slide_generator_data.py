@@ -44,9 +44,10 @@ class SlideGeneratorData:
 
     def generate(self, presentation_context, used_elements):
         """Generate a slide for a given presentation using the given seed."""
+        prs = presentation_context["presentation"]
         # Try a certain amount of times
         for i in range(self._retries):
-            slide_results = self._generator(presentation_context, (used_elements, self._allowed_repeated_elements))
+            slide_results = self._generator.generate_ppt_slide(presentation_context, (used_elements, self._allowed_repeated_elements))
             if slide_results:
                 (slide, generated_elements) = slide_results
 

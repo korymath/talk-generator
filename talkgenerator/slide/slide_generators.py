@@ -93,7 +93,7 @@ class FullImageSlideGenerator(SlideGenerator):
         return slides.FullImageSlide
 
 
-class TwoColumnImageSlide(SlideGenerator):
+class TwoColumnImageSlideGenerator(SlideGenerator):
     def __init__(self, slide_content_generator):
         super().__init__(slide_content_generator)
 
@@ -118,7 +118,7 @@ class TwoColumnImageSlide(SlideGenerator):
     @classmethod
     def of_images_and_tupled_captions(cls, title_generator, captions_generator, image_1_generator,
                                       image_2_generator, original_image_size=True):
-        def generate(presentation_context, used):
+        def generate(presentation_context):
             generated_tuple = captions_generator(presentation_context)
             return title_generator(presentation_context), generated_tuple[0], image_1_generator(
                 presentation_context), generated_tuple[1], image_2_generator(presentation_context), original_image_size
@@ -130,7 +130,7 @@ class TwoColumnImageSlide(SlideGenerator):
         return slides.TwoColumnImageSlide
 
 
-class ThreeColumnImageSlide(SlideGenerator):
+class ThreeColumnImageSlideGenerator(SlideGenerator):
     def __init__(self, slide_content_generator):
         super().__init__(slide_content_generator)
 
@@ -158,7 +158,7 @@ class ThreeColumnImageSlide(SlideGenerator):
     @classmethod
     def of_images_and_tupled_captions(cls, title_generator, captions_generator, image_1_generator,
                                       image_2_generator, image_3_generator, original_image_size=True):
-        def generate(presentation_context, used):
+        def generate(presentation_context):
             generated_tuple = captions_generator(presentation_context)
             return title_generator(presentation_context), generated_tuple[0], image_1_generator(
                 presentation_context), generated_tuple[1], image_2_generator(presentation_context), generated_tuple[
