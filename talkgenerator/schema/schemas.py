@@ -14,7 +14,7 @@ from talkgenerator.util.generator_util import create_seeded_generator, none_gene
     create_backup_generator, remove_invalid_images_from_generator, create_inspired_tuple_generator, \
     apply_function_to_generator, create_tupled_generator
 from talkgenerator.schema.presentation_schema import PresentationSchema
-from talkgenerator.schema.slide_generator import SlideGeneratorData, constant_weight, create_peaked_weight
+from talkgenerator.schema.slide_generator_data import SlideGeneratorData, constant_weight, create_peaked_weight
 
 
 # = TEXT GENERATORS=

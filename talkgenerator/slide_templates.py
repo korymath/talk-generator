@@ -2,6 +2,7 @@
 from talkgenerator.util import generator_util
 
 from talkgenerator.slide import powerpoint_slide_creator, slides
+from talkgenerator.slide.slide_generators import generate_slide, generate_if_different_enough
 
 
 # GENERATORS: Same as the template fillers above, but using generation functions
@@ -21,8 +22,8 @@ def generate_image_slide_tuple(tuple_generator, original_image_size=True):
         generated_tuple = tuple_generator(presentation_context)
         generated = generated_tuple[0], generated_tuple[1], original_image_size
 
-        return _generate_if_different_enough(powerpoint_slide_creator.create_image_slide, presentation_context,
-                                             generated, used)
+        return generate_if_different_enough(powerpoint_slide_creator.create_image_slide, presentation_context,
+                                            generated, used)
 
     return generate
 
@@ -54,8 +55,8 @@ def generate_two_column_images_slide_tuple(title_generator, tuple_1_generator, t
         generated = title_generator(presentation_context), generated_tuple_1[0], generated_tuple_1[1], \
                     generated_tuple_2[0], generated_tuple_2[1]
 
-        return _generate_if_different_enough(powerpoint_slide_creator.create_two_column_images_slide,
-                                             presentation_context, generated, used)
+        return generate_if_different_enough(powerpoint_slide_creator.create_two_column_images_slide,
+                                            presentation_context, generated, used)
 
     return generate
 
@@ -66,8 +67,8 @@ def generate_two_column_images_slide_tuple_caption(title_generator, captions_gen
         generated_tuple = captions_generator(presentation_context)
         generated = title_generator(presentation_context), generated_tuple[0], image_1_generator(
             presentation_context), generated_tuple[1], image_2_generator(presentation_context)
-        return _generate_if_different_enough(powerpoint_slide_creator.create_two_column_images_slide,
-                                             presentation_context, generated, used)
+        return generate_if_different_enough(powerpoint_slide_creator.create_two_column_images_slide,
+                                            presentation_context, generated, used)
 
     return generate
 
@@ -90,8 +91,8 @@ def generate_three_column_images_slide_tuple(title_generator, tuple_1_generator,
                     generated_tuple_2[0], generated_tuple_2[1], \
                     generated_tuple_3[0], generated_tuple_3[1]
 
-        return _generate_if_different_enough(powerpoint_slide_creator.create_three_column_images_slide,
-                                             presentation_context, generated, used)
+        return generate_if_different_enough(powerpoint_slide_creator.create_three_column_images_slide,
+                                            presentation_context, generated, used)
 
     return generate
 
@@ -103,8 +104,8 @@ def generate_three_column_images_slide_tuple_caption(title_generator, captions_g
         generated = title_generator(presentation_context), generated_tuple[0], image_1_generator(
             presentation_context), generated_tuple[1], image_2_generator(presentation_context), \
                     generated_tuple[2], image_3_generator(presentation_context)
-        return _generate_if_different_enough(powerpoint_slide_creator.create_three_column_images_slide,
-                                             presentation_context, generated, used)
+        return generate_if_different_enough(powerpoint_slide_creator.create_three_column_images_slide,
+                                            presentation_context, generated, used)
 
     return generate
 
@@ -115,38 +116,10 @@ def generate_chart_slide(title_generator, chart_generator):
 
 def generate_chart_slide_tuple(chart_generator):
     def generate(presentation_context, used):
-        return _generate_if_different_enough(powerpoint_slide_creator.create_chart_slide, presentation_context,
-                                             chart_generator(presentation_context), used)
+        return generate_if_different_enough(powerpoint_slide_creator.create_chart_slide, presentation_context,
+                                            chart_generator(presentation_context), used)
 
     return generate
-
-
-# HELPERS
-
-def generate_slide(slide_template, generators):
-    def generate(presentation_context, used):
-        generated = [content_generator(presentation_context) if content_generator else None for content_generator in
-                     generators]
-        return _generate_if_different_enough(slide_template, presentation_context, generated, used)
-
-    return generate
-
-
-def _generate_if_different_enough(slide_template, presentation_context, generated, used):
-    if _is_different_enough(generated, used):
-        return slide_template(get_presentation(presentation_context), *generated), generated
-
-
-def get_presentation(presentation_context):
-    return presentation_context["presentation"]
-
-
-def _is_different_enough(generated, used):
-    if generated:
-        (used_elements, allowed_repeated_elements) = used
-        intersection = set(generated) & used_elements
-        return allowed_repeated_elements >= len(intersection)
-    return False
 
 
 def create_new_powerpoint():

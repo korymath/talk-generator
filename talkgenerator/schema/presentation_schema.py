@@ -4,7 +4,7 @@ presentation), and slide generators, that have functions for generating slides a
 
 """
 
-from talkgenerator.schema.slide_generator import _filter_generated_elements
+from talkgenerator.schema.slide_generator_data import _filter_generated_elements
 
 from talkgenerator.util import random_util
 
