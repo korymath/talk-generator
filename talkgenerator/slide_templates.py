@@ -2,7 +2,7 @@
 from talkgenerator.util import generator_util
 
 from talkgenerator.slide import powerpoint_slide_creator, slides
-from talkgenerator.slide.slide_generators import generate_slide, generate_if_different_enough
+from talkgenerator.slide.slide_generators import is_different_enough
 
 
 # GENERATORS: Same as the template fillers above, but using generation functions
@@ -120,6 +120,24 @@ def generate_chart_slide_tuple(chart_generator):
                                             chart_generator(presentation_context), used)
 
     return generate
+
+
+def generate_slide(slide_template, generators):
+    def generate(presentation_context, used):
+        generated = [content_generator(presentation_context) if content_generator else None for content_generator in
+                     generators]
+        return generate_if_different_enough(slide_template, presentation_context, generated, used)
+
+    return generate
+
+
+def generate_if_different_enough(slide_template, presentation_context, generated, used):
+    if is_different_enough(generated, used):
+        return slide_template(get_presentation(presentation_context), *generated), generated
+
+
+def get_presentation(presentation_context):
+    return presentation_context["presentation"]
 
 
 def create_new_powerpoint():
