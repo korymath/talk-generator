@@ -1,5 +1,5 @@
-
 from functools import lru_cache
+
 
 # WEIGHT FUNCTIONS
 def create_peaked_weight(peak_values, weight, other_weight):

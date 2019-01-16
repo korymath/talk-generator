@@ -290,7 +290,7 @@ reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funny
 all_slide_generators = [
     # TITLE
     SlideGeneratorData(
-        slide_generators.TitleSlideGenerator(talk_title_generator, talk_subtitle_generator).generate_ppt_slide,
+        slide_generators.TitleSlideGenerator.of(talk_title_generator, talk_subtitle_generator).generate_ppt_slide,
         weight_function=create_peaked_weight((0,), 100000, 0),
         tags=["title"],
         name="Title slide"),

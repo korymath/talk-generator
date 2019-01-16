@@ -34,8 +34,12 @@ class SlideGenerator(metaclass=ABCMeta):
 
 
 class TitleSlideGenerator(SlideGenerator):
-    def __init__(self, title_generator, subtitle_generator):
-        super().__init__(combine_generators(title_generator, subtitle_generator))
+    def __init__(self, slide_content_generator):
+        super().__init__(slide_content_generator)
+
+    @classmethod
+    def of(cls, title_generator, subtitle_generator):
+        return cls(combine_generators(title_generator, subtitle_generator))
 
     @property
     def slide_type(self):
