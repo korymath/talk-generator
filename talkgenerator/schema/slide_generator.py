@@ -24,7 +24,7 @@ def constant_weight(weight):
 
 # Classes that are abstractly responsible for generating powerpoints
 
-class SlideGenerator:
+class SlideGeneratorData:
     """ Responsible for providing the slide generator and other attributes, such as its name and weight"""
 
     def __init__(self, generator,

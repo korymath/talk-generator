@@ -14,7 +14,7 @@ from talkgenerator.util.generator_util import create_seeded_generator, none_gene
     create_backup_generator, remove_invalid_images_from_generator, create_inspired_tuple_generator, \
     apply_function_to_generator, create_tupled_generator
 from talkgenerator.schema.presentation_schema import PresentationSchema
-from talkgenerator.schema.slide_generator import SlideGenerator, constant_weight, create_peaked_weight
+from talkgenerator.schema.slide_generator import SlideGeneratorData, constant_weight, create_peaked_weight
 
 
 # = TEXT GENERATORS=
@@ -288,14 +288,14 @@ reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funny
 
 all_slide_generators = [
     # TITLE
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
         weight_function=create_peaked_weight((0,), 100000, 0),
         tags=["title"],
         name="Title slide"),
 
     # ABOUT ME
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_three_column_images_slide_tuple(
             about_me_title_generator,
             about_me_location_or_country_tuple_generator,
@@ -307,7 +307,7 @@ all_slide_generators = [
         tags=["about_me"],
         name="About Me: Location-Job-WeirdHobby"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_two_column_images_slide_tuple(
             about_me_title_generator,
             about_me_location_or_country_tuple_generator,
@@ -318,7 +318,7 @@ all_slide_generators = [
         tags=["about_me"],
         name="About Me: Location-Job"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_three_column_images_slide_tuple(
             about_me_title_generator,
             about_me_location_or_country_tuple_generator,
@@ -330,7 +330,7 @@ all_slide_generators = [
         tags=["about_me"],
         name="About Me: Location-Book-WeirdHobby"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_image_slide_tuple(
             about_me_hobby_tuple_generator
         ),
@@ -340,7 +340,7 @@ all_slide_generators = [
         name="Weird Hobby"),
 
     # HISTORY
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_two_column_images_slide(
             history_and_history_person_title_generator,
             historical_name_generator,
@@ -353,7 +353,7 @@ all_slide_generators = [
         tags=["history", "quote"],
         name="Historical Figure Quote"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_two_column_images_slide_tuple_caption(
             history_title_generator,
             historic_double_captions_generator,
@@ -366,25 +366,25 @@ all_slide_generators = [
         name="Two History Pictures"),
 
     # FULL SCREEN RELATED IMAGES
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_full_image_slide(
             anticipation_title_generator,
             combined_gif_generator),
         tags=["full_image", "gif"],
         name="Full Screen Giphy"),
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_image_slide(
             default_slide_title_generator,
             combined_gif_generator),
         tags=["single_image", "gif"],
         name="Single Image Giphy"),
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_full_image_slide(
             none_generator,
             generate_full_screen_google_image),
         tags=["full_image", "google_images"],
         name="Full Screen Google Images"),
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_full_image_slide(
             default_slide_title_generator,
             generate_wide_google_image),
@@ -393,7 +393,7 @@ all_slide_generators = [
 
     # WISE STATEMENTS
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_image_slide(
             inspiration_title_generator,
             inspirobot_image_generator),
@@ -401,7 +401,7 @@ all_slide_generators = [
         tags=["inspiration", "statement"],
         name="Inspirobot"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_large_quote_slide(
             title_generator=none_generator,
             text_generator=generate_wikihow_bold_statement,
@@ -409,7 +409,7 @@ all_slide_generators = [
         tags=["bold_statement", "statement"],
         name="Wikihow Bold Statement"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_large_quote_slide(
             title_generator=none_generator,
             text_generator=create_goodreads_quote_generator(250),
@@ -418,7 +418,7 @@ all_slide_generators = [
         tags=["quote", "statement"],
         name="Goodreads Quote"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_large_quote_slide(
             title_generator=none_generator,
             text_generator=anecdote_prompt_generator,
@@ -428,7 +428,7 @@ all_slide_generators = [
         name="Anecdote"),
 
     # TWO CAPTIONS VARIATIONS
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_two_column_images_slide_tuple_caption(
             default_or_no_title_generator,
             double_captions_generator,
@@ -438,7 +438,7 @@ all_slide_generators = [
         tags=["multi_caption", "two_captions", "gif"],
         name="Two Captions Gifs"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_two_column_images_slide_tuple_caption(
             default_or_no_title_generator,
             double_captions_generator,
@@ -448,7 +448,7 @@ all_slide_generators = [
         tags=["multi_caption", "two_captions", "reddit"],
         name="Two Captions Weird Reddit"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_two_column_images_slide_tuple_caption(
             default_or_no_title_generator,
             double_captions_generator,
@@ -458,7 +458,7 @@ all_slide_generators = [
         tags=["multi_caption", "two_captions", "reddit"],
         name="Two Captions Weird"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_three_column_images_slide_tuple_caption(
             default_or_no_title_generator,
             triple_captions_generator,
@@ -472,7 +472,7 @@ all_slide_generators = [
 
     # CHARTS
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_full_image_slide(
             none_generator,
             reddit_chart_generator),
@@ -481,7 +481,7 @@ all_slide_generators = [
         tags=["chart"],
         name="Reddit Chart"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_chart_slide_tuple(
             chart.generate_yes_no_pie
         ),
@@ -491,7 +491,7 @@ all_slide_generators = [
         tags=["pie_chart", "yes_no_chart", "chart"],
         name="Yes/No/Funny Chart"),
 
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_chart_slide_tuple(
             chart.generate_location_pie
         ),
@@ -500,7 +500,7 @@ all_slide_generators = [
         weight_function=constant_weight(0.08),
         tags=["location_chart", "pie_chart", "chart"],
         name="Location Chart"),
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_chart_slide_tuple(
             chart.generate_property_pie
         ),
@@ -509,7 +509,7 @@ all_slide_generators = [
         weight_function=constant_weight(0.04),
         tags=["property_chart", "pie_chart", "chart"],
         name="Property Chart"),
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_chart_slide_tuple(
             chart.generate_correlation_curve
         ),
@@ -520,7 +520,7 @@ all_slide_generators = [
         name="Correlation Curve"),
 
     # CONCLUSION:
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_two_column_images_slide(
             conclusion_title_generator,
             create_static_generator("Conclusion 1"),
@@ -534,7 +534,7 @@ all_slide_generators = [
         allowed_repeated_elements=10,
         tags=["conclusion"],
         name="Conclusion"),
-    SlideGenerator(
+    SlideGeneratorData(
         slide_templates.generate_three_column_images_slide(
             conclusion_title_generator,
             create_static_generator("Conclusion 1"),
