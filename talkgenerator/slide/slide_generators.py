@@ -67,6 +67,14 @@ class ImageSlideGenerator(SlideGenerator):
     def of(cls, title_generator, image_generator=None, original_image_size=True):
         return cls(combine_generators(title_generator, image_generator, lambda void: original_image_size))
 
+    @classmethod
+    def of_tupled_captioned_image(cls, tuple_1_generator, original_image_size=True):
+        def generate(presentation_context):
+            generated_tuple_1 = tuple_1_generator(presentation_context)
+            return generated_tuple_1[0], generated_tuple_1[1]
+
+        return generate
+
     @property
     def slide_type(self):
         return slides.ImageSlide

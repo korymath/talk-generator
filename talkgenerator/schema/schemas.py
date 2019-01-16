@@ -297,44 +297,49 @@ all_slide_generators = [
 
     # ABOUT ME
     SlideGeneratorData(
-        slide_templates.generate_three_column_images_slide_tuple(
+        # slide_templates.generate_three_column_images_slide_tuple(
+        slide_generators.ThreeColumnImageSlide.of_tupled_captioned_images(
             about_me_title_generator,
             about_me_location_or_country_tuple_generator,
             about_me_job_tuple_generator,
             about_me_hobby_tuple_generator,
-        ),
+        ).generate_ppt_slide,
         create_peaked_weight((1,), 10, 0),
         allowed_repeated_elements=3,
         tags=["about_me"],
         name="About Me: Location-Job-WeirdHobby"),
 
     SlideGeneratorData(
-        slide_templates.generate_two_column_images_slide_tuple(
+        # slide_templates.generate_two_column_images_slide_tuple(
+
+        slide_generators.TwoColumnImageSlide.of_tupled_captioned_images(
             about_me_title_generator,
             about_me_location_or_country_tuple_generator,
             about_me_job_tuple_generator,
-        ),
+        ).generate_ppt_slide,
         create_peaked_weight((1,), 4, 0),
         allowed_repeated_elements=3,
         tags=["about_me"],
         name="About Me: Location-Job"),
 
     SlideGeneratorData(
-        slide_templates.generate_three_column_images_slide_tuple(
+        # slide_templates.generate_three_column_images_slide_tuple(
+        slide_generators.ThreeColumnImageSlide.of_tupled_captioned_images(
             about_me_title_generator,
             about_me_location_or_country_tuple_generator,
             about_me_book_tuple_generator,
             about_me_hobby_tuple_generator,
-        ),
+        ).generate_ppt_slide,
         create_peaked_weight((1,), 4, 0),
         allowed_repeated_elements=0,
         tags=["about_me"],
         name="About Me: Location-Book-WeirdHobby"),
 
     SlideGeneratorData(
-        slide_templates.generate_image_slide_tuple(
+        # slide_templates.generate_image_slide_tuple(
+        slide_generators.ImageSlideGenerator.of_tupled_captioned_image(
             about_me_hobby_tuple_generator
-        ),
+        ).generate_ppt_slide,
         create_peaked_weight((1, 2), 3, 0),
         allowed_repeated_elements=0,
         tags=["about_me"],
