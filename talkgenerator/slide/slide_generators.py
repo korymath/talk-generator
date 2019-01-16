@@ -51,8 +51,8 @@ class LarqeQuoteSlideGenerator(SlideGenerator):
         super().__init__(slide_content_generator)
 
     @classmethod
-    def of(cls, title_generator, text_generator, background_imag_generator):
-        return cls(combine_generators(title_generator, text_generator, background_imag_generator))
+    def of(cls, title_generator, text_generator, background_image_generator):
+        return cls(combine_generators(title_generator, text_generator, background_image_generator))
 
     @property
     def slide_type(self):
@@ -171,7 +171,7 @@ class ThreeColumnImageSlide(SlideGenerator):
         return slides.ThreeColumnImageSlide
 
 
-class ChartSlide(SlideGenerator):
+class ChartSlideGenerator(SlideGenerator):
     def __init__(self, slide_content_generator):
         super().__init__(slide_content_generator)
 
