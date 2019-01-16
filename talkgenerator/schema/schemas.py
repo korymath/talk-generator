@@ -6,6 +6,7 @@ from talkgenerator.sources import shitpostbot, wikihow, google_images, inspirobo
     text_generator
 from talkgenerator import slide_templates
 from talkgenerator.schema import slide_topic_generators
+from talkgenerator.slide import slide_generators
 
 # Import a lot from generator_util to make schema creation easier
 from talkgenerator.util.generator_util import create_seeded_generator, none_generator, create_static_generator, \
@@ -289,7 +290,7 @@ reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funny
 all_slide_generators = [
     # TITLE
     SlideGeneratorData(
-        slide_templates.generate_title_slide(talk_title_generator, talk_subtitle_generator),
+        slide_generators.TitleSlideGenerator(talk_title_generator, talk_subtitle_generator).generate_ppt_slide,
         weight_function=create_peaked_weight((0,), 100000, 0),
         tags=["title"],
         name="Title slide"),
