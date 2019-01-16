@@ -30,8 +30,6 @@ def generate_image_slide_tuple(tuple_generator, original_image_size=True):
 def generate_title_slide(title_generator, subtitle_generator):
     return generate_slide(
         lambda prs, title, subtitle: slides.TitleSlide(title, subtitle).create_powerpoint_slide(prs),
-        # (title, subtitle) => slides.
-        # powerpoint_slide_creator.create_title_slide,
         (title_generator, subtitle_generator))
 
 
