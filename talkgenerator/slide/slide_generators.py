@@ -73,7 +73,7 @@ class ImageSlideGenerator(SlideGenerator):
             generated_tuple_1 = tuple_1_generator(presentation_context)
             return generated_tuple_1[0], generated_tuple_1[1]
 
-        return generate
+        return cls(generate)
 
     @property
     def slide_type(self):

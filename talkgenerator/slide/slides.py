@@ -8,6 +8,7 @@ class Slide(metaclass=ABCMeta):
 
     def __init__(self, arguments):
         self._arguments = arguments
+        self._note = ''
 
     def set_note(self, note):
         self._note = note
