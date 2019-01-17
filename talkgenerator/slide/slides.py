@@ -9,6 +9,9 @@ class Slide(metaclass=ABCMeta):
     def __init__(self, arguments):
         self._arguments = arguments
 
+    def set_note(self, note):
+        self._note = note
+
     @property
     @abstractmethod
     def ppt_slide_creator(self):
@@ -17,7 +20,9 @@ class Slide(metaclass=ABCMeta):
 
     def create_powerpoint_slide(self, prs):
         """ Should generate a slide in the powerpoint """
-        return self.ppt_slide_creator(prs, **self._arguments)
+        ppt_slide = self.ppt_slide_creator(prs, **self._arguments)
+        ppt_slide.notes_slide.notes_text_frame.text = self._note
+        return ppt_slide
 
 
 class TitleSlide(Slide):

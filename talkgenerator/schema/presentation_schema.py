@@ -7,6 +7,7 @@ presentation), and slide generators, that have functions for generating slides a
 from talkgenerator.schema.slide_generator_data import _filter_generated_elements
 
 from talkgenerator.util import random_util
+from talkgenerator.slide.slide_deck import SlideDeck
 
 
 class PresentationSchema:
@@ -25,6 +26,7 @@ class PresentationSchema:
         """Generate a presentation about a certain topic with a certain number of slides"""
         # Create new presentation
         presentation = self._powerpoint_creator()
+        slide_deck = SlideDeck(num_slides)
 
         # Create the topic-for-each-slide generator
         seed_generator = self._seed_generator(topic, num_slides)
@@ -60,6 +62,8 @@ class PresentationSchema:
                 # Add new generated content
                 slide, generated_elements, slide_generator = slide_results
 
+                slide_deck.add_slide(slide_nr, slide)
+
                 # Add generated items to used_elements list
                 generated_elements = set(generated_elements)
                 _filter_generated_elements(generated_elements)
@@ -67,6 +71,8 @@ class PresentationSchema:
 
                 # Add generator tags to used_tags list
                 add_tags(used_tags, slide_generator.get_tags())
+
+        slide_deck.to_powerpoint(presentation)
 
         return presentation
 

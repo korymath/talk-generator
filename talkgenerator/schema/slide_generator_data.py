@@ -44,10 +44,10 @@ class SlideGeneratorData:
 
     def generate(self, presentation_context, used_elements):
         """Generate a slide for a given presentation using the given seed."""
-        prs = presentation_context["presentation"]
         # Try a certain amount of times
         for i in range(self._retries):
-            slide_results = self._generator.generate_ppt_slide(presentation_context, (used_elements, self._allowed_repeated_elements))
+            slide_results = self._generator.generate_slide(presentation_context,
+                                                           (used_elements, self._allowed_repeated_elements))
             if slide_results:
                 (slide, generated_elements) = slide_results
 
@@ -57,13 +57,10 @@ class SlideGeneratorData:
 
                 if slide:
                     # Add notes about the generation
-                    slide.notes_slide.notes_text_frame.text = "Seed: " + presentation_context["seed"] \
-                                                              + "\nGenerator: " \
-                                                              + str(self) \
-                                                              + " \n Context: " \
-                                                              + str(presentation_context) \
-                                                              + " \n Generated Elements: " \
-                                                              + str(generated_elements)
+                    slide.set_note("Seed: " + presentation_context["seed"]
+                                   + "\nGenerator: " + str(self)
+                                   + " \n Context: " + str(presentation_context)
+                                   + " \n Generated Elements: " + str(generated_elements))
                     return slide, generated_elements
 
     def get_weight_for(self, slide_nr, total_slides):
