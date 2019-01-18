@@ -15,7 +15,7 @@ from talkgenerator.util.generator_util import create_seeded_generator, none_gene
     create_backup_generator, remove_invalid_images_from_generator, create_inspired_tuple_generator, \
     apply_function_to_generator, create_tupled_generator
 from talkgenerator.schema.presentation_schema import PresentationSchema
-from talkgenerator.schema.slide_generator_data import SlideGeneratorData, constant_weight, create_peaked_weight
+from talkgenerator.schema.slide_generator_data import SlideGeneratorData, constant_weight, PeakedWeight
 
 
 # = TEXT GENERATORS=
@@ -291,7 +291,7 @@ all_slide_generators = [
     # TITLE
     SlideGeneratorData(
         slide_generators.TitleSlideGenerator.of(talk_title_generator, talk_subtitle_generator),
-        weight_function=create_peaked_weight((0,), 100000, 0),
+        weight_function=PeakedWeight((0,), 100000, 0),
         tags=["title"],
         name="Title slide"),
 
@@ -304,7 +304,7 @@ all_slide_generators = [
             about_me_job_tuple_generator,
             about_me_hobby_tuple_generator,
         ),
-        create_peaked_weight((1,), 10, 0),
+        PeakedWeight((1,), 10, 0),
         allowed_repeated_elements=3,
         tags=["about_me"],
         name="About Me: Location-Job-WeirdHobby"),
@@ -317,7 +317,7 @@ all_slide_generators = [
             about_me_location_or_country_tuple_generator,
             about_me_job_tuple_generator,
         ),
-        create_peaked_weight((1,), 4, 0),
+        PeakedWeight((1,), 4, 0),
         allowed_repeated_elements=3,
         tags=["about_me"],
         name="About Me: Location-Job"),
@@ -330,7 +330,7 @@ all_slide_generators = [
             about_me_book_tuple_generator,
             about_me_hobby_tuple_generator,
         ),
-        create_peaked_weight((1,), 4, 0),
+        PeakedWeight((1,), 4, 0),
         allowed_repeated_elements=0,
         tags=["about_me"],
         name="About Me: Location-Book-WeirdHobby"),
@@ -340,7 +340,7 @@ all_slide_generators = [
         slide_generators.ImageSlideGenerator.of_tupled_captioned_image(
             about_me_hobby_tuple_generator
         ),
-        create_peaked_weight((1, 2), 3, 0),
+        PeakedWeight((1, 2), 3, 0),
         allowed_repeated_elements=0,
         tags=["about_me"],
         name="Weird Hobby"),
@@ -355,7 +355,7 @@ all_slide_generators = [
             none_generator,
             create_goodreads_quote_generator(280)
         ),
-        weight_function=create_peaked_weight((2, 3), 20, 0.3),
+        weight_function=PeakedWeight((2, 3), 20, 0.3),
         allowed_repeated_elements=0,
         tags=["history", "quote"],
         name="Historical Figure Quote"),
@@ -368,7 +368,7 @@ all_slide_generators = [
             vintage_picture_generator,
             vintage_picture_generator
         ),
-        weight_function=create_peaked_weight((2, 3), 12, 0.1),
+        weight_function=PeakedWeight((2, 3), 12, 0.1),
         allowed_repeated_elements=0,
         tags=["history", "two_images"],
         name="Two History Pictures"),
@@ -556,7 +556,7 @@ all_slide_generators = [
             create_static_generator("Conclusion 2"),
             weird_image_generator,
         ),
-        weight_function=create_peaked_weight((-1,), 10000, 0),
+        weight_function=PeakedWeight((-1,), 10000, 0),
         allowed_repeated_elements=10,
         tags=["conclusion"],
         name="Conclusion"),
@@ -573,7 +573,7 @@ all_slide_generators = [
             # (links it up nicely)
             combined_gif_generator,
         ),
-        weight_function=create_peaked_weight((-1,), 5000, 0),
+        weight_function=PeakedWeight((-1,), 5000, 0),
         allowed_repeated_elements=10,
         tags=["conclusion"],
         name="Conclusion"),

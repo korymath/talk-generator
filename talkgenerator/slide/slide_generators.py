@@ -18,7 +18,7 @@ class SlideGenerator(metaclass=ABCMeta):
 
     @classmethod
     def of(cls, *generators):
-        return cls(combine_generators(*generators))
+        return cls(CombinedGenerator(*generators))
 
     def generate_slide(self, presentation_context, used) -> (slides.Slide, list):
         """ Generates the slide using the given generators """
@@ -39,7 +39,7 @@ class TitleSlideGenerator(SlideGenerator):
 
     @classmethod
     def of(cls, title_generator, subtitle_generator):
-        return cls(combine_generators(title_generator, subtitle_generator))
+        return cls(CombinedGenerator(title_generator, subtitle_generator))
 
     @property
     def slide_type(self):
@@ -52,7 +52,7 @@ class LarqeQuoteSlideGenerator(SlideGenerator):
 
     @classmethod
     def of(cls, title_generator, text_generator, background_image_generator):
-        return cls(combine_generators(title_generator, text_generator, background_image_generator))
+        return cls(CombinedGenerator(title_generator, text_generator, background_image_generator))
 
     @property
     def slide_type(self):
@@ -65,7 +65,7 @@ class ImageSlideGenerator(SlideGenerator):
 
     @classmethod
     def of(cls, title_generator, image_generator=None, original_image_size=True):
-        return cls(combine_generators(title_generator, image_generator, lambda void: original_image_size))
+        return cls(CombinedGenerator(title_generator, image_generator, lambda void: original_image_size))
 
     @classmethod
     def of_tupled_captioned_image(cls, tuple_1_generator, original_image_size=True):
@@ -86,7 +86,7 @@ class FullImageSlideGenerator(SlideGenerator):
 
     @classmethod
     def of(cls, title_generator, image_generator=None, original_image_size=True):
-        return cls(combine_generators(title_generator, image_generator, lambda void: original_image_size))
+        return cls(CombinedGenerator(title_generator, image_generator, lambda void: original_image_size))
 
     @property
     def slide_type(self):
@@ -101,8 +101,8 @@ class TwoColumnImageSlideGenerator(SlideGenerator):
     def of(cls, title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
            image_or_text_2_generator, original_image_size=True):
         return cls(
-            combine_generators(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
-                               image_or_text_2_generator, lambda void: original_image_size))
+            CombinedGenerator(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
+                              image_or_text_2_generator, lambda void: original_image_size))
 
     @classmethod
     def of_tupled_captioned_images(cls, title_generator, tuple_1_generator, tuple_2_generator,
@@ -139,9 +139,9 @@ class ThreeColumnImageSlideGenerator(SlideGenerator):
            image_or_text_2_generator, caption_3_generator,
            image_or_text_3_generator, original_image_size=True):
         return cls(
-            combine_generators(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
-                               image_or_text_2_generator, caption_3_generator,
-                               image_or_text_3_generator, lambda void: original_image_size))
+            CombinedGenerator(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
+                              image_or_text_2_generator, caption_3_generator,
+                              image_or_text_3_generator, lambda void: original_image_size))
 
     @classmethod
     def of_tupled_captioned_images(cls, title_generator, tuple_1_generator, tuple_2_generator, tuple_3_generator,
@@ -178,8 +178,8 @@ class ChartSlideGenerator(SlideGenerator):
     @classmethod
     def of(cls, title_generator, chart_type_generator, chart_data_generator, chart_modifier=None):
         return cls(
-            combine_generators(title_generator, chart_type_generator, chart_data_generator,
-                               lambda void: chart_modifier))
+            CombinedGenerator(title_generator, chart_type_generator, chart_data_generator,
+                              lambda void: chart_modifier))
 
     @property
     def slide_type(self):
@@ -187,11 +187,20 @@ class ChartSlideGenerator(SlideGenerator):
 
 
 # HELPERS
-def combine_generators(*generators):
-    return lambda presentation_context: [content_generator(presentation_context)
-                                         if content_generator
-                                         else None
-                                         for content_generator in generators]
+# def combine_generators(*generators):
+#     return lambda presentation_context: [content_generator(presentation_context)
+#                                          if content_generator
+#                                          else None
+#                                          for content_generator in generators]
+
+
+class CombinedGenerator(object):
+    def __init__(self, *generators):
+        self._generators = generators
+
+    def __call__(self, presentation_context):
+        [content_generator(presentation_context) if content_generator else None for content_generator in
+         self._generators]
 
 
 def is_different_enough(generated, used):

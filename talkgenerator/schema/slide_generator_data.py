@@ -2,14 +2,27 @@ from functools import lru_cache
 
 
 # WEIGHT FUNCTIONS
-def create_peaked_weight(peak_values, weight, other_weight):
-    def weight_function(slide_nr, num_slides):
-        actual_peak_values = fix_indices(peak_values, num_slides)
-        if slide_nr in actual_peak_values:
-            return weight
-        return other_weight
+# def create_peaked_weight(peak_values, weight, other_weight):
+#     def weight_function(slide_nr, num_slides):
+#         actual_peak_values = fix_indices(peak_values, num_slides)
+#         if slide_nr in actual_peak_values:
+#             return weight
+#         return other_weight
+#
+#     return weight_function
 
-    return weight_function
+
+class PeakedWeight(object):
+    def __init__(self, peak_values, weight, other_weight):
+        self._peak_values = peak_values
+        self._weight = weight
+        self._other_weight = other_weight
+
+    def __call__(self, slide_nr, num_slides):
+        actual_peak_values = fix_indices(self._peak_values, num_slides)
+        if slide_nr in actual_peak_values:
+            return self._weight
+        return self._other_weight
 
 
 @lru_cache(maxsize=30)
