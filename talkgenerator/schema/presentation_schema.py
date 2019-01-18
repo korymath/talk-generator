@@ -39,8 +39,13 @@ class PresentationSchema:
         }
 
         used_tags = {}
-
         used_elements = set()
+
+        return self._generate_slide_deck(slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
+                                    used_tags).to_powerpoint(presentation)
+
+    def _generate_slide_deck(self, slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
+                             used_tags):
         for slide_nr in range(num_slides):
             # TODO Parallellise, make sure to solve race condition used_elements, and pass slide_nr as argument & back
 
@@ -55,25 +60,23 @@ class PresentationSchema:
 
             if slide_results:
                 # Add new generated content
-                slide, generated_elements, slide_generator = slide_results
-
+                slide, generated_elements, slide_generator_data = slide_results
                 slide_deck.add_slide(slide_nr, slide)
+                self._update_used_elements(used_elements, used_tags, generated_elements, slide_generator_data)
 
-                # Add generated items to used_elements list
-                generated_elements = set(generated_elements)
-                _filter_generated_elements(generated_elements)
-                used_elements.update(generated_elements)
+        return slide_deck
 
-                # Add generator tags to used_tags list
-                add_tags(used_tags, slide_generator.get_tags())
+    def _update_used_elements(self, used_elements, used_tags, generated_elements, slide_generator_data):
+        # Add generated items to used_elements list
+        generated_elements = set(generated_elements)
+        _filter_generated_elements(generated_elements)
+        used_elements.update(generated_elements)
 
-        slide_deck.to_powerpoint(presentation)
-
-        return presentation
+        # Add generator tags to used_tags list
+        add_tags(used_tags, slide_generator_data.get_tags())
 
     def _generate_slide(self, presentation_context, slide_nr, num_slides, used_elements=None,
                         prohibited_generators=None):
-
         # Default arguments: avoid mutable defaults
         if prohibited_generators is None:
             prohibited_generators = set()
