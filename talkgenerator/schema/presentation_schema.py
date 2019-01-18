@@ -22,7 +22,7 @@ class PresentationSchema:
             max_allowed_tags = {}
         self._max_allowed_tags = max_allowed_tags
 
-    def generate_presentation(self, topic, num_slides, presenter=None):
+    def generate_presentation(self, topic, num_slides, presenter=None, parallel=False):
         """Generate a presentation about a certain topic with a certain number of slides"""
         # Create new presentation
         presentation = self._powerpoint_creator()
@@ -41,8 +41,14 @@ class PresentationSchema:
         used_tags = {}
         used_elements = set()
 
-        self._generate_slide_deck(slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
-                                    used_tags).save_to_powerpoint(presentation)
+        # Generate
+        if parallel:
+            print("TODO: IMPLEMENT PARALLEL")
+        else:
+            self._generate_slide_deck(slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
+                                  used_tags)
+
+        slide_deck.save_to_powerpoint(presentation)
         return presentation
 
     def _generate_slide_deck(self, slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
@@ -67,7 +73,8 @@ class PresentationSchema:
 
         return slide_deck
 
-    def _update_used_elements(self, used_elements, used_tags, generated_elements, slide_generator_data):
+    @classmethod
+    def _update_used_elements(cls, used_elements, used_tags, generated_elements, slide_generator_data):
         # Add generated items to used_elements list
         generated_elements = set(generated_elements)
         _filter_generated_elements(generated_elements)

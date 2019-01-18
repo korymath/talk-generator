@@ -66,7 +66,8 @@ def main(arguments):
     # Generate the presentation object
     presentation = schema.generate_presentation(topic=arguments.topic,
                                                 num_slides=arguments.num_slides,
-                                                presenter=arguments.presenter)
+                                                presenter=arguments.presenter,
+                                                parallel=arguments.parallel)
 
     # Save presentation
     if arguments.save_ppt or settings.AWS_S3_ENABLED:
@@ -107,6 +108,10 @@ def get_argument_parser():
                         default="default", type=str)
     parser.add_argument('--presenter', help="The full name of the presenter, leave blank to randomise",
                         default=None, type=str)
+    parser.add_argument('--parallel',
+                        help="If this flag is true, the generated powerpoint will generate in parallel " +
+                             "(faster but drops some conditions)",
+                        default=False, type=str2bool)
     parser.add_argument('--output_folder', help="The folder to output the generated presentations",
                         default="../output/", type=str)
     parser.add_argument('--save_ppt', help="If this flag is true, the generated powerpoint will be saved",
