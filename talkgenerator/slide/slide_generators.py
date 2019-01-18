@@ -249,7 +249,7 @@ class CombinedGenerator(object):
         self._generators = generators
 
     def __call__(self, presentation_context):
-        [content_generator(presentation_context) if content_generator else None for content_generator in
+        return [content_generator(presentation_context) if content_generator else None for content_generator in
          self._generators]
 
 

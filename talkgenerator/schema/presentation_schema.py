@@ -34,7 +34,6 @@ class PresentationSchema:
 
         # Create main presentation_context
         main_presentation_context = {
-            "presentation": presentation,
             "topic": topic,
             "presenter": presenter
         }
