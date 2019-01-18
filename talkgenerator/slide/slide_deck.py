@@ -1,6 +1,3 @@
-from talkgenerator.slide.slides import Slide
-
-
 class SlideDeck():
     """ Represents a deck of Slide objects    """
 
@@ -14,7 +11,7 @@ class SlideDeck():
     def is_complete(self):
         return len(self._slides) >= self._size and (None not in self._slides)
 
-    def to_powerpoint(self, prs_template):
+    def save_to_powerpoint(self, prs_template):
         """ Should generate a slide in the powerpoint """
         if not self.is_complete():
             print("ERROR: SOME SLIDES WERE NOT GENERATED:", self._slides)

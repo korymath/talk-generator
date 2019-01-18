@@ -41,8 +41,9 @@ class PresentationSchema:
         used_tags = {}
         used_elements = set()
 
-        return self._generate_slide_deck(slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
-                                    used_tags).to_powerpoint(presentation)
+        self._generate_slide_deck(slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
+                                    used_tags).save_to_powerpoint(presentation)
+        return presentation
 
     def _generate_slide_deck(self, slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
                              used_tags):
