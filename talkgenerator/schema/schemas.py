@@ -38,7 +38,7 @@ default_slide_title_generator = createTemplatedTextGenerator("../../data/text-te
 
 default_or_no_title_generator = CombinedGenerator(
     (1, default_slide_title_generator),
-    (1, NoneGenerator)
+    (1, NoneGenerator())
 )
 
 anticipation_title_generator = createTemplatedTextGenerator(
@@ -352,7 +352,7 @@ all_slide_generators = [
             history_and_history_person_title_generator,
             historical_name_generator,
             vintage_person_generator,
-            NoneGenerator,
+            NoneGenerator(),
             create_goodreads_quote_generator(280)
         ),
         weight_function=PeakedWeight((2, 3), 20, 0.3),
@@ -391,7 +391,7 @@ all_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
-            NoneGenerator,
+            NoneGenerator(),
             generate_full_screen_google_image),
         tags=["full_image", "google_images"],
         name="Full Screen Google Images"),
@@ -417,7 +417,7 @@ all_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_large_quote_slide(
         slide_generators.LarqeQuoteSlideGenerator.of(
-            title_generator=NoneGenerator,
+            title_generator=NoneGenerator(),
             text_generator=generate_wikihow_bold_statement,
             background_image_generator=generate_full_screen_google_image),
         tags=["bold_statement", "statement"],
@@ -426,7 +426,7 @@ all_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_large_quote_slide(
         slide_generators.LarqeQuoteSlideGenerator.of(
-            title_generator=NoneGenerator,
+            title_generator=NoneGenerator(),
             text_generator=create_goodreads_quote_generator(250),
             background_image_generator=generate_full_screen_google_image),
         weight_function=constant_weight(0.6),
@@ -436,7 +436,7 @@ all_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_large_quote_slide(
         slide_generators.LarqeQuoteSlideGenerator.of(
-            title_generator=NoneGenerator,
+            title_generator=NoneGenerator(),
             text_generator=anecdote_prompt_generator,
             background_image_generator=generate_full_screen_google_image
         ),
@@ -495,7 +495,7 @@ all_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
-            NoneGenerator,
+            NoneGenerator(),
             reddit_chart_generator),
         weight_function=constant_weight(4),
         allowed_repeated_elements=0,
