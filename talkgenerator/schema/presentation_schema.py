@@ -42,22 +42,17 @@ class PresentationSchema:
 
         used_elements = set()
         for slide_nr in range(num_slides):
-            # TODO: This could possibly be done in parallel. There might be race conditions with the used_elements set,
-            # and the order of slides must still happen in the same order, so the slide_nr should be passed as
-            # argument to slide generator's content generator
-
-            # Generate a topic for the next slide
-            seed = seed_generator.generate_seed(slide_nr)
-
-            prohibited_generators = self._calculate_prohibited_generators(used_tags, num_slides)
+            # TODO Parallellise, make sure to solve race condition used_elements, and pass slide_nr as argument & back
 
             # Generate the slide
             slide_results = self._generate_slide(
-                presentation_context=create_slide_presentation_context(main_presentation_context, seed),
+                presentation_context=create_slide_presentation_context(main_presentation_context,
+                                                                       seed_generator.generate_seed(slide_nr)),
                 slide_nr=slide_nr,
                 num_slides=num_slides,
                 used_elements=used_elements,
-                prohibited_generators=prohibited_generators)
+                prohibited_generators=self._calculate_prohibited_generators(used_tags, num_slides))
+
             if slide_results:
                 # Add new generated content
                 slide, generated_elements, slide_generator = slide_results
@@ -113,6 +108,10 @@ class PresentationSchema:
 
     def _select_generator(self, slide_nr, total_slides, prohibited_generators):
         """Select a generator for a certain slide number"""
+        return random_util.weighted_random(
+            self._get_weighted_generators_for_slide_nr(slide_nr, total_slides, prohibited_generators))
+
+    def _get_weighted_generators_for_slide_nr(self, slide_nr, total_slides, prohibited_generators):
         weighted_generators = []
         for i in range(len(self._slide_generators)):
             generator = self._slide_generators[i]
@@ -124,7 +123,7 @@ class PresentationSchema:
         if len(weighted_generators) == 0:
             raise ValueError("No generators left to generate slides with!")
 
-        return random_util.weighted_random(weighted_generators)
+        return weighted_generators
 
     def _calculate_prohibited_generators(self, used_tags, num_slides):
         prohibited_tags = set()
