@@ -77,17 +77,18 @@ def create_backup_generator(*generator_list):
     return generate
 
 
-def combined_generator(*weighted_generators):
-    def generate(seed):
-        current_weighted_generators = list(weighted_generators)
+class CombinedGenerator(object):
+    def __init__(self, *weighted_generators):
+        self._weighted_generators = weighted_generators
+
+    def __call__(self, seed):
+        current_weighted_generators = list(self._weighted_generators)
         while len(current_weighted_generators) > 0:
             generator = random_util.weighted_random(current_weighted_generators)
             generated = generator(seed)
             if generated is not None:
                 return generated
             _remove_object_from_weighted_list(current_weighted_generators, generator)
-
-    return generate
 
 
 def _remove_object_from_weighted_list(current_weighted_generators, generator):
@@ -96,30 +97,39 @@ def _remove_object_from_weighted_list(current_weighted_generators, generator):
             current_weighted_generators.remove(i)
 
 
-def apply_function_to_generator(generator, *functions):
-    def generate(presentation_context):
-        generated = generator(presentation_context)
-        for func in functions:
+class MappedGenerator(object):
+    def __init__(self, generator, *functions):
+        self._generator = generator
+        self._functions = functions
+
+    def __call__(self, presentation_context):
+        generated = self._generator(presentation_context)
+        for func in self._functions:
             generated = func(generated)
         return generated
 
-    return generate
 
-
-def create_tupled_generator(*generators):
+class TupledGenerator(object):
     """ Creates a tuple generator that generates every tuple value independent from the others"""
-    return lambda x: tuple([generator(x) for generator in generators])
+
+    def __init__(self, *generators):
+        self._generators = generators
+
+    def __call__(self, x):
+        return tuple([generator(x) for generator in self._generators])
 
 
-def create_inspired_tuple_generator(generator_1, generator_2):
+class InspiredTupleGenerator(object):
     """ The second generator will get the generator 1 as input, outputting the tuple """
 
-    def generate_tuple(presentation_context):
-        gen_1 = generator_1(presentation_context)
-        gen_2 = generator_2(gen_1)
-        return gen_1, gen_2
+    def __init__(self, generator_1, generator_2):
+        self._generator_1 = generator_1
+        self._generator_2 = generator_2
 
-    return generate_tuple
+    def __call__(self, presentation_context):
+        gen_1 = self._generator_1(presentation_context)
+        gen_2 = self._generator_2(gen_1)
+        return gen_1, gen_2
 
 
 def create_weighted_generator(weighted_list_creator):

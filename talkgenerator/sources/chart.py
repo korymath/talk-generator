@@ -263,7 +263,7 @@ def generate_property_pie(presentation_context):
 
 
 _CORRELATION_WORD_GENERATOR = generator_util.create_walking_generator(
-    generator_util.combined_generator(
+    generator_util.CombinedGenerator(
         (2, conceptnet.unweighted_antonym_generator),
         (1, conceptnet.unweighted_related_word_generator)
     ),

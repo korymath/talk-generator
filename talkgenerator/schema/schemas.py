@@ -10,10 +10,10 @@ from talkgenerator.slide import slide_generators
 
 # Import a lot from generator_util to make schema creation easier
 from talkgenerator.util.generator_util import create_seeded_generator, none_generator, create_static_generator, \
-    combined_generator, \
+    CombinedGenerator, \
     create_from_external_image_list_generator, create_from_list_generator, \
-    create_backup_generator, remove_invalid_images_from_generator, create_inspired_tuple_generator, \
-    apply_function_to_generator, create_tupled_generator
+    create_backup_generator, remove_invalid_images_from_generator, InspiredTupleGenerator, \
+    MappedGenerator, TupledGenerator
 from talkgenerator.schema.presentation_schema import PresentationSchema
 from talkgenerator.schema.slide_generator_data import SlideGeneratorData, constant_weight, PeakedWeight
 
@@ -36,7 +36,7 @@ talk_subtitle_generator = createTraceryGenerator("../../data/text-templates/talk
 
 default_slide_title_generator = createTemplatedTextGenerator("../../data/text-templates/default_slide_title.txt")
 
-default_or_no_title_generator = combined_generator(
+default_or_no_title_generator = CombinedGenerator(
     (1, default_slide_title_generator),
     (1, none_generator)
 )
@@ -54,7 +54,7 @@ history_title_generator = createTemplatedTextGenerator(
     "../../data/text-templates/history.txt")
 history_person_title_generator = createTemplatedTextGenerator(
     "../../data/text-templates/history_person.txt")
-history_and_history_person_title_generator = combined_generator(
+history_and_history_person_title_generator = CombinedGenerator(
     (4, history_title_generator), (6, history_person_title_generator))
 about_me_title_generator = createTemplatedTextGenerator(
     "../../data/text-templates/about_me_title.txt")
@@ -134,7 +134,7 @@ shitpostbot_image_generator = create_from_external_image_list_generator(
     lambda url: os_util.to_actual_file("../../downloads/shitpostbot/{}".format(os_util.get_file_name(url)), __file__)
 )
 
-weird_and_shitpost_generator = combined_generator(
+weird_and_shitpost_generator = CombinedGenerator(
     (1, weird_image_generator),
     (2, shitpostbot_image_generator)
 )
@@ -147,9 +147,9 @@ giphy_generator = create_backup_generator(
 )
 reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", "nonononoYES")
 
-combined_gif_generator = combined_generator((.5, giphy_generator), (.5, reddit_gif_generator))
+combined_gif_generator = CombinedGenerator((.5, giphy_generator), (.5, reddit_gif_generator))
 
-weird_and_shitpost_and_gif_generator = combined_generator(
+weird_and_shitpost_and_gif_generator = CombinedGenerator(
     (1, weird_image_generator),
     (1, shitpostbot_image_generator),
     (1, combined_gif_generator)
@@ -243,21 +243,21 @@ def _apply_country_prefix(country_name):
     return country_description_generator() + country_name
 
 
-about_me_hobby_tuple_generator = create_tupled_generator(
+about_me_hobby_tuple_generator = TupledGenerator(
     hobby_description_generator,
     weird_and_shitpost_generator
 )
-about_me_book_tuple_generator = create_tupled_generator(
+about_me_book_tuple_generator = TupledGenerator(
     book_description_generator,
     reddit_book_cover_generator,
 )
-about_me_location_tuple_generator = create_tupled_generator(
+about_me_location_tuple_generator = TupledGenerator(
     location_description_generator,
     reddit_location_image_generator,
 )
-about_me_job_tuple_generator = apply_function_to_generator(
-    create_inspired_tuple_generator(
-        apply_function_to_generator(
+about_me_job_tuple_generator = MappedGenerator(
+    InspiredTupleGenerator(
+        MappedGenerator(
             job_generator,
             str.title
         ),
@@ -266,15 +266,15 @@ about_me_job_tuple_generator = apply_function_to_generator(
     lambda x: (_apply_job_prefix(x[0]), x[1])
 )
 
-about_me_country_tuple_generator = apply_function_to_generator(
-    create_inspired_tuple_generator(
+about_me_country_tuple_generator = MappedGenerator(
+    InspiredTupleGenerator(
         country_generator,
         generate_google_image_from_word
     ),
     lambda x: (_apply_country_prefix(x[0]), x[1])
 )
 
-about_me_location_or_country_tuple_generator = combined_generator(
+about_me_location_or_country_tuple_generator = CombinedGenerator(
     (3, about_me_country_tuple_generator),
     (1, about_me_location_tuple_generator),
 )
