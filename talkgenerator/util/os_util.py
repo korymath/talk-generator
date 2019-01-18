@@ -58,7 +58,7 @@ def get_prohibited_images():
 
 @lru_cache(maxsize=20)
 def is_image(content):
-    if not bool(content):
+    if not bool(content) or bool(content) is content or not content.lower:
         return False
     lower_url = content.lower()
     return ".jpg" in lower_url or ".gif" in lower_url or ".png" in lower_url or ".jpeg" in lower_url
