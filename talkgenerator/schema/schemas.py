@@ -9,10 +9,10 @@ from talkgenerator.schema import slide_topic_generators
 from talkgenerator.slide import slide_generators
 
 # Import a lot from generator_util to make schema creation easier
-from talkgenerator.util.generator_util import create_seeded_generator, none_generator, create_static_generator, \
+from talkgenerator.util.generator_util import SeededGenerator, NoneGenerator, StaticGenerator, \
     CombinedGenerator, \
-    create_from_external_image_list_generator, create_from_list_generator, \
-    create_backup_generator, remove_invalid_images_from_generator, InspiredTupleGenerator, \
+    create_from_external_image_list_generator, FromListGenerator, \
+    create_backup_generator, InvalidImagesRemoverGenerator, InspiredTupleGenerator, \
     MappedGenerator, TupledGenerator
 from talkgenerator.schema.presentation_schema import PresentationSchema
 from talkgenerator.schema.slide_generator_data import SlideGeneratorData, constant_weight, PeakedWeight
@@ -38,7 +38,7 @@ default_slide_title_generator = createTemplatedTextGenerator("../../data/text-te
 
 default_or_no_title_generator = CombinedGenerator(
     (1, default_slide_title_generator),
-    (1, none_generator)
+    (1, NoneGenerator)
 )
 
 anticipation_title_generator = createTemplatedTextGenerator(
@@ -84,7 +84,7 @@ def create_goodreads_quote_generator(max_quote_length):
     def generator(seed):
         return [quote for quote in goodreads.search_quotes(seed, 50) if len(quote) <= max_quote_length]
 
-    return create_from_list_generator(create_seeded_generator(generator))
+    return FromListGenerator(SeededGenerator(generator))
 
 
 # INSPIROBOT
@@ -104,7 +104,7 @@ class RedditImageGenerator:
                 return [post.url for post in results]
 
         self._generate = create_from_external_image_list_generator(
-            create_seeded_generator(generate),
+            SeededGenerator(generate),
             lambda url: os_util.to_actual_file(
                 "../../downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url), __file__)
         )
@@ -126,7 +126,7 @@ weird_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf", "wtf
                                                       "EyeBleach", "natureismetal")
 
 shitpostbot_image_generator = create_from_external_image_list_generator(
-    create_seeded_generator(
+    SeededGenerator(
         create_backup_generator(
             shitpostbot.search_images,
             shitpostbot.get_random_images
@@ -142,7 +142,7 @@ weird_and_shitpost_generator = CombinedGenerator(
 # GIFS
 
 giphy_generator = create_backup_generator(
-    create_seeded_generator(giphy.get_related_giphy),
+    SeededGenerator(giphy.get_related_giphy),
     lambda _: giphy.get_related_giphy(None)
 )
 reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", "nonononoYES")
@@ -157,23 +157,23 @@ weird_and_shitpost_and_gif_generator = CombinedGenerator(
 
 # GOOGLE IMAGES
 
-generate_full_screen_google_image = create_from_list_generator(
-    remove_invalid_images_from_generator(
-        create_seeded_generator(
+generate_full_screen_google_image = FromListGenerator(
+    InvalidImagesRemoverGenerator(
+        SeededGenerator(
             google_images.create_full_screen_image_generator())))
 
-generate_wide_google_image = create_from_list_generator(
-    remove_invalid_images_from_generator(
-        create_seeded_generator(
+generate_wide_google_image = FromListGenerator(
+    InvalidImagesRemoverGenerator(
+        SeededGenerator(
             google_images.create_wide_image_generator())))
 
-generate_google_image = create_from_list_generator(
-    remove_invalid_images_from_generator(
-        create_seeded_generator(
+generate_google_image = FromListGenerator(
+    InvalidImagesRemoverGenerator(
+        SeededGenerator(
             google_images.create_image_generator())))
 
-generate_google_image_from_word = create_from_list_generator(
-    remove_invalid_images_from_generator(
+generate_google_image_from_word = FromListGenerator(
+    InvalidImagesRemoverGenerator(
         google_images.create_image_generator()))
 
 # OLD/VINTAGE
@@ -352,7 +352,7 @@ all_slide_generators = [
             history_and_history_person_title_generator,
             historical_name_generator,
             vintage_person_generator,
-            none_generator,
+            NoneGenerator,
             create_goodreads_quote_generator(280)
         ),
         weight_function=PeakedWeight((2, 3), 20, 0.3),
@@ -391,7 +391,7 @@ all_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
-            none_generator,
+            NoneGenerator,
             generate_full_screen_google_image),
         tags=["full_image", "google_images"],
         name="Full Screen Google Images"),
@@ -417,7 +417,7 @@ all_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_large_quote_slide(
         slide_generators.LarqeQuoteSlideGenerator.of(
-            title_generator=none_generator,
+            title_generator=NoneGenerator,
             text_generator=generate_wikihow_bold_statement,
             background_image_generator=generate_full_screen_google_image),
         tags=["bold_statement", "statement"],
@@ -426,7 +426,7 @@ all_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_large_quote_slide(
         slide_generators.LarqeQuoteSlideGenerator.of(
-            title_generator=none_generator,
+            title_generator=NoneGenerator,
             text_generator=create_goodreads_quote_generator(250),
             background_image_generator=generate_full_screen_google_image),
         weight_function=constant_weight(0.6),
@@ -436,7 +436,7 @@ all_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_large_quote_slide(
         slide_generators.LarqeQuoteSlideGenerator.of(
-            title_generator=none_generator,
+            title_generator=NoneGenerator,
             text_generator=anecdote_prompt_generator,
             background_image_generator=generate_full_screen_google_image
         ),
@@ -495,7 +495,7 @@ all_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
-            none_generator,
+            NoneGenerator,
             reddit_chart_generator),
         weight_function=constant_weight(4),
         allowed_repeated_elements=0,
@@ -549,11 +549,11 @@ all_slide_generators = [
         # slide_templates.generate_two_column_images_slide(
         slide_generators.TwoColumnImageSlideGenerator.of(
             conclusion_title_generator,
-            create_static_generator("Conclusion 1"),
+            StaticGenerator("Conclusion 1"),
             generate_google_image,
             # none_generator("Conclusion 2"),
             # generate_google_image,
-            create_static_generator("Conclusion 2"),
+            StaticGenerator("Conclusion 2"),
             weird_image_generator,
         ),
         weight_function=PeakedWeight((-1,), 10000, 0),
@@ -564,11 +564,11 @@ all_slide_generators = [
         # slide_templates.generate_three_column_images_slide(
         slide_generators.ThreeColumnImageSlideGenerator.of(
             conclusion_title_generator,
-            create_static_generator("Conclusion 1"),
+            StaticGenerator("Conclusion 1"),
             generate_google_image,
-            create_static_generator("Conclusion 2"),
+            StaticGenerator("Conclusion 2"),
             weird_image_generator,
-            create_static_generator("Conclusion 3"),
+            StaticGenerator("Conclusion 3"),
             # TODO: Maybe add generator that generates the title of the presentation instead of conclusion 3?
             # (links it up nicely)
             combined_gif_generator,

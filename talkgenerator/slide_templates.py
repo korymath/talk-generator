@@ -35,7 +35,7 @@ def generate_title_slide(title_generator, subtitle_generator):
 
 
 def generate_large_quote_slide(title_generator, text_generator,
-                               background_image_generator=generator_util.none_generator):
+                               background_image_generator=generator_util.NoneGenerator):
     return generate_slide(powerpoint_slide_creator.create_large_quote_slide,
                           (title_generator, text_generator, background_image_generator))
 

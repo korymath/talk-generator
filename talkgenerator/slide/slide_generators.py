@@ -246,11 +246,13 @@ class ChartSlideGenerator(SlideGenerator):
 
 class CombinedGenerator(object):
     def __init__(self, *generators):
+        print("CombinedGenerator:", self, generators)
         self._generators = generators
 
     def __call__(self, presentation_context):
+        print("CombinedGenerator:", self)
         return [content_generator(presentation_context) if content_generator else None for content_generator in
-         self._generators]
+                self._generators]
 
 
 def is_different_enough(generated, used):

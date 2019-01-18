@@ -47,7 +47,7 @@ class TupledGenerator(object):
 
     def __call__(self, presentation_context):
         print("TupledGenerator generator using", presentation_context)
-        return tuple([generator(x) for generator in self._generators])
+        return tuple([generator(presentation_context) for generator in self._generators])
 
 
 class InspiredTupleGenerator(object):
@@ -66,41 +66,97 @@ class InspiredTupleGenerator(object):
 
 # == TRIVIAL GENERATORS ==
 
-def create_seeded_generator(simple_generator):
-    return lambda presentation_context: simple_generator(presentation_context["seed"])
+class SeededGenerator(object):
+    def __init__(self, simple_generator):
+        self._simple_generator = simple_generator
+
+    def __call__(self, presentation_context):
+        return self._simple_generator(presentation_context["seed"])
 
 
-def none_generator(_):
-    return None
+class NoneGenerator(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, presentation_context):
+        return None
 
 
-def identity_generator(input_word):
-    return input_word
+class IdentityGenerator(object):
+    def __init__(self, input_word):
+        self._input_word = input_word
+
+    def __call__(self, presentation_context):
+        return self._input_word
 
 
-def titled_identity_generator(input_word):
-    if input_word:
-        return input_word.title()
+class TitledIdentityGenerator(object):
+    def __init__(self, input_word):
+        self._input_word = input_word
+
+    def __call__(self, presentation_context):
+        if self._input_word:
+            return self._input_word.title()
 
 
-def create_static_generator(always_generate_this):
-    return lambda _: always_generate_this
+class StaticGenerator(object):
+    def __init__(self, always_generate_this):
+        self._always_generate_this = always_generate_this
+
+    def __call__(self, presentation_context):
+        return self._always_generate_this
 
 
-def create_none_generator():
-    return lambda _: None
+class FromListGenerator(object):
+    def __init__(self, list_generator):
+        self._list_generator = list_generator
+
+    def __call__(self, presentation_context):
+        return random_util.choice_optional(self._list_generator(presentation_context))
 
 
-seeded_identity_generator = create_seeded_generator(identity_generator)
-seeded_titled_identity_generator = create_seeded_generator(titled_identity_generator)
+class InvalidImagesRemoverGenerator(object):
+    def __init__(self, list_generator):
+        self._list_generator = list_generator
+
+    def __call__(self, presentation_context):
+        return [item for item in self._list_generator(presentation_context) if
+                os_util.is_image(item) and os_util.is_valid_image(item)]
 
 
-def create_from_list_generator(list_generator):
-    return lambda inp: random_util.choice_optional(list_generator(inp))
+#
+# def none_generator(_):
+#     return None
+#
+#
+# def identity_generator(input_word):
+#     return input_word
+#
+#
+# def titled_identity_generator(input_word):
+#     if input_word:
+#         return input_word.title()
+#
+#
+# def create_static_generator(always_generate_this):
+#     return lambda _: always_generate_this
+#
+#
+# def create_none_generator():
+#     return lambda _: None
+#
+#
+#
+# def create_from_list_generator(list_generator):
+#     return lambda inp: random_util.choice_optional(list_generator(inp))
+#
+#
+# def remove_invalid_images_from_generator(list_generator):
+#     return lambda inp: [item for item in list_generator(inp) if os_util.is_image(item) and os_util.is_valid_image(item)]
 
 
-def remove_invalid_images_from_generator(list_generator):
-    return lambda inp: [item for item in list_generator(inp) if os_util.is_image(item) and os_util.is_valid_image(item)]
+seeded_identity_generator = SeededGenerator(IdentityGenerator)
+seeded_titled_identity_generator = SeededGenerator(TitledIdentityGenerator)
 
 
 def create_from_external_image_list_generator(image_url_generator, file_name_generator):
