@@ -84,11 +84,11 @@ class GoodReadsQuoteGenerator(object):
     def __init__(self, max_quote_length):
         self._max_quote_length = max_quote_length
 
-    def __call__(self, seed):
-        def generator():
+    def __call__(self, presentation_context):
+        def generator(seed):
             return [quote for quote in goodreads.search_quotes(seed, 50) if len(quote) <= self._max_quote_length]
 
-        return FromListGenerator(SeededGenerator(generator))()
+        return FromListGenerator(SeededGenerator(generator))(presentation_context)
 
 
 # INSPIROBOT
