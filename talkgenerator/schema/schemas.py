@@ -80,11 +80,15 @@ anecdote_prompt_generator = createTemplatedTextGenerator(
 
 
 # QUOTES
-def create_goodreads_quote_generator(max_quote_length):
-    def generator(seed):
-        return [quote for quote in goodreads.search_quotes(seed, 50) if len(quote) <= max_quote_length]
+class GoodReadsQuoteGenerator(object):
+    def __init__(self, max_quote_length):
+        self._max_quote_length = max_quote_length
 
-    return FromListGenerator(SeededGenerator(generator))
+    def __call__(self, seed):
+        def generator():
+            return [quote for quote in goodreads.search_quotes(seed, 50) if len(quote) <= self._max_quote_length]
+
+        return FromListGenerator(SeededGenerator(generator))()
 
 
 # INSPIROBOT
@@ -103,19 +107,24 @@ class RedditLocalImageLocationGenerator(object):
             "../../downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url), __file__)
 
 
+class RedditImageSearcher(object):
+    def __init__(self, subreddit):
+        self._subreddit = subreddit
+
+    def __call__(self, seed):
+        results = reddit.search_subreddit(
+            self._subreddit,
+            str(seed) + " nsfw:no (url:.jpg OR url:.png OR url:.gif)")
+        if bool(results):
+            return [post.url for post in results]
+
+
 class RedditImageGenerator:
     def __init__(self, subreddit):
         self._subreddit = subreddit
 
-        def generate(seed):
-            results = reddit.search_subreddit(
-                self._subreddit,
-                str(seed) + " nsfw:no (url:.jpg OR url:.png OR url:.gif)")
-            if bool(results):
-                return [post.url for post in results]
-
         self._generate = ExternalImageListGenerator(
-            SeededGenerator(generate),
+            SeededGenerator(RedditImageSearcher(self._subreddit)),
             RedditLocalImageLocationGenerator(self._subreddit)
         )
 
@@ -162,7 +171,7 @@ weird_and_shitpost_generator = CombinedGenerator(
 
 giphy_generator = BackupGenerator(
     SeededGenerator(giphy.get_related_giphy),
-    lambda _: giphy.get_related_giphy(None)
+    giphy.get_random_giphy
 )
 reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", "nonononoYES")
 
@@ -391,7 +400,7 @@ all_slide_generators = [
             historical_name_generator,
             vintage_person_generator,
             NoneGenerator(),
-            create_goodreads_quote_generator(280)
+            GoodReadsQuoteGenerator(280)
         ),
         weight_function=PeakedWeight((2, 3), 20, 0.3),
         allowed_repeated_elements=0,
@@ -465,7 +474,7 @@ all_slide_generators = [
         # slide_templates.generate_large_quote_slide(
         slide_generators.LarqeQuoteSlideGenerator.of(
             title_generator=NoneGenerator(),
-            text_generator=create_goodreads_quote_generator(250),
+            text_generator=GoodReadsQuoteGenerator(250),
             background_image_generator=generate_full_screen_google_image),
         weight_function=constant_weight(0.6),
         tags=["quote", "statement"],
