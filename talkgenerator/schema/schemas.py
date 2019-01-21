@@ -15,7 +15,7 @@ from talkgenerator.util.generator_util import SeededGenerator, NoneGenerator, St
     BackupGenerator, InvalidImagesRemoverGenerator, InspiredTupleGenerator, \
     MappedGenerator, TupledGenerator
 from talkgenerator.schema.presentation_schema import PresentationSchema
-from talkgenerator.schema.slide_generator_data import SlideGeneratorData, constant_weight, PeakedWeight
+from talkgenerator.schema.slide_generator_data import SlideGeneratorData, ConstantWeightFunction, PeakedWeight
 
 
 # = TEXT GENERATORS=
@@ -238,13 +238,14 @@ def generate_wikihow_bold_statement(presentation_context):
 
 # DOUBLE CAPTIONS
 
-def split_captions_generator(generator):
-    def create_double_image_captions(presentation_context):
-        line = generator(presentation_context)
+class SplitCaptionsGenerator(object):
+    def __init__(self, generator):
+        self._generator = generator
+
+    def __call__(self, presentation_context):
+        line = self._generator(presentation_context)
         parts = line.split("|")
         return parts
-
-    return create_double_image_captions
 
 
 _double_captions_generator = createTemplatedTextGenerator("../../data/text-templates/double_captions.txt")
@@ -252,9 +253,9 @@ _triple_captions_generator = createTemplatedTextGenerator("../../data/text-templ
 _historic_double_captions_generator = createTemplatedTextGenerator(
     "../../data/text-templates/historic_double_captions.txt")
 
-double_captions_generator = split_captions_generator(_double_captions_generator)
-triple_captions_generator = split_captions_generator(_triple_captions_generator)
-historic_double_captions_generator = split_captions_generator(_historic_double_captions_generator)
+double_captions_generator = SplitCaptionsGenerator(_double_captions_generator)
+triple_captions_generator = SplitCaptionsGenerator(_triple_captions_generator)
+historic_double_captions_generator = SplitCaptionsGenerator(_historic_double_captions_generator)
 
 
 # TUPLED ABOUT ME
@@ -457,7 +458,7 @@ all_slide_generators = [
         slide_generators.ImageSlideGenerator.of(
             inspiration_title_generator,
             inspirobot_image_generator),
-        weight_function=constant_weight(0.6),
+        weight_function=ConstantWeightFunction(0.6),
         tags=["inspiration", "statement"],
         name="Inspirobot"),
 
@@ -476,7 +477,7 @@ all_slide_generators = [
             title_generator=NoneGenerator(),
             text_generator=GoodReadsQuoteGenerator(250),
             background_image_generator=generate_full_screen_google_image),
-        weight_function=constant_weight(0.6),
+        weight_function=ConstantWeightFunction(0.6),
         tags=["quote", "statement"],
         name="Goodreads Quote"),
 
@@ -498,7 +499,7 @@ all_slide_generators = [
             double_captions_generator,
             combined_gif_generator,
             combined_gif_generator),
-        weight_function=constant_weight(2),
+        weight_function=ConstantWeightFunction(2),
         tags=["multi_caption", "two_captions", "gif"],
         name="Two Captions Gifs"),
 
@@ -509,7 +510,7 @@ all_slide_generators = [
             double_captions_generator,
             weird_image_generator,
             weird_and_shitpost_generator),
-        weight_function=constant_weight(2),
+        weight_function=ConstantWeightFunction(2),
         tags=["multi_caption", "two_captions", "reddit"],
         name="Two Captions Weird Reddit"),
 
@@ -520,7 +521,7 @@ all_slide_generators = [
             double_captions_generator,
             weird_and_shitpost_and_gif_generator,
             weird_and_shitpost_and_gif_generator),
-        weight_function=constant_weight(2),
+        weight_function=ConstantWeightFunction(2),
         tags=["multi_caption", "two_captions", "reddit"],
         name="Two Captions Weird"),
 
@@ -532,7 +533,7 @@ all_slide_generators = [
             weird_and_shitpost_and_gif_generator,
             weird_and_shitpost_and_gif_generator,
             weird_and_shitpost_generator),
-        weight_function=constant_weight(1),
+        weight_function=ConstantWeightFunction(1),
         allowed_repeated_elements=4,
         tags=["multi_caption", "three_captions", "reddit"],
         name="Three Captions Weird"),
@@ -544,7 +545,7 @@ all_slide_generators = [
         slide_generators.FullImageSlideGenerator.of(
             NoneGenerator(),
             reddit_chart_generator),
-        weight_function=constant_weight(4),
+        weight_function=ConstantWeightFunction(4),
         allowed_repeated_elements=0,
         tags=["chart"],
         name="Reddit Chart"),
@@ -556,7 +557,7 @@ all_slide_generators = [
         ),
         retries=1,
         allowed_repeated_elements=4,
-        weight_function=constant_weight(2.5),
+        weight_function=ConstantWeightFunction(2.5),
         tags=["pie_chart", "yes_no_chart", "chart"],
         name="Yes/No/Funny Chart"),
 
@@ -567,7 +568,7 @@ all_slide_generators = [
         ),
         allowed_repeated_elements=4,
         retries=1,
-        weight_function=constant_weight(0.08),
+        weight_function=ConstantWeightFunction(0.08),
         tags=["location_chart", "pie_chart", "chart"],
         name="Location Chart"),
     SlideGeneratorData(
@@ -577,7 +578,7 @@ all_slide_generators = [
         ),
         allowed_repeated_elements=4,
         retries=1,
-        weight_function=constant_weight(0.04),
+        weight_function=ConstantWeightFunction(0.04),
         tags=["property_chart", "pie_chart", "chart"],
         name="Property Chart"),
     SlideGeneratorData(
@@ -587,7 +588,7 @@ all_slide_generators = [
         ),
         allowed_repeated_elements=4,
         retries=1,
-        weight_function=constant_weight(0.5),
+        weight_function=ConstantWeightFunction(0.5),
         tags=["curve", "chart"],
         name="Correlation Curve"),
 

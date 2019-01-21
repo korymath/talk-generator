@@ -30,9 +30,12 @@ def fix_indices(values, num_slides):
     return [value % num_slides if value < 0 else value for value in values]
 
 
-def constant_weight(weight):
-    """Class function to create a function that always returns a certain weight"""
-    return lambda slide_nr, total_slides: weight
+class ConstantWeightFunction(object):
+    def __init__(self, weight):
+        self._weight = weight
+
+    def __call__(self, slide_nr, total_slides):
+        return self._weight
 
 
 # Classes that are abstractly responsible for generating powerpoints
@@ -41,7 +44,7 @@ class SlideGeneratorData:
     """ Responsible for providing the slide generator and other attributes, such as its name and weight"""
 
     def __init__(self, generator,
-                 weight_function=constant_weight(1),
+                 weight_function=ConstantWeightFunction(1),
                  retries=5,
                  allowed_repeated_elements=0,
                  tags=None,
