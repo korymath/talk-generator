@@ -3,6 +3,7 @@ This module represents the abstractions of a presentation schema (responsible fo
 presentation), and slide generators, that have functions for generating slides along with some other metadata.
 
 """
+import time
 from multiprocessing.pool import ThreadPool
 
 from talkgenerator.schema.slide_generator_data import _filter_generated_elements
@@ -120,6 +121,7 @@ class PresentationSchema:
         # Select the slide generator to generate with
         generator = self._select_generator(slide_nr, num_slides, prohibited_generators)
 
+        start_time = time.time()
         if generator:
             print('\n * Generating slide {} about {} using {} *'.format(
                 slide_nr + 1,
@@ -129,7 +131,8 @@ class PresentationSchema:
 
             # Try again if slide is None, and prohibit generator for generating for this topic
             if not bool(slide_result):
-                print("Failed to generated using:", generator)
+                end_time = time.time()
+                print("Failed to generate after {} seconds using: {}".format(round(end_time-start_time, 2), generator))
                 prohibited_generators.add(generator)
 
                 return self.generate_slide(presentation_context=presentation_context,
@@ -140,11 +143,12 @@ class PresentationSchema:
                 # TODO: Remove slide from presentation if there was a slide generated
 
             slide, generated_elements = slide_result
-
-            print('\n * Finished generating slide {} about {} using {} *'.format(
+            end_time = time.time()
+            print('\n * Finished generating slide {} about {} using {} in {} seconds *'.format(
                 slide_nr + 1,
                 presentation_context["seed"],
-                generator))
+                generator,
+                round(end_time-start_time, 2)))
             return slide, generated_elements, generator, slide_nr
         else:
             print("No generator found to generate about ", presentation_context["Presentation"])
