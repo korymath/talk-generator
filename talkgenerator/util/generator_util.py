@@ -103,7 +103,7 @@ class StaticGenerator(object):
     def __init__(self, always_generate_this):
         self._always_generate_this = always_generate_this
 
-    def __call__(self, presentation_context):
+    def __call__(self, presentation_context=None):
         return self._always_generate_this
 
 

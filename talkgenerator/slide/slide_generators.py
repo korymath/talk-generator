@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from talkgenerator.slide import slides
+from talkgenerator.util import generator_util
 
 
 class SlideGenerator(metaclass=ABCMeta):
@@ -65,7 +66,8 @@ class ImageSlideGenerator(SlideGenerator):
 
     @classmethod
     def of(cls, title_generator, image_generator=None, original_image_size=True):
-        return cls(CombinedGenerator(title_generator, image_generator, lambda void: original_image_size))
+        return cls(
+            CombinedGenerator(title_generator, image_generator, generator_util.StaticGenerator(original_image_size)))
 
     @classmethod
     def of_tupled_captioned_image(cls, tuple_1_generator, original_image_size=True):
@@ -92,7 +94,8 @@ class FullImageSlideGenerator(SlideGenerator):
 
     @classmethod
     def of(cls, title_generator, image_generator=None, original_image_size=True):
-        return cls(CombinedGenerator(title_generator, image_generator, lambda void: original_image_size))
+        return cls(
+            CombinedGenerator(title_generator, image_generator, generator_util.StaticGenerator(original_image_size)))
 
     @property
     def slide_type(self):
@@ -108,7 +111,7 @@ class TwoColumnImageSlideGenerator(SlideGenerator):
            image_or_text_2_generator, original_image_size=True):
         return cls(
             CombinedGenerator(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
-                              image_or_text_2_generator, lambda void: original_image_size))
+                              image_or_text_2_generator, generator_util.StaticGenerator(original_image_size)))
 
     @classmethod
     def of_tupled_captioned_images(cls, title_generator, tuple_1_generator, tuple_2_generator,
@@ -167,7 +170,7 @@ class ThreeColumnImageSlideGenerator(SlideGenerator):
         return cls(
             CombinedGenerator(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
                               image_or_text_2_generator, caption_3_generator,
-                              image_or_text_3_generator, lambda void: original_image_size))
+                              image_or_text_3_generator, generator_util.StaticGenerator(original_image_size)))
 
     @classmethod
     def of_tupled_captioned_images(cls, title_generator, tuple_1_generator, tuple_2_generator, tuple_3_generator,
@@ -229,7 +232,7 @@ class ChartSlideGenerator(SlideGenerator):
     def of(cls, title_generator, chart_type_generator, chart_data_generator, chart_modifier=None):
         return cls(
             CombinedGenerator(title_generator, chart_type_generator, chart_data_generator,
-                              lambda void: chart_modifier))
+                              generator_util.StaticGenerator(chart_modifier)))
 
     @property
     def slide_type(self):
@@ -237,12 +240,6 @@ class ChartSlideGenerator(SlideGenerator):
 
 
 # HELPERS
-# def combine_generators(*generators):
-#     return lambda presentation_context: [content_generator(presentation_context)
-#                                          if content_generator
-#                                          else None
-#                                          for content_generator in generators]
-
 
 class CombinedGenerator(object):
     def __init__(self, *generators):
