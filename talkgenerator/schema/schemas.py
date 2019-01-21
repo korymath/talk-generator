@@ -11,7 +11,7 @@ from talkgenerator.slide import slide_generators
 # Import a lot from generator_util to make schema creation easier
 from talkgenerator.util.generator_util import SeededGenerator, NoneGenerator, StaticGenerator, \
     CombinedGenerator, \
-    create_from_external_image_list_generator, FromListGenerator, \
+    ExternalImageListGenerator, FromListGenerator, \
     create_backup_generator, InvalidImagesRemoverGenerator, InspiredTupleGenerator, \
     MappedGenerator, TupledGenerator
 from talkgenerator.schema.presentation_schema import PresentationSchema
@@ -92,6 +92,17 @@ inspirobot_image_generator = inspirobot.get_random_inspirobot_image
 
 
 # REDDIT
+
+
+class RedditLocalImageLocationGenerator(object):
+    def __init__(self, subreddit):
+        self._subreddit = subreddit
+
+    def __call__(self, url):
+        return os_util.to_actual_file(
+            "../../downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url), __file__)
+
+
 class RedditImageGenerator:
     def __init__(self, subreddit):
         self._subreddit = subreddit
@@ -103,10 +114,9 @@ class RedditImageGenerator:
             if bool(results):
                 return [post.url for post in results]
 
-        self._generate = create_from_external_image_list_generator(
+        self._generate = ExternalImageListGenerator(
             SeededGenerator(generate),
-            lambda url: os_util.to_actual_file(
-                "../../downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url), __file__)
+            RedditLocalImageLocationGenerator(self._subreddit)
         )
 
     def generate(self, presentation_context):
@@ -125,13 +135,22 @@ weird_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf", "wtf
                                                       "confusing_perspective", "cursedimages", "HybridAnimals",
                                                       "EyeBleach", "natureismetal")
 
-shitpostbot_image_generator = create_from_external_image_list_generator(
+
+class ShitPostBotURLGenerator(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, url):
+        return os_util.to_actual_file("../../downloads/shitpostbot/{}".format(os_util.get_file_name(url)), __file__)
+
+
+shitpostbot_image_generator = ExternalImageListGenerator(
     SeededGenerator(
         create_backup_generator(
             shitpostbot.search_images,
             shitpostbot.get_random_images
         )),
-    lambda url: os_util.to_actual_file("../../downloads/shitpostbot/{}".format(os_util.get_file_name(url)), __file__)
+    ShitPostBotURLGenerator()
 )
 
 weird_and_shitpost_generator = CombinedGenerator(
@@ -255,6 +274,16 @@ about_me_location_tuple_generator = TupledGenerator(
     location_description_generator,
     reddit_location_image_generator,
 )
+
+
+class JobPrefixApplier(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, x):
+        return _apply_job_prefix(x[0]), x[1]
+
+
 about_me_job_tuple_generator = MappedGenerator(
     InspiredTupleGenerator(
         MappedGenerator(
@@ -263,15 +292,24 @@ about_me_job_tuple_generator = MappedGenerator(
         ),
         generate_google_image_from_word
     ),
-    lambda x: (_apply_job_prefix(x[0]), x[1])
+    JobPrefixApplier()
 )
+
+
+class CountryPrefixApplier(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, x):
+        return _apply_country_prefix(x[0]), x[1]
+
 
 about_me_country_tuple_generator = MappedGenerator(
     InspiredTupleGenerator(
         country_generator,
         generate_google_image_from_word
     ),
-    lambda x: (_apply_country_prefix(x[0]), x[1])
+    CountryPrefixApplier()
 )
 
 about_me_location_or_country_tuple_generator = CombinedGenerator(

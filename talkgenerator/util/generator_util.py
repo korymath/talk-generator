@@ -159,12 +159,16 @@ seeded_identity_generator = SeededGenerator(IdentityGenerator)
 seeded_titled_identity_generator = SeededGenerator(TitledIdentityGenerator)
 
 
-def create_from_external_image_list_generator(image_url_generator, file_name_generator):
-    def generate_from_image_list(presentation_context):
-        images = image_url_generator(presentation_context)
+class ExternalImageListGenerator(object):
+    def __init__(self, image_url_generator, file_name_generator):
+        self._image_url_generator = image_url_generator
+        self._file_name_generator = file_name_generator
+
+    def __call__(self, presentation_context):
+        images = self._image_url_generator(presentation_context)
         while bool(images) and len(images) > 0:
             chosen_image_url = random.choice(images)
-            downloaded_url = file_name_generator(chosen_image_url)
+            downloaded_url = self._file_name_generator(chosen_image_url)
             try:
                 if os_util.is_image(chosen_image_url):
                     os_util.download_image(chosen_image_url, downloaded_url)
@@ -178,8 +182,6 @@ def create_from_external_image_list_generator(image_url_generator, file_name_gen
                 print("Non existing image for: ", chosen_image_url)
             images.remove(chosen_image_url)
         return None
-
-    return generate_from_image_list
 
 
 def create_backup_generator(*generator_list):
