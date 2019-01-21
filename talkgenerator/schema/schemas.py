@@ -12,7 +12,7 @@ from talkgenerator.slide import slide_generators
 from talkgenerator.util.generator_util import SeededGenerator, NoneGenerator, StaticGenerator, \
     CombinedGenerator, \
     ExternalImageListGenerator, FromListGenerator, \
-    create_backup_generator, InvalidImagesRemoverGenerator, InspiredTupleGenerator, \
+    BackupGenerator, InvalidImagesRemoverGenerator, InspiredTupleGenerator, \
     MappedGenerator, TupledGenerator
 from talkgenerator.schema.presentation_schema import PresentationSchema
 from talkgenerator.schema.slide_generator_data import SlideGeneratorData, constant_weight, PeakedWeight
@@ -128,7 +128,7 @@ class RedditImageGenerator:
 
 def create_reddit_image_generator(*name):
     reddit_generator = RedditImageGenerator("+".join(name))
-    return create_backup_generator(reddit_generator.generate, reddit_generator.generate_random)
+    return BackupGenerator(reddit_generator.generate, reddit_generator.generate_random)
 
 
 weird_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf", "wtfstockphotos", "photoshopbattles",
@@ -146,7 +146,7 @@ class ShitPostBotURLGenerator(object):
 
 shitpostbot_image_generator = ExternalImageListGenerator(
     SeededGenerator(
-        create_backup_generator(
+        BackupGenerator(
             shitpostbot.search_images,
             shitpostbot.get_random_images
         )),
@@ -160,7 +160,7 @@ weird_and_shitpost_generator = CombinedGenerator(
 
 # GIFS
 
-giphy_generator = create_backup_generator(
+giphy_generator = BackupGenerator(
     SeededGenerator(giphy.get_related_giphy),
     lambda _: giphy.get_related_giphy(None)
 )

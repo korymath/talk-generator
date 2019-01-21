@@ -262,7 +262,7 @@ def generate_property_pie(presentation_context):
         return title, chart_type, chart_data, chart_modifier
 
 
-_CORRELATION_WORD_GENERATOR = generator_util.create_walking_generator(
+_CORRELATION_WORD_GENERATOR = generator_util.WalkingGenerator(
     generator_util.CombinedGenerator(
         (2, conceptnet.unweighted_antonym_generator),
         (1, conceptnet.unweighted_related_word_generator)

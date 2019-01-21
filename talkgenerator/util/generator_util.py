@@ -124,37 +124,6 @@ class InvalidImagesRemoverGenerator(object):
                 os_util.is_image(item) and os_util.is_valid_image(item)]
 
 
-#
-# def none_generator(_):
-#     return None
-#
-#
-# def identity_generator(input_word):
-#     return input_word
-#
-#
-# def titled_identity_generator(input_word):
-#     if input_word:
-#         return input_word.title()
-#
-#
-# def create_static_generator(always_generate_this):
-#     return lambda _: always_generate_this
-#
-#
-# def create_none_generator():
-#     return lambda _: None
-#
-#
-#
-# def create_from_list_generator(list_generator):
-#     return lambda inp: random_util.choice_optional(list_generator(inp))
-#
-#
-# def remove_invalid_images_from_generator(list_generator):
-#     return lambda inp: [item for item in list_generator(inp) if os_util.is_image(item) and os_util.is_valid_image(item)]
-
-
 seeded_identity_generator = SeededGenerator(IdentityGenerator)
 seeded_titled_identity_generator = SeededGenerator(TitledIdentityGenerator)
 
@@ -184,49 +153,52 @@ class ExternalImageListGenerator(object):
         return None
 
 
-def create_backup_generator(*generator_list):
-    def generate(context):
-        for generator in generator_list:
+class BackupGenerator(object):
+    def __init__(self, *generator_list):
+        self._generator_list = generator_list
+
+    def __call__(self, context):
+        for generator in self._generator_list:
             generated = generator(context)
             if generated:
                 return generated
 
-    return generate
 
+class WeightedGenerator(object):
+    def __init__(self, weighted_list_creator):
+        self._weighted_list_creator = weighted_list_creator
 
-def create_weighted_generator(weighted_list_creator):
-    def generate(argument):
-        weighted_list = weighted_list_creator(argument)
+    def __call__(self, argument):
+        weighted_list = self._weighted_list_creator(argument)
         if weighted_list:
             return random_util.weighted_random(weighted_list)
 
-    return generate
 
+class UnweightedGenerator(object):
+    def __init__(self, weighted_list_creator):
+        self._weighted_list_creator = weighted_list_creator
 
-def create_unweighted_generator(weighted_list_creator):
-    """ Makes a generator that gets a weighted list as input, but discards the weights when choosing an option """
-
-    def generate(argument):
-        weighted_list = weighted_list_creator(argument)
+    def __call__(self, argument):
+        weighted_list = self._weighted_list_creator(argument)
         if weighted_list:
             return random_util.choice_optional([element[1] for element in weighted_list])
 
-    return generate
 
-
-def create_walking_generator(inner_generator, steps):
+class WalkingGenerator(object):
     """ This type of generator uses its output as input for a next step, taking concepts a few steps away """
 
-    def generate(seed):
+    def __init__(self, inner_generator, steps):
+        self._inner_generator = inner_generator
+        self._steps = steps
+
+    def __call__(self, seed):
         history = set()
         history.add(seed)
         current = seed
-        for i in range(steps):
-            generated = inner_generator(current)
+        for i in range(self._steps):
+            generated = self._inner_generator(current)
             if generated:
                 current = generated
                 history.add(current)
 
         return current
-
-    return generate
