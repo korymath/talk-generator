@@ -113,7 +113,7 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
             return placeholder
         except FileNotFoundError as fnfe:
             traceback.print_exc(file=sys.stdout)
-            print(fnfe)
+            print('_add_image file not found: {}'.format(fnfe))
             return None
     else:
         try:
