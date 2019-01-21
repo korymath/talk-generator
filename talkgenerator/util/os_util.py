@@ -1,5 +1,6 @@
 import ntpath
 import os
+import traceback
 import pathlib
 from functools import lru_cache
 
@@ -71,8 +72,9 @@ def is_valid_image(image_url):
         if im in get_prohibited_images():
             print(image_url, " IS DENIED")
             return False
-    except OSError as e:
-        print(e)
+    except (OSError, SyntaxError) as e:
+        traceback.print_exc(file=sys.stdout)
+        print('is_valid_image error: {}'.format(e))
         return False
 
     return True
