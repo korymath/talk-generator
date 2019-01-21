@@ -12,7 +12,7 @@ class CombinedGenerator(object):
     def __call__(self, seed):
         current_weighted_generators = list(self._weighted_generators)
         while len(current_weighted_generators) > 0:
-            print("combined generator using", current_weighted_generators)
+            # print("combined generator using", current_weighted_generators)
             generator = random_util.weighted_random(current_weighted_generators)
             generated = generator(seed)
             if generated is not None:
@@ -32,7 +32,7 @@ class MappedGenerator(object):
         self._functions = functions
 
     def __call__(self, presentation_context):
-        print("MappedGenerator generator using", presentation_context)
+        # print("MappedGenerator generator using", presentation_context)
         generated = self._generator(presentation_context)
         for func in self._functions:
             generated = func(generated)
@@ -46,7 +46,7 @@ class TupledGenerator(object):
         self._generators = generators
 
     def __call__(self, presentation_context):
-        print("TupledGenerator generator using", presentation_context)
+        # print("TupledGenerator generator using", presentation_context)
         return tuple([generator(presentation_context) for generator in self._generators])
 
 
@@ -58,7 +58,7 @@ class InspiredTupleGenerator(object):
         self._generator_2 = generator_2
 
     def __call__(self, presentation_context):
-        print("InspiredTupleGenerator generator using", presentation_context)
+        # print("InspiredTupleGenerator generator using", presentation_context)
         gen_1 = self._generator_1(presentation_context)
         gen_2 = self._generator_2(gen_1)
         return gen_1, gen_2

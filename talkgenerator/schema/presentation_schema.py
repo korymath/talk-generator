@@ -55,16 +55,16 @@ class PresentationSchema:
     def _generate_slide_deck_parallel(self, slide_deck, num_slides, main_presentation_context, seed_generator,
                                       used_elements,
                                       used_tags):
-        print("TODO: IMPLEMENT PARALLEL")
+        print("TRYING TO GENERATE IN PARALLEL")
         with Pool(processes=num_slides) as pool:
             all_slide_results = pool.map(SlideGeneratorContext(self,
-                                                               # main_presentation_context,
-                                                               # seed_generator,
-
-                                                               num_slides, None, None), range(num_slides))
-            # for slide_result in all_slide_results:
-            #     slide, generated_elements, slide_generator_data, slide_nr = slide_result
-            #     slide_deck.add_slide(slide_nr, slide)
+                                                               main_presentation_context,
+                                                               seed_generator,
+                                                               num_slides, None, None),
+                                         range(num_slides))
+            for slide_result in all_slide_results:
+                slide, generated_elements, slide_generator_data, slide_nr = slide_result
+                slide_deck.add_slide(slide_nr, slide)
             return slide_deck
 
     def f(self, x):
@@ -182,23 +182,23 @@ class PresentationSchema:
 
 class SlideGeneratorContext(object):
     def __init__(self, presentation_schema, presentation_context,
-                 # seed_generator,
+                 seed_generator,
                  num_slides, used_elements=None,
                  prohibited_generators=None):
         self.presentation_schema = presentation_schema
         self.presentation_context = presentation_context
-        # self.seed_generator = seed_generator
+        self.seed_generator = seed_generator
         self.num_slides = num_slides
         self.used_elements = used_elements
         self.prohibited_generators = prohibited_generators
 
     def __call__(self, slide_nr):
         return self.presentation_schema.generate_slide(
-            presentation_context=dict(),
-            # create_slide_presentation_context(self.presentation_context,
-                                                                   # self.seed_generator.generate_seed(slide_nr)
-                                                                   # 'cat'
-                                                                   # ),
+            # presentation_context=dict(),
+            create_slide_presentation_context(self.presentation_context,
+                                              self.seed_generator.generate_seed(slide_nr)
+                                              # 'cat'
+                                              ),
             slide_nr=slide_nr,
             num_slides=self.num_slides,
             used_elements=self.used_elements,

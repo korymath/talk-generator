@@ -243,11 +243,11 @@ class ChartSlideGenerator(SlideGenerator):
 
 class CombinedGenerator(object):
     def __init__(self, *generators):
-        print("CombinedGenerator:", self, generators)
+        # print("CombinedGenerator:", self, generators)
         self._generators = generators
 
     def __call__(self, presentation_context):
-        print("CombinedGenerator:", self)
+        # print("CombinedGenerator:", self)
         return [content_generator(presentation_context) if content_generator else None for content_generator in
                 self._generators]
 
@@ -255,6 +255,8 @@ class CombinedGenerator(object):
 def is_different_enough(generated, used):
     if generated:
         (used_elements, allowed_repeated_elements) = used
+        if not used_elements:
+            return True
         intersection = set(generated) & used_elements
         return allowed_repeated_elements >= len(intersection)
     return False
