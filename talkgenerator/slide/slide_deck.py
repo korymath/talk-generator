@@ -16,4 +16,4 @@ class SlideDeck():
         if not self.is_complete():
             print("ERROR: SOME SLIDES WERE NOT GENERATED:", self._slides)
             self._slides = [slide for slide in self._slides if slide is not None]
-        return list(map(lambda x: x.create_powerpoint_slide(prs_template), self._slides))
+        return [x.create_powerpoint_slide(prs_template) for x in self._slides]

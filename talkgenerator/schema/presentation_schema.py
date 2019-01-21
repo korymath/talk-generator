@@ -3,7 +3,7 @@ This module represents the abstractions of a presentation schema (responsible fo
 presentation), and slide generators, that have functions for generating slides along with some other metadata.
 
 """
-from multiprocessing.pool import Pool
+from multiprocessing.pool import ThreadPool
 
 from talkgenerator.schema.slide_generator_data import _filter_generated_elements
 
@@ -58,12 +58,16 @@ class PresentationSchema:
         print("TRYING TO GENERATE IN PARALLEL")
         slide_nrs_to_generate = range(num_slides)
         while len(slide_nrs_to_generate) > 0:
-            with Pool(processes=num_slides) as pool:
-                all_slide_results = pool.map(SlideGeneratorContext(self,
-                                                                   main_presentation_context,
-                                                                   seed_generator,
-                                                                   num_slides, None, None),
-                                             slide_nrs_to_generate)
+            with ThreadPool(processes=num_slides) as pool:
+                all_slide_results = pool.map(
+                    SlideGeneratorContext(
+                        presentation_schema=self,  # reference the enclosing presentation schema
+                        presentation_context=main_presentation_context,
+                        seed_generator=seed_generator,
+                        num_slides=num_slides,
+                        used_elements=None,
+                        prohibited_generators=None),
+                    slide_nrs_to_generate)
                 slide_nrs_to_generate = []  # TODO: Update to slide numbers without
                 for i in range(len(all_slide_results)):
                     slide_result = all_slide_results[i]
