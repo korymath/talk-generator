@@ -1,15 +1,15 @@
-import tqdm
 import time
 import random
 import subprocess
 import numpy as np
+from tqdm import tqdm
 
 
 # get some random words
 word_file = "/usr/share/dict/words"
 WORDS = open(word_file).read().splitlines()
-num_tests = 2
-num_slides = 2
+num_tests = 10
+num_slides = 10
 parallel = 'True'
 open_ppt = 'False'
 
