@@ -36,15 +36,16 @@ py==1.7.0
 py-thesaurus==1.0.5
 PyDictionary==1.5.2
 pytest==3.9.2
-python-dotenv==0.9.1
 python-datamuse==1.2.0
 python-dateutil==2.7.5
+python-dotenv==0.9.1
 python-pptx==0.6.15
 requests==2.20.0
 s3transfer==0.1.13
 safygiphy==1.1.0
 selenium==3.14.1
 six==1.11.0
+tqdm==4.29.1
 tracery==0.1.1
 update-checker==0.16
 urllib3==1.24
