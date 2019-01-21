@@ -56,19 +56,24 @@ class PresentationSchema:
                                       used_elements,
                                       used_tags):
         print("TRYING TO GENERATE IN PARALLEL")
-        with Pool(processes=num_slides) as pool:
-            all_slide_results = pool.map(SlideGeneratorContext(self,
-                                                               main_presentation_context,
-                                                               seed_generator,
-                                                               num_slides, None, None),
-                                         range(num_slides))
-            for slide_result in all_slide_results:
-                slide, generated_elements, slide_generator_data, slide_nr = slide_result
-                slide_deck.add_slide(slide_nr, slide)
-            return slide_deck
+        slide_nrs_to_generate = range(num_slides)
+        while len(slide_nrs_to_generate) > 0:
+            with Pool(processes=num_slides) as pool:
+                all_slide_results = pool.map(SlideGeneratorContext(self,
+                                                                   main_presentation_context,
+                                                                   seed_generator,
+                                                                   num_slides, None, None),
+                                             slide_nrs_to_generate)
+                slide_nrs_to_generate = []  # TODO: Update to slide numbers without
+                for i in range(len(all_slide_results)):
+                    slide_result = all_slide_results[i]
+                    if not slide_result:
+                        slide_nrs_to_generate.append(i)
 
-    def f(self, x):
-        return x * x
+                    slide, generated_elements, slide_generator_data, slide_nr = slide_result
+                    slide_deck.add_slide(slide_nr, slide)
+
+        return slide_deck
 
     def _generate_slide_deck(self, slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
                              used_tags):
@@ -132,6 +137,10 @@ class PresentationSchema:
 
             slide, generated_elements = slide_result
 
+            print('\n * Finished generating slide {} about {} using {} *'.format(
+                slide_nr + 1,
+                presentation_context["seed"],
+                generator))
             return slide, generated_elements, generator, slide_nr
         else:
             print("No generator found to generate about ", presentation_context["Presentation"])
