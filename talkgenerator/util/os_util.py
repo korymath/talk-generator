@@ -69,7 +69,7 @@ def is_image(content):
 @lru_cache(maxsize=20)
 def is_valid_image(image_url):
     try:
-        im = open_image(image_url)
+        im = open_image(os.path.normpath(image_url))
         if im in get_prohibited_images():
             print(image_url, " IS DENIED")
             return False
