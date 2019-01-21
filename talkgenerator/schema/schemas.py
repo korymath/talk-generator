@@ -160,21 +160,21 @@ weird_and_shitpost_and_gif_generator = CombinedGenerator(
 generate_full_screen_google_image = FromListGenerator(
     InvalidImagesRemoverGenerator(
         SeededGenerator(
-            google_images.create_full_screen_image_generator())))
+            google_images.FullImageGenerator())))
 
 generate_wide_google_image = FromListGenerator(
     InvalidImagesRemoverGenerator(
         SeededGenerator(
-            google_images.create_wide_image_generator())))
+            google_images.WideImageGenerator())))
 
 generate_google_image = FromListGenerator(
     InvalidImagesRemoverGenerator(
         SeededGenerator(
-            google_images.create_image_generator())))
+            google_images.ImageGenerator())))
 
 generate_google_image_from_word = FromListGenerator(
     InvalidImagesRemoverGenerator(
-        google_images.create_image_generator()))
+        google_images.ImageGenerator()))
 
 # OLD/VINTAGE
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")

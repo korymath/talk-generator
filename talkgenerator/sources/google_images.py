@@ -17,17 +17,9 @@ _WIDE_ARGUMENTS = {
 }
 
 
-def create_full_screen_image_generator(num_images=_DEFAULT_NUM_IMAGES):
-    return lambda word: _search_full_screen(word, num_images)
-
-
 @lru_cache(maxsize=20)
 def _search_full_screen(word, num_images=_DEFAULT_NUM_IMAGES):
     return search_images(word, _FULL_SCREEN_ARGUMENTS, num_images)
-
-
-def create_wide_image_generator(num_images=_DEFAULT_NUM_IMAGES):
-    return lambda word: _search_wide(word, num_images)
 
 
 @lru_cache(maxsize=20)
@@ -35,8 +27,28 @@ def _search_wide(word, num_images=_DEFAULT_NUM_IMAGES):
     return search_images(word, _WIDE_ARGUMENTS, num_images)
 
 
-def create_image_generator(num_images=_DEFAULT_NUM_IMAGES):
-    return lambda word: _search_normal_image(word, num_images)
+class FullImageGenerator(object):
+    def __init__(self, num_images=_DEFAULT_NUM_IMAGES):
+        self._num_images = num_images
+
+    def __call__(self, word):
+        return _search_full_screen(word, self._num_images)
+
+
+class WideImageGenerator(object):
+    def __init__(self, num_images=_DEFAULT_NUM_IMAGES):
+        self._num_images = num_images
+
+    def __call__(self, word):
+        return _search_wide(word, self._num_images)
+
+
+class ImageGenerator(object):
+    def __init__(self, num_images=_DEFAULT_NUM_IMAGES):
+        self._num_images = num_images
+
+    def __call__(self, word):
+        return _search_normal_image(word, self._num_images)
 
 
 @lru_cache(maxsize=20)
