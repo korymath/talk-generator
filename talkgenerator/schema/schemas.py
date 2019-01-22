@@ -339,6 +339,7 @@ all_slide_generators = [
     # TITLE
     SlideGeneratorData(
         slide_generators.TitleSlideGenerator.of(talk_title_generator, talk_subtitle_generator),
+        allowed_repeated_elements=3,
         weight_function=PeakedWeight((0,), 100000, 0),
         tags=["title"],
         name="Title slide"),
