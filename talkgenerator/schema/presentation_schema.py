@@ -73,7 +73,7 @@ class PresentationSchema:
                         seed_generator=seed_generator,
                         num_slides=num_slides,
                         used_elements=used_elements,
-                        prohibited_generators=None),
+                        prohibited_generators=self._calculate_prohibited_generators(used_tags, num_slides)),
                     slide_nrs_to_generate)
                 slide_nrs_to_generate = []  # TODO: Update to slide numbers without
                 for slide_result in all_slide_results:
@@ -84,13 +84,14 @@ class PresentationSchema:
             # Check Constraints
 
             for i in range(num_slides):
-                if not generated_results[i]:
-                    slide_nrs_to_generate.append(i)
-                else:
-                    success = self._update_slide_deck_with_generated_result(slide_deck, generated_results[i],
-                                                                            used_elements, used_tags)
-                    if not success:
+                if not slide_deck.has_slide_nr(i):
+                    if not generated_results[i]:
                         slide_nrs_to_generate.append(i)
+                    else:
+                        success = self._update_slide_deck_with_generated_result(slide_deck, generated_results[i],
+                                                                                used_elements, used_tags, num_slides)
+                        if not success:
+                            slide_nrs_to_generate.append(i)
 
         return slide_deck
 
@@ -110,18 +111,21 @@ class PresentationSchema:
 
             if slide_results:
                 success = self._update_slide_deck_with_generated_result(slide_deck, slide_results, used_elements,
-                                                                        used_tags)
+                                                                        used_tags, num_slides)
                 print("success?", success)
                 assert success
 
         return slide_deck
 
-    def _update_slide_deck_with_generated_result(self, slide_deck, generated_result, used_elements, used_tags):
+    def _update_slide_deck_with_generated_result(self, slide_deck, generated_result, used_elements, used_tags,
+                                                 num_slides):
         slide, generated_elements, slide_generator_data, slide_nr = generated_result
+        # Check if allowed according to repeated elements & slide type tags
         if slide_generators \
                 .is_different_enough_for_allowed_repeated(generated_elements,
                                                           used_elements,
-                                                          slide_generator_data.get_allowed_repeated_elements()):
+                                                          slide_generator_data.get_allowed_repeated_elements()) \
+                and slide_generator_data not in self._calculate_prohibited_generators(used_tags, num_slides):
             slide_deck.add_slide(slide_nr, slide)
             self._update_used_elements(used_elements, used_tags, generated_elements, slide_generator_data)
             return True

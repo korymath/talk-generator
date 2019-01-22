@@ -17,3 +17,6 @@ class SlideDeck():
             print("ERROR: SOME SLIDES WERE NOT GENERATED:", self._slides)
             self._slides = [slide for slide in self._slides if slide is not None]
         return [x.create_powerpoint_slide(prs_template) for x in self._slides]
+
+    def has_slide_nr(self, index):
+        return 0 <= index < self._size and self._slides[index] is not None
