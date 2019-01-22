@@ -4,7 +4,7 @@ import random
 from talkgenerator.util import os_util
 from talkgenerator.sources import shitpostbot, wikihow, google_images, inspirobot, chart, goodreads, giphy, reddit, \
     text_generator
-from talkgenerator import slide_templates
+from talkgenerator.slide import powerpoint_slide_creator
 from talkgenerator.schema import slide_topic_generators
 from talkgenerator.slide import slide_generators
 
@@ -649,7 +649,7 @@ default_max_allowed_tags = {
 # This object holds all the information about how to generate the presentation
 presentation_schema = PresentationSchema(
     # Basic powerpoint generator
-    powerpoint_creator=slide_templates.create_new_powerpoint,
+    powerpoint_creator=powerpoint_slide_creator.create_new_powerpoint,
     # Topic per slide generator
     seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
 
@@ -665,7 +665,7 @@ interview_max_allowed_tags["about_me"] = 0
 
 interview_schema = PresentationSchema(
     # Basic powerpoint generator
-    powerpoint_creator=slide_templates.create_new_powerpoint,
+    powerpoint_creator=powerpoint_slide_creator.create_new_powerpoint,
     # Topic per slide generator
     seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
 
@@ -679,7 +679,7 @@ interview_schema = PresentationSchema(
 
 test_schema = PresentationSchema(
     # Basic powerpoint generator
-    slide_templates.create_new_powerpoint,
+    powerpoint_slide_creator.create_new_powerpoint,
     # Topic per slide generator
     # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
     seed_generator=slide_topic_generators.IdentityTopicGenerator,
