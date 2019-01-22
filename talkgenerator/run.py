@@ -4,6 +4,7 @@ import os.path
 import pathlib
 import subprocess
 import sys
+sys.path.append('../')
 
 from talkgenerator import settings
 
