@@ -1,3 +1,4 @@
+import time 
 from functools import lru_cache
 from urllib.parse import urlencode
 
@@ -79,10 +80,14 @@ def _get_data(word, arguments=None):
     splitted_word = _remove_prohibited_words(word)
     search_term = "_".join(splitted_word)
     url = URL.format(search_term) + urlencode(arguments, False, "/")
-    # start = time.perf_counter()
-    result = requests.get(url).json()
-    # end = time.perf_counter()
-    # print("Took {} seconds to poll conceptnet".format(str(end-start)))
+    start = time.perf_counter()
+    try:
+        result = requests.get(url).json()
+    except Exception as e:
+        print('conceptnet _get_data timeout: {}'.format(e))
+        result = None
+    end = time.perf_counter()
+    print("Took {} seconds to poll conceptnet".format(str(end-start)))
     return result
 
 

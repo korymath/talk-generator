@@ -84,6 +84,9 @@ class SlideGeneratorData:
         Determines how much chance it has being picked for a particular slide number"""
         return self._weight_function(slide_nr, total_slides)
 
+    def get_allowed_repeated_elements(self):
+        return self._allowed_repeated_elements
+
     def get_tags(self):
         return self._tags
 

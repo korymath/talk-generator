@@ -1,5 +1,7 @@
 import ntpath
+import sys
 import os
+import traceback
 import pathlib
 from functools import lru_cache
 
@@ -67,12 +69,13 @@ def is_image(content):
 @lru_cache(maxsize=20)
 def is_valid_image(image_url):
     try:
-        im = open_image(image_url)
+        im = open_image(os.path.normpath(image_url))
         if im in get_prohibited_images():
             print(image_url, " IS DENIED")
             return False
-    except OSError as e:
-        print(e)
+    except (OSError, SyntaxError) as e:
+        traceback.print_exc(file=sys.stdout)
+        print('is_valid_image error: {}'.format(e))
         return False
 
     return True

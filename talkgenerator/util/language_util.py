@@ -119,23 +119,29 @@ def get_definitions(word):
     """Get definitions of a given topic word."""
     print('******************************************')
     # Get definition
-    word_senses = wn.synsets(word)
     definitions = {}
-    for ss in word_senses:
-        definitions[ss.name()] = ss.definition()
-    print('{} definitions for "{}"'.format(len(definitions), word))
+    try:
+        word_senses = wn.synsets(word)
+        for ss in word_senses:
+            definitions[ss.name()] = ss.definition()
+        print('{} definitions for "{}"'.format(len(definitions), word))
+    except AttributeError as e:
+        print(e)
     return definitions
 
 
 def get_synonyms(word):
     """Get all synonyms for a given word."""
-    word_senses = wn.synsets(word)
     all_synonyms = []
-    for ss in word_senses:
-        all_synonyms.extend(
-            [x.lower().replace('_', ' ') for x in ss.lemma_names()])
-    all_synonyms.append(word)
-    all_synonyms = list(set(all_synonyms))
+    try:
+        word_senses = wn.synsets(word)
+        for ss in word_senses:
+            all_synonyms.extend(
+                [x.lower().replace('_', ' ') for x in ss.lemma_names()])
+        all_synonyms.append(word)
+        all_synonyms = list(set(all_synonyms))
+    except AttributeError as e:
+        print(e)
     return all_synonyms
 
 

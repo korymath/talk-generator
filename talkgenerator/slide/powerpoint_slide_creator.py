@@ -1,6 +1,6 @@
-
 import os
 import sys
+import traceback
 from functools import lru_cache
 
 from lxml.etree import XMLSyntaxError
@@ -65,7 +65,7 @@ def _add_title(slide, title):
 def _add_text(slide, placeholder_id, text):
     if text:
         placeholder = slide.placeholders[placeholder_id]
-        placeholder.text = text
+        placeholder.text = str(text)
         return True
 
 
@@ -90,7 +90,8 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
             try:
                 placeholder = placeholder.insert_picture(image_url)
             except (ValueError, XMLSyntaxError) as e:
-                print(e)
+                traceback.print_exc(file=sys.stdout)
+                print('_add_image error: {}'.format(e))
                 return None
 
             # Calculate ratios and compare
@@ -111,12 +112,14 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
 
             return placeholder
         except FileNotFoundError as fnfe:
-            print(fnfe)
+            traceback.print_exc(file=sys.stdout)
+            print('_add_image file not found: {}'.format(fnfe))
             return None
     else:
         try:
             return placeholder.insert_picture(image_url)
         except OSError:
+            traceback.print_exc(file=sys.stdout)
             print("Unexpected error inserting image:", image_url, ":", sys.exc_info()[0])
             return None
 

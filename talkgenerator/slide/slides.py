@@ -22,7 +22,10 @@ class Slide(metaclass=ABCMeta):
     def create_powerpoint_slide(self, prs):
         """ Should generate a slide in the powerpoint """
         ppt_slide = self.ppt_slide_creator(prs, **self._arguments)
-        ppt_slide.notes_slide.notes_text_frame.text = self._note
+        try:
+            ppt_slide.notes_slide.notes_text_frame.text = self._note
+        except AttributeError as e:
+            print('attribute error on create slide {}'.format(e))
         return ppt_slide
 
 

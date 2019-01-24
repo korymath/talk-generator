@@ -253,8 +253,12 @@ class CombinedGenerator(object):
 
 
 def is_different_enough(generated, used):
+    (used_elements, allowed_repeated_elements) = used
+    return is_different_enough_for_allowed_repeated(generated, used_elements, allowed_repeated_elements)
+
+
+def is_different_enough_for_allowed_repeated(generated, used_elements, allowed_repeated_elements):
     if generated:
-        (used_elements, allowed_repeated_elements) = used
         if not used_elements:
             return True
         intersection = set(generated) & used_elements

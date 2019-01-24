@@ -68,7 +68,12 @@ def _fill_in(seeds, i, distance=1):
         if i - distance >= 0 and seeds[i - distance]:
             neighbour = seeds[i - distance]
 
-            related = conceptnet.get_weighted_related_words(neighbour, 200)
+            try:
+                related = conceptnet.get_weighted_related_words(neighbour, 200)
+            except Exception as e:
+                print('Conceptnet related words failing: {}'.format(e))
+                related = []
+
             filtered_related = [word for word in related if
                                 not normalise_seed(word[1]) in seeds and len(normalise_seed(word[1])) > 2]
 
