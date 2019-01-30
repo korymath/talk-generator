@@ -18,7 +18,7 @@ class TestTalkGenerator(unittest.TestCase):
     def test_main(self):
         arguments = mock.Mock()
         arguments.configure_mock(topic='cat')
-        arguments.configure_mock(num_slides=10)
+        arguments.configure_mock(num_slides=3)
         arguments.configure_mock(schema='test')
         arguments.configure_mock(parallel=False)
         arguments.configure_mock(output_folder=os_util.to_actual_file("../output/test/", __file__))
@@ -26,7 +26,20 @@ class TestTalkGenerator(unittest.TestCase):
         arguments.configure_mock(save_ppt=True)
         ppt = run.main(arguments)
 
-        self.assertEqual(10, len(ppt.slides))
+        self.assertEqual(3, len(ppt.slides))
+
+    def test_parallel(self):
+        arguments = mock.Mock()
+        arguments.configure_mock(topic='dog')
+        arguments.configure_mock(num_slides=3)
+        arguments.configure_mock(schema='test')
+        arguments.configure_mock(parallel=True)
+        arguments.configure_mock(output_folder=os_util.to_actual_file("../output/test/", __file__))
+        arguments.configure_mock(open_ppt=False)
+        arguments.configure_mock(save_ppt=True)
+        ppt = run.main(arguments)
+
+        self.assertEqual(3, len(ppt.slides))
 
 
 if __name__ == '__main__':
