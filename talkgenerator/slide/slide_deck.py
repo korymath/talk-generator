@@ -18,5 +18,12 @@ class SlideDeck():
             self._slides = [slide for slide in self._slides if slide is not None]
         return [x.create_powerpoint_slide(prs_template) for x in self._slides]
 
+    def save_to_revealjs(self):
+        """ Should generate a slide in the revealjs """
+        if not self.is_complete():
+            print("ERROR: SOME SLIDES WERE NOT GENERATED:", self._slides)
+            self._slides = [slide for slide in self._slides if slide is not None]
+        return [x for x in self._slides]
+
     def has_slide_nr(self, index):
         return 0 <= index < self._size and self._slides[index] is not None

@@ -62,11 +62,12 @@ def main(arguments):
         arguments.presenter = schemas.full_name_generator()
 
     # Generate the presentation object
-    presentation = schema.generate_presentation(topic=arguments.topic,
+    presentation, slide_deck = schema.generate_presentation(topic=arguments.topic,
                                                 num_slides=arguments.num_slides,
                                                 presenter=arguments.presenter,
                                                 parallel=arguments.parallel)
 
+    print('Slide deck: {}'.format(slide_deck.save_to_revealjs()))
     # Save presentation
     if arguments.save_ppt or settings.AWS_S3_ENABLED:
         presentation_file = _save_presentation_to_pptx(

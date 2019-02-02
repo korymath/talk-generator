@@ -53,7 +53,7 @@ class PresentationSchema:
                                       used_tags)
 
         slide_deck.save_to_powerpoint(presentation)
-        return presentation
+        return presentation, slide_deck
 
     def _generate_slide_deck_parallel(self, slide_deck, num_slides, main_presentation_context, seed_generator,
                                       used_elements,
