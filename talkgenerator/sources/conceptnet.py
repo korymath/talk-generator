@@ -94,7 +94,7 @@ def _get_data(word, arguments=None):
 def _get_edges(word, arguments=None):
     data = _get_data(word, arguments)
     if data:
-        return ["edges"]
+        return data["edges"]
 
 
 def _get_weight_and_word(edge, word):
@@ -136,8 +136,7 @@ def get_weighted_properties(word):
 
 def get_weighted_antonyms(word):
     edges = _get_edges(word)
-    if edges:
-        return _get_from_relation(word, edges, "Antonym")
+    return _get_from_relation(word, edges, "Antonym")
 
 
 # pp.pprint(get_weighted_related_words("cat", 45))
