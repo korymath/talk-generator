@@ -14,7 +14,7 @@ def _search_quotes_page(search_term, page):
     url = quote_search_url.format(page, search_term.replace(' ', '+'))
     try:
         page = requests.get(url, timeout=5)
-    except requests.exceptions.ConnectionError or requests.exceptions.ReadTimeout:
+    except (requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout) as e:
         return None
     if page:
         soup = BeautifulSoup(page.content, 'html.parser')
