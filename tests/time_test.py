@@ -4,13 +4,13 @@ from talkgenerator import run
 from talkgenerator.util import os_util
 
 
-def run_time_test(number_of_times):
-    words = os_util.read_lines("../data/eval/common_words.txt")[0:number_of_times]
+def run_time_test(start_idx, end_idx):
+    words = os_util.read_lines("../data/eval/common_words.txt", __file__)[start_idx:end_idx]
     result_file = open("../data/eval/timings.txt", "a+")
 
     for topic in words:
         arguments = run.get_argument_parser().parse_args(
-            ['--topic', topic, '--num_slides', '7', '--save_ppt', 'False', '--open_ppt', 'False'])
+            ['--topic', topic, '--num_slides', '7', '--save_ppt', 'True', '--open_ppt', 'False', '--parallel', 'True'])
 
         start = time.process_time()
         clock_start = time.perf_counter()
@@ -27,3 +27,6 @@ def run_time_test(number_of_times):
         result_file.flush()
 
     result_file.close()
+
+
+run_time_test(0, 200)
