@@ -7,6 +7,7 @@ from functools import lru_cache
 
 import requests
 from PIL import Image
+from PIL.Image import DecompressionBombError
 
 
 def download_image(from_url, to_url):
@@ -45,7 +46,10 @@ def read_lines(file, current__file__):
 
 @lru_cache(maxsize=20)
 def open_image(file):
-    return Image.open(file)
+    try:
+        return Image.open(file)
+    except DecompressionBombError:
+        return None
 
 
 _PROHIBITED_IMAGES_DIR = "../../data/images/prohibited/"
@@ -70,7 +74,7 @@ def is_image(content):
 def is_valid_image(image_url):
     try:
         im = open_image(os.path.normpath(image_url))
-        if im in get_prohibited_images():
+        if not im or im in get_prohibited_images():
             print(image_url, " IS DENIED")
             return False
     except (OSError, SyntaxError) as e:

@@ -12,7 +12,10 @@ quote_search_url = "https://www.goodreads.com/search?page={}&q={" \
 @lru_cache(maxsize=20)
 def _search_quotes_page(search_term, page):
     url = quote_search_url.format(page, search_term.replace(' ', '+'))
-    page = requests.get(url)
+    try:
+        page = requests.get(url, timeout=5)
+    except requests.exceptions.ConnectionError or requests.exceptions.ReadTimeout:
+        return None
     if page:
         soup = BeautifulSoup(page.content, 'html.parser')
         # Replace breaks with new lines
