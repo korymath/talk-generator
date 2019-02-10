@@ -11,6 +11,10 @@ This software can be extended to be used for any sort of presentation including 
 
 For more details, feel free to see the [project details and technical description.](https://docs.google.com/document/d/1R7v6XELpqCwPH3kZzZHefAY1GiL32_wRhQOT8PpzEys/edit?usp=sharing)
 
+## Demo
+
+For a demo of this generator, please visit [the online demo page](https://shaun.lol/), a platform created by Shaun Furragia to give easier access to this talk generator.
+
 ### Example
 
 ![Automatically Generated](https://media.giphy.com/media/8gWRbelmFyKoHfwz2Z/giphy.gif)]
