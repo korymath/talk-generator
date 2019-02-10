@@ -118,7 +118,7 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
     else:
         try:
             return placeholder.insert_picture(image_url)
-        except OSError:
+        except OSError or ValueError:
             traceback.print_exc(file=sys.stdout)
             print("Unexpected error inserting image:", image_url, ":", sys.exc_info()[0])
             return None
