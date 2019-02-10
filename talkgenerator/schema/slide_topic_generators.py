@@ -35,7 +35,7 @@ class SideTrackingTopicGenerator:
         previous = seeds.copy()
         while None in seeds:
             fill_in_blank_topics_with_related(seeds)
-            print(seeds)
+            print('SideTrackingTopicGenerator concept seeds: {}'.format(seeds))
             if seeds == previous:
                 fill_in_blanks_with(seeds, topic)
                 break
@@ -106,13 +106,13 @@ class IdentityTopicGenerator:
 
 
 # TODO Other topic generators
-'''=> We might need to think of a better way of finding topics for slides other than just plain synonyms. Usually, 
-talks have some sort temporal linearity, building up to something, whereas currently in our system the order of the 
-slide seeds doesn't matter. It might for example be interesting to try to make small loops around related concepts 
-and try to come back to the main topic as seed every ~3 seeds, e.g. using Wikipedia links, conceptnet relations or 
-other means, similar to the classic Harold impro format opener Cloverleaf. e.g. spaghetti -> Italy -> hills -> 
-holidays -> restaurant -> spaghetti -> rasta hair -> reggea -> munchies -> spaghetti. Although this example might be 
-a bit extreme varied, it will ensure that the talker just doesn't have to talk about this one topic and its synonyms, 
+'''=> We might need to think of a better way of finding topics for slides other than just plain synonyms. Usually,
+talks have some sort temporal linearity, building up to something, whereas currently in our system the order of the
+slide seeds doesn't matter. It might for example be interesting to try to make small loops around related concepts
+and try to come back to the main topic as seed every ~3 seeds, e.g. using Wikipedia links, conceptnet relations or
+other means, similar to the classic Harold impro format opener Cloverleaf. e.g. spaghetti -> Italy -> hills ->
+holidays -> restaurant -> spaghetti -> rasta hair -> reggea -> munchies -> spaghetti. Although this example might be
+a bit extreme varied, it will ensure that the talker just doesn't have to talk about this one topic and its synonyms,
 but can also deviate and make little stories. '''
 
 

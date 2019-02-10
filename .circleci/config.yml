@@ -38,7 +38,8 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pytest
+            pytest --cov=talkgenerator tests/
+            codecov --token=e25ce249-b3da-4d80-b8d3-074f7d288969
 
       - store_artifacts:
           path: test-reports
