@@ -29,4 +29,4 @@ def run_time_test(start_idx, end_idx):
     result_file.close()
 
 
-run_time_test(0, 200)
+# run_time_test(0, 200)

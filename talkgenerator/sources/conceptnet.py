@@ -1,12 +1,9 @@
-import time 
+import time
+import requests
 from functools import lru_cache
 from urllib.parse import urlencode
 
-import requests
-
 from talkgenerator.util import generator_util, cache_util
-
-# import time
 
 URL = "http://api.conceptnet.io/c/en/{}?"
 
@@ -87,7 +84,8 @@ def _get_data(word, arguments=None):
         print('conceptnet _get_data timeout: {}'.format(e))
         result = None
     end = time.perf_counter()
-    print("Took {} seconds to poll conceptnet".format(str(end-start)))
+    print("Took {} seconds to poll Conceptnet for '{}'".format(
+        str(end-start), word))
     return result
 
 
@@ -137,9 +135,6 @@ def get_weighted_properties(word):
 def get_weighted_antonyms(word):
     edges = _get_edges(word)
     return _get_from_relation(word, edges, "Antonym")
-
-
-# pp.pprint(get_weighted_related_words("cat", 45))
 
 # Weighted
 weighted_location_generator = generator_util.WeightedGenerator(get_weighted_related_locations)
