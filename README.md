@@ -106,7 +106,6 @@ and run `pip install mysqlclient-1.3.8-cp36-cp36m-win_amd64.whl`
 
 *slaps the hood of the container* Yep this bad boy runs on [Docker](https://www.docker.com/products/docker-desktop).
 
-Do not `docker push` this image to a public repository. It contains code that can't be made public. Just build the image locally and run.
 
 ### Building the Image
 
