@@ -32,10 +32,15 @@ def get_subreddit(name):
 
 
 @lru_cache(maxsize=20)
-def search_subreddit(name, query, sort="relevance", limit=500):
+def search_subreddit(name, query, sort="relevance", limit=500, filter_nsfw=True):
     if has_reddit_access():
         try:
-            return list(get_subreddit(name).search(query, sort=sort, limit=limit))
+            submissions = list(get_subreddit(name).search(query, sort=sort, limit=limit))
+
+            if filter_nsfw:
+                submissions = [submission for submission in submissions if not submission.over_18]
+            return submissions
+
         except ResponseException as err:
             print("Exception with accessing Reddit: {}".format(err))
     else:
