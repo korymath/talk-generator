@@ -109,7 +109,7 @@ def get_argument_parser():
         help="The presentation schema to generate the presentation with")
     parser.add_argument('--presenter', default=None, type=str,
         help="The full name of the presenter, leave blank to randomise")
-    parser.add_argument('--parallel', default=False, type=str2bool,
+    parser.add_argument('--parallel', default=True, type=str2bool,
         help=("Generated powerpoint will generate in parallel " +
               "faster but drops some conditions)"))
     parser.add_argument('--output_folder', default="../output/", type=str,

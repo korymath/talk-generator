@@ -1,12 +1,15 @@
+# Talk Powerpoint Generator
 [![CircleCI](https://circleci.com/gh/korymath/talk-generator.svg?style=svg&circle-token=dcba7d5a9ff7953cff0526e201990c0b811b3aae)](https://circleci.com/gh/korymath/talk-generator)
 [![codecov](https://codecov.io/gh/korymath/talk-generator/branch/master/graph/badge.svg?token=gqkCyuXop0)](https://codecov.io/gh/korymath/talk-generator)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/korymath/britbot/blob/master/LICENSE.md)
 
-# Talk Powerpoint Generator
-
 ## Description
 
-Software to automatically generate talks, presentations for PowerPoint and/or Keynote. Their main purpose is for the improvisational comedy format "Improvised TED talk", where the actors have to present an unseen presentation. This software can be extended to be used for any sort of presentation including for example pecha kucha, etc. For more details, feel free to see the [project details and technical description.](https://docs.google.com/document/d/1R7v6XELpqCwPH3kZzZHefAY1GiL32_wRhQOT8PpzEys/edit?usp=sharing)
+Software to automatically generate talks, presentations for PowerPoint and/or Keynote. Their main purpose is for the improvisational comedy format "Improvised TED talk", where the actors have to present an unseen presentation. This software can be extended to be used for any sort of presentation including for example pecha kucha, etc. 
+
+## Demo
+
+For a demo of this generator, please visit [the online demo page](https://shaun.lol/), a platform created by Shaun Furragia to give easier access to this talk generator.
 
 ### Example
 
@@ -114,7 +117,6 @@ and run `pip install mysqlclient-1.3.8-cp36-cp36m-win_amd64.whl`
 
 *slaps the hood of the container* Yep this bad boy runs on [Docker](https://www.docker.com/products/docker-desktop).
 
-Do not `docker push` this image to a public repository. It contains code that can't be made public. Just build the image locally and run.
 
 ### Building the Image
 
@@ -265,7 +267,7 @@ Tests are automatically run with CircleCI based on the `.yml` file in the `.circ
 
 This ``Talk Generator`` is made by [Kory Mathewson](https://github.com/korymath)
 and [Thomas Winters](https://github.com/TWinters),
-with help from [Piotr Mirowski](https://github.com/piotrmirowski) and [Julian Faid](https://github.com/jfaid).
+with help from [Shaun Farrugia](https://github.com/h0h0h0), [Piotr Mirowski](https://github.com/piotrmirowski) and [Julian Faid](https://github.com/jfaid).
 
 ## License
 

@@ -90,7 +90,9 @@ def _get_data(word, arguments=None):
 
 
 def _get_edges(word, arguments=None):
-    return _get_data(word, arguments)["edges"]
+    data = _get_data(word, arguments)
+    if data:
+        return data["edges"]
 
 
 def _get_weight_and_word(edge, word):

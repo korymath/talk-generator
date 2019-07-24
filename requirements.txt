@@ -23,7 +23,7 @@ gunicorn==19.9.0
 idna==2.8
 inflect==2.1.0
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2>=2.10.1
 jmespath==0.9.3
 lxml==4.3.0
 MarkupSafe==1.1.0
@@ -61,7 +61,7 @@ terminaltables==3.1.0
 tqdm==4.30.0
 tracery==0.1.1
 update-checker==0.16
-urllib3==1.24.1
+urllib3>=1.24.2
 websocket-client==0.54.0
 Werkzeug==0.14.1
 WTForms==2.2.1

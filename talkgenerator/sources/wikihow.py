@@ -5,7 +5,7 @@ from functools import lru_cache
 import inflect
 import requests
 from bs4 import BeautifulSoup
-
+from itertools import chain
 from talkgenerator import settings
 
 _LOG_IN_URL = "https://www.wikihow.com/index.php?title=Special:UserLogin&action=submitlogin&type=login"
@@ -44,6 +44,7 @@ def remove_how_to(wikihow_title):
 def clean_wikihow_action(action):
     action = _remove_between_brackets(action)
     action = _remove_trademarks(action)
+    action = action.strip()
     return action
 
 
@@ -89,8 +90,10 @@ def get_related_wikihow_actions_basic_search(seed_word):
 
     soup = BeautifulSoup(page.content, 'html.parser')
     actions_elements = soup.find_all('a', class_='result_link')
-    actions = [clean_wikihow_action(remove_how_to(x.get_text())) for x in actions_elements if
-               x is not None and not x.get_text().startswith("Category")]
+    action_titles = list(chain.from_iterable([a.find_all('div', 'result_title') for a in actions_elements]))
+    actions = [clean_wikihow_action(remove_how_to(x.get_text())) for x in action_titles if
+               x is not None
+               and not x.get_text().startswith("Category")]
     return actions
 
 

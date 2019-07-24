@@ -214,14 +214,15 @@ class ThreeImagesAndTupledCaptions(object):
         self._captions_generator = captions_generator
         self._image_1_generator = image_1_generator
         self._image_2_generator = image_2_generator
-        self.image_3_generator = image_3_generator
+        self._image_3_generator = image_3_generator
         self._original_image_size = original_image_size
 
     def __call__(self, presentation_context):
         generated_tuple = self._captions_generator(presentation_context)
         return self._title_generator(presentation_context), generated_tuple[0], self._image_1_generator(
             presentation_context), generated_tuple[1], self._image_2_generator(
-            presentation_context), self.image_3_generator(presentation_context), self._original_image_size
+            presentation_context), generated_tuple[2], self._image_3_generator(
+            presentation_context), self._original_image_size
 
 
 class ChartSlideGenerator(SlideGenerator):
