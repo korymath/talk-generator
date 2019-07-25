@@ -31,13 +31,13 @@ from talkgenerator.schema.slide_generator_data import PeakedWeight
 
 # = TEXT GENERATORS=
 
-def createTemplatedTextGenerator(file):
-    actual_file = os_util.to_actual_file(file, __file__)
+def createTemplatedTextGenerator(filename):
+    actual_file = os_util.to_actual_file(filename)
     return text_generator.TemplatedTextGenerator(actual_file).generate
 
 
-def createTraceryGenerator(file, main="origin"):
-    actual_file = os_util.to_actual_file(file, __file__)
+def createTraceryGenerator(filename, main="origin"):
+    actual_file = os_util.to_actual_file(filename)
     return text_generator.TraceryTextGenerator(actual_file, main).generate
 
 
@@ -114,8 +114,8 @@ class RedditLocalImageLocationGenerator(object):
         self._subreddit = subreddit
 
     def __call__(self, url):
-        return os_util.to_actual_file(
-            "../../downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url), __file__)
+        filename = "downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
+        return os_util.to_actual_file(filename)
 
 
 class RedditImageSearcher(object):
@@ -161,7 +161,8 @@ class ShitPostBotURLGenerator(object):
         pass
 
     def __call__(self, url):
-        return os_util.to_actual_file("../../downloads/shitpostbot/{}".format(os_util.get_file_name(url)), __file__)
+        return os_util.to_actual_file("downloads/shitpostbot/{}".format(
+            os_util.get_file_name(url)))
 
 
 shitpostbot_image_generator = ExternalImageListGenerator(
@@ -225,7 +226,7 @@ reddit_location_image_generator = create_reddit_image_generator("evilbuildings",
                                                                 "EarthPorn")
 
 # BOLD_STATEMENT
-bold_statement_templated_file = os_util.to_actual_file('data/text-templates/bold_statements.txt', __file__)
+bold_statement_templated_file = os_util.to_actual_file('data/text-templates/bold_statements.txt')
 bold_statement_templated_generator = createTemplatedTextGenerator(bold_statement_templated_file)
 
 

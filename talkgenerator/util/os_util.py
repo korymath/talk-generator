@@ -1,8 +1,9 @@
-import ntpath
-import sys
 import os
-import traceback
+import sys
+import ntpath
 import pathlib
+import traceback
+
 from functools import lru_cache
 
 import requests
@@ -25,39 +26,34 @@ def get_file_name(url):
     return ntpath.basename(url)
 
 
-def to_actual_file(file, current__file__):
-    # if file.startswith('..'):
-    this_folder = os.path.dirname(os.path.abspath(current__file__))
-    # folder = this_folder
-    # while file.startswith('../'):
-    #     folder = os.path.dirname(folder)
-    #     file = file[3:]
-    # actual_file = os.path.join(folder, file)
-    actual_file = os.path.join(this_folder, file)
-    return actual_file
-    # return file
+def to_actual_file(filename=""):
+    """Return the path to the filename specified.
+    This is used most often to get the path of data files."""
+
+    util_folder = os.path.dirname((os.path.dirname(os.path.abspath(__file__))))
+    return os.path.join(util_folder, filename)
 
 
 @lru_cache(maxsize=20)
-def read_lines(file, current__file__):
-    actual_file = to_actual_file(file, current__file__)
+def read_lines(filename):
+    actual_file = to_actual_file(filename)
     return [line.rstrip('\n') for line in open(actual_file)]
 
 
 @lru_cache(maxsize=20)
-def open_image(file):
+def open_image(filename):
     try:
-        return Image.open(file)
+        return Image.open(filename)
     except DecompressionBombError:
         return None
 
 
-_PROHIBITED_IMAGES_DIR = "../../data/images/prohibited/"
+_PROHIBITED_IMAGES_DIR = "data/images/prohibited/"
 
 
 @lru_cache(maxsize=1)
 def get_prohibited_images():
-    actual_dir = to_actual_file(_PROHIBITED_IMAGES_DIR, __file__)
+    actual_dir = to_actual_file(_PROHIBITED_IMAGES_DIR)
     return list(
         [open_image(actual_dir + url) for url in os.listdir(actual_dir)])
 

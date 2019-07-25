@@ -1,3 +1,6 @@
+from os import listdir
+from os.path import isfile, join
+
 from setuptools import setup
 from setuptools import find_packages
 
@@ -7,15 +10,28 @@ with open('README.md') as f:
 with open('LICENSE') as f:
     license = f.read()
 
+# Build a list of text-templates to install
+DATA_PATH = 'talkgenerator/data/'
+text_templates_path = DATA_PATH + 'text-templates/'
+onlyfiles = [f for f in listdir(text_templates_path) if isfile(join(text_templates_path, f))]
+all_text_templates = []
+for f in onlyfiles:
+    all_text_templates.append(text_templates_path + f)
+
 setup(
     name='talkgenerator',
-    version='0.0.1',
-    description='Automatically generating PowerPoint presentation slide decks',
+    version='2.0.0',
+    description='Automatically generating presentation slide decks.',
     long_description=readme,
     author='Kory Mathewson, Thomas Winters',
     author_email='info@thomaswinters.be',
     url='https://github.com/korymath/talk-generator',
     license=license,
-    packages=find_packages(exclude=('tests', 'docs')),
+    packages=['talkgenerator'],
+    package_dir={'talkgenerator': 'talkgenerator'},
+    data_files=[('eval', [DATA_PATH + 'eval/common_words.txt']),
+                ('images', [DATA_PATH + 'images/black-transparent.png']),
+                ('powerpoint', [DATA_PATH + 'powerpoint/template.pptx']),
+                ('text-templates', all_text_templates),],
     include_package_data=True
 )

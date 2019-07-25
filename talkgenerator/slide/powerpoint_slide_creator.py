@@ -9,12 +9,12 @@ from pptx import Presentation
 
 from talkgenerator.util import os_util
 # Location of powerpoint template
-_POWERPOINT_TEMPLATE_FILE = '../../data/powerpoint/template.pptx'
+_POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
 
 
 @lru_cache(maxsize=1)
 def get_powerpoint_template_file():
-    return os_util.to_actual_file(_POWERPOINT_TEMPLATE_FILE, __file__)
+    return os_util.to_actual_file(_POWERPOINT_TEMPLATE_FILE)
 
 
 # Layouts index in template
@@ -73,7 +73,7 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
     if not os.path.isfile(image_url):
         return None
 
-    image_url = os_util.to_actual_file(image_url, __file__)
+    image_url = os_util.to_actual_file(image_url)
 
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:
@@ -166,7 +166,7 @@ def create_large_quote_slide(prs, title, text, background_image=None):
             _add_image(slide, 10, background_image, False)
 
         # Add black transparent image for making other image behind it transparent (missing feature in python-pptx)
-        _add_image(slide, 11, "../../data/images/black-transparent.png", False)
+        _add_image(slide, 11, "data/images/black-transparent.png", False)
 
         return slide
 

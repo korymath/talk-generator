@@ -11,7 +11,7 @@ def get_random_inspirobot_image(_):
                       '0{}/aXm{}xjU.jpg').format(dd, nnnn)
 
     # Download the image
-    image_url = os_util.to_actual_file('../downloads/inspirobot/{}-{}.jpg'.format(dd, nnnn), __file__)
+    image_url = os_util.to_actual_file('downloads/inspirobot/{}-{}.jpg'.format(dd, nnnn))
     os_util.download_image(inspirobot_url, image_url)
 
     return image_url

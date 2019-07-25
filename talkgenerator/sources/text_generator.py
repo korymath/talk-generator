@@ -74,7 +74,7 @@ class TemplatedTextGenerator(AbstractTextGenerator):
 
 class TraceryTextGenerator(AbstractTextGenerator):
     def __init__(self, tracery_json, variable="origin"):
-        with open(os_util.to_actual_file(tracery_json, __file__)) as grammar_file:
+        with open(os_util.to_actual_file(tracery_json)) as grammar_file:
             grammar = get_tracery_grammar(grammar_file)
             grammar.add_modifiers(base_english)
             self._grammar = grammar
@@ -173,6 +173,6 @@ def apply_functions_to_variables(template, variables_dictionary, variables_and_f
     return template, variables_dictionary
 
 
-def read_lines(file):
+def read_lines(filename):
     """ Reads all the string lines from a file """
-    return os_util.read_lines(file, __file__)
+    return os_util.read_lines(filename)
