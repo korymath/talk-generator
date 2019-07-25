@@ -48,7 +48,7 @@ def open_image(filename):
         return None
 
 
-_PROHIBITED_IMAGES_DIR = "data/images/prohibited/"
+_PROHIBITED_IMAGES_DIR = "data/prohibited_images/"
 
 
 @lru_cache(maxsize=1)

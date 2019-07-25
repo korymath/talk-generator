@@ -32,6 +32,7 @@ setup(
     data_files=[('eval', [DATA_PATH + 'eval/common_words.txt']),
                 ('images', [DATA_PATH + 'images/black-transparent.png']),
                 ('powerpoint', [DATA_PATH + 'powerpoint/template.pptx']),
+                ('prohibited_images', [DATA_PATH + 'prohibited_images/tinypic_removed.png']),
                 ('text-templates', all_text_templates),],
     include_package_data=True
 )
