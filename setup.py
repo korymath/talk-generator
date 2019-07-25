@@ -4,6 +4,9 @@ from os.path import isfile, join
 from setuptools import setup
 from setuptools import find_packages
 
+with open('requirements.txt') as f:
+    install_requires = f.read().strip().split('\n')
+
 with open('README.md') as f:
     readme = f.read()
 
@@ -34,5 +37,11 @@ setup(
                 ('powerpoint', [DATA_PATH + 'powerpoint/template.pptx']),
                 ('prohibited_images', [DATA_PATH + 'prohibited_images/tinypic_removed.png']),
                 ('text-templates', all_text_templates),],
-    include_package_data=True
+    include_package_data=True,
+    install_requires=install_requires,
+        entry_points={
+        'console_scripts': [
+            'talkgenerator = talkgenerator.run:main_cli'
+        ]
+    }
 )
