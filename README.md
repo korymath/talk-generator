@@ -36,6 +36,12 @@ REDDIT_USER_AGENT="" #use quotes here
 WIKIHOW_USERNAME=
 WIKIHOW_PASSWORD=
 
+# Unsplash Authentication
+UNSPLASH_ACCESS_KEY=
+UNSPLASH_SECRET_KEY=
+UNSPLASH_REDIRECT_URI=
+UNSPLASH_CODE=
+
 # OPTIONAL: If you want to save to Amazon S3, define your params here
 AWS_TALK_BUCKET_KEY=
 AWS_ACCESS_KEY_ID=
@@ -63,6 +69,11 @@ You can create this file by following the next steps:
 - Create a [Wikihow](https://wikihow.com) account.
 - Open `.env`
 - Fill in `WIKIHOW_USERNAME` with your username, and `WIKIHOW_PASSWORD` with your password.
+
+
+#### Unsplash authentication: Getting your keys
+
+TODO(korymath)
 
 #### Installing nltk
 
@@ -244,8 +255,8 @@ Sometimes, certain content providers return a default image when no image is fou
 There are a lot of tests present in this repository. These `.py` files are prefixed with `test_`, and use the `unittest` module. They can easily be run all together when using PyCharm by right clicking on `talk-generator` and pressing *Run 'Unittests in talk-generator'*
 
 ```sh
-source setup.sh
-pytest
+. venv/bin/activate
+pytest --cov=talkgenerator tests/
 ```
 
 Test coverage is automatically handled by `codecov`.
