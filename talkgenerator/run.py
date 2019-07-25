@@ -67,7 +67,8 @@ def main(arguments):
                                                 presenter=arguments.presenter,
                                                 parallel=arguments.parallel)
 
-    print('Slide deck: {}'.format(slide_deck.save_to_revealjs()))
+    print('Slide deck structured data: {}'.format(slide_deck.get_structured_data()))
+
     # Save presentation
     if arguments.save_ppt or settings.AWS_S3_ENABLED:
         presentation_file = _save_presentation_to_pptx(

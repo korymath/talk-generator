@@ -8,14 +8,10 @@ from run import get_argument_parser, main
 
 
 app = Flask("talkgen")
-
-
 argparser = get_argument_parser()
-
 
 HTTP_ERROR_CLIENT = 403
 HTTP_ERROR_SERVER = 500
-
 
 
 @app.route('/gen', methods=['GET'])
@@ -26,14 +22,14 @@ def talkgen_generate():
     if 'topic' not in request.args or request.args['topic'] in ("", None):
         return notify_error("ERR_NO_ARG:  'topic' argument required", HTTP_ERROR_CLIENT)
     topic = request.args.get('topic', '')
-    
+
     if 'slides' not in request.args or request.args['slides'] in ("", None):
         return notify_error("ERR_NO_ARG:  'slides' argument required", HTTP_ERROR_CLIENT)
 
     if 'slides' in request.args and request.args['slides'] not in ("0", None):
         try:
             slides = int(request.args.get('slides', ''))
-        except: 
+        except:
             return notify_error("ERR_NO_ARG:  'slides' must be an integer", HTTP_ERROR_CLIENT)
 
         if slides < 1 or slides > 15:
@@ -42,8 +38,8 @@ def talkgen_generate():
     args = argparser.parse_args(gather_run_params(topic, slides))
     try:
         main(args)
-        return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
-    except Exception as ex: 
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    except Exception as ex:
         return notify_error(ex, HTTP_ERROR_SERVER)
 
 # Create argparsable list of params to run against the run.main
@@ -52,7 +48,7 @@ def gather_run_params(topic, slides):
         topic = random_word_util.random_word()
 
     num_slides = str(slides)
-    return ['--topic', topic, 
+    return ['--topic', topic,
     '--num_slides', num_slides,
     '--open_ppt', 'false']
 
