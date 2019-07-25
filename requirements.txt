@@ -57,7 +57,6 @@ selenium==3.141.0
 singledispatch==3.4.0.3
 six==1.10.0
 soupsieve==1.7.3
-talkgenerator==2.0.0
 terminaltables==3.1.0
 tqdm==4.30.0
 tracery==0.1.1
