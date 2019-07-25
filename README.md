@@ -20,9 +20,29 @@ For a demo of this generator, please visit [the online demo page](https://shaun.
 ```sh
 # Run the setup script from the command line
 source setup.sh
+# Optionally install using setup.py
+# python setup.py install
 ```
 
-### Setting up required authentication
+## Running the generator (development)
+
+```sh
+cd talkgenerator
+python run.py --topic cat --num_slides 10
+```
+
+### Tests
+There are a lot of tests present in this repository. These `.py` files are prefixed with `test_`, and use the `unittest` module. They can easily be run all together when using PyCharm by right clicking on `talk-generator` and pressing *Run 'Unittests in talk-generator'*
+
+```sh
+. venv/bin/activate
+pytest --cov=talkgenerator tests/
+```
+
+Test coverage is automatically handled by `codecov`. Tests are automatically run with CircleCI based on the `.yml` file in the `.circleci` directory.
+
+
+### Setting up Required API Keys
 
 Our program relies on certain APIs that require authentication in order to use it. Create a file named `.env` (don't forget the period) in your project directory.
 
@@ -126,12 +146,6 @@ Reasonable defaults have been provided. To override, simply pass the command-lin
 `docker run --env-file .env -v ``pwd``/output:/output talkgen run.py --topic 'climate change' --num_slides 12 --open_ppt false`
 
 * be sure that open_ppt is false when running as a docker process.
-
-## Running the generator
-
-```sh
-python run.py --topic cat --num_slides 10
-```
 
 ### Available arguments
 
@@ -240,18 +254,6 @@ There are a lot of different services providing content to our generator. Usuall
 
 #### Prohibited images
 Sometimes, certain content providers return a default image when no image is found for that url (usually when an image got deleted). These types of images are stored in our repository in `data/images/prohibited/*`. This folder gets automatically scanned, and all images in the generated presentation are compared to images from this folder, to ensure that none gets added to the final presentation.
-
-### Tests
-There are a lot of tests present in this repository. These `.py` files are prefixed with `test_`, and use the `unittest` module. They can easily be run all together when using PyCharm by right clicking on `talk-generator` and pressing *Run 'Unittests in talk-generator'*
-
-```sh
-. venv/bin/activate
-pytest --cov=talkgenerator tests/
-```
-
-Test coverage is automatically handled by `codecov`.
-
-Tests are automatically run with CircleCI based on the `.yml` file in the `.circleci` directory.
 
 ## Credits
 

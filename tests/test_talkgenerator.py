@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 import random
 
-from talkgenerator import run
+from talkgenerator import utils
 from talkgenerator.util import os_util
 from talkgenerator.schema import schemas
 
@@ -16,28 +16,28 @@ class TestTalkGenerator(unittest.TestCase):
         self.assertTrue(bool(schemas.generate_full_screen_google_image({"seed": "cat"})))
 
     def test_main(self):
-        arguments = mock.Mock()
-        arguments.configure_mock(topic='cat')
-        arguments.configure_mock(num_slides=3)
-        arguments.configure_mock(schema='test')
-        arguments.configure_mock(parallel=False)
-        arguments.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
-        arguments.configure_mock(open_ppt=False)
-        arguments.configure_mock(save_ppt=True)
-        ppt = run.main(arguments)
+        args = mock.Mock()
+        args.configure_mock(topic='cat')
+        args.configure_mock(num_slides=3)
+        args.configure_mock(schema='test')
+        args.configure_mock(parallel=False)
+        args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
+        args.configure_mock(open_ppt=False)
+        args.configure_mock(save_ppt=True)
+        ppt = utils.generate_talk(args)
 
         self.assertEqual(3, len(ppt.slides))
 
     def test_parallel(self):
-        arguments = mock.Mock()
-        arguments.configure_mock(topic='dog')
-        arguments.configure_mock(num_slides=3)
-        arguments.configure_mock(schema='test')
-        arguments.configure_mock(parallel=True)
-        arguments.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
-        arguments.configure_mock(open_ppt=False)
-        arguments.configure_mock(save_ppt=True)
-        ppt = run.main(arguments)
+        args = mock.Mock()
+        args.configure_mock(topic='dog')
+        args.configure_mock(num_slides=3)
+        args.configure_mock(schema='test')
+        args.configure_mock(parallel=True)
+        args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
+        args.configure_mock(open_ppt=False)
+        args.configure_mock(save_ppt=True)
+        ppt = utils.generate_talk(args)
 
         self.assertEqual(3, len(ppt.slides))
 

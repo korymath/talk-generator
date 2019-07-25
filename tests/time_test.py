@@ -1,6 +1,6 @@
 import time
 
-from talkgenerator import run
+from talkgenerator import utils
 from talkgenerator.util import os_util
 
 
@@ -9,13 +9,13 @@ def run_time_test(start_idx, end_idx):
     result_file = open("data/eval/timings.txt", "a+")
 
     for topic in words:
-        arguments = run.get_argument_parser().parse_args(
+        args = utils.get_argument_parser().parse_args(
             ['--topic', topic, '--num_slides', '7', '--save_ppt', 'True', '--open_ppt', 'False', '--parallel', 'True'])
 
         start = time.process_time()
         clock_start = time.perf_counter()
 
-        run.main(arguments)
+        utils.generate_talk(args)
 
         end = time.process_time()
         clock_end = time.perf_counter()
