@@ -5,7 +5,7 @@
 
 ## Description
 
-Software to automatically generate talks, presentations for PowerPoint and/or Keynote. Their main purpose is for the improvisational comedy format "Improvised TED talk", where the actors have to present an unseen presentation. This software can be extended to be used for any sort of presentation including for example pecha kucha, etc. 
+Software to automatically generate talks, presentations for PowerPoint and/or Keynote. Their main purpose is for the improvisational comedy format "Improvised TED talk", where the actors have to present an unseen presentation. This software can be extended to be used for any sort of presentation including for example pecha kucha, etc.
 
 ## Demo
 
@@ -74,16 +74,6 @@ You can create this file by following the next steps:
 #### Unsplash authentication: Getting your keys
 
 TODO(korymath)
-
-#### Installing nltk
-
-We require several NTLK packages, which can be downloaded by running the following code in to the Python console:
-```
-import nltk
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('wordnet')
-```
 
 ### Common Errors/Warnings:
 
