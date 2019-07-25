@@ -1,22 +1,33 @@
 import random
 
-# Own modules:
 from talkgenerator.util import os_util
-from talkgenerator.sources import shitpostbot, wikihow, google_images, inspirobot, chart, goodreads, giphy, reddit, \
-    text_generator
-from talkgenerator.slide import powerpoint_slide_creator
+from talkgenerator.sources import shitpostbot
+from talkgenerator.sources import wikihow
+from talkgenerator.sources import google_images
+from talkgenerator.sources import inspirobot
+from talkgenerator.sources import chart
+from talkgenerator.sources import goodreads
+from talkgenerator.sources import giphy
+from talkgenerator.sources import reddit
+from talkgenerator.sources import text_generator
 from talkgenerator.schema import slide_topic_generators
+from talkgenerator.slide import powerpoint_slide_creator
 from talkgenerator.slide import slide_generators
-
-# Import a lot from generator_util to make schema creation easier
-from talkgenerator.util.generator_util import SeededGenerator, NoneGenerator, StaticGenerator, \
-    CombinedGenerator, \
-    ExternalImageListGenerator, FromListGenerator, \
-    BackupGenerator, InvalidImagesRemoverGenerator, InspiredTupleGenerator, \
-    MappedGenerator, TupledGenerator
+from talkgenerator.util.generator_util import SeededGenerator
+from talkgenerator.util.generator_util import NoneGenerator
+from talkgenerator.util.generator_util import StaticGenerator
+from talkgenerator.util.generator_util import CombinedGenerator
+from talkgenerator.util.generator_util import ExternalImageListGenerator
+from talkgenerator.util.generator_util import FromListGenerator
+from talkgenerator.util.generator_util import BackupGenerator
+from talkgenerator.util.generator_util import InvalidImagesRemoverGenerator
+from talkgenerator.util.generator_util import InspiredTupleGenerator
+from talkgenerator.util.generator_util import MappedGenerator
+from talkgenerator.util.generator_util import TupledGenerator
 from talkgenerator.schema.presentation_schema import PresentationSchema
-from talkgenerator.schema.slide_generator_data import SlideGeneratorData, ConstantWeightFunction, PeakedWeight
-
+from talkgenerator.schema.slide_generator_data import SlideGeneratorData
+from talkgenerator.schema.slide_generator_data import ConstantWeightFunction
+from talkgenerator.schema.slide_generator_data import PeakedWeight
 
 # = TEXT GENERATORS=
 
@@ -31,10 +42,10 @@ def createTraceryGenerator(file, main="origin"):
 
 
 # TITLES
-talk_title_generator = createTemplatedTextGenerator("../../data/text-templates/talk_title.txt")
-talk_subtitle_generator = createTraceryGenerator("../../data/text-templates/talk_subtitle.json")
+talk_title_generator = createTemplatedTextGenerator("data/text-templates/talk_title.txt")
+talk_subtitle_generator = createTraceryGenerator("data/text-templates/talk_subtitle.json")
 
-default_slide_title_generator = createTemplatedTextGenerator("../../data/text-templates/default_slide_title.txt")
+default_slide_title_generator = createTemplatedTextGenerator("data/text-templates/default_slide_title.txt")
 
 default_or_no_title_generator = CombinedGenerator(
     (1, default_slide_title_generator),
@@ -42,29 +53,29 @@ default_or_no_title_generator = CombinedGenerator(
 )
 
 anticipation_title_generator = createTemplatedTextGenerator(
-    '../../data/text-templates/anticipation_title.txt')
+    'data/text-templates/anticipation_title.txt')
 
 conclusion_title_generator = createTemplatedTextGenerator(
-    "../../data/text-templates/conclusion_title.txt")
+    "data/text-templates/conclusion_title.txt")
 inspiration_title_generator = createTemplatedTextGenerator(
-    "../../data/text-templates/inspiration.txt")
+    "data/text-templates/inspiration.txt")
 anecdote_title_generator = createTemplatedTextGenerator(
-    "../../data/text-templates/anecdote_title.txt")
+    "data/text-templates/anecdote_title.txt")
 history_title_generator = createTemplatedTextGenerator(
-    "../../data/text-templates/history.txt")
+    "data/text-templates/history.txt")
 history_person_title_generator = createTemplatedTextGenerator(
-    "../../data/text-templates/history_person.txt")
+    "data/text-templates/history_person.txt")
 history_and_history_person_title_generator = CombinedGenerator(
     (4, history_title_generator), (6, history_person_title_generator))
 about_me_title_generator = createTemplatedTextGenerator(
-    "../../data/text-templates/about_me_title.txt")
+    "data/text-templates/about_me_title.txt")
 
 # NAMES
-historical_name_generator = createTraceryGenerator("../../data/text-templates/name.json", "title_name")
-full_name_generator = createTraceryGenerator("../../data/text-templates/name.json", "full_name")
+historical_name_generator = createTraceryGenerator("data/text-templates/name.json", "title_name")
+full_name_generator = createTraceryGenerator("data/text-templates/name.json", "full_name")
 
 # ABOUT ME
-_about_me_facts_grammar = "../../data/text-templates/about_me_facts.json"
+_about_me_facts_grammar = "data/text-templates/about_me_facts.json"
 book_description_generator = createTraceryGenerator(_about_me_facts_grammar, "book_description")
 location_description_generator = createTraceryGenerator(_about_me_facts_grammar, "location_description")
 hobby_description_generator = createTraceryGenerator(_about_me_facts_grammar, "hobby_description")
@@ -76,7 +87,7 @@ country_generator = createTraceryGenerator(_about_me_facts_grammar, "country")
 # PROMPTS & CHALLENGES
 
 anecdote_prompt_generator = createTemplatedTextGenerator(
-    "../../data/text-templates/anecdote_prompt.txt")
+    "data/text-templates/anecdote_prompt.txt")
 
 
 # QUOTES
@@ -214,7 +225,7 @@ reddit_location_image_generator = create_reddit_image_generator("evilbuildings",
                                                                 "EarthPorn")
 
 # BOLD_STATEMENT
-bold_statement_templated_file = os_util.to_actual_file('../../data/text-templates/bold_statements.txt', __file__)
+bold_statement_templated_file = os_util.to_actual_file('data/text-templates/bold_statements.txt', __file__)
 bold_statement_templated_generator = createTemplatedTextGenerator(bold_statement_templated_file)
 
 
@@ -248,10 +259,10 @@ class SplitCaptionsGenerator(object):
         return parts
 
 
-_double_captions_generator = createTemplatedTextGenerator("../../data/text-templates/double_captions.txt")
-_triple_captions_generator = createTemplatedTextGenerator("../../data/text-templates/triple_captions.txt")
+_double_captions_generator = createTemplatedTextGenerator("data/text-templates/double_captions.txt")
+_triple_captions_generator = createTemplatedTextGenerator("data/text-templates/triple_captions.txt")
 _historic_double_captions_generator = createTemplatedTextGenerator(
-    "../../data/text-templates/historic_double_captions.txt")
+    "data/text-templates/historic_double_captions.txt")
 
 double_captions_generator = SplitCaptionsGenerator(_double_captions_generator)
 triple_captions_generator = SplitCaptionsGenerator(_triple_captions_generator)

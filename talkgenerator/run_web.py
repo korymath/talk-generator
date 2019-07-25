@@ -1,13 +1,17 @@
+import json
+import pprint
+
 from flask import Flask
 from flask import request
-import pprint
-import json
+from flask import render_template
 
-from server.flask_util import notify_error
-from run import get_argument_parser, main
+from utils import str2bool
+from utils import notify_error
+from utils import generate_talk
+from utils import get_argument_parser
 
+from app import app
 
-app = Flask("talkgen")
 argparser = get_argument_parser()
 
 HTTP_ERROR_CLIENT = 403
@@ -16,6 +20,14 @@ HTTP_ERROR_SERVER = 500
 
 @app.route('/gen', methods=['GET'])
 def talkgen_generate():
+    """ When this route is called with a GET request check the topic and the
+    number of slides in the calling URL and then process from there.
+
+    Example: http://0.0.0.0:5687/gen?topic=chairs&slides=2
+
+    This would generate a presentation about chairs with 2 slides.
+    """
+
     #validate the inputs from the request
     slides = None
     topic = ''
@@ -37,7 +49,7 @@ def talkgen_generate():
 
     args = argparser.parse_args(gather_run_params(topic, slides))
     try:
-        main(args)
+        generate_talk(args)
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except Exception as ex:
         return notify_error(ex, HTTP_ERROR_SERVER)
@@ -45,6 +57,7 @@ def talkgen_generate():
 # Create argparsable list of params to run against the run.main
 def gather_run_params(topic, slides):
     if topic in ("", None):
+        print('No topic given, using a random word.')
         topic = random_word_util.random_word()
 
     num_slides = str(slides)
