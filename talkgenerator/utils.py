@@ -60,7 +60,7 @@ def generate_talk(args):
             aws_s3.store_file(bucket=settings.BUCKET,
                               key=args.topic + ".pptx",
                               file=os.path.realpath(presentation_file))
-    return presentation
+    return presentation, slide_deck
 
 
 def save_presentation_to_pptx(output_folder, file_name, prs, index=0):
