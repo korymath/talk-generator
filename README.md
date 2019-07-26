@@ -24,23 +24,6 @@ source setup.sh
 # python setup.py install
 ```
 
-## Running the generator (development)
-
-```sh
-cd talkgenerator
-python run.py --topic cat --num_slides 10
-```
-
-### Tests
-There are a lot of tests present in this repository. These `.py` files are prefixed with `test_`, and use the `unittest` module. They can easily be run all together when using PyCharm by right clicking on `talk-generator` and pressing *Run 'Unittests in talk-generator'*
-
-```sh
-. venv/bin/activate
-pytest --cov=talkgenerator tests/
-```
-
-Test coverage is automatically handled by `codecov`. Tests are automatically run with CircleCI based on the `.yml` file in the `.circleci` directory.
-
 
 ### Setting up Required API Keys
 
@@ -95,6 +78,29 @@ You can create this file by following the next steps:
 
 TODO(korymath)
 
+
+### Running the generator (development)
+
+```sh
+cd talkgenerator
+python run.py --topic cat --num_slides 10
+```
+
+### Available arguments
+
+| Argument               | Description               |
+| ---------------------- | ------------------------- |
+| `topic` | The topic of the generator. This works best if it is a common, well-known noun |
+| `num_slides` | The number of slides in the generated presentation (*default: 10*) |
+| `schema` | The presentation schema to use when generating the presentation. Currently, only two modes are implemented, being `default` and `test` (for testing during development) |
+| `presenter` | The name that will be present on the first slide. Leave blank for an automatically generated name |
+| `output_folder` | The folder to output the generated presentations (*default: `./output/`*) |
+| `save_ppt` | If this flag is true(*default*), the generated powerpoint will be saved on the computer in the `output_folder`|
+| `open_ppt` | If this flag is true (*default*), the generated powerpoint will automatically open after generating|
+| `parallel` | If this flag is true (*default*), the generator will generate all slides in parallel |
+
+
+
 ### Common Errors/Warnings:
 
 #### prawcore.exceptions.ResponseException: received 401 HTTP response
@@ -123,41 +129,6 @@ If `pip` complains about a missing `mysql.h`, you need to `pip install wheel`,
 go to [mysql wheel download]( http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python) to download the wheel
 and run `pip install mysqlclient-1.3.8-cp36-cp36m-win_amd64.whl`
 
-## Docker Instructions (optional)
-
-*slaps the hood of the container* Yep this bad boy runs on [Docker](https://www.docker.com/products/docker-desktop).
-
-
-### Building the Image
-
-Build the image, and tag it as talkgen.
-
-`docker build -t talkgen .`
-
-### Running the Image
-
-Run the image tagged as talkgen. The container /output directory maps to your
-current working directory.
-
-`docker run --env-file .env -v ``pwd``/output:/output talkgen run.py --open_ppt false`
-
-Reasonable defaults have been provided. To override, simply pass the command-line parameter. Here we are overriding the the topic and number of slides.
-
-`docker run --env-file .env -v ``pwd``/output:/output talkgen run.py --topic 'climate change' --num_slides 12 --open_ppt false`
-
-* be sure that open_ppt is false when running as a docker process.
-
-### Available arguments
-
-| Argument               | Description               |
-| ---------------------- | ------------------------- |
-| `topic` | The topic of the generator. This works best if it is a common, well-known noun |
-| `num_slides` | The number of slides in the generated presentation (*default: 10*) |
-| `schema` | The presentation schema to use when generating the presentation. Currently, only two modes are implemented, being `default` and `test` (for testing during development) |
-| `presenter` | The name that will be present on the first slide. Leave blank for an automatically generated name |
-| `output_folder` | The folder to output the generated presentations (*default: `./output/`*) |
-| `save_ppt` | If this flag is true(*default*), the generated powerpoint will be saved on the computer in the `output_folder`|
-| `open_ppt` | If this flag is true (*default*), the generated powerpoint will automatically open after generating|
 
 ## Running the generator as a microservice
 
@@ -167,9 +138,44 @@ Run the generator as a microservice at 0.0.0.0:5687.
 
 You can then hit `http://0.0.0.0:5687?topic=sometopic`. This will kick the main.py off.
 
+## Paper
+
+If you would like to refer to this project in academic work, please cite the following paper:
+
+```
+@InProceedings{winters2019tedric,
+    author="Winters, Thomas
+    and Mathewson, Kory W.",
+    editor="Ek{\'a}rt, Anik{\'o}
+    and Liapis, Antonios
+    and Castro Pena, Mar{\'i}a Luz",
+    title="Automatically Generating Engaging Presentation Slide Decks",
+    booktitle="Computational Intelligence in Music, Sound, Art and Design",
+    year="2019",
+    publisher="Springer International Publishing",
+    address="Cham",
+    pages="127--141",
+    abstract="Talented public speakers have thousands of hours of practice. One means of improving public speaking skills is practice through improvisation, e.g. presenting an improvised presentation using an unseen slide deck. We present Tedric, a novel system capable of generating coherent slide decks based on a single topic suggestion. It combines semantic word webs with text and image data sources to create an engaging slide deck with an overarching theme. We found that audience members perceived the quality of improvised presentations using these generated slide decks to be on par with presentations using human created slide decks for the Improvised TED Talk performance format. Tedric is thus a valuable new creative tool for improvisers to perform with, and for anyone looking to improve their presentation skills.",
+    isbn="978-3-030-16667-0"
+}
+```
+
 ## Program structure
 
-See the [wiki](https://github.com/korymath/talk-generator/wiki/Program-structure).
+See the [wiki](https://github.com/korymath/talk-generator/wiki/Program-structure) to know more about the inner implementation.
+
+
+## Tests
+There are a lot of tests present in this repository. These `.py` files are prefixed with `test_`, and use the `unittest` module.
+They can easily be run all together when using PyCharm by right clicking on `talk-generator` and pressing *Run 'Unittests in talk-generator'*
+
+```sh
+. venv/bin/activate
+pytest --cov=talkgenerator tests/
+```
+
+Test coverage is automatically handled by `codecov`. Tests are automatically run with CircleCI based on the `.yml` file in the `.circleci` directory.
+
 
 ## Credits
 
