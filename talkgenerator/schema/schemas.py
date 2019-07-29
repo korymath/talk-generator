@@ -46,6 +46,13 @@ def create_tracery_generator(filename, main="origin"):
 talk_title_generator = create_templated_text_generator("data/text-templates/talk_title.txt")
 talk_subtitle_generator = create_tracery_generator("data/text-templates/talk_subtitle.json")
 
+
+def talk_title_generator_if_not_generated(presentation_context):
+    if presentation_context['title'] is not None:
+        return presentation_context['title']
+    return talk_title_generator(presentation_context)
+
+
 default_slide_title_generator = create_templated_text_generator("data/text-templates/default_slide_title.txt")
 
 default_or_no_title_generator = CombinedGenerator(
@@ -360,7 +367,7 @@ conclusion_three_captions_tuple_generator = SplitCaptionsGenerator(
 # TITLE SLIDE
 title_slide_generators = [
     SlideGeneratorData(
-        slide_generators.TitleSlideGenerator.of(talk_title_generator, talk_subtitle_generator),
+        slide_generators.TitleSlideGenerator.of(talk_title_generator_if_not_generated, talk_subtitle_generator),
         allowed_repeated_elements=3,
         weight_function=PeakedWeight((0,), 100000, 0),
         tags=["title"],

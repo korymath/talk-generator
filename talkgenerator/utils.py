@@ -32,11 +32,16 @@ def generate_talk(args):
     if not args.presenter:
         args.presenter = schemas.full_name_generator()
 
+    # Generate random talk title
+    if not args.title:
+        args.title = schemas.talk_title_generator({'seed': args.topic})
+
     # Generate the presentation object
     presentation, slide_deck = schema.generate_presentation(
         topic=args.topic,
         num_slides=args.num_slides,
         presenter=args.presenter,
+        title=args.title,
         parallel=args.parallel)
 
     print('Slide deck structured data: {}'.format(
@@ -117,6 +122,8 @@ def get_argument_parser():
                         help="The presentation schema to generate the presentation with")
     parser.add_argument('--presenter', default=None, type=str,
                         help="The full name of the presenter, leave blank to randomise")
+    parser.add_argument('--title', default=None, type=str,
+                        help="The title of the talk, leave blank to randomise")
     parser.add_argument('--parallel', default=True, type=str2bool,
                         help=("Generated powerpoint will generate in parallel " +
                               "faster but drops some conditions)"))
@@ -161,7 +168,7 @@ def log_api_call(func):
         if 'Apitrace' in request.headers and request.headers['Apitrace'] is not None:
             log = logging.getLogger('werkzeug')
             log.info("%s | API CALL: %s TRACE: %s " % (
-            str(datetime.datetime.now()), func.__name__, request.headers['Apitrace']))
+                str(datetime.datetime.now()), func.__name__, request.headers['Apitrace']))
         return func(*args, **kwargs)
 
     return log_api_call_wrapper

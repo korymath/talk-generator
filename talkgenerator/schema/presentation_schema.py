@@ -28,7 +28,7 @@ class PresentationSchema:
         self._max_allowed_tags = max_allowed_tags
         self._ignore_weights = ignore_weights
 
-    def generate_presentation(self, topic, num_slides, presenter=None, parallel=False):
+    def generate_presentation(self, topic, num_slides, presenter=None, title=None, parallel=False):
         """Generate a presentation about a certain topic with a certain number of slides"""
         # Create new presentation
         presentation = self._powerpoint_creator()
@@ -40,7 +40,8 @@ class PresentationSchema:
         # Create main presentation_context
         main_presentation_context = {
             "topic": topic,
-            "presenter": presenter
+            "presenter": presenter,
+            "title": title,
         }
 
         used_tags = {}
