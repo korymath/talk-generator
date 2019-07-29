@@ -9,7 +9,7 @@ Software to automatically generate talks, presentations for PowerPoint and/or Ke
 
 ## Demo
 
-For a demo of this generator, please visit [the online demo page](https://shaun.lol/), a platform created by Shaun Furragia to give easier access to this talk generator.
+For a demo of this generator, please visit [the online demo page](https://shaun.lol/), a platform created by Shaun Farrugia to give easier access to this talk generator.
 
 ### Example
 
@@ -128,7 +128,6 @@ consider installing a version of [Visual Studio](https://docs.microsoft.com/en-u
 If `pip` complains about a missing `mysql.h`, you need to `pip install wheel`,
 go to [mysql wheel download]( http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python) to download the wheel
 and run `pip install mysqlclient-1.3.8-cp36-cp36m-win_amd64.whl`
-
 
 ## Running the generator as a microservice
 

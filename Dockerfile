@@ -12,7 +12,10 @@ ENV PYTHONUNBUFFERED 1
 COPY . /app
 WORKDIR /app
 
+RUN pip install -e .
+
 EXPOSE 5687
 #python run.py --topic ganja --num_slides 10 --output_folder=./ganja/ --open_ppt=false
 ENTRYPOINT ["python"]
 CMD ["run.py", "--topic", "indie music", "--num_slides", "10", "--output_folder", "/output", "--open_ppt", "false"]
+#CMD ["talkgenerator-web"]

@@ -5,12 +5,12 @@ from flask import Flask
 from flask import request
 from flask import render_template
 
-from utils import str2bool
-from utils import notify_error
-from utils import generate_talk
-from utils import get_argument_parser
+from talkgenerator.utils import str2bool
+from talkgenerator.utils import notify_error
+from talkgenerator.utils import generate_talk
+from talkgenerator.utils import get_argument_parser
 
-from app import app
+app = Flask(__name__)
 
 argparser = get_argument_parser()
 
@@ -79,6 +79,9 @@ class LoggingMiddleware(object):
 
         return self._app(environ, log_response)
 
-if __name__=='__main__':
+def startup_web():
     app.wsgi_app = LoggingMiddleware(app.wsgi_app)
     app.run(host="0.0.0.0", port=5687)
+
+if __name__=='__main__':
+    startup_web()

@@ -58,7 +58,7 @@ def generate_talk(args):
             open_file(path)
 
         if settings.AWS_S3_ENABLED:
-            from server import aws_s3
+            from talkgenerator.util import aws_s3
             print("Saving slides to S3 key {}".format(
                 args.topic + ".pptx"))
             # if aws_s3.check_for_object(settings.BUCKET, args.topic):

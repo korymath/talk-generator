@@ -6,7 +6,43 @@ import inflect
 import nltk
 from nltk.corpus import wordnet as wn
 
+# nltk setup check
 
+def check_and_download():
+    required_corpus_list = [
+        'tokenizers/punkt', 
+        'taggers/averaged_perceptron_tagger', 
+        'corpora/wordnet'
+    ]
+    try:
+        for corpus in required_corpus_list:
+            _check_and_download_corpus(corpus, corpus.split('/')[1])
+    except Exception as e:
+        print_corpus_download_warning()
+        return False
+
+    return True
+
+
+def _check_and_download_corpus(corpus_fullname, corpus_shortname):
+    try:
+        nltk.data.find(corpus_fullname)
+    except LookupError as le:
+        nltk.download(corpus_shortname)
+
+
+def print_corpus_download_warning():
+    corpus_warning = '''
+    Hmm...
+    ---------------------
+
+    We had some trouble downloading the NLTK corpuses.. 
+    Try running the following from a command line. This should 
+    download the needed packages.. but it might also tell you if 
+    there is another issue.
+
+    $ python3 -m nltk.downloader wordnet punkt averaged_perceptron_tagger
+    '''
 # Helpers
 
 def _replace_word_one_case(sentence, word, replacement, flags=0):

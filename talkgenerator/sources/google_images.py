@@ -64,7 +64,7 @@ def search_images(word, extra_arguments_dict=None, num_images=_DEFAULT_NUM_IMAGE
         'limit': num_images,
         'print_urls': False,
         'print_paths': False,
-        'output_directory': '../downloads/google_images/',
+        'output_directory': 'downloads/google_images/',
         'language': 'English',
         'safe_search': True,
         'no_numbering': True,
@@ -75,12 +75,13 @@ def search_images(word, extra_arguments_dict=None, num_images=_DEFAULT_NUM_IMAGE
         arguments.update(extra_arguments_dict)
 
     # passing the arguments to the function
-    paths_dict = response.download(arguments)
+    paths_dict = response.download(arguments)[0]
     paths = []
+    print(paths_dict)
     for value in paths_dict.values():
         paths.extend(value)
 
-    # printing absolute paths of the downloaded images
+    # return absolute paths of the downloaded images
     return paths
 
 # @lru_cache(maxsize=20)
