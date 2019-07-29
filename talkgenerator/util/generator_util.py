@@ -1,3 +1,8 @@
+"""
+Light, commonly used, non-specific generators that are helpful shortcuts for creating
+certain types of (content) generators
+"""
+
 import random
 
 import requests

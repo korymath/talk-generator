@@ -1,3 +1,7 @@
+"""
+This file contains structures that are helpful for certain content generators, but not general enough for generator_util
+"""
+
 from random import random
 
 from talkgenerator.util.generator_util import SeededGenerator, BackupGenerator
@@ -123,7 +127,6 @@ class JobPrefixApplier(object):
 
 
 # SPLITTER
-
 
 class SplitCaptionsGenerator(object):
     def __init__(self, generator):

@@ -28,6 +28,10 @@ from talkgenerator.schema.slide_generator_data import SlideGeneratorData
 from talkgenerator.schema.slide_generator_data import ConstantWeightFunction
 from talkgenerator.schema.slide_generator_data import PeakedWeight
 
+# ===============================
+# =====  CONTENT GENERATORS =====
+# ===============================
+
 # TITLES
 talk_title_generator = create_templated_text_generator("data/text-templates/talk_title.txt")
 talk_subtitle_generator = create_tracery_generator("data/text-templates/talk_subtitle.json")
@@ -180,13 +184,13 @@ def generate_wikihow_bold_statement(presentation_context):
 
 # DOUBLE CAPTIONS
 
-_double_captions_generator = create_templated_text_generator("data/text-templates/double_captions.txt")
-_triple_captions_generator = create_templated_text_generator("data/text-templates/triple_captions.txt")
+_double_image_captions_generator = create_templated_text_generator("data/text-templates/double_captions.txt")
+_triple_image_captions_generator = create_templated_text_generator("data/text-templates/triple_captions.txt")
 _historic_double_captions_generator = create_templated_text_generator(
     "data/text-templates/historic_double_captions.txt")
 
-double_captions_generator = SplitCaptionsGenerator(_double_captions_generator)
-triple_captions_generator = SplitCaptionsGenerator(_triple_captions_generator)
+double_image_captions_generator = SplitCaptionsGenerator(_double_image_captions_generator)
+triple_image_captions_generator = SplitCaptionsGenerator(_triple_image_captions_generator)
 historic_double_captions_generator = SplitCaptionsGenerator(_historic_double_captions_generator)
 
 # TUPLED ABOUT ME
@@ -243,7 +247,10 @@ conclusion_two_captions_tuple_generator = SplitCaptionsGenerator(
 conclusion_three_captions_tuple_generator = SplitCaptionsGenerator(
     create_tracery_generator(_conclusions_tuple_grammar, "three_conclusions"))
 
-# == SCHEMAS ==
+# ==============================
+# =====  SLIDE GENERATORS  =====
+# ==============================
+
 
 # TITLE SLIDE
 title_slide_generators = [
@@ -415,7 +422,7 @@ captioned_images_slide_generators = [
         # slide_templates.generate_two_column_images_slide_tuple_caption(
         slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
-            double_captions_generator,
+            double_image_captions_generator,
             combined_gif_generator,
             combined_gif_generator),
         weight_function=ConstantWeightFunction(2),
@@ -426,7 +433,7 @@ captioned_images_slide_generators = [
         # slide_templates.generate_two_column_images_slide_tuple_caption(
         slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
-            double_captions_generator,
+            double_image_captions_generator,
             weird_image_generator,
             weird_and_shitpost_generator),
         weight_function=ConstantWeightFunction(2),
@@ -437,7 +444,7 @@ captioned_images_slide_generators = [
         # slide_templates.generate_two_column_images_slide_tuple_caption(
         slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
-            double_captions_generator,
+            double_image_captions_generator,
             weird_and_shitpost_and_gif_generator,
             weird_and_shitpost_and_gif_generator),
         weight_function=ConstantWeightFunction(2),
@@ -448,7 +455,7 @@ captioned_images_slide_generators = [
         # slide_templates.generate_three_column_images_slide_tuple_caption(
         slide_generators.ThreeColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
-            triple_captions_generator,
+            triple_image_captions_generator,
             weird_and_shitpost_and_gif_generator,
             weird_and_shitpost_and_gif_generator,
             weird_and_shitpost_generator),
