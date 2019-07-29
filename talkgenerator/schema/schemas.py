@@ -32,62 +32,62 @@ from talkgenerator.schema.slide_generator_data import PeakedWeight
 
 # = TEXT GENERATORS=
 
-def createTemplatedTextGenerator(filename):
+def create_templated_text_generator(filename):
     actual_file = os_util.to_actual_file(filename)
     return text_generator.TemplatedTextGenerator(actual_file).generate
 
 
-def createTraceryGenerator(filename, main="origin"):
+def create_tracery_generator(filename, main="origin"):
     actual_file = os_util.to_actual_file(filename)
     return text_generator.TraceryTextGenerator(actual_file, main).generate
 
 
 # TITLES
-talk_title_generator = createTemplatedTextGenerator("data/text-templates/talk_title.txt")
-talk_subtitle_generator = createTraceryGenerator("data/text-templates/talk_subtitle.json")
+talk_title_generator = create_templated_text_generator("data/text-templates/talk_title.txt")
+talk_subtitle_generator = create_tracery_generator("data/text-templates/talk_subtitle.json")
 
-default_slide_title_generator = createTemplatedTextGenerator("data/text-templates/default_slide_title.txt")
+default_slide_title_generator = create_templated_text_generator("data/text-templates/default_slide_title.txt")
 
 default_or_no_title_generator = CombinedGenerator(
     (1, default_slide_title_generator),
     (1, NoneGenerator())
 )
 
-anticipation_title_generator = createTemplatedTextGenerator(
+anticipation_title_generator = create_templated_text_generator(
     'data/text-templates/anticipation_title.txt')
 
-conclusion_title_generator = createTemplatedTextGenerator(
+conclusion_title_generator = create_templated_text_generator(
     "data/text-templates/conclusion_title.txt")
-inspiration_title_generator = createTemplatedTextGenerator(
+inspiration_title_generator = create_templated_text_generator(
     "data/text-templates/inspiration.txt")
-anecdote_title_generator = createTemplatedTextGenerator(
+anecdote_title_generator = create_templated_text_generator(
     "data/text-templates/anecdote_title.txt")
-history_title_generator = createTemplatedTextGenerator(
+history_title_generator = create_templated_text_generator(
     "data/text-templates/history.txt")
-history_person_title_generator = createTemplatedTextGenerator(
+history_person_title_generator = create_templated_text_generator(
     "data/text-templates/history_person.txt")
 history_and_history_person_title_generator = CombinedGenerator(
     (4, history_title_generator), (6, history_person_title_generator))
-about_me_title_generator = createTemplatedTextGenerator(
+about_me_title_generator = create_templated_text_generator(
     "data/text-templates/about_me_title.txt")
 
 # NAMES
-historical_name_generator = createTraceryGenerator("data/text-templates/name.json", "title_name")
-full_name_generator = createTraceryGenerator("data/text-templates/name.json", "full_name")
+historical_name_generator = create_tracery_generator("data/text-templates/name.json", "title_name")
+full_name_generator = create_tracery_generator("data/text-templates/name.json", "full_name")
 
 # ABOUT ME
 _about_me_facts_grammar = "data/text-templates/about_me_facts.json"
-book_description_generator = createTraceryGenerator(_about_me_facts_grammar, "book_description")
-location_description_generator = createTraceryGenerator(_about_me_facts_grammar, "location_description")
-hobby_description_generator = createTraceryGenerator(_about_me_facts_grammar, "hobby_description")
-job_description_generator = createTraceryGenerator(_about_me_facts_grammar, "job_description")
-country_description_generator = createTraceryGenerator(_about_me_facts_grammar, "country_description")
-job_generator = createTraceryGenerator(_about_me_facts_grammar, "job")
-country_generator = createTraceryGenerator(_about_me_facts_grammar, "country")
+book_description_generator = create_tracery_generator(_about_me_facts_grammar, "book_description")
+location_description_generator = create_tracery_generator(_about_me_facts_grammar, "location_description")
+hobby_description_generator = create_tracery_generator(_about_me_facts_grammar, "hobby_description")
+job_description_generator = create_tracery_generator(_about_me_facts_grammar, "job_description")
+country_description_generator = create_tracery_generator(_about_me_facts_grammar, "country_description")
+job_generator = create_tracery_generator(_about_me_facts_grammar, "job")
+country_generator = create_tracery_generator(_about_me_facts_grammar, "country")
 
 # PROMPTS & CHALLENGES
 
-anecdote_prompt_generator = createTemplatedTextGenerator(
+anecdote_prompt_generator = create_templated_text_generator(
     "data/text-templates/anecdote_prompt.txt")
 
 
@@ -228,7 +228,7 @@ reddit_location_image_generator = create_reddit_image_generator("evilbuildings",
 
 # BOLD_STATEMENT
 bold_statement_templated_file = os_util.to_actual_file('data/text-templates/bold_statements.txt')
-bold_statement_templated_generator = createTemplatedTextGenerator(bold_statement_templated_file)
+bold_statement_templated_generator = create_templated_text_generator(bold_statement_templated_file)
 
 
 def generate_wikihow_bold_statement(presentation_context):
@@ -261,9 +261,9 @@ class SplitCaptionsGenerator(object):
         return parts
 
 
-_double_captions_generator = createTemplatedTextGenerator("data/text-templates/double_captions.txt")
-_triple_captions_generator = createTemplatedTextGenerator("data/text-templates/triple_captions.txt")
-_historic_double_captions_generator = createTemplatedTextGenerator(
+_double_captions_generator = create_templated_text_generator("data/text-templates/double_captions.txt")
+_triple_captions_generator = create_templated_text_generator("data/text-templates/triple_captions.txt")
+_historic_double_captions_generator = create_templated_text_generator(
     "data/text-templates/historic_double_captions.txt")
 
 double_captions_generator = SplitCaptionsGenerator(_double_captions_generator)
@@ -350,10 +350,10 @@ reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funny
 # Conclusions
 _conclusions_tuple_grammar = "data/text-templates/conclusion_tuple.json"
 conclusion_two_captions_tuple_generator = SplitCaptionsGenerator(
-    createTraceryGenerator(_conclusions_tuple_grammar, "two_conclusions"))
+    create_tracery_generator(_conclusions_tuple_grammar, "two_conclusions"))
 
 conclusion_three_captions_tuple_generator = SplitCaptionsGenerator(
-    createTraceryGenerator(_conclusions_tuple_grammar, "three_conclusions"))
+    create_tracery_generator(_conclusions_tuple_grammar, "three_conclusions"))
 
 # == SCHEMAS ==
 
