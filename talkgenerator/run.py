@@ -7,7 +7,7 @@ def main(args):
     presentations, slide_deck = utils.generate_talk(args)
 
 def main_cli(): 
-    args = get_argument_parser().parse_args()
+    args = utils.get_argument_parser().parse_args()
     main(args)
 
 if __name__ == '__main__':

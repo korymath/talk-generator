@@ -9,7 +9,7 @@ Software to automatically generate talks, presentations for PowerPoint and/or Ke
 
 ## Demo
 
-For a demo of this generator, please visit [the online demo page](https://shaun.lol/), a platform created by Shaun Furragia to give easier access to this talk generator.
+For a demo of this generator, please visit [the online demo page](https://shaun.lol/), a platform created by Shaun Farrugia to give easier access to this talk generator.
 
 ### Example
 
@@ -95,6 +95,21 @@ You can create this file by following the next steps:
 
 TODO(korymath)
 
+### Available arguments
+
+These are the available runtime arguments that you can pass to the talk-generator. 
+
+| Argument               | Description               |
+| ---------------------- | ------------------------- |
+| `topic` | The topic of the generator. This works best if it is a common, well-known noun |
+| `num_slides` | The number of slides in the generated presentation (*default: 10*) |
+| `schema` | The presentation schema to use when generating the presentation. Currently, only two modes are implemented, being `default` and `test` (for testing during development) |
+| `presenter` | The name that will be present on the first slide. Leave blank for an automatically generated name |
+| `output_folder` | The folder to output the generated presentations (*default: `./output/`*) |
+| `save_ppt` | If this flag is true(*default*), the generated powerpoint will be saved on the computer in the `output_folder`|
+| `open_ppt` | If this flag is true (*default*), the generated powerpoint will automatically open after generating|
+
+
 ### Common Errors/Warnings:
 
 #### prawcore.exceptions.ResponseException: received 401 HTTP response
@@ -147,17 +162,6 @@ Reasonable defaults have been provided. To override, simply pass the command-lin
 
 * be sure that open_ppt is false when running as a docker process.
 
-### Available arguments
-
-| Argument               | Description               |
-| ---------------------- | ------------------------- |
-| `topic` | The topic of the generator. This works best if it is a common, well-known noun |
-| `num_slides` | The number of slides in the generated presentation (*default: 10*) |
-| `schema` | The presentation schema to use when generating the presentation. Currently, only two modes are implemented, being `default` and `test` (for testing during development) |
-| `presenter` | The name that will be present on the first slide. Leave blank for an automatically generated name |
-| `output_folder` | The folder to output the generated presentations (*default: `./output/`*) |
-| `save_ppt` | If this flag is true(*default*), the generated powerpoint will be saved on the computer in the `output_folder`|
-| `open_ppt` | If this flag is true (*default*), the generated powerpoint will automatically open after generating|
 
 ## Running the generator as a microservice
 

@@ -26,7 +26,7 @@ setup(
     version='2.0.0',
     description='Automatically generating presentation slide decks.',
     long_description=readme,
-    author='Kory Mathewson, Thomas Winters',
+    author='Kory Mathewson, Thomas Winters, Shaun Farrugia',
     author_email='info@thomaswinters.be',
     url='https://github.com/korymath/talk-generator',
     license=license,
@@ -41,7 +41,8 @@ setup(
     install_requires=install_requires,
         entry_points={
         'console_scripts': [
-            'talkgenerator = talkgenerator.run:main_cli'
+            'talkgenerator = talkgenerator.run:main_cli',
+            'talkgenerator-web = talkgenerator.run_web:startup_web'
         ]
     }
 )
