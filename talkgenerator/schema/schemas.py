@@ -3,9 +3,9 @@ import random
 from talkgenerator.schema.content_generator_structures import RedditImageGenerator, ShitPostBotURLGenerator, \
     GoodReadsQuoteGenerator, CountryPrefixApplier, JobPrefixApplier, create_tracery_generator, \
     create_templated_text_generator, create_reddit_image_generator, SplitCaptionsGenerator, \
-    generate_wikihow_bold_statement, generate_google_image_generator
+    generate_wikihow_bold_statement, generate_google_image_generator, UnsplashURLGenerator
 from talkgenerator.util import os_util
-from talkgenerator.sources import shitpostbot
+from talkgenerator.sources import shitpostbot, unsplash
 from talkgenerator.sources import wikihow
 from talkgenerator.sources import google_images
 from talkgenerator.sources import inspirobot
@@ -154,6 +154,11 @@ generate_wide_google_image = generate_google_image_generator(google_images.WideI
 generate_google_image = generate_google_image_generator(google_images.ImageGenerator())
 
 generate_google_image_from_word = FromListGenerator(InvalidImagesRemoverGenerator(google_images.ImageGenerator()))
+
+# UNSPLASH
+
+generate_unsplash_image = ExternalImageListGenerator(SeededGenerator(unsplash.search_photos_return_urls),
+                                                     UnsplashURLGenerator(), check_image_validness=False)
 
 # OLD/VINTAGE
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
@@ -576,7 +581,15 @@ test_schema = PresentationSchema(
     # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
     seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
-    slide_generators=conclusion_slide_generators,
+    slide_generators=[
+        SlideGeneratorData(
+            slide_generators.FullImageSlideGenerator.of(
+                default_slide_title_generator,
+                generate_unsplash_image),
+            tags=["full_image", "unsplash"],
+            allowed_repeated_elements=10,
+            name="Unsplash Image")
+    ],
     ignore_weights=True
 )
 

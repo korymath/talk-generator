@@ -1,7 +1,7 @@
 """
 This file contains structures that are helpful for certain content generators, but not general enough for generator_util
 """
-
+import os
 import random
 
 from talkgenerator.util.generator_util import SeededGenerator, BackupGenerator, InvalidImagesRemoverGenerator
@@ -89,6 +89,16 @@ class ShitPostBotURLGenerator(object):
     def __call__(self, url):
         return os_util.to_actual_file("downloads/shitpostbot/{}".format(
             os_util.get_file_name(url)))
+
+
+# UNSPLASH
+
+class UnsplashURLGenerator(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, url):
+        return os_util.to_actual_file("downloads\\unsplash\\{}.jpg".format(os_util.get_file_name(os.path.dirname(url))))
 
 
 # ABOUT ME
