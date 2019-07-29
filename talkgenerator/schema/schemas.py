@@ -4,7 +4,7 @@ from talkgenerator.schema.content_generator_structures import RedditImageGenerat
     GoodReadsQuoteGenerator, CountryPrefixApplier, JobPrefixApplier, create_tracery_generator, \
     create_templated_text_generator, create_reddit_image_generator, SplitCaptionsGenerator
 from talkgenerator.util import os_util
-from talkgenerator.sources import shitpostbot, conceptnet
+from talkgenerator.sources import shitpostbot
 from talkgenerator.sources import wikihow
 from talkgenerator.sources import google_images
 from talkgenerator.sources import inspirobot
@@ -171,9 +171,7 @@ def generate_wikihow_bold_statement(presentation_context):
     if related_actions:
         action = random.choice(related_actions)
         template_values.update({'action': action.title(),
-                                'location': conceptnet.get_weighted_related_locations(seed),
-                                # TODO: Make a scraper that scrapes a step related to this action on wikihow.
-                                'step': 'Do Whatever You Like'})
+                                'seed': seed})
 
     return bold_statement_templated_generator(template_values)
 
