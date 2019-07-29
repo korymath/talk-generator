@@ -718,6 +718,7 @@ test_schema = PresentationSchema(
     seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
     slide_generators=conclusion_slide_generators,
+    ignore_weights=True
 )
 
 schemas = {

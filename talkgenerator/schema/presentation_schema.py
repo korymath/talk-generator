@@ -18,13 +18,15 @@ class PresentationSchema:
     """ Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
     each slide is generated """
 
-    def __init__(self, powerpoint_creator, seed_generator, slide_generators, max_allowed_tags=None):
+    def __init__(self, powerpoint_creator, seed_generator, slide_generators, max_allowed_tags=None,
+                 ignore_weights=False):
         self._powerpoint_creator = powerpoint_creator
         self._seed_generator = seed_generator
         self._slide_generators = slide_generators
         if max_allowed_tags is None:
             max_allowed_tags = {}
         self._max_allowed_tags = max_allowed_tags
+        self._ignore_weights = ignore_weights
 
     def generate_presentation(self, topic, num_slides, presenter=None, parallel=False):
         """Generate a presentation about a certain topic with a certain number of slides"""
@@ -185,6 +187,8 @@ class PresentationSchema:
 
     def _select_generator(self, slide_nr, total_slides, prohibited_generators):
         """Select a generator for a certain slide number"""
+        if self._ignore_weights:
+            return random_util.choice_optional(self._slide_generators)
         return random_util.weighted_random(
             self._get_weighted_generators_for_slide_nr(slide_nr, total_slides, prohibited_generators))
 
