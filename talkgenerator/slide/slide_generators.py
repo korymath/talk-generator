@@ -130,8 +130,10 @@ class TwoColumnImageSlideGenerator(SlideGenerator):
         return slides.TwoColumnImageSlide
 
 
-class TwoTupledCaptionedImagesGenerator(object):
+class TwoTupledCaptionedImagesGenerator(SlideGenerator):
+
     def __init__(self, title_generator, tuple_1_generator, tuple_2_generator, original_image_size=True):
+        super().__init__(self)
         self._title_generator = title_generator
         self._tuple_1_generator = tuple_1_generator
         self._tuple_2_generator = tuple_2_generator
@@ -143,9 +145,15 @@ class TwoTupledCaptionedImagesGenerator(object):
         return self._title_generator(presentation_context), generated_tuple_1[0], generated_tuple_1[1], (
             generated_tuple_2[0]), generated_tuple_2[1], self._original_image_size
 
+    @property
+    def slide_type(self):
+        return slides.TwoColumnImageSlide
 
-class TwoImagesAndTupledCaptions(object):
-    def __init__(self, title_generator, captions_generator, image_1_generator, image_2_generator, original_image_size):
+
+class TwoImagesAndTupledCaptions(SlideGenerator):
+    def __init__(self, title_generator, captions_generator, image_1_generator, image_2_generator,
+                 original_image_size=True):
+        super().__init__(self)
         self._title_generator = title_generator
         self._captions_generator = captions_generator
         self._image_1_generator = image_1_generator
@@ -157,6 +165,10 @@ class TwoImagesAndTupledCaptions(object):
         return self._title_generator(presentation_context), generated_tuple[0], self._image_1_generator(
             presentation_context), generated_tuple[1], self._image_2_generator(
             presentation_context), self._original_image_size
+
+    @property
+    def slide_type(self):
+        return slides.TwoColumnImageSlide
 
 
 class ThreeColumnImageSlideGenerator(SlideGenerator):
@@ -189,9 +201,10 @@ class ThreeColumnImageSlideGenerator(SlideGenerator):
         return slides.ThreeColumnImageSlide
 
 
-class ThreeTupledCaptionedImagesGenerator(object):
+class ThreeTupledCaptionedImagesGenerator(SlideGenerator):
     def __init__(self, title_generator, tuple_1_generator, tuple_2_generator, tuple_3_generator,
                  original_image_size=True):
+        super().__init__(self)
         self._title_generator = title_generator
         self._tuple_1_generator = tuple_1_generator
         self._tuple_2_generator = tuple_2_generator
@@ -206,10 +219,15 @@ class ThreeTupledCaptionedImagesGenerator(object):
             generated_tuple_2[0]), generated_tuple_2[1], generated_tuple_3[0], generated_tuple_3[
                    1], self._original_image_size
 
+    @property
+    def slide_type(self):
+        return slides.ThreeColumnImageSlide
 
-class ThreeImagesAndTupledCaptions(object):
+
+class ThreeImagesAndTupledCaptions(SlideGenerator):
     def __init__(self, title_generator, captions_generator, image_1_generator, image_2_generator, image_3_generator,
-                 original_image_size):
+                 original_image_size=True):
+        super().__init__(self)
         self._title_generator = title_generator
         self._captions_generator = captions_generator
         self._image_1_generator = image_1_generator
@@ -223,6 +241,10 @@ class ThreeImagesAndTupledCaptions(object):
             presentation_context), generated_tuple[1], self._image_2_generator(
             presentation_context), generated_tuple[2], self._image_3_generator(
             presentation_context), self._original_image_size
+
+    @property
+    def slide_type(self):
+        return slides.ThreeColumnImageSlide
 
 
 class ChartSlideGenerator(SlideGenerator):
