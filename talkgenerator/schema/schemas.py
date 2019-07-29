@@ -120,7 +120,8 @@ combined_gif_generator = CombinedGenerator((.5, giphy_generator), (.5, reddit_gi
 
 # REDDIT
 
-weird_reddit_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf", "wtfstockphotos", "photoshopbattles",
+weird_reddit_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf", "wtfstockphotos", "weirdstockphotos",
+                                                             "darkstockphotos", "photoshopbattles",
                                                              "confusing_perspective", "cursedimages", "HybridAnimals",
                                                              "EyeBleach", "natureismetal")
 
