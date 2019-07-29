@@ -1,21 +1,20 @@
 import random
 
+from talkgenerator.schema.content_generator_structures import RedditImageGenerator, ShitPostBotURLGenerator, \
+    GoodReadsQuoteGenerator, CountryPrefixApplier, JobPrefixApplier, create_tracery_generator, \
+    create_templated_text_generator, create_reddit_image_generator, SplitCaptionsGenerator
 from talkgenerator.util import os_util
 from talkgenerator.sources import shitpostbot
 from talkgenerator.sources import wikihow
 from talkgenerator.sources import google_images
 from talkgenerator.sources import inspirobot
 from talkgenerator.sources import chart
-from talkgenerator.sources import goodreads
 from talkgenerator.sources import giphy
-from talkgenerator.sources import reddit
-from talkgenerator.sources import text_generator
 from talkgenerator.schema import slide_topic_generators
 from talkgenerator.slide import powerpoint_slide_creator
 from talkgenerator.slide import slide_generators
 from talkgenerator.util.generator_util import SeededGenerator
 from talkgenerator.util.generator_util import NoneGenerator
-from talkgenerator.util.generator_util import StaticGenerator
 from talkgenerator.util.generator_util import CombinedGenerator
 from talkgenerator.util.generator_util import ExternalImageListGenerator
 from talkgenerator.util.generator_util import FromListGenerator
@@ -28,19 +27,6 @@ from talkgenerator.schema.presentation_schema import PresentationSchema
 from talkgenerator.schema.slide_generator_data import SlideGeneratorData
 from talkgenerator.schema.slide_generator_data import ConstantWeightFunction
 from talkgenerator.schema.slide_generator_data import PeakedWeight
-
-
-# = TEXT GENERATORS=
-
-def create_templated_text_generator(filename):
-    actual_file = os_util.to_actual_file(filename)
-    return text_generator.TemplatedTextGenerator(actual_file).generate
-
-
-def create_tracery_generator(filename, main="origin"):
-    actual_file = os_util.to_actual_file(filename)
-    return text_generator.TraceryTextGenerator(actual_file, main).generate
-
 
 # TITLES
 talk_title_generator = create_templated_text_generator("data/text-templates/talk_title.txt")
@@ -87,8 +73,6 @@ _about_me_facts_grammar = "data/text-templates/about_me_facts.json"
 book_description_generator = create_tracery_generator(_about_me_facts_grammar, "book_description")
 location_description_generator = create_tracery_generator(_about_me_facts_grammar, "location_description")
 hobby_description_generator = create_tracery_generator(_about_me_facts_grammar, "hobby_description")
-job_description_generator = create_tracery_generator(_about_me_facts_grammar, "job_description")
-country_description_generator = create_tracery_generator(_about_me_facts_grammar, "country_description")
 job_generator = create_tracery_generator(_about_me_facts_grammar, "job")
 country_generator = create_tracery_generator(_about_me_facts_grammar, "country")
 
@@ -97,81 +81,18 @@ country_generator = create_tracery_generator(_about_me_facts_grammar, "country")
 anecdote_prompt_generator = create_templated_text_generator(
     "data/text-templates/anecdote_prompt.txt")
 
-
 # QUOTES
-class GoodReadsQuoteGenerator(object):
-    def __init__(self, max_quote_length):
-        self._max_quote_length = max_quote_length
-
-    def __call__(self, presentation_context):
-        def generator(seed):
-            return [quote for quote in goodreads.search_quotes(seed, 50) if len(quote) <= self._max_quote_length]
-
-        return FromListGenerator(SeededGenerator(generator))(presentation_context)
-
+goodreads_quote_generator = GoodReadsQuoteGenerator(250)
 
 # INSPIROBOT
 inspirobot_image_generator = inspirobot.get_random_inspirobot_image
 
-
 # REDDIT
-
-
-class RedditLocalImageLocationGenerator(object):
-    def __init__(self, subreddit):
-        self._subreddit = subreddit
-
-    def __call__(self, url):
-        filename = "downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
-        return os_util.to_actual_file(filename)
-
-
-class RedditImageSearcher(object):
-    def __init__(self, subreddit):
-        self._subreddit = subreddit
-
-    def __call__(self, seed):
-        results = reddit.search_subreddit(
-            self._subreddit,
-            str(seed) + " nsfw:no (url:.jpg OR url:.png OR url:.gif)")
-        if bool(results):
-            return [post.url for post in results]
-
-
-class RedditImageGenerator:
-    def __init__(self, subreddit):
-        self._subreddit = subreddit
-
-        self._generate = ExternalImageListGenerator(
-            SeededGenerator(RedditImageSearcher(self._subreddit)),
-            RedditLocalImageLocationGenerator(self._subreddit)
-        )
-
-    def generate(self, presentation_context):
-        return self._generate(presentation_context)
-
-    def generate_random(self, _):
-        return self.generate({"seed": ""})
-
-
-def create_reddit_image_generator(*name):
-    reddit_generator = RedditImageGenerator("+".join(name))
-    return BackupGenerator(reddit_generator.generate, reddit_generator.generate_random)
 
 
 weird_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf", "wtfstockphotos", "photoshopbattles",
                                                       "confusing_perspective", "cursedimages", "HybridAnimals",
                                                       "EyeBleach", "natureismetal")
-
-
-class ShitPostBotURLGenerator(object):
-    def __init__(self):
-        pass
-
-    def __call__(self, url):
-        return os_util.to_actual_file("downloads/shitpostbot/{}".format(
-            os_util.get_file_name(url)))
-
 
 shitpostbot_image_generator = ExternalImageListGenerator(
     SeededGenerator(
@@ -228,7 +149,8 @@ generate_google_image_from_word = FromListGenerator(
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
 vintage_picture_generator = create_reddit_image_generator("TheWayWeWere", "100yearsago", "ColorizedHistory")
 
-reddit_book_cover_generator = create_reddit_image_generator("BookCovers", "fakebookcovers", "coverdesign", "bookdesign")
+reddit_book_cover_generator = create_reddit_image_generator("BookCovers", "fakebookcovers", "coverdesign",
+                                                            "bookdesign")
 
 reddit_location_image_generator = create_reddit_image_generator("evilbuildings", "itookapicture", "SkyPorn",
                                                                 "EarthPorn")
@@ -258,16 +180,6 @@ def generate_wikihow_bold_statement(presentation_context):
 
 # DOUBLE CAPTIONS
 
-class SplitCaptionsGenerator(object):
-    def __init__(self, generator):
-        self._generator = generator
-
-    def __call__(self, presentation_context):
-        line = self._generator(presentation_context)
-        parts = line.split("|")
-        return parts
-
-
 _double_captions_generator = create_templated_text_generator("data/text-templates/double_captions.txt")
 _triple_captions_generator = create_templated_text_generator("data/text-templates/triple_captions.txt")
 _historic_double_captions_generator = create_templated_text_generator(
@@ -277,20 +189,7 @@ double_captions_generator = SplitCaptionsGenerator(_double_captions_generator)
 triple_captions_generator = SplitCaptionsGenerator(_triple_captions_generator)
 historic_double_captions_generator = SplitCaptionsGenerator(_historic_double_captions_generator)
 
-
 # TUPLED ABOUT ME
-
-def _apply_job_prefix(job_name):
-    if random.uniform(0, 1) < 0.55:
-        return job_name
-    return job_description_generator() + ": " + job_name
-
-
-def _apply_country_prefix(country_name):
-    if random.uniform(0, 1) < 0.55:
-        return country_name
-    return country_description_generator() + country_name
-
 
 about_me_hobby_tuple_generator = TupledGenerator(
     hobby_description_generator,
@@ -305,15 +204,6 @@ about_me_location_tuple_generator = TupledGenerator(
     reddit_location_image_generator,
 )
 
-
-class JobPrefixApplier(object):
-    def __init__(self):
-        pass
-
-    def __call__(self, x):
-        return _apply_job_prefix(x[0]), x[1]
-
-
 about_me_job_tuple_generator = MappedGenerator(
     InspiredTupleGenerator(
         MappedGenerator(
@@ -324,15 +214,6 @@ about_me_job_tuple_generator = MappedGenerator(
     ),
     JobPrefixApplier()
 )
-
-
-class CountryPrefixApplier(object):
-    def __init__(self):
-        pass
-
-    def __call__(self, x):
-        return _apply_country_prefix(x[0]), x[1]
-
 
 about_me_country_tuple_generator = MappedGenerator(
     InspiredTupleGenerator(
@@ -434,7 +315,7 @@ history_slide_generators = [
             historical_name_generator,
             vintage_person_generator,
             NoneGenerator(),
-            GoodReadsQuoteGenerator(280)
+            goodreads_quote_generator
         ),
         weight_function=PeakedWeight((2, 3), 20, 0.3),
         allowed_repeated_elements=0,
@@ -511,7 +392,7 @@ statement_slide_generators = [
         # slide_templates.generate_large_quote_slide(
         slide_generators.LarqeQuoteSlideGenerator.of(
             title_generator=NoneGenerator(),
-            text_generator=GoodReadsQuoteGenerator(250),
+            text_generator=goodreads_quote_generator,
             background_image_generator=generate_full_screen_google_image),
         weight_function=ConstantWeightFunction(0.6),
         tags=["quote", "statement"],
