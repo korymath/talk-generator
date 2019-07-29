@@ -4,7 +4,7 @@ This file contains structures that are helpful for certain content generators, b
 
 import random
 
-from talkgenerator.util.generator_util import SeededGenerator, BackupGenerator
+from talkgenerator.util.generator_util import SeededGenerator, BackupGenerator, InvalidImagesRemoverGenerator
 from talkgenerator.util.generator_util import ExternalImageListGenerator
 from talkgenerator.util.generator_util import FromListGenerator
 
@@ -137,6 +137,7 @@ class SplitCaptionsGenerator(object):
         parts = line.split("|")
         return parts
 
+
 # BOLD STATEMENT
 
 bold_statement_templated_file = os_util.to_actual_file('data/text-templates/bold_statements.txt')
@@ -153,3 +154,8 @@ def generate_wikihow_bold_statement(presentation_context):
                                 'seed': seed})
 
     return bold_statement_templated_generator(template_values)
+
+
+# GOOGLE
+def generate_google_image_generator(generator):
+    return FromListGenerator(InvalidImagesRemoverGenerator(SeededGenerator(generator)))
