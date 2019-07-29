@@ -349,27 +349,27 @@ reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funny
 
 
 # Conclusions
-def _conclusion_two_enumeration_generator():
+def _conclusion_two_enumeration_generator(ignore):
     return 'Conclusion 1', 'Conclusion 2'
 
 
-def _conclusion_three_enumeration_generator():
+def _conclusion_three_enumeration_generator(ignore):
     return 'Conclusion 1', 'Conclusion 2', 'Conclusion 3'
 
 
-def _empty_string_two_tuple_generator():
+def _empty_string_two_tuple_generator(ignore):
     return '', ''
 
 
-def _empty_string_three_tuple_generator():
+def _empty_string_three_tuple_generator(ignore):
     return '', '', ''
 
 
-conclusion_two_text_tuple_generator = CombinedGenerator(
+conclusion_two_captions_tuple_generator = CombinedGenerator(
     (1, _conclusion_two_enumeration_generator),
     (1, _empty_string_two_tuple_generator),
 )
-conclusion_three_text_tuple_generator = CombinedGenerator(
+conclusion_three_captions_tuple_generator = CombinedGenerator(
     (1, _conclusion_three_enumeration_generator),
     (1, _empty_string_three_tuple_generator),
 )
@@ -648,11 +648,10 @@ chart_slide_generators = [
 conclusion_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_two_column_images_slide(
-        slide_generators.TwoColumnImageSlideGenerator.of(
+        slide_generators.TwoImagesAndTupledCaptions(
             conclusion_title_generator,
-            StaticGenerator("Conclusion 1"),
+            conclusion_two_captions_tuple_generator,
             generate_google_image,
-            StaticGenerator("Conclusion 2"),
             weird_image_generator,
         ),
         weight_function=PeakedWeight((-1,), 10000, 0),
@@ -661,21 +660,19 @@ conclusion_slide_generators = [
         name="Conclusion"),
     SlideGeneratorData(
         # slide_templates.generate_three_column_images_slide(
-        slide_generators.ThreeColumnImageSlideGenerator.of(
+        slide_generators.ThreeImagesAndTupledCaptions(
             conclusion_title_generator,
-            StaticGenerator("Conclusion 1"),
+            conclusion_three_captions_tuple_generator,
             generate_google_image,
-            StaticGenerator("Conclusion 2"),
             weird_image_generator,
-            StaticGenerator("Conclusion 3"),
             # TODO: Maybe add generator that generates the title of the presentation instead of conclusion 3?
             # (links it up nicely)
             combined_gif_generator,
         ),
-        weight_function=PeakedWeight((-1,), 5000, 0),
+        weight_function=PeakedWeight((-1,), 8000, 0),
         allowed_repeated_elements=10,
         tags=["conclusion"],
-        name="Conclusion"),
+        name="Conclusion")
 ]
 
 all_slide_generators = title_slide_generators + about_me_slide_generators + history_slide_generators + \
@@ -739,7 +736,7 @@ test_schema = PresentationSchema(
     # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
     seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
-    slide_generators=all_slide_generators,
+    slide_generators=conclusion_slide_generators,
 )
 
 schemas = {
