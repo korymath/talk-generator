@@ -77,7 +77,7 @@ def advanced_search_wikihow(search_words):
         url = _ADVANCED_SEARCH_URL.format(search_words.replace(' ', '+'))
         resp = session.get(url, allow_redirects=True)
         if "Login Required - wikiHow" in str(resp.content):
-            print("WARNING: Invalid log in on Wikihow!")
+            print("WARNING: Problem logging in on Wikihow: Advanced Search disabled")
         return resp
     return None
 
