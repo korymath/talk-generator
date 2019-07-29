@@ -32,6 +32,7 @@ known_functions = {
 
     # Conceptnet
     "conceptnet_location": conceptnet.weighted_location_generator,
+    "conceptnet_related": conceptnet.weighted_related_word_generator,
 
     # Checkers
     "is_noun": lambda word: word if language_util.is_noun(word) else None,
