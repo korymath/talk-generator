@@ -19,19 +19,13 @@ class SlideGenerator(metaclass=ABCMeta):
 
     @classmethod
     def of(cls, *generators):
-        return cls(CombinedGenerator(*generators))
+        return cls(CombinedSlideGenerator(*generators))
 
     def generate_slide(self, presentation_context, used) -> (slides.Slide, list):
         """ Generates the slide using the given generators """
         generated = self._slide_content_generator(presentation_context)
         if is_different_enough(generated, used):
             return self.slide_type(*generated), generated
-
-    def generate_ppt_slide(self, presentation_context, used):
-        # Temporary function: TODO remove me
-        result = self.generate_slide(presentation_context, used)
-        if result:
-            return result[0].create_powerpoint_slide(presentation_context["presentation"]), result[1]
 
 
 class TitleSlideGenerator(SlideGenerator):
@@ -40,7 +34,7 @@ class TitleSlideGenerator(SlideGenerator):
 
     @classmethod
     def of(cls, title_generator, subtitle_generator):
-        return cls(CombinedGenerator(title_generator, subtitle_generator))
+        return cls(CombinedSlideGenerator(title_generator, subtitle_generator))
 
     @property
     def slide_type(self):
@@ -53,7 +47,7 @@ class LarqeQuoteSlideGenerator(SlideGenerator):
 
     @classmethod
     def of(cls, title_generator, text_generator, background_image_generator):
-        return cls(CombinedGenerator(title_generator, text_generator, background_image_generator))
+        return cls(CombinedSlideGenerator(title_generator, text_generator, background_image_generator))
 
     @property
     def slide_type(self):
@@ -67,7 +61,7 @@ class ImageSlideGenerator(SlideGenerator):
     @classmethod
     def of(cls, title_generator, image_generator=None, original_image_size=True):
         return cls(
-            CombinedGenerator(title_generator, image_generator, generator_util.StaticGenerator(original_image_size)))
+            CombinedSlideGenerator(title_generator, image_generator, generator_util.StaticGenerator(original_image_size)))
 
     @classmethod
     def of_tupled_captioned_image(cls, tuple_1_generator, original_image_size=True):
@@ -95,7 +89,7 @@ class FullImageSlideGenerator(SlideGenerator):
     @classmethod
     def of(cls, title_generator, image_generator=None, original_image_size=True):
         return cls(
-            CombinedGenerator(title_generator, image_generator, generator_util.StaticGenerator(original_image_size)))
+            CombinedSlideGenerator(title_generator, image_generator, generator_util.StaticGenerator(original_image_size)))
 
     @property
     def slide_type(self):
@@ -110,8 +104,8 @@ class TwoColumnImageSlideGenerator(SlideGenerator):
     def of(cls, title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
            image_or_text_2_generator, original_image_size=True):
         return cls(
-            CombinedGenerator(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
-                              image_or_text_2_generator, generator_util.StaticGenerator(original_image_size)))
+            CombinedSlideGenerator(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
+                                   image_or_text_2_generator, generator_util.StaticGenerator(original_image_size)))
 
     @classmethod
     def of_tupled_captioned_images(cls, title_generator, tuple_1_generator, tuple_2_generator,
@@ -122,16 +116,18 @@ class TwoColumnImageSlideGenerator(SlideGenerator):
     @classmethod
     def of_images_and_tupled_captions(cls, title_generator, captions_generator, image_1_generator,
                                       image_2_generator, original_image_size=True):
-        return cls(ImagesAndTupledCaptions(title_generator, captions_generator, image_1_generator,
-                                           image_2_generator, original_image_size))
+        return cls(TwoImagesAndTupledCaptions(title_generator, captions_generator, image_1_generator,
+                                              image_2_generator, original_image_size))
 
     @property
     def slide_type(self):
         return slides.TwoColumnImageSlide
 
 
-class TwoTupledCaptionedImagesGenerator(object):
+class TwoTupledCaptionedImagesGenerator(SlideGenerator):
+
     def __init__(self, title_generator, tuple_1_generator, tuple_2_generator, original_image_size=True):
+        super().__init__(self)
         self._title_generator = title_generator
         self._tuple_1_generator = tuple_1_generator
         self._tuple_2_generator = tuple_2_generator
@@ -143,9 +139,15 @@ class TwoTupledCaptionedImagesGenerator(object):
         return self._title_generator(presentation_context), generated_tuple_1[0], generated_tuple_1[1], (
             generated_tuple_2[0]), generated_tuple_2[1], self._original_image_size
 
+    @property
+    def slide_type(self):
+        return slides.TwoColumnImageSlide
 
-class ImagesAndTupledCaptions(object):
-    def __init__(self, title_generator, captions_generator, image_1_generator, image_2_generator, original_image_size):
+
+class TwoImagesAndTupledCaptions(SlideGenerator):
+    def __init__(self, title_generator, captions_generator, image_1_generator, image_2_generator,
+                 original_image_size=True):
+        super().__init__(self)
         self._title_generator = title_generator
         self._captions_generator = captions_generator
         self._image_1_generator = image_1_generator
@@ -158,6 +160,10 @@ class ImagesAndTupledCaptions(object):
             presentation_context), generated_tuple[1], self._image_2_generator(
             presentation_context), self._original_image_size
 
+    @property
+    def slide_type(self):
+        return slides.TwoColumnImageSlide
+
 
 class ThreeColumnImageSlideGenerator(SlideGenerator):
     def __init__(self, slide_content_generator):
@@ -168,9 +174,9 @@ class ThreeColumnImageSlideGenerator(SlideGenerator):
            image_or_text_2_generator, caption_3_generator,
            image_or_text_3_generator, original_image_size=True):
         return cls(
-            CombinedGenerator(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
-                              image_or_text_2_generator, caption_3_generator,
-                              image_or_text_3_generator, generator_util.StaticGenerator(original_image_size)))
+            CombinedSlideGenerator(title_generator, caption_1_generator, image_or_text_1_generator, caption_2_generator,
+                                   image_or_text_2_generator, caption_3_generator,
+                                   image_or_text_3_generator, generator_util.StaticGenerator(original_image_size)))
 
     @classmethod
     def of_tupled_captioned_images(cls, title_generator, tuple_1_generator, tuple_2_generator, tuple_3_generator,
@@ -189,9 +195,10 @@ class ThreeColumnImageSlideGenerator(SlideGenerator):
         return slides.ThreeColumnImageSlide
 
 
-class ThreeTupledCaptionedImagesGenerator(object):
+class ThreeTupledCaptionedImagesGenerator(SlideGenerator):
     def __init__(self, title_generator, tuple_1_generator, tuple_2_generator, tuple_3_generator,
                  original_image_size=True):
+        super().__init__(self)
         self._title_generator = title_generator
         self._tuple_1_generator = tuple_1_generator
         self._tuple_2_generator = tuple_2_generator
@@ -206,10 +213,15 @@ class ThreeTupledCaptionedImagesGenerator(object):
             generated_tuple_2[0]), generated_tuple_2[1], generated_tuple_3[0], generated_tuple_3[
                    1], self._original_image_size
 
+    @property
+    def slide_type(self):
+        return slides.ThreeColumnImageSlide
 
-class ThreeImagesAndTupledCaptions(object):
+
+class ThreeImagesAndTupledCaptions(SlideGenerator):
     def __init__(self, title_generator, captions_generator, image_1_generator, image_2_generator, image_3_generator,
-                 original_image_size):
+                 original_image_size=True):
+        super().__init__(self)
         self._title_generator = title_generator
         self._captions_generator = captions_generator
         self._image_1_generator = image_1_generator
@@ -224,6 +236,10 @@ class ThreeImagesAndTupledCaptions(object):
             presentation_context), generated_tuple[2], self._image_3_generator(
             presentation_context), self._original_image_size
 
+    @property
+    def slide_type(self):
+        return slides.ThreeColumnImageSlide
+
 
 class ChartSlideGenerator(SlideGenerator):
     def __init__(self, slide_content_generator):
@@ -232,8 +248,8 @@ class ChartSlideGenerator(SlideGenerator):
     @classmethod
     def of(cls, title_generator, chart_type_generator, chart_data_generator, chart_modifier=None):
         return cls(
-            CombinedGenerator(title_generator, chart_type_generator, chart_data_generator,
-                              generator_util.StaticGenerator(chart_modifier)))
+            CombinedSlideGenerator(title_generator, chart_type_generator, chart_data_generator,
+                                   generator_util.StaticGenerator(chart_modifier)))
 
     @property
     def slide_type(self):
@@ -242,7 +258,7 @@ class ChartSlideGenerator(SlideGenerator):
 
 # HELPERS
 
-class CombinedGenerator(object):
+class CombinedSlideGenerator(object):
     def __init__(self, *generators):
         # print("CombinedGenerator:", self, generators)
         self._generators = generators

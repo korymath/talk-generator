@@ -1,3 +1,8 @@
+"""
+Light, commonly used, non-specific generators that are helpful shortcuts for creating
+certain types of (content) generators
+"""
+
 import random
 
 import requests
@@ -129,9 +134,10 @@ seeded_titled_identity_generator = SeededGenerator(TitledIdentityGenerator)
 
 
 class ExternalImageListGenerator(object):
-    def __init__(self, image_url_generator, file_name_generator):
+    def __init__(self, image_url_generator, file_name_generator, check_image_validness=True):
         self._image_url_generator = image_url_generator
         self._file_name_generator = file_name_generator
+        self._check_image_validness = check_image_validness
 
     def __call__(self, presentation_context):
         images = self._image_url_generator(presentation_context)
@@ -139,10 +145,12 @@ class ExternalImageListGenerator(object):
             chosen_image_url = random.choice(images)
             downloaded_url = self._file_name_generator(chosen_image_url)
             try:
-                if os_util.is_image(chosen_image_url):
+                if not self._check_image_validness or os_util.is_image(chosen_image_url):
                     os_util.download_image(chosen_image_url, downloaded_url)
                     if os_util.is_valid_image(downloaded_url):
                         return downloaded_url
+                else:
+                    print("Not a image url", chosen_image_url)
             except PermissionError:
                 print("Permission error when downloading", chosen_image_url)
             except requests.exceptions.MissingSchema:

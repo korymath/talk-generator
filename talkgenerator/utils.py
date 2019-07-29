@@ -14,8 +14,8 @@ from functools import wraps
 from talkgenerator import settings
 from talkgenerator.schema import schemas
 
-
 MAX_PRESENTATION_SAVE_TRIES = 100
+
 
 def generate_talk(args):
     """Make a talk with the given topic."""
@@ -32,11 +32,16 @@ def generate_talk(args):
     if not args.presenter:
         args.presenter = schemas.full_name_generator()
 
+    # Generate random talk title
+    if not args.title:
+        args.title = schemas.talk_title_generator({'seed': args.topic})
+
     # Generate the presentation object
     presentation, slide_deck = schema.generate_presentation(
         topic=args.topic,
         num_slides=args.num_slides,
         presenter=args.presenter,
+        title=args.title,
         parallel=args.parallel)
 
     print('Slide deck structured data: {}'.format(
@@ -110,22 +115,24 @@ def str2bool(v):
 def get_argument_parser():
     parser = argparse.ArgumentParser(description='Quickly build a slide deck.')
     parser.add_argument('--topic', default='cat', type=str,
-        help="Topic of presentation.")
+                        help="Topic of presentation.")
     parser.add_argument('--num_slides', default=10, type=int,
-        help="Number of slides to create.")
+                        help="Number of slides to create.")
     parser.add_argument('--schema', default="default", type=str,
-        help="The presentation schema to generate the presentation with")
+                        help="The presentation schema to generate the presentation with")
     parser.add_argument('--presenter', default=None, type=str,
-        help="The full name of the presenter, leave blank to randomise")
+                        help="The full name of the presenter, leave blank to randomise")
+    parser.add_argument('--title', default=None, type=str,
+                        help="The title of the talk, leave blank to randomise")
     parser.add_argument('--parallel', default=True, type=str2bool,
-        help=("Generated powerpoint will generate in parallel " +
-              "faster but drops some conditions)"))
+                        help=("Generated powerpoint will generate in parallel " +
+                              "faster but drops some conditions)"))
     parser.add_argument('--output_folder', default="../output/", type=str,
-        help="The folder to output the generated presentations")
+                        help="The folder to output the generated presentations")
     parser.add_argument('--save_ppt', default=True, type=str2bool,
-        help="If this flag is true, the generated powerpoint will be saved")
+                        help="If this flag is true, the generated powerpoint will be saved")
     parser.add_argument('--open_ppt', default=True, type=str2bool,
-        help="Generated powerpoint will automatically open")
+                        help="Generated powerpoint will automatically open")
     return parser
 
 
@@ -156,11 +163,14 @@ def log_api_call(func):
               -- Output to logs:
               API CALL: fibonacci_foo_api TRACE: 1232345346
     """
+
     def log_api_call_wrapper(*args, **kwargs):
         if 'Apitrace' in request.headers and request.headers['Apitrace'] is not None:
             log = logging.getLogger('werkzeug')
-            log.info("%s | API CALL: %s TRACE: %s " % (str(datetime.datetime.now()), func.__name__, request.headers['Apitrace']))
+            log.info("%s | API CALL: %s TRACE: %s " % (
+                str(datetime.datetime.now()), func.__name__, request.headers['Apitrace']))
         return func(*args, **kwargs)
+
     return log_api_call_wrapper
 
 

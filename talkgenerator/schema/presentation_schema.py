@@ -18,15 +18,17 @@ class PresentationSchema:
     """ Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
     each slide is generated """
 
-    def __init__(self, powerpoint_creator, seed_generator, slide_generators, max_allowed_tags=None):
+    def __init__(self, powerpoint_creator, seed_generator, slide_generators, max_allowed_tags=None,
+                 ignore_weights=False):
         self._powerpoint_creator = powerpoint_creator
         self._seed_generator = seed_generator
         self._slide_generators = slide_generators
         if max_allowed_tags is None:
             max_allowed_tags = {}
         self._max_allowed_tags = max_allowed_tags
+        self._ignore_weights = ignore_weights
 
-    def generate_presentation(self, topic, num_slides, presenter=None, parallel=False):
+    def generate_presentation(self, topic, num_slides, presenter=None, title=None, parallel=False):
         """Generate a presentation about a certain topic with a certain number of slides"""
         # Create new presentation
         presentation = self._powerpoint_creator()
@@ -38,7 +40,8 @@ class PresentationSchema:
         # Create main presentation_context
         main_presentation_context = {
             "topic": topic,
-            "presenter": presenter
+            "presenter": presenter,
+            "title": title,
         }
 
         used_tags = {}
@@ -75,7 +78,7 @@ class PresentationSchema:
                         used_elements=used_elements,
                         prohibited_generators=self._calculate_prohibited_generators(used_tags, num_slides)),
                     slide_nrs_to_generate)
-                slide_nrs_to_generate = []  # TODO: Update to slide numbers without
+                slide_nrs_to_generate = []
                 for slide_result in all_slide_results:
                     if slide_result:
                         slide, generated_elements, slide_generator_data, slide_nr = slide_result
@@ -98,8 +101,6 @@ class PresentationSchema:
     def _generate_slide_deck(self, slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
                              used_tags):
         for slide_nr in range(num_slides):
-            # TODO Parallellise, make sure to solve race condition used_elements, and pass slide_nr as argument & back
-
             # Generate the slide
             slide_results = self.generate_slide(
                 presentation_context=create_slide_presentation_context(main_presentation_context,
@@ -170,7 +171,6 @@ class PresentationSchema:
                                            num_slides=num_slides,
                                            used_elements=used_elements,
                                            prohibited_generators=prohibited_generators)
-                # TODO: Remove slide from presentation if there was a slide generated
 
             slide, generated_elements = slide_result
             end_time = time.time()
@@ -185,6 +185,8 @@ class PresentationSchema:
 
     def _select_generator(self, slide_nr, total_slides, prohibited_generators):
         """Select a generator for a certain slide number"""
+        if self._ignore_weights:
+            return random_util.choice_optional(self._slide_generators)
         return random_util.weighted_random(
             self._get_weighted_generators_for_slide_nr(slide_nr, total_slides, prohibited_generators))
 

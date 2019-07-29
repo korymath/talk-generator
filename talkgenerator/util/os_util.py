@@ -18,7 +18,7 @@ def download_image(from_url, to_url):
 
     # Download
     f = open(to_url, 'wb')
-    f.write(requests.get(from_url).content)
+    f.write(requests.get(from_url, allow_redirects=True).content)
     f.close()
 
 

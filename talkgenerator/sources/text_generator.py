@@ -32,6 +32,7 @@ known_functions = {
 
     # Conceptnet
     "conceptnet_location": conceptnet.weighted_location_generator,
+    "conceptnet_related": conceptnet.weighted_related_word_generator,
 
     # Checkers
     "is_noun": lambda word: word if language_util.is_noun(word) else None,
@@ -103,9 +104,6 @@ class TraceryTextGenerator(AbstractTextGenerator):
 @lru_cache(maxsize=20)
 def get_tracery_grammar(grammar_file):
     return tracery.Grammar(json.load(grammar_file))
-
-
-# TODO(Thomas): Add TraceryTemplatedTextGenerator for better variations than a template list
 
 def can_format_with(template, variables_dictionary):
     """ Checks if the template can be fully formatted by the given variable dictionary without errors"""

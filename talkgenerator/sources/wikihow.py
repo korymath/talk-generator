@@ -1,5 +1,6 @@
 """ Module for interacting with Wikihow """
 import re
+import time
 from functools import lru_cache
 
 import inflect
@@ -16,7 +17,18 @@ _ADVANCED_SEARCH_URL = "https://www.wikihow.com/index.php?title=Special%3ASearch
 def create_log_in_session(username, password):
     log_in_credentials = {"wpName": username, "wpPassword": password}
     session = requests.session()
-    session.post(_LOG_IN_URL, log_in_credentials, log_in_credentials)
+
+    trial = 1
+    success = False
+    while not success and trial < 16:
+        try:
+            session.post(_LOG_IN_URL, log_in_credentials, log_in_credentials)
+            success = True
+        except requests.exceptions.ConnectionError:
+            wait_time = .25 * 2 ** trial
+            print('Connection error with Wikihow! Retrying in ' + str(wait_time) + ' seconds.')
+            time.sleep(wait_time)
+            return create_log_in_session(username, password)
     return session
 
 
@@ -72,12 +84,12 @@ def basic_search_wikihow(search_words):
 
 @lru_cache(maxsize=20)
 def advanced_search_wikihow(search_words):
-    session = get_wikihow_session()
-    if session:
+    # session = get_wikihow_session()
+    if wikihow_session:
         url = _ADVANCED_SEARCH_URL.format(search_words.replace(' ', '+'))
-        resp = session.get(url, allow_redirects=True)
+        resp = wikihow_session.get(url, allow_redirects=True)
         if "Login Required - wikiHow" in str(resp.content):
-            print("WARNING: Invalid log in on Wikihow!")
+            print("WARNING: Problem logging in on Wikihow: Advanced Search disabled")
         return resp
     return None
 

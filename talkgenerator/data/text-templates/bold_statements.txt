@@ -15,3 +15,4 @@ Life Advice: Never {action}!
 WARNING: Never {action}!
 Friendly Reminder to {action}
 When in Doubt: {action}
+{seed.conceptnet_location} is the best place to do {action}!

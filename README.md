@@ -24,23 +24,6 @@ source setup.sh
 # python setup.py install
 ```
 
-## Running the generator (development)
-
-```sh
-cd talkgenerator
-python run.py --topic cat --num_slides 10
-```
-
-### Tests
-There are a lot of tests present in this repository. These `.py` files are prefixed with `test_`, and use the `unittest` module. They can easily be run all together when using PyCharm by right clicking on `talk-generator` and pressing *Run 'Unittests in talk-generator'*
-
-```sh
-. venv/bin/activate
-pytest --cov=talkgenerator tests/
-```
-
-Test coverage is automatically handled by `codecov`. Tests are automatically run with CircleCI based on the `.yml` file in the `.circleci` directory.
-
 
 ### Setting up Required API Keys
 
@@ -95,9 +78,15 @@ You can create this file by following the next steps:
 
 TODO(korymath)
 
-### Available arguments
 
-These are the available runtime arguments that you can pass to the talk-generator. 
+### Running the generator (development)
+
+```sh
+cd talkgenerator
+python run.py --topic cat --num_slides 10
+```
+
+### Available arguments
 
 | Argument               | Description               |
 | ---------------------- | ------------------------- |
@@ -108,6 +97,8 @@ These are the available runtime arguments that you can pass to the talk-generato
 | `output_folder` | The folder to output the generated presentations (*default: `./output/`*) |
 | `save_ppt` | If this flag is true(*default*), the generated powerpoint will be saved on the computer in the `output_folder`|
 | `open_ppt` | If this flag is true (*default*), the generated powerpoint will automatically open after generating|
+| `parallel` | If this flag is true (*default*), the generator will generate all slides in parallel |
+
 
 
 ### Common Errors/Warnings:
@@ -138,31 +129,6 @@ If `pip` complains about a missing `mysql.h`, you need to `pip install wheel`,
 go to [mysql wheel download]( http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python) to download the wheel
 and run `pip install mysqlclient-1.3.8-cp36-cp36m-win_amd64.whl`
 
-## Docker Instructions (optional)
-
-*slaps the hood of the container* Yep this bad boy runs on [Docker](https://www.docker.com/products/docker-desktop).
-
-
-### Building the Image
-
-Build the image, and tag it as talkgen.
-
-`docker build -t talkgen .`
-
-### Running the Image
-
-Run the image tagged as talkgen. The container /output directory maps to your
-current working directory.
-
-`docker run --env-file .env -v ``pwd``/output:/output talkgen run.py --open_ppt false`
-
-Reasonable defaults have been provided. To override, simply pass the command-line parameter. Here we are overriding the the topic and number of slides.
-
-`docker run --env-file .env -v ``pwd``/output:/output talkgen run.py --topic 'climate change' --num_slides 12 --open_ppt false`
-
-* be sure that open_ppt is false when running as a docker process.
-
-
 ## Running the generator as a microservice
 
 Run the generator as a microservice at 0.0.0.0:5687.
@@ -171,93 +137,44 @@ Run the generator as a microservice at 0.0.0.0:5687.
 
 You can then hit `http://0.0.0.0:5687?topic=sometopic`. This will kick the main.py off.
 
+## Paper
+
+If you would like to refer to this project in academic work, please cite the following paper:
+
+```
+@InProceedings{winters2019tedric,
+    author="Winters, Thomas
+    and Mathewson, Kory W.",
+    editor="Ek{\'a}rt, Anik{\'o}
+    and Liapis, Antonios
+    and Castro Pena, Mar{\'i}a Luz",
+    title="Automatically Generating Engaging Presentation Slide Decks",
+    booktitle="Computational Intelligence in Music, Sound, Art and Design",
+    year="2019",
+    publisher="Springer International Publishing",
+    address="Cham",
+    pages="127--141",
+    abstract="Talented public speakers have thousands of hours of practice. One means of improving public speaking skills is practice through improvisation, e.g. presenting an improvised presentation using an unseen slide deck. We present Tedric, a novel system capable of generating coherent slide decks based on a single topic suggestion. It combines semantic word webs with text and image data sources to create an engaging slide deck with an overarching theme. We found that audience members perceived the quality of improvised presentations using these generated slide decks to be on par with presentations using human created slide decks for the Improvised TED Talk performance format. Tedric is thus a valuable new creative tool for improvisers to perform with, and for anyone looking to improve their presentation skills.",
+    isbn="978-3-030-16667-0"
+}
+```
+
 ## Program structure
 
-In this section, we discuss the many parts of this software.
-
-### Powerpoint Template
-- `data/powerpoint/template.pptx`: This Powerpoint file contains the powerpoint presentation to start from. The interesting part of this file is when opening the model view, as you can edit the slide templates and their
-placeholders.
-
-- `slide_templates.py`: This Python module is responsible for filling in the `template.pptx` with values. There are also functions present which you can give as arguments functions that generates content when given a `presentation_context` dictionary. It will then generate the content, and if certain conditions (e.g. originality) are satisfied, it will create and add a slide to the presentation.
-
-### Presentation Schema elements
-
-- **PresentationSchema**: This class controls the parameters of the powerpoint generator. It contains information about which slide generators to use, which slide topic generator and a dictionary `max_allowed_tags` that contains information about how many times slide generators with certain tags are allowed to generate in one presentation. We might add different presentation schemas for different types of presentation generators in the future. The PresentationSchema class can be found in `presentation_schema.py`.
-
-- **SlideGenerator**: This class contains information about how to generate a particular type of slide. It holds a generating function for this purpose, as well as meta-data. For example, it contains a `weight_function` to calculate the chance of being used for a certain slide number, a name and tags for the generator, the allowed number of elements that have already been used in the presentation and the number of retries the slide generator is allowed to make in case it fails to generate a slide. The SlideGenerator class can be found in `presentation_schema.py`.
-
-- **SlideTopicGenerator**: This is type of class that has a `generate_seed(slide_nr)` function, which generates a seed for the given slide number, which tends to be based on the topic of the presentation (as entered by the user). This slide `seed` will then be given to a Slide Generator as an inspiration point for the content of the slide. There are several types of topic generators, such as a slide topic generator that just returns the presentation topic, one that gives synonyms and one that makes little side tracks using related concepts on `ConceptNet`
-
-- `presentation_context`: This is an object that is created by the Presentation Schema, containing information about
-the topic and presenter of the presentation, the used content and the `seed` for the current slide
-
-### Custom Text Template Language: `text_generator`
-
-We wrote our own custom templated text generation language to easily generate texts. They're mostly based on Python's `str.format` and Tracery, but come with some extra functionalities (see also `language_util`)
-
-The template files themselves are stored in `/data/text-templates/*`
-
-#### TemplatedTextGenerator
-
-On construction, this object is given the name of a file that contains a text template on a new line, usually in a `.txt` file. Similar to the build-in `str.format` function, these text templates can contain named variables between curly brackets `{variable_name}`. Usually, the `presentation_context` dictionary is used as an argument. This means that in these text generators `{seed}` will be the variable containing the slide topic seed. This dictionary can also be extended before generating the text, such that more, custom variables are also possible.
-
-A difference is that our custom language also provides some functions that can be easily called within the template. If a function returns None, or the variable is not present in the given dictionary, the text generator will keep retrying to generate until no templates are left. An example of such a function is `{seed.plural.title}`, which will pluralise the seed, and then apply title casing.
-
-Listed below are some possible functions in our text generation language. The up-to-date list of function can be found in `text_generator.py`.
-
-| Function               | Description               |
-| ---------------------- | ------------------------- |
-| `title` | Converts the string to title casing |
-| `lower` | Converts the string to lower casing |
-| `upper` | Converts the string to upper casing |
-| `dashes` | Replaces the spaces of the string with dashes |
-| `a` | Adds the "a" article, or "an" if the word starts with a vowel (except *u*) |
-| `ing` | Converts a verb to the present participle |
-| `plural` | Converts a noun to plural |
-| `singular` | Converts a noun to singular |
-| `synonym` | Converts the noun to a random synonym |
-| `2_to_1_pronouns` | Changes 2nd person pronouns to 1st person pronouns in a sentence (e.g. you->my) |
-| `wikihow_action` | Retrieves a random action based on the string using Wikihow |
-| `get_last_noun_and_article` | Extracts the last noun from a sentence |
-| `conceptnet_location` | Retrieves a location related to the string using Conceptnet |
-| `is_noun` | Checks if the string can be a noun |
-| `is_verb` | Checks if the string can be a verb |
+See the [wiki](https://github.com/korymath/talk-generator/wiki/Program-structure) to know more about the inner implementation.
 
 
-#### TraceryTextGenerator
-Allows the same things `TemplatedTextGenerator` does, but using a [Tracery grammar](https://github.com/aparrish/pytracery). This means that the file is saved as a JSON file, and that local variables can be declared, for easily creating a large possibility space of possible texts.
+## Tests
+There are a lot of tests present in this repository. These `.py` files are prefixed with `test_`, and use the `unittest` module.
+They can easily be run all together when using PyCharm by right clicking on `talk-generator` and pressing *Run 'Unittests in talk-generator'*
 
+```sh
+. venv/bin/activate
+pytest --cov=talkgenerator tests/
+```
 
-### Utilities
+Test coverage is automatically handled by `codecov`. Tests are automatically run with CircleCI based on the `.yml` file in the `.circleci` directory.
 
-- `random_util`: This module helps with dealing better with randomness. It has a function to deal with picking from a list with weighted elements, as well as `choice_optional(list)`, which is like `random.choice`, except it returns None if the list is empty
-
-- `generator_util`: This module provides lots of utilities for creating generators. Since some content generators return (image or textual) lists, there are functions for converting them to normal single output generators. There are also methods for converting methods that only take a string `seed` as input to one that takes a `presentation_context`, namely `create_seeded_generator(generator)`. There are also more exotic generators such as weighted generators and walking generators.
-
-- `language_util`: Contains many language functionalities, such as converting to singular/plural, changing tense, checking part of speech, getting synonyms etc.
-
-- `scraper_util`: Provides some common functionalities for the page scrapers.
-
-- `os_util`: Contains some methods dealing with the operating system, such as saving and checking files.
-
-- `cache_util`: Contains a hashable dictionary class, which is necessary for caching certain functions.
-
-### Content generators
-
-There are a lot of different services providing content to our generator. Usually, the content scrapers below are used in `run.py` to craft a real concent generator used in the slides generators.
-
-- `chart.py`: Generates random powerpoint charts using text templates and random math functions.
-- `conceptnet.py`: Explores the graph of related concepts to certain seeds
-- `goodreads.py`: Used for retrieving quotes related to a seed
-- `google_images.py`: Used for retrieving relevant images for certain seeds (e.g. as background image)
-- `inspirobot.py`: Used for retrieving nonsensical quote images
-- `reddit.py`: Used for scraping reddit images, as there are many interesting subreddits to scrape images from.
-- `shitpostbot.py`: Used for retrieving "interesting"/weird images
-- `wikihow.py`: Used for finding related actions to a certain seed.
-
-#### Prohibited images
-Sometimes, certain content providers return a default image when no image is found for that url (usually when an image got deleted). These types of images are stored in our repository in `data/images/prohibited/*`. This folder gets automatically scanned, and all images in the generated presentation are compared to images from this folder, to ensure that none gets added to the final presentation.
 
 ## Credits
 
