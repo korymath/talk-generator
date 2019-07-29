@@ -122,8 +122,8 @@ class TwoColumnImageSlideGenerator(SlideGenerator):
     @classmethod
     def of_images_and_tupled_captions(cls, title_generator, captions_generator, image_1_generator,
                                       image_2_generator, original_image_size=True):
-        return cls(ImagesAndTupledCaptions(title_generator, captions_generator, image_1_generator,
-                                           image_2_generator, original_image_size))
+        return cls(TwoImagesAndTupledCaptions(title_generator, captions_generator, image_1_generator,
+                                              image_2_generator, original_image_size))
 
     @property
     def slide_type(self):
@@ -144,7 +144,7 @@ class TwoTupledCaptionedImagesGenerator(object):
             generated_tuple_2[0]), generated_tuple_2[1], self._original_image_size
 
 
-class ImagesAndTupledCaptions(object):
+class TwoImagesAndTupledCaptions(object):
     def __init__(self, title_generator, captions_generator, image_1_generator, image_2_generator, original_image_size):
         self._title_generator = title_generator
         self._captions_generator = captions_generator
