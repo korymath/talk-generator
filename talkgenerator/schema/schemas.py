@@ -344,7 +344,35 @@ about_me_location_or_country_tuple_generator = CombinedGenerator(
 
 reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funnycharts", "charts")
 
+
 # chart_generator = create_seeded_generator(charts.generate_test_chart)
+
+
+# Conclusions
+def _conclusion_two_enumeration_generator():
+    return 'Conclusion 1', 'Conclusion 2'
+
+
+def _conclusion_three_enumeration_generator():
+    return 'Conclusion 1', 'Conclusion 2', 'Conclusion 3'
+
+
+def _empty_string_two_tuple_generator():
+    return '', ''
+
+
+def _empty_string_three_tuple_generator():
+    return '', '', ''
+
+
+conclusion_two_text_tuple_generator = CombinedGenerator(
+    (1, _conclusion_two_enumeration_generator),
+    (1, _empty_string_two_tuple_generator),
+)
+conclusion_three_text_tuple_generator = CombinedGenerator(
+    (1, _conclusion_three_enumeration_generator),
+    (1, _empty_string_three_tuple_generator),
+)
 
 # == SCHEMAS ==
 
