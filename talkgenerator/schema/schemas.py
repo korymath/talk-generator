@@ -53,23 +53,16 @@ default_or_no_title_generator = CombinedGenerator(
     (1, NoneGenerator())
 )
 
-anticipation_title_generator = create_templated_text_generator(
-    'data/text-templates/anticipation_title.txt')
+anticipation_title_generator = create_templated_text_generator('data/text-templates/anticipation_title.txt')
 
-conclusion_title_generator = create_templated_text_generator(
-    "data/text-templates/conclusion_title.txt")
-inspiration_title_generator = create_templated_text_generator(
-    "data/text-templates/inspiration.txt")
-anecdote_title_generator = create_templated_text_generator(
-    "data/text-templates/anecdote_title.txt")
-history_title_generator = create_templated_text_generator(
-    "data/text-templates/history.txt")
-history_person_title_generator = create_templated_text_generator(
-    "data/text-templates/history_person.txt")
+conclusion_title_generator = create_templated_text_generator("data/text-templates/conclusion_title.txt")
+inspiration_title_generator = create_templated_text_generator("data/text-templates/inspiration.txt")
+anecdote_title_generator = create_templated_text_generator("data/text-templates/anecdote_title.txt")
+history_title_generator = create_templated_text_generator("data/text-templates/history.txt")
+history_person_title_generator = create_templated_text_generator("data/text-templates/history_person.txt")
 history_and_history_person_title_generator = CombinedGenerator(
     (4, history_title_generator), (6, history_person_title_generator))
-about_me_title_generator = create_templated_text_generator(
-    "data/text-templates/about_me_title.txt")
+about_me_title_generator = create_templated_text_generator("data/text-templates/about_me_title.txt")
 
 # NAMES
 historical_name_generator = create_tracery_generator("data/text-templates/name.json", "title_name")
@@ -117,10 +110,9 @@ inspirobot_image_generator = inspirobot.get_random_inspirobot_image
 
 # REDDIT
 
-
-weird_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf", "wtfstockphotos", "photoshopbattles",
-                                                      "confusing_perspective", "cursedimages", "HybridAnimals",
-                                                      "EyeBleach", "natureismetal")
+weird_reddit_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf", "wtfstockphotos", "photoshopbattles",
+                                                             "confusing_perspective", "cursedimages", "HybridAnimals",
+                                                             "EyeBleach", "natureismetal")
 
 shitpostbot_image_generator = ExternalImageListGenerator(
     SeededGenerator(
@@ -131,8 +123,8 @@ shitpostbot_image_generator = ExternalImageListGenerator(
     ShitPostBotURLGenerator()
 )
 
-weird_and_shitpost_generator = CombinedGenerator(
-    (1, weird_image_generator),
+weird_punchline_image_generator = CombinedGenerator(
+    (1, weird_reddit_image_generator),
     (2, shitpostbot_image_generator)
 )
 
@@ -147,7 +139,7 @@ reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", 
 combined_gif_generator = CombinedGenerator((.5, giphy_generator), (.5, reddit_gif_generator))
 
 weird_and_shitpost_and_gif_generator = CombinedGenerator(
-    (1, weird_image_generator),
+    (1, weird_reddit_image_generator),
     (1, shitpostbot_image_generator),
     (1, combined_gif_generator)
 )
@@ -176,7 +168,7 @@ reddit_location_image_generator = create_reddit_image_generator("evilbuildings",
 
 about_me_hobby_tuple_generator = TupledGenerator(
     hobby_description_generator,
-    weird_and_shitpost_generator
+    weird_punchline_image_generator
 )
 about_me_book_tuple_generator = TupledGenerator(
     book_description_generator,
@@ -214,8 +206,6 @@ about_me_location_or_country_tuple_generator = CombinedGenerator(
 # Charts
 
 reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funnycharts", "charts")
-
-# chart_generator = create_seeded_generator(charts.generate_test_chart)
 
 
 # ==============================
@@ -405,8 +395,8 @@ captioned_images_slide_generators = [
         slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             double_image_captions_generator,
-            weird_image_generator,
-            weird_and_shitpost_generator),
+            weird_reddit_image_generator,
+            weird_punchline_image_generator),
         weight_function=ConstantWeightFunction(2),
         tags=["multi_caption", "two_captions", "reddit"],
         name="Two Captions Weird Reddit"),
@@ -429,7 +419,7 @@ captioned_images_slide_generators = [
             triple_image_captions_generator,
             weird_and_shitpost_and_gif_generator,
             weird_and_shitpost_and_gif_generator,
-            weird_and_shitpost_generator),
+            weird_punchline_image_generator),
         weight_function=ConstantWeightFunction(1),
         allowed_repeated_elements=4,
         tags=["multi_caption", "three_captions", "reddit"],
@@ -499,7 +489,7 @@ conclusion_slide_generators = [
             conclusion_title_generator,
             conclusion_two_captions_tuple_generator,
             generate_google_image,
-            weird_image_generator,
+            weird_reddit_image_generator,
         ),
         weight_function=PeakedWeight((-1,), 10000, 0),
         allowed_repeated_elements=10,
@@ -511,7 +501,7 @@ conclusion_slide_generators = [
             conclusion_title_generator,
             conclusion_three_captions_tuple_generator,
             generate_google_image,
-            weird_image_generator,
+            weird_reddit_image_generator,
             combined_gif_generator,
         ),
         weight_function=PeakedWeight((-1,), 8000, 0),
@@ -542,6 +532,11 @@ default_max_allowed_tags = {
     "statement": 0.2,
     "chart": 0.3
 }
+
+# ==================================
+# =====  PRESENTATION SCHEMAS  =====
+# ==================================
+
 
 # This object holds all the information about how to generate the presentation
 presentation_schema = PresentationSchema(
