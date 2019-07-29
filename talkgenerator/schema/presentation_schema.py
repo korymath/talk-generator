@@ -101,8 +101,6 @@ class PresentationSchema:
     def _generate_slide_deck(self, slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
                              used_tags):
         for slide_nr in range(num_slides):
-            # TODO Parallellise, make sure to solve race condition used_elements, and pass slide_nr as argument & back
-
             # Generate the slide
             slide_results = self.generate_slide(
                 presentation_context=create_slide_presentation_context(main_presentation_context,
@@ -173,7 +171,6 @@ class PresentationSchema:
                                            num_slides=num_slides,
                                            used_elements=used_elements,
                                            prohibited_generators=prohibited_generators)
-                # TODO: Remove slide from presentation if there was a slide generated
 
             slide, generated_elements = slide_result
             end_time = time.time()

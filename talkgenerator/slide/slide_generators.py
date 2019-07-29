@@ -27,12 +27,6 @@ class SlideGenerator(metaclass=ABCMeta):
         if is_different_enough(generated, used):
             return self.slide_type(*generated), generated
 
-    def generate_ppt_slide(self, presentation_context, used):
-        # Temporary function: TODO remove me
-        result = self.generate_slide(presentation_context, used)
-        if result:
-            return result[0].create_powerpoint_slide(presentation_context["presentation"]), result[1]
-
 
 class TitleSlideGenerator(SlideGenerator):
     def __init__(self, slide_content_generator):
