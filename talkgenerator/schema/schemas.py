@@ -159,6 +159,25 @@ generate_google_image_from_word = FromListGenerator(InvalidImagesRemoverGenerato
 
 generate_unsplash_image = ExternalImageListGenerator(SeededGenerator(unsplash.search_photos_return_urls),
                                                      UnsplashURLGenerator(), check_image_validness=False)
+generate_unsplash_image_from_word = ExternalImageListGenerator(unsplash.search_photos_return_urls,
+                                                               UnsplashURLGenerator(), check_image_validness=False)
+
+normal_image_generator = CombinedGenerator(
+    (100, generate_unsplash_image),
+    (2, generate_google_image)
+)
+
+normal_image_generator_from_word = CombinedGenerator(
+    (100, generate_unsplash_image_from_word),
+    (2, generate_google_image_from_word)
+)
+
+normal_or_weird_image_generator = CombinedGenerator(
+    (1, normal_image_generator),
+    (1, weird_punchline_image_generator)
+)
+
+
 
 # OLD/VINTAGE
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
@@ -191,7 +210,7 @@ about_me_job_tuple_generator = MappedGenerator(
             job_generator,
             str.title
         ),
-        generate_google_image_from_word
+        normal_image_generator_from_word
     ),
     JobPrefixApplier()
 )
@@ -199,7 +218,7 @@ about_me_job_tuple_generator = MappedGenerator(
 about_me_country_tuple_generator = MappedGenerator(
     InspiredTupleGenerator(
         country_generator,
-        generate_google_image_from_word
+        normal_image_generator_from_word
     ),
     CountryPrefixApplier()
 )
@@ -329,14 +348,20 @@ single_image_slide_generators = [
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
             NoneGenerator(),
-            generate_full_screen_google_image),
+            CombinedGenerator(
+                (1, normal_image_generator),
+                (1, generate_wide_google_image)
+            )),
         tags=["full_image", "google_images"],
         name="Full Screen Google Images"),
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
             default_slide_title_generator,
-            generate_wide_google_image),
+            CombinedGenerator(
+                (1, normal_image_generator),
+                (1, generate_wide_google_image)
+            )),
         tags=["full_image", "google_images"],
         name="Wide Google Images")
 ]
@@ -389,7 +414,7 @@ captioned_images_slide_generators = [
         slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             double_image_captions_generator,
-            combined_gif_generator,
+            normal_or_weird_image_generator,
             combined_gif_generator),
         weight_function=ConstantWeightFunction(2),
         tags=["multi_caption", "two_captions", "gif"],
@@ -422,7 +447,7 @@ captioned_images_slide_generators = [
         slide_generators.ThreeColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             triple_image_captions_generator,
-            weird_punchline_image_generator,
+            normal_or_weird_image_generator,
             weird_punchline_image_generator,
             weird_punchline_static_image_generator),
         weight_function=ConstantWeightFunction(1),
@@ -493,7 +518,7 @@ conclusion_slide_generators = [
         slide_generators.TwoImagesAndTupledCaptions(
             conclusion_title_generator,
             conclusion_two_captions_tuple_generator,
-            generate_google_image,
+            normal_image_generator,
             weird_reddit_image_generator,
         ),
         weight_function=PeakedWeight((-1,), 10000, 0),
@@ -505,7 +530,7 @@ conclusion_slide_generators = [
         slide_generators.ThreeImagesAndTupledCaptions(
             conclusion_title_generator,
             conclusion_three_captions_tuple_generator,
-            generate_google_image,
+            normal_image_generator,
             weird_reddit_image_generator,
             combined_gif_generator,
         ),
@@ -581,15 +606,7 @@ test_schema = PresentationSchema(
     # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
     seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
-    slide_generators=[
-        SlideGeneratorData(
-            slide_generators.FullImageSlideGenerator.of(
-                default_slide_title_generator,
-                generate_unsplash_image),
-            tags=["full_image", "unsplash"],
-            allowed_repeated_elements=10,
-            name="Unsplash Image")
-    ],
+    slide_generators=single_image_slide_generators,
     ignore_weights=True
 )
 
