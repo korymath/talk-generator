@@ -29,6 +29,7 @@ from talkgenerator.schema.slide_generator_data import SlideGeneratorData
 from talkgenerator.schema.slide_generator_data import ConstantWeightFunction
 from talkgenerator.schema.slide_generator_data import PeakedWeight
 
+
 # = TEXT GENERATORS=
 
 def createTemplatedTextGenerator(filename):
@@ -347,16 +348,18 @@ reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funny
 
 # == SCHEMAS ==
 
-all_slide_generators = [
-    # TITLE
+# TITLE SLIDE
+title_slide_generators = [
     SlideGeneratorData(
         slide_generators.TitleSlideGenerator.of(talk_title_generator, talk_subtitle_generator),
         allowed_repeated_elements=3,
         weight_function=PeakedWeight((0,), 100000, 0),
         tags=["title"],
-        name="Title slide"),
+        name="Title slide")
+]
 
-    # ABOUT ME
+# ABOUT ME
+about_me_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_three_column_images_slide_tuple(
         slide_generators.ThreeColumnImageSlideGenerator.of_tupled_captioned_images(
@@ -404,9 +407,10 @@ all_slide_generators = [
         PeakedWeight((1, 2), 3, 0),
         allowed_repeated_elements=0,
         tags=["about_me"],
-        name="Weird Hobby"),
+        name="Weird Hobby")]
 
-    # HISTORY
+# HISTORY
+history_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_two_column_images_slide(
         slide_generators.TwoColumnImageSlideGenerator.of(
@@ -432,9 +436,11 @@ all_slide_generators = [
         weight_function=PeakedWeight((2, 3), 12, 0.1),
         allowed_repeated_elements=0,
         tags=["history", "two_images"],
-        name="Two History Pictures"),
+        name="Two History Pictures")
+]
 
-    # FULL SCREEN RELATED IMAGES
+# FULL SCREEN RELATED IMAGES
+single_image_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
@@ -462,10 +468,11 @@ all_slide_generators = [
             default_slide_title_generator,
             generate_wide_google_image),
         tags=["full_image", "google_images"],
-        name="Wide Google Images"),
+        name="Wide Google Images")
+]
 
-    # WISE STATEMENTS
-
+# WISE STATEMENTS
+statement_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_image_slide(
         slide_generators.ImageSlideGenerator.of(
@@ -502,9 +509,11 @@ all_slide_generators = [
             background_image_generator=generate_full_screen_google_image
         ),
         tags=["anecdote"],
-        name="Anecdote"),
+        name="Anecdote")
+]
 
-    # TWO CAPTIONS VARIATIONS
+# TWO CAPTIONS VARIATIONS
+captioned_images_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_two_column_images_slide_tuple_caption(
         slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
@@ -550,9 +559,10 @@ all_slide_generators = [
         allowed_repeated_elements=4,
         tags=["multi_caption", "three_captions", "reddit"],
         name="Three Captions Weird"),
+]
 
-    # CHARTS
-
+# CHART GENERATORS
+chart_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
@@ -604,16 +614,16 @@ all_slide_generators = [
         weight_function=ConstantWeightFunction(0.5),
         tags=["curve", "chart"],
         name="Correlation Curve"),
+]
 
-    # CONCLUSION:
+# CONCLUSIONS
+conclusion_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_two_column_images_slide(
         slide_generators.TwoColumnImageSlideGenerator.of(
             conclusion_title_generator,
             StaticGenerator("Conclusion 1"),
             generate_google_image,
-            # none_generator("Conclusion 2"),
-            # generate_google_image,
             StaticGenerator("Conclusion 2"),
             weird_image_generator,
         ),
@@ -639,6 +649,10 @@ all_slide_generators = [
         tags=["conclusion"],
         name="Conclusion"),
 ]
+
+all_slide_generators = title_slide_generators + about_me_slide_generators + history_slide_generators + \
+                       single_image_slide_generators + statement_slide_generators \
+                       + captioned_images_slide_generators + chart_slide_generators + conclusion_slide_generators
 
 default_max_allowed_tags = {
     # Absolute maxima
