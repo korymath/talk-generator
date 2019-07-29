@@ -108,6 +108,16 @@ conclusion_three_captions_tuple_generator = SplitCaptionsGenerator(
 # INSPIROBOT
 inspirobot_image_generator = inspirobot.get_random_inspirobot_image
 
+# GIFS
+
+giphy_generator = BackupGenerator(
+    SeededGenerator(giphy.get_related_giphy),
+    giphy.get_random_giphy
+)
+reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", "nonononoYES")
+
+combined_gif_generator = CombinedGenerator((.5, giphy_generator), (.5, reddit_gif_generator))
+
 # REDDIT
 
 weird_reddit_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf", "wtfstockphotos", "photoshopbattles",
@@ -123,25 +133,15 @@ shitpostbot_image_generator = ExternalImageListGenerator(
     ShitPostBotURLGenerator()
 )
 
-weird_punchline_image_generator = CombinedGenerator(
+weird_punchline_static_image_generator = CombinedGenerator(
     (1, weird_reddit_image_generator),
     (2, shitpostbot_image_generator)
 )
 
-# GIFS
-
-giphy_generator = BackupGenerator(
-    SeededGenerator(giphy.get_related_giphy),
-    giphy.get_random_giphy
-)
-reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", "nonononoYES")
-
-combined_gif_generator = CombinedGenerator((.5, giphy_generator), (.5, reddit_gif_generator))
-
-weird_and_shitpost_and_gif_generator = CombinedGenerator(
-    (1, weird_reddit_image_generator),
-    (1, shitpostbot_image_generator),
-    (1, combined_gif_generator)
+weird_punchline_image_generator = CombinedGenerator(
+    (5, weird_reddit_image_generator),
+    (5, shitpostbot_image_generator),
+    (3, combined_gif_generator)
 )
 
 # GOOGLE IMAGES
@@ -206,7 +206,6 @@ about_me_location_or_country_tuple_generator = CombinedGenerator(
 # Charts
 
 reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funnycharts", "charts")
-
 
 # ==============================
 # =====  SLIDE GENERATORS  =====
@@ -406,8 +405,8 @@ captioned_images_slide_generators = [
         slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             double_image_captions_generator,
-            weird_and_shitpost_and_gif_generator,
-            weird_and_shitpost_and_gif_generator),
+            weird_punchline_image_generator,
+            weird_punchline_image_generator),
         weight_function=ConstantWeightFunction(2),
         tags=["multi_caption", "two_captions", "reddit"],
         name="Two Captions Weird"),
@@ -417,9 +416,9 @@ captioned_images_slide_generators = [
         slide_generators.ThreeColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             triple_image_captions_generator,
-            weird_and_shitpost_and_gif_generator,
-            weird_and_shitpost_and_gif_generator,
-            weird_punchline_image_generator),
+            weird_punchline_image_generator,
+            weird_punchline_image_generator,
+            weird_punchline_static_image_generator),
         weight_function=ConstantWeightFunction(1),
         allowed_repeated_elements=4,
         tags=["multi_caption", "three_captions", "reddit"],
