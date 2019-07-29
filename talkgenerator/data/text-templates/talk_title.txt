@@ -34,6 +34,7 @@ Why We All Love {seed.wikihow_action.ing.title}
 How to Let {seed.plural.title} Be Your Guide
 My Hobby: {seed.wikihow_action.ing.title}
 What Your {seed.singular.title} Says About You
+What Your {seed.singular.title} Truly Says About You
 The Happy Secret To Better {seed.plural.title}
 Never, Ever {seed.wikihow_action.title}
 Want to Be Happy? {seed.wikihow_action.title}!
@@ -54,3 +55,28 @@ How {seed.plural.title} Caused My Bankruptcy
 My Irrational Fear of {seed.plural.title}
 Why I Disallow My Children to {seed.wikihow_action.title} (and so should you)
 I Quit {seed.wikihow_action.ing.title} (and so should you)
+From {seed.title} to {seed.conceptnet_related.title}: {seed.wikihow_action.ing.title}
+How to {seed.wikihow_action.ing} Most Effectively
+We. Need. More. {seed.plural.title}.
+Help, I Keep Having To {seed.wikihow_action.ing.title}
+Why People Call Me A "{seed.title}"
+Why I Joined a {seed.title} Cult and Why You Should Too
+{seed.wikihow_action.ing.title}: Amazing Delight or Sign of Apocalypse?
+Putting {seed.plural.title} On The Blockchain
+Help, My Boyfriend Is Obsessed With {seed.plural.title}
+The Art of {seed.wikihow_action.ing.title}
+{seed.title.first_letter}... {seed.first_letter}... {seed.plural}?
+How to Fail Miserably at {seed.wikihow_action.ing.title}
+How I {seed.wikihow_action.ing.title}: Confessions of a {seed.title}
+Despite what you've heard, stupid {seed.plural} exists
+How {seed.plural.title} Can Change the World
+How {seed.plural} can save humanity and why we should legalize it everywhere now.
+{seed.title}: The Power of {seed.wikihow_action.ing.title}
+How {seed.lower} might save your life
+How to subtly put "{seed.conceptnet_related}" in every sentence
+99 problems but {seed.a} ain't one.
+How to {seed.wikihow_action.lower} (without getting fired)
+Sci-fi stories that imagine {seed.wikihow_action.ing.lower}
+I'm a {seed.title} AND a U.S. Marine: ASK ME ANYTHING!
+{seed.wikihow_action.ing.title} in 142 easy steps
+How to look like you're working while {seed.wikihow_action.ing.lower}
