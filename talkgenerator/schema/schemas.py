@@ -2,7 +2,8 @@ import random
 
 from talkgenerator.schema.content_generator_structures import RedditImageGenerator, ShitPostBotURLGenerator, \
     GoodReadsQuoteGenerator, CountryPrefixApplier, JobPrefixApplier, create_tracery_generator, \
-    create_templated_text_generator, create_reddit_image_generator, SplitCaptionsGenerator
+    create_templated_text_generator, create_reddit_image_generator, SplitCaptionsGenerator, \
+    generate_wikihow_bold_statement
 from talkgenerator.util import os_util
 from talkgenerator.sources import shitpostbot
 from talkgenerator.sources import wikihow
@@ -31,6 +32,8 @@ from talkgenerator.schema.slide_generator_data import PeakedWeight
 # ===============================
 # =====  CONTENT GENERATORS =====
 # ===============================
+
+# === TEXT GENERATORS ===
 
 # TITLES
 talk_title_generator = create_templated_text_generator("data/text-templates/talk_title.txt")
@@ -87,6 +90,27 @@ anecdote_prompt_generator = create_templated_text_generator(
 
 # QUOTES
 goodreads_quote_generator = GoodReadsQuoteGenerator(250)
+
+# DOUBLE CAPTIONS
+
+_double_image_captions_generator = create_templated_text_generator("data/text-templates/double_captions.txt")
+_triple_image_captions_generator = create_templated_text_generator("data/text-templates/triple_captions.txt")
+_historic_double_captions_generator = create_templated_text_generator(
+    "data/text-templates/historic_double_captions.txt")
+
+double_image_captions_generator = SplitCaptionsGenerator(_double_image_captions_generator)
+triple_image_captions_generator = SplitCaptionsGenerator(_triple_image_captions_generator)
+historic_double_captions_generator = SplitCaptionsGenerator(_historic_double_captions_generator)
+
+# Conclusions
+_conclusions_tuple_grammar = "data/text-templates/conclusion_tuple.json"
+conclusion_two_captions_tuple_generator = SplitCaptionsGenerator(
+    create_tracery_generator(_conclusions_tuple_grammar, "two_conclusions"))
+
+conclusion_three_captions_tuple_generator = SplitCaptionsGenerator(
+    create_tracery_generator(_conclusions_tuple_grammar, "three_conclusions"))
+
+# === IMAGE GENERATORS ===
 
 # INSPIROBOT
 inspirobot_image_generator = inspirobot.get_random_inspirobot_image
@@ -159,34 +183,6 @@ reddit_book_cover_generator = create_reddit_image_generator("BookCovers", "fakeb
 reddit_location_image_generator = create_reddit_image_generator("evilbuildings", "itookapicture", "SkyPorn",
                                                                 "EarthPorn")
 
-# BOLD_STATEMENT
-bold_statement_templated_file = os_util.to_actual_file('data/text-templates/bold_statements.txt')
-bold_statement_templated_generator = create_templated_text_generator(bold_statement_templated_file)
-
-
-def generate_wikihow_bold_statement(presentation_context):
-    seed = presentation_context["seed"]
-    template_values = presentation_context
-    related_actions = wikihow.get_related_wikihow_actions(seed)
-    if related_actions:
-        action = random.choice(related_actions)
-        template_values.update({'action': action.title(),
-                                'seed': seed})
-
-    return bold_statement_templated_generator(template_values)
-
-
-# DOUBLE CAPTIONS
-
-_double_image_captions_generator = create_templated_text_generator("data/text-templates/double_captions.txt")
-_triple_image_captions_generator = create_templated_text_generator("data/text-templates/triple_captions.txt")
-_historic_double_captions_generator = create_templated_text_generator(
-    "data/text-templates/historic_double_captions.txt")
-
-double_image_captions_generator = SplitCaptionsGenerator(_double_image_captions_generator)
-triple_image_captions_generator = SplitCaptionsGenerator(_triple_image_captions_generator)
-historic_double_captions_generator = SplitCaptionsGenerator(_historic_double_captions_generator)
-
 # TUPLED ABOUT ME
 
 about_me_hobby_tuple_generator = TupledGenerator(
@@ -232,14 +228,6 @@ reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funny
 
 # chart_generator = create_seeded_generator(charts.generate_test_chart)
 
-
-# Conclusions
-_conclusions_tuple_grammar = "data/text-templates/conclusion_tuple.json"
-conclusion_two_captions_tuple_generator = SplitCaptionsGenerator(
-    create_tracery_generator(_conclusions_tuple_grammar, "two_conclusions"))
-
-conclusion_three_captions_tuple_generator = SplitCaptionsGenerator(
-    create_tracery_generator(_conclusions_tuple_grammar, "three_conclusions"))
 
 # ==============================
 # =====  SLIDE GENERATORS  =====

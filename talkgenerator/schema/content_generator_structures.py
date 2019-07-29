@@ -8,7 +8,7 @@ from talkgenerator.util.generator_util import SeededGenerator, BackupGenerator
 from talkgenerator.util.generator_util import ExternalImageListGenerator
 from talkgenerator.util.generator_util import FromListGenerator
 
-from talkgenerator.sources import goodreads, text_generator, reddit
+from talkgenerator.sources import goodreads, text_generator, reddit, wikihow
 
 
 # = TEXT GENERATORS=
@@ -136,3 +136,20 @@ class SplitCaptionsGenerator(object):
         line = self._generator(presentation_context)
         parts = line.split("|")
         return parts
+
+# BOLD STATEMENT
+
+bold_statement_templated_file = os_util.to_actual_file('data/text-templates/bold_statements.txt')
+bold_statement_templated_generator = create_templated_text_generator(bold_statement_templated_file)
+
+
+def generate_wikihow_bold_statement(presentation_context):
+    seed = presentation_context["seed"]
+    template_values = presentation_context
+    related_actions = wikihow.get_related_wikihow_actions(seed)
+    if related_actions:
+        action = random.choice(related_actions)
+        template_values.update({'action': action.title(),
+                                'seed': seed})
+
+    return bold_statement_templated_generator(template_values)
