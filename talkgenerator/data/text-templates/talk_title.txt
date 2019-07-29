@@ -12,7 +12,7 @@ Why We Do What We Do To {seed.wikihow_action.title}
 This Is What Happens When You {seed.wikihow_action.title}
 {seed.plural.title} Aren't Everything. Believe Me.
 The Puzzle of {seed.plural.title}
-The {seed.plural.title} Conundrum
+The {seed.title} Conundrum
 How to Spot {seed.singular.a.title}
 What makes a good {seed.singular.lower}? Lessons from the longest study.
 The Happy Secret to Better {seed.plural.title}
@@ -29,7 +29,7 @@ The Danger of a Single {seed.singular.title}
 You are {seed.wikihow_action.ing} (and Don't Even Know It)
 Inside the Mind of {seed.singular.a.title}
 The Worst Thing about {seed.plural.title} You Never Noticed
-We need to talk about {seed.plural.title}
+We need to talk about {seed.plural.lower}
 Why We All Love {seed.wikihow_action.ing.title}
 How to Let {seed.plural.title} Be Your Guide
 My Hobby: {seed.wikihow_action.ing.title}
@@ -70,11 +70,11 @@ How to Fail Miserably at {seed.wikihow_action.ing.title}
 How I {seed.wikihow_action.ing.title}: Confessions of a {seed.title}
 Despite what you've heard, stupid {seed.plural} exists
 How {seed.plural.title} Can Change the World
-How {seed.plural} can save humanity and why we should legalize it everywhere now.
+How {seed.plural} can save humanity and why we should legalize it everywhere now
 {seed.title}: The Power of {seed.wikihow_action.ing.title}
 How {seed.lower} might save your life
 How to subtly put "{seed.conceptnet_related}" in every sentence
-99 problems but {seed.a} ain't one.
+99 problems but {seed.a} ain't one
 How to {seed.wikihow_action.lower} (without getting fired)
 Sci-fi stories that imagine {seed.wikihow_action.ing.lower}
 I'm a {seed.title} AND a U.S. Marine: ASK ME ANYTHING!
