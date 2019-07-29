@@ -84,10 +84,10 @@ def basic_search_wikihow(search_words):
 
 @lru_cache(maxsize=20)
 def advanced_search_wikihow(search_words):
-    session = get_wikihow_session()
-    if session:
+    # session = get_wikihow_session()
+    if wikihow_session:
         url = _ADVANCED_SEARCH_URL.format(search_words.replace(' ', '+'))
-        resp = session.get(url, allow_redirects=True)
+        resp = wikihow_session.get(url, allow_redirects=True)
         if "Login Required - wikiHow" in str(resp.content):
             print("WARNING: Problem logging in on Wikihow: Advanced Search disabled")
         return resp
