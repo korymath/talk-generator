@@ -344,35 +344,16 @@ about_me_location_or_country_tuple_generator = CombinedGenerator(
 
 reddit_chart_generator = create_reddit_image_generator("dataisbeautiful", "funnycharts", "charts")
 
-
 # chart_generator = create_seeded_generator(charts.generate_test_chart)
 
 
 # Conclusions
-def _conclusion_two_enumeration_generator(ignore):
-    return 'Conclusion 1', 'Conclusion 2'
+_conclusions_tuple_grammar = "data/text-templates/conclusion_tuple.json"
+conclusion_two_captions_tuple_generator = SplitCaptionsGenerator(
+    createTraceryGenerator(_conclusions_tuple_grammar, "two_conclusions"))
 
-
-def _conclusion_three_enumeration_generator(ignore):
-    return 'Conclusion 1', 'Conclusion 2', 'Conclusion 3'
-
-
-def _empty_string_two_tuple_generator(ignore):
-    return '', ''
-
-
-def _empty_string_three_tuple_generator(ignore):
-    return '', '', ''
-
-
-conclusion_two_captions_tuple_generator = CombinedGenerator(
-    (1, _conclusion_two_enumeration_generator),
-    (1, _empty_string_two_tuple_generator),
-)
-conclusion_three_captions_tuple_generator = CombinedGenerator(
-    (1, _conclusion_three_enumeration_generator),
-    (1, _empty_string_three_tuple_generator),
-)
+conclusion_three_captions_tuple_generator = SplitCaptionsGenerator(
+    createTraceryGenerator(_conclusions_tuple_grammar, "three_conclusions"))
 
 # == SCHEMAS ==
 

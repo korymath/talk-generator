@@ -1,0 +1,10 @@
+{
+  "two_conclusions": [
+    "Conclusion 1|Conclusion 2",
+    "|"
+  ],
+  "three_conclusions": [
+    "Conclusion 1|Conclusion 2|Conclusion 3",
+    "||"
+  ]
+}
