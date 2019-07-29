@@ -4,7 +4,7 @@ from talkgenerator.schema.content_generator_structures import RedditImageGenerat
     GoodReadsQuoteGenerator, CountryPrefixApplier, JobPrefixApplier, create_tracery_generator, \
     create_templated_text_generator, create_reddit_image_generator, SplitCaptionsGenerator
 from talkgenerator.util import os_util
-from talkgenerator.sources import shitpostbot
+from talkgenerator.sources import shitpostbot, conceptnet
 from talkgenerator.sources import wikihow
 from talkgenerator.sources import google_images
 from talkgenerator.sources import inspirobot
@@ -165,17 +165,13 @@ bold_statement_templated_generator = create_templated_text_generator(bold_statem
 
 
 def generate_wikihow_bold_statement(presentation_context):
-    # template_values = {
-    #     "topic": seed,
-    #     # TODO: Use datamuse or conceptnet or some other mechanism of finding a related location
-    #     'location': 'Here'
-    # }
+    seed = presentation_context["seed"]
     template_values = presentation_context
-    # TODO: Sometimes "Articles Form Wikihow" is being scraped as an action, this is a bug
-    related_actions = wikihow.get_related_wikihow_actions(presentation_context["seed"])
+    related_actions = wikihow.get_related_wikihow_actions(seed)
     if related_actions:
         action = random.choice(related_actions)
         template_values.update({'action': action.title(),
+                                'location': conceptnet.get_weighted_related_locations(seed),
                                 # TODO: Make a scraper that scrapes a step related to this action on wikihow.
                                 'step': 'Do Whatever You Like'})
 
@@ -541,8 +537,6 @@ conclusion_slide_generators = [
             conclusion_three_captions_tuple_generator,
             generate_google_image,
             weird_image_generator,
-            # TODO: Maybe add generator that generates the title of the presentation instead of conclusion 3?
-            # (links it up nicely)
             combined_gif_generator,
         ),
         weight_function=PeakedWeight((-1,), 8000, 0),

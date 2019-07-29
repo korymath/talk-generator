@@ -78,7 +78,7 @@ class PresentationSchema:
                         used_elements=used_elements,
                         prohibited_generators=self._calculate_prohibited_generators(used_tags, num_slides)),
                     slide_nrs_to_generate)
-                slide_nrs_to_generate = []  # TODO: Update to slide numbers without
+                slide_nrs_to_generate = []
                 for slide_result in all_slide_results:
                     if slide_result:
                         slide, generated_elements, slide_generator_data, slide_nr = slide_result
