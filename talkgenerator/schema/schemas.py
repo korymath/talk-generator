@@ -1,9 +1,5 @@
 import random
 
-from talkgenerator.schema.content_generator_structures import RedditImageGenerator, ShitPostBotURLGenerator, \
-    GoodReadsQuoteGenerator, CountryPrefixApplier, JobPrefixApplier, create_tracery_generator, \
-    create_templated_text_generator, create_reddit_image_generator, SplitCaptionsGenerator, \
-    generate_wikihow_bold_statement, generate_google_image_generator, UnsplashURLGenerator
 from talkgenerator.util import os_util
 from talkgenerator.sources import shitpostbot, unsplash
 from talkgenerator.sources import wikihow
@@ -28,6 +24,19 @@ from talkgenerator.schema.presentation_schema import PresentationSchema
 from talkgenerator.schema.slide_generator_data import SlideGeneratorData
 from talkgenerator.schema.slide_generator_data import ConstantWeightFunction
 from talkgenerator.schema.slide_generator_data import PeakedWeight
+
+from talkgenerator.schema.content_generator_structures import RedditImageGenerator
+from talkgenerator.schema.content_generator_structures import ShitPostBotURLGenerator
+from talkgenerator.schema.content_generator_structures import GoodReadsQuoteGenerator
+from talkgenerator.schema.content_generator_structures import CountryPrefixApplier
+from talkgenerator.schema.content_generator_structures import JobPrefixApplier
+from talkgenerator.schema.content_generator_structures import create_tracery_generator
+from talkgenerator.schema.content_generator_structures import create_templated_text_generator
+from talkgenerator.schema.content_generator_structures import create_reddit_image_generator
+from talkgenerator.schema.content_generator_structures import SplitCaptionsGenerator
+from talkgenerator.schema.content_generator_structures import generate_wikihow_bold_statement
+from talkgenerator.schema.content_generator_structures import generate_google_image_generator
+from talkgenerator.schema.content_generator_structures import UnsplashURLGenerator
 
 # ===============================
 # =====  CONTENT GENERATORS =====
