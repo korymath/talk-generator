@@ -28,18 +28,19 @@ class PresentationSchema:
         self._max_allowed_tags = max_allowed_tags
         self._ignore_weights = ignore_weights
 
-    def generate_presentation(self, topic, num_slides, presenter=None, title=None, parallel=False):
+    def generate_presentation(self, topics, num_slides, presenter=None, title=None, parallel=False):
         """Generate a presentation about a certain topic with a certain number of slides"""
         # Create new presentation
         presentation = self._powerpoint_creator()
         slide_deck = SlideDeck(num_slides)
 
         # Create the topic-for-each-slide generator
-        seed_generator = self._seed_generator(topic, num_slides)
+        seed_generator = self._seed_generator(topics, num_slides)
 
         # Create main presentation_context
         main_presentation_context = {
-            "topic": topic,
+            "topic": topics[0],
+            "topics": topics,
             "presenter": presenter,
             "title": title,
         }

@@ -16,11 +16,11 @@ class TestTalkGenerator(unittest.TestCase):
     def test_google_images(self):
         self.assertTrue(bool(schemas.generate_full_screen_google_image({"seed": "cat"})))
 
-    def test_main(self):
+    def test_serial(self):
         args = mock.Mock()
         args.configure_mock(topic='cat')
         args.configure_mock(num_slides=3)
-        args.configure_mock(schema='test')
+        args.configure_mock(schema='default')
         args.configure_mock(parallel=False)
         args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
         args.configure_mock(open_ppt=False)
@@ -33,7 +33,20 @@ class TestTalkGenerator(unittest.TestCase):
         args = mock.Mock()
         args.configure_mock(topic='dog')
         args.configure_mock(num_slides=3)
-        args.configure_mock(schema='test')
+        args.configure_mock(schema='default')
+        args.configure_mock(parallel=True)
+        args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
+        args.configure_mock(open_ppt=False)
+        args.configure_mock(save_ppt=True)
+        ppt, slide_deck = utils.generate_talk(args)
+
+        self.assertEqual(3, len(ppt.slides))
+
+    def test_multiple_topics(self):
+        args = mock.Mock()
+        args.configure_mock(topic='cat, dog, bread, house')
+        args.configure_mock(num_slides=6)
+        args.configure_mock(schema='default')
         args.configure_mock(parallel=True)
         args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
         args.configure_mock(open_ppt=False)

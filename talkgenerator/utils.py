@@ -36,9 +36,11 @@ def generate_talk(args):
     if not args.title:
         args.title = schemas.talk_title_generator({'seed': args.topic})
 
+    args.topics = [topic.strip() for topic in args.topic.split(',')]
+
     # Generate the presentation object
     presentation, slide_deck = schema.generate_presentation(
-        topic=args.topic,
+        topics=args.topics,
         num_slides=args.num_slides,
         presenter=args.presenter,
         title=args.title,
