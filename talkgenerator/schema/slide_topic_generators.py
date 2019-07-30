@@ -49,6 +49,9 @@ class SideTrackingTopicGenerator:
     def generate_seed(self, slide_nr):
         return self._seeds[slide_nr]
 
+    def all_seeds(self):
+        return self._seeds
+
 
 def fill_in_blank_topics_with_related(seeds, distance=1):
     for i in range(len(seeds)):
@@ -69,13 +72,15 @@ def _fill_in(seeds, i, distance=1):
             neighbour = seeds[i - distance]
 
             try:
-                related = conceptnet.get_weighted_related_words(neighbour, 200)
+                related = conceptnet.get_weighted_related_words(neighbour, 50)
             except Exception as e:
                 print('Conceptnet related words failing: {}'.format(e))
                 related = []
 
             filtered_related = [word for word in related if
-                                not normalise_seed(word[1]) in seeds and len(normalise_seed(word[1])) > 2]
+                                not normalise_seed(word[1]) in seeds
+                                and len(normalise_seed(word[1])) > 2
+                                ]
 
             if len(filtered_related) > 0:
                 seeds[i] = normalise_seed(
@@ -89,9 +94,13 @@ def _fill_in(seeds, i, distance=1):
                 _fill_in(seeds, i, distance + 1)
 
 
+
 def normalise_seed(seed):
     normalised = conceptnet.normalise(seed).lower()
     normalised = re.sub(r'[^a-z\s\b _-]+', '', normalised)
+    if ' ' in normalised:
+        last_word = normalised.split(' ')[-1]
+        normalised = last_word
     return normalised
 
 
