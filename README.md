@@ -9,7 +9,7 @@ Software to automatically generate talks, presentations for PowerPoint and/or Ke
 
 ## Demo
 
-For a demo of this generator, please visit [the online demo page](https://shaun.lol/), a platform created by Shaun Farrugia to give easier access to this talk generator.
+For a demo of this generator, please visit [talkgenerator.com](http://talkgenerator.com/), a platform created by Shaun Farrugia to give easier access to this talk generator.
 
 ### Example
 
