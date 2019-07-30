@@ -53,7 +53,7 @@ class TestTalkGenerator(unittest.TestCase):
         presentation = powerpoint_slide_creator.create_new_powerpoint()
 
         for slide_generator in schemas.all_slide_generators:
-            print("Testing", slide_generator)
+            print("Testing Slide Generator", slide_generator)
             slide, generated_elements = slide_generator.generate(basic_presentation_context, [])
             slide.create_powerpoint_slide(presentation)
 
