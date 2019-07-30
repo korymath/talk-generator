@@ -208,13 +208,11 @@ def _generate_conceptnet_data(presentation_context, title_generator, conceptnet_
     conceptnet_relations = conceptnet_function(seed)
 
     if conceptnet_relations:
-        print("conceptnet:", conceptnet_relations)
         conceptnet_relations = conceptnet.remove_duplicates(conceptnet_relations)
         conceptnet_relations = conceptnet.remove_containing(conceptnet_relations, seed)
         random.shuffle(conceptnet_relations)
 
         conceptnet_relations = conceptnet_relations[0:random.randint(2, 5)]
-        print("conceptnet after", conceptnet_relations)
         categories = [location[1] for location in conceptnet_relations]
         values = [float(location[0]) ** 2 for location in conceptnet_relations]
 

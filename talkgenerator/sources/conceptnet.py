@@ -85,7 +85,7 @@ def _get_data(word, arguments=None):
         result = None
     end = time.perf_counter()
     print("Took {} seconds to poll Conceptnet for '{}'".format(
-        str(end-start), word))
+        str(end - start), word))
     return result
 
 
@@ -135,6 +135,7 @@ def get_weighted_properties(word):
 def get_weighted_antonyms(word):
     edges = _get_edges(word)
     return _get_from_relation(word, edges, "Antonym")
+
 
 # Weighted
 weighted_location_generator = generator_util.WeightedGenerator(get_weighted_related_locations)
