@@ -33,7 +33,7 @@ def generate_talk(args):
         args.presenter = schemas.full_name_generator()
 
     # Generate random talk title
-    if not args.title:
+    if not args.title or args.title is None:
         args.title = schemas.talk_title_generator({'seed': args.topic})
 
     args.topics = [topic.strip() for topic in args.topic.split(',')]
