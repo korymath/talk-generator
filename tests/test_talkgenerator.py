@@ -3,6 +3,7 @@ from unittest import mock
 import random
 
 from talkgenerator import utils
+from talkgenerator.slide import powerpoint_slide_creator
 from talkgenerator.util import os_util
 from talkgenerator.schema import schemas
 
@@ -40,6 +41,21 @@ class TestTalkGenerator(unittest.TestCase):
         ppt, slide_deck = utils.generate_talk(args)
 
         self.assertEqual(3, len(ppt.slides))
+
+    def test_all_slide_generators(self):
+        basic_presentation_context = {
+            'topic': 'dog',
+            'seed': 'cat',
+            'presenter': 'An O. Nymous',
+            'title': 'Mock title'
+        }
+
+        presentation = powerpoint_slide_creator.create_new_powerpoint()
+
+        for slide_generator in schemas.all_slide_generators:
+            print("Testing", slide_generator)
+            slide, generated_elements = slide_generator.generate(basic_presentation_context, [])
+            slide.create_powerpoint_slide(presentation)
 
 
 if __name__ == '__main__':

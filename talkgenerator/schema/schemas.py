@@ -533,7 +533,7 @@ conclusion_slide_generators = [
         weight_function=PeakedWeight((-1,), 10000, 0),
         allowed_repeated_elements=10,
         tags=["conclusion"],
-        name="Conclusion"),
+        name="2 Conclusions"),
     SlideGeneratorData(
         # slide_templates.generate_three_column_images_slide(
         slide_generators.ThreeImagesAndTupledCaptions(
@@ -546,7 +546,7 @@ conclusion_slide_generators = [
         weight_function=PeakedWeight((-1,), 8000, 0),
         allowed_repeated_elements=10,
         tags=["conclusion"],
-        name="Conclusion")
+        name="3 Conclusions")
 ]
 
 all_slide_generators = title_slide_generators + about_me_slide_generators + history_slide_generators + \
