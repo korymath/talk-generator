@@ -1,4 +1,3 @@
-import os
 from talkgenerator import utils
 from talkgenerator import runtime_check
 
