@@ -21,7 +21,8 @@ For a demo of this generator, please visit [the online demo page](https://shaun.
 # Run the setup script from the command line
 source setup.sh
 # Optionally install using setup.py
-# python setup.py install
+# rm -rf talkgenerator.egg-info
+# python setup.py clean --all install clean --all
 ```
 
 
