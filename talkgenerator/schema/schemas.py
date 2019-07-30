@@ -172,13 +172,13 @@ generate_unsplash_image_from_word = ExternalImageListGenerator(unsplash.search_p
                                                                UnsplashURLGenerator(), check_image_validness=False)
 
 normal_image_generator = CombinedGenerator(
-    (100, generate_unsplash_image),
-    (2, generate_google_image)
+    (1000, generate_unsplash_image),
+    (1, generate_google_image)
 )
 
 normal_image_generator_from_word = CombinedGenerator(
-    (100, generate_unsplash_image_from_word),
-    (2, generate_google_image_from_word)
+    (1000, generate_unsplash_image_from_word),
+    (1, generate_google_image_from_word)
 )
 
 normal_or_weird_image_generator = CombinedGenerator(
