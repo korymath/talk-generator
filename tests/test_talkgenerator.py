@@ -1,6 +1,6 @@
+import random
 import unittest
 from unittest import mock
-import random
 
 from talkgenerator import utils
 from talkgenerator.util import os_util
