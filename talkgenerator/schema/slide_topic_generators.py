@@ -14,22 +14,26 @@ from talkgenerator.util import language_util, random_util
 class SideTrackingTopicGenerator:
     """ This generator will make small side tracks around topics, but keeps returning every X slides"""
 
-    def __init__(self, topic, num_slides, topic_return_period_range=range(3, 6)):
-        self._topic = topic
+    def __init__(self, topics, num_slides, topic_return_period_range=range(3, 6)):
+        self._topics = topics
         self._num_slides = num_slides
 
         seeds = [None] * num_slides
 
         # Make it begin and end with the topic
         if num_slides > 0:
-            seeds[0] = topic
-            seeds[-1] = topic
+            seeds[0] = topics[0]
+            seeds[-1] = topics[-1]
 
-        # Add the returning topic
-        idx = 0
-        while idx < num_slides:
-            seeds[idx] = topic
-            idx += random.choice(topic_return_period_range)
+        # Add the returning topic if only one topic given
+        if len(topics) == 1:
+            idx = 0
+            while idx < num_slides:
+                seeds[idx] = topics[0]
+                idx += random.choice(topic_return_period_range)
+        elif len(topics) > 2:
+            topics_to_disperse = topics[1:-1]
+            _disperse(seeds, topics_to_disperse, 1, num_slides - 1)
 
         # Fill in the blanks with related topics
         previous = seeds.copy()
@@ -37,7 +41,7 @@ class SideTrackingTopicGenerator:
             fill_in_blank_topics_with_related(seeds)
             print('SideTrackingTopicGenerator concept seeds: {}'.format(seeds))
             if seeds == previous:
-                fill_in_blanks_with(seeds, topic)
+                fill_in_blanks_with(seeds, topics[0])
                 break
             previous = seeds.copy()
 
@@ -51,6 +55,16 @@ class SideTrackingTopicGenerator:
 
     def all_seeds(self):
         return self._seeds
+
+
+def _disperse(seeds, topics, min_idx, max_idx):
+    range_size = max_idx - min_idx
+    len_topics = len(topics)
+    step_size = range_size / len(topics)
+    offset = int(step_size / 2)
+    for i in range(len(topics)):
+        seeds_index = int(min_idx + step_size * i) + offset
+        seeds[seeds_index] = topics[i]
 
 
 def fill_in_blank_topics_with_related(seeds, distance=1):
@@ -92,7 +106,6 @@ def _fill_in(seeds, i, distance=1):
             # Check if still unassigned
             if seeds[i] is None:
                 _fill_in(seeds, i, distance + 1)
-
 
 
 def normalise_seed(seed):
