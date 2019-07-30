@@ -46,13 +46,16 @@ def generate_talk(args):
         title=args.title,
         parallel=args.parallel)
 
+    cleaned_topics = args.topic.replace(' ', '').replace(',', '_')
+    file_name = ''.join(e for e in cleaned_topics if e.isalnum() or e == '_')
+
     print('Slide deck structured data: {}'.format(
         slide_deck.get_structured_data()))
 
     # Save presentation
     if args.save_ppt or settings.AWS_S3_ENABLED:
         presentation_file = save_presentation_to_pptx(
-            args.output_folder, args.topic, presentation)
+            args.output_folder, file_name, presentation)
 
         # Open the presentation
         if args.open_ppt and presentation_file is not None:
@@ -61,8 +64,7 @@ def generate_talk(args):
 
         if settings.AWS_S3_ENABLED:
             from talkgenerator.util import aws_s3
-            print("Saving slides to S3 key {}".format(
-                args.topic + ".pptx"))
+            print("Saving slides to S3 key {}".format(file_name + ".pptx"))
             # if aws_s3.check_for_object(settings.BUCKET, args.topic):
             aws_s3.store_file(bucket=settings.BUCKET,
                               key=args.topic + ".pptx",
