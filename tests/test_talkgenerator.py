@@ -56,7 +56,7 @@ class TestTalkGenerator(unittest.TestCase):
         args.configure_mock(save_ppt=True)
         ppt, slide_deck = utils.generate_talk(args)
 
-        self.assertEqual(3, len(ppt.slides))
+        self.assertEqual(6, len(ppt.slides))
 
     def test_all_slide_generators(self):
         basic_presentation_context = {

@@ -10,7 +10,6 @@ class MyTestCase(unittest.TestCase):
 
     def test_no_views_in_wikihow_action(self):
         actions = wikihow.get_related_wikihow_actions("grass")
-        print(actions)
         for action in actions:
             # No line breaks allowed
             self.assertFalse("\n" in action)

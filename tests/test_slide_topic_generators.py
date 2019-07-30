@@ -19,7 +19,6 @@ class SlideTopicGeneratorsTest(unittest.TestCase):
     def test_conceptnet_sidetracking_multi_topic(self):
         generator = SideTrackingTopicGenerator(['cat', 'house', 'dog'], 6)
         seeds = generator.all_seeds()
-        print(seeds)
         self.assertTrue(seeds[0] == 'cat')
         self.assertTrue(seeds[5] == 'dog')
         self.assertTrue('house' in seeds)
