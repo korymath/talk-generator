@@ -22,18 +22,18 @@ class SideTrackingTopicGenerator:
 
         # Make it begin and end with the topic
         if num_slides > 0:
-            seeds[0] = topics[0]
-            seeds[-1] = topics[-1]
+            # End with main topic
+            seeds[-1] = topics[0]
 
-        # Add the returning topic if only one topic given
         if len(topics) == 1:
+            # Add the returning topic if only one topic given
             idx = 0
             while idx < num_slides:
                 seeds[idx] = topics[0]
                 idx += random.choice(topic_return_period_range)
-        elif len(topics) > 2:
-            topics_to_disperse = topics[1:-1]
-            _disperse(seeds, topics_to_disperse, 1, num_slides - 1)
+        else:
+            # Disperse all topics over the slides if multiple topics given
+            _disperse(seeds, topics, 0, num_slides-1)
 
         # Fill in the blanks with related topics
         previous = seeds.copy()
@@ -58,12 +58,10 @@ class SideTrackingTopicGenerator:
 
 
 def _disperse(seeds, topics, min_idx, max_idx):
-    range_size = max_idx - min_idx
-    len_topics = len(topics)
+    range_size = max_idx - min_idx + 1
     step_size = range_size / len(topics)
-    offset = int(step_size / 2)
     for i in range(len(topics)):
-        seeds_index = int(min_idx + step_size * i) + offset
+        seeds_index = int(min_idx + step_size * i)
         seeds[seeds_index] = topics[i]
 
 
