@@ -17,21 +17,20 @@ For a demo of this generator, please visit [talkgenerator.com](http://talkgenera
 
 ## Easy Install and Run
 
-Our program relies on certain APIs that require authentication in order to use it. Create a file named `.env` (don't forget the period) in your project directory. See the [wiki](https://github.com/korymath/talk-generator/wiki/Setting-Up-API-Keys) for details.
+Our program relies on certain APIs that require authentication in order to use it.
+Create a file named `.env` (don't forget the period) in your project directory, and fill this with the correct API keys as described on our [wiki page about this](https://github.com/korymath/talk-generator/wiki/Setting-Up-API-Keys).
 
 ```sh
 source setup.sh
 talkgenerator --topic 'peanuts' --num_slides 10
-# cd talkgenerator
-# python run.py --topic 'cat' --num_slides 10
 ```
 
 ### Run arguments
 
 | Argument               | Description               |
 | ---------------------- | ------------------------- |
-| `topic` | The topic of the generator. This works best if it is a common, well-known noun |
-| `num_slides` | The number of slides in the generated presentation (*default: 10*) |
+| `topic` | The topic of the generator. This works best if it is a common, well-known noun. Use comma-separated words to generate a slide deck about multiple topics |
+| `slides` | The number of slides in the generated presentation (*default: 10*) |
 | `schema` | The presentation schema to use when generating the presentation. Currently, only two modes are implemented, being `default` and `test` (for testing during development) |
 | `presenter` | The name that will be present on the first slide. Leave blank for an automatically generated name |
 | `output_folder` | The folder to output the generated presentations (*default: `./output/`*) |
