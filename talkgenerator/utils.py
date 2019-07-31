@@ -39,7 +39,6 @@ def generate_talk(args):
     if not args.title or args.title is None:
         args.title = schemas.talk_title_generator({'seed': args.topics[0]})
 
-
     # Generate the presentation object
     presentation, slide_deck = schema.generate_presentation(
         topics=args.topics,
@@ -122,7 +121,7 @@ def get_argument_parser():
     parser = argparse.ArgumentParser(description='Quickly build a slide deck.')
     parser.add_argument('--topic', default='cat', type=str,
                         help="Topic of presentation.")
-    parser.add_argument('--num_slides', default=10, type=int,
+    parser.add_argument('--num_slides', '--slides', default=10, type=int,
                         help="Number of slides to create.")
     parser.add_argument('--schema', default="default", type=str,
                         help="The presentation schema to generate the presentation with")

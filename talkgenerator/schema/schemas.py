@@ -1,8 +1,4 @@
-import random
-
-from talkgenerator.util import os_util
 from talkgenerator.sources import shitpostbot, unsplash
-from talkgenerator.sources import wikihow
 from talkgenerator.sources import google_images
 from talkgenerator.sources import inspirobot
 from talkgenerator.sources import chart
@@ -24,8 +20,6 @@ from talkgenerator.schema.presentation_schema import PresentationSchema
 from talkgenerator.schema.slide_generator_data import SlideGeneratorData
 from talkgenerator.schema.slide_generator_data import ConstantWeightFunction
 from talkgenerator.schema.slide_generator_data import PeakedWeight
-
-from talkgenerator.schema.content_generator_structures import RedditImageGenerator
 from talkgenerator.schema.content_generator_structures import ShitPostBotURLGenerator
 from talkgenerator.schema.content_generator_structures import GoodReadsQuoteGenerator
 from talkgenerator.schema.content_generator_structures import CountryPrefixApplier
@@ -185,8 +179,6 @@ normal_or_weird_image_generator = CombinedGenerator(
     (1, normal_image_generator),
     (1, weird_punchline_image_generator)
 )
-
-
 
 # OLD/VINTAGE
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
