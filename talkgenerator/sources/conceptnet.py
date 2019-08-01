@@ -112,9 +112,18 @@ def _get_from_relation(word, edges, relation_name):
 
 # EXTRACTING INFO
 
+def is_english(node):
+    return not node['language'] or node['language'] == 'en'
+
+
 def get_weighted_related_words(word, limit=50):
     edges = _get_edges(word, cache_util.HashableDict(limit=limit))
-    return [(edge["weight"], edge["end"]["label"]) for edge in edges if edge["end"]["label"] != word]
+    starts = [(edge["weight"], edge["start"]["label"]) for edge in edges if
+              edge["start"]["label"].lower() != word.lower() and is_english(edge['start'])]
+    ends = [(edge["weight"], edge["end"]["label"]) for edge in edges if
+            edge["end"]["label"].lower() != word.lower() and is_english(edge['end'])]
+    result = starts + ends
+    return result
 
 
 def get_weighted_related_locations(word):
