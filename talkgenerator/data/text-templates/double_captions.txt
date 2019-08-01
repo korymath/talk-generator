@@ -21,3 +21,6 @@ Good|Better
 Good|Bad
 Bad|Good
 Expectation|Reality
+How I initially approached {seed.wikihow_action.ing}|What I should have done
+Why {seed.plural} are great|Why {seed.plural} are awful
+{seed.wikihow_action}|{seed.wikihow_action}
