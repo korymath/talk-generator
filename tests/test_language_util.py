@@ -5,10 +5,6 @@ from talkgenerator.util import language_util
 
 class LanguageUtilTest(unittest.TestCase):
 
-    def test_get_synonyms(self):
-        synonyms = language_util.get_synonyms('dog')
-        self.assertEqual(30, len(synonyms))
-
     def test_to_plural(self):
         self.assertEqual("cats", language_util.to_plural("a cat"))
         self.assertEqual("cats", language_util.to_plural("cat"))
@@ -62,7 +58,8 @@ class LanguageUtilTest(unittest.TestCase):
         self.assertEqual("your cat", language_util.get_last_noun_and_article("do you like your cat"))
 
     def test_replace_pronouns(self):
-        self.assertEqual("I care about me and my family", language_util.second_to_first_pronouns("I care about you and your family"))
+        self.assertEqual("I care about me and my family",
+                         language_util.second_to_first_pronouns("I care about you and your family"))
 
         # def test_is_noun(self):
         #     self.assertTrue(language_util.is_noun("cat"))
