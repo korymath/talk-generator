@@ -3,6 +3,7 @@ import sys
 import ntpath
 import pathlib
 import traceback
+# import tempfile
 
 from functools import lru_cache
 
@@ -14,10 +15,13 @@ from PIL.Image import DecompressionBombError
 def download_image(from_url, to_url):
     """Download image from url to path."""
     # Create the parent folder if it doesn't exist
-    pathlib.Path(os.path.dirname(to_url)).mkdir(parents=True, exist_ok=True)
+    dir_path = pathlib.Path(os.path.dirname(to_url))
+    dir_path.mkdir(parents=True, exist_ok=True)
+    # tempfile.mkdtemp(dir=dir_path)
 
     # Download
     f = open(to_url, 'wb')
+    # f = tempfile.NamedTemporaryFile('wb', dir=to_url)
     f.write(requests.get(from_url, allow_redirects=True).content)
     f.close()
 
