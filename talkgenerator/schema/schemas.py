@@ -113,13 +113,15 @@ inspirobot_image_generator = inspirobot.get_random_inspirobot_image
 
 # GIFS
 
-giphy_generator = BackupGenerator(
-    SeededGenerator(giphy.get_related_giphy),
-    giphy.get_random_giphy
+giphy_generator = SeededGenerator(
+    BackupGenerator(
+        giphy.get_related_giphy,
+        giphy.get_random_giphy
+    )
 )
 reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", "nonononoYES")
 
-combined_gif_generator = CombinedGenerator((.5, giphy_generator), (.5, reddit_gif_generator))
+combined_gif_generator = CombinedGenerator((1, giphy_generator), (1, reddit_gif_generator))
 
 # REDDIT
 
