@@ -7,4 +7,4 @@ My story about {seed.plural}
 Funny thing that once happened with {seed}
 My {seed.plural.title} Experience: how I learned to not {seed.wikihow_action.lower}...
 My experience with {seed.plural}
-How did I get into {topic}? Because of {seed.synonym.plural}!
+How did I get into {topic}? Because of {seed.plural}!
