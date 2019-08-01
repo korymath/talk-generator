@@ -5,6 +5,9 @@ from talkgenerator.util import language_util
 
 class LanguageUtilTest(unittest.TestCase):
 
+    def test_check_and_download_no_exception(self):
+        language_util.check_and_download()
+
     def test_to_plural(self):
         self.assertEqual("cats", language_util.to_plural("a cat"))
         self.assertEqual("cats", language_util.to_plural("cat"))
