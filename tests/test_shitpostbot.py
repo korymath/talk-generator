@@ -12,7 +12,7 @@ class ShitPostBot(unittest.TestCase):
         image_urls = shitpostbot.search_images_rated('cat')
         self.assertTrue(len(image_urls) > 0)
         # Check if the rating of the first one is large
-        self.assertTrue(int(image_urls[0][1]) > 20)
+        self.assertTrue(int(image_urls[0][0]) > 20)
 
 
 if __name__ == '__main__':

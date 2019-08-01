@@ -12,7 +12,7 @@ _SEARCH_URL = "https://www.shitpostbot.com/gallery/sourceimages?query={" \
 
 
 def _search_shitpostbot_page(search_term, page):
-    return [element[0] for element in _search_shitpostbot_page_rated(search_term, page)]
+    return [element[1] for element in _search_shitpostbot_page_rated(search_term, page)]
 
 
 @lru_cache(maxsize=20)
@@ -34,8 +34,9 @@ def _search_shitpostbot_page_rated(search_term, page):
             image_url = entry.find("img").get("src")
             image_url = _get_source_image(image_url)
             rating_div = entry.find("span", class_="rating")
-            rating = rating_div.text if rating_div else 1
-            image_urls.append((image_url, rating))
+            rating = int(rating_div.text if rating_div else 1)
+            if rating > 0:
+                image_urls.append((rating, image_url))
 
         return image_urls
 

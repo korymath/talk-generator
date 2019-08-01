@@ -131,20 +131,21 @@ weird_reddit_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf
 shitpostbot_image_generator = ExternalImageListGenerator(
     SeededGenerator(
         BackupGenerator(
-            shitpostbot.search_images,
-            shitpostbot.get_random_images
+            shitpostbot.search_images_rated,
+            shitpostbot.get_random_images_rated
         )),
-    ShitPostBotURLGenerator()
+    ShitPostBotURLGenerator(),
+    weighted=True
 )
 
 weird_punchline_static_image_generator = CombinedGenerator(
-    (1, weird_reddit_image_generator),
-    (2, shitpostbot_image_generator)
+    (2, weird_reddit_image_generator),
+    (3, shitpostbot_image_generator)
 )
 
 weird_punchline_image_generator = CombinedGenerator(
     (5, weird_reddit_image_generator),
-    (5, shitpostbot_image_generator),
+    (4, shitpostbot_image_generator),
     (3, combined_gif_generator)
 )
 
@@ -607,7 +608,7 @@ test_schema = PresentationSchema(
     # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
     seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
-    slide_generators=single_image_slide_generators,
+    slide_generators=captioned_images_slide_generators,
     ignore_weights=True
 )
 
