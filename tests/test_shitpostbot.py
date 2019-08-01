@@ -1,5 +1,5 @@
 import unittest
-from talkgenerator.sources import unsplash, shitpostbot
+from talkgenerator.sources import shitpostbot
 
 
 class ShitPostBot(unittest.TestCase):
