@@ -33,7 +33,7 @@ class SideTrackingTopicGenerator:
                 idx += random.choice(topic_return_period_range)
         else:
             # Disperse all topics over the slides if multiple topics given
-            _disperse(seeds, topics, 0, num_slides-1)
+            _disperse(seeds, topics, 0, num_slides - 1)
 
         # Fill in the blanks with related topics
         previous = seeds.copy()
@@ -118,12 +118,11 @@ def normalise_seed(seed):
 class IdentityTopicGenerator:
     """ Generates always the given topic as the seed for each slide """
 
-    def __init__(self, topic, _):
-        self._topic = topic
+    def __init__(self, topics, _):
+        self._topics = topics
 
     def generate_seed(self, _):
-        return self._topic
-
+        return random.choice(self._topics)
 
 # class SynonymTopicGenerator:
 #     """ Generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation"""
