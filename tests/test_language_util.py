@@ -4,9 +4,6 @@ from talkgenerator.util import language_util
 
 
 class LanguageUtilTest(unittest.TestCase):
-    def test_get_definitions(self):
-        definitions = language_util.get_definitions('dog')
-        self.assertEqual(len(definitions), 8)
 
     def test_get_synonyms(self):
         synonyms = language_util.get_synonyms('dog')
@@ -16,6 +13,16 @@ class LanguageUtilTest(unittest.TestCase):
         self.assertEqual("cats", language_util.to_plural("a cat"))
         self.assertEqual("cats", language_util.to_plural("cat"))
         self.assertEqual("cats", language_util.to_plural("cats"))
+
+    def test_is_noun(self):
+        self.assertTrue(language_util.is_noun("cat"))
+        self.assertFalse(language_util.is_noun("see"))
+        self.assertFalse(language_util.is_noun("because"))
+
+    def test_is_verb(self):
+        self.assertTrue(language_util.is_verb("see"))
+        self.assertFalse(language_util.is_verb("cat"))
+        self.assertFalse(language_util.is_verb("because"))
 
     def test_to_singular(self):
         self.assertEqual("cat", language_util.to_singular("cat"))
@@ -54,22 +61,24 @@ class LanguageUtilTest(unittest.TestCase):
         self.assertEqual("my cat", language_util.get_last_noun_and_article("What to do with my cat"))
         self.assertEqual("your cat", language_util.get_last_noun_and_article("do you like your cat"))
 
-    # def test_is_noun(self):
-    #     self.assertTrue(language_util.is_noun("cat"))
-    #     self.assertTrue(language_util.is_noun("dog"))
-    #     self.assertTrue(language_util.is_noun("food"))
-    #     self.assertTrue(language_util.is_noun("pet"))
+    def test_replace_pronouns(self):
+        self.assertEqual("I care about me and my family", language_util.second_to_first_pronouns("I care about you and your family"))
 
-    # def test_is_verb(self):
-    #     self.assertTrue(language_util.is_verb("act"))
-    #     self.assertTrue(language_util.is_verb("pet"))
-    #     self.assertTrue(language_util.is_verb("kiss"))
+        # def test_is_noun(self):
+        #     self.assertTrue(language_util.is_noun("cat"))
+        #     self.assertTrue(language_util.is_noun("dog"))
+        #     self.assertTrue(language_util.is_noun("food"))
+        #     self.assertTrue(language_util.is_noun("pet"))
 
-    # def test_is_verb_action(self):
-    #     self.assertTrue(language_util.is_verb("kill a mockingbird"))
-    #     self.assertTrue(language_util.is_verb("act like a cat"))
-    #     self.assertTrue(language_util.is_verb("speak English"))
+        # def test_is_verb(self):
+        #     self.assertTrue(language_util.is_verb("act"))
+        #     self.assertTrue(language_util.is_verb("pet"))
+        #     self.assertTrue(language_util.is_verb("kiss"))
 
+        # def test_is_verb_action(self):
+        #     self.assertTrue(language_util.is_verb("kill a mockingbird"))
+        #     self.assertTrue(language_util.is_verb("act like a cat"))
+        #     self.assertTrue(language_util.is_verb("speak English"))
 
-if __name__ == '__main__':
-    unittest.main()
+    if __name__ == '__main__':
+        unittest.main()

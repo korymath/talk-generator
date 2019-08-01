@@ -125,28 +125,28 @@ class IdentityTopicGenerator:
         return self._topic
 
 
-class SynonymTopicGenerator:
-    """ Generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation"""
-
-    def __init__(self, topic, number_of_slides):
-        self._topic = topic
-        self._slides_nr = number_of_slides
-        synonyms = language_util.get_synonyms(topic)
-        # seeds.extend(get_relations(topic))
-
-        # Check if enough generated
-        if len(synonyms) < number_of_slides:
-            # If nothing: big problem!
-            if len(synonyms) == 0:
-                synonyms = [topic]
-
-            # Now fill the seeds up with repeating topics
-            number_of_repeats = int(math.ceil(number_of_slides / len(synonyms)))
-            synonyms = numpy.tile(synonyms, number_of_repeats)
-
-        # Take random `number_of_slides` elements
-        random.shuffle(synonyms)
-        self._seeds = synonyms[0: number_of_slides]
-
-    def generate_seed(self, slide_nr):
-        return self._seeds[slide_nr]
+# class SynonymTopicGenerator:
+#     """ Generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation"""
+#
+#     def __init__(self, topic, number_of_slides):
+#         self._topic = topic
+#         self._slides_nr = number_of_slides
+#         synonyms = language_util.get_synonyms(topic)
+#         # seeds.extend(get_relations(topic))
+#
+#         # Check if enough generated
+#         if len(synonyms) < number_of_slides:
+#             # If nothing: big problem!
+#             if len(synonyms) == 0:
+#                 synonyms = [topic]
+#
+#             # Now fill the seeds up with repeating topics
+#             number_of_repeats = int(math.ceil(number_of_slides / len(synonyms)))
+#             synonyms = numpy.tile(synonyms, number_of_repeats)
+#
+#         # Take random `number_of_slides` elements
+#         random.shuffle(synonyms)
+#         self._seeds = synonyms[0: number_of_slides]
+#
+#     def generate_seed(self, slide_nr):
+#         return self._seeds[slide_nr]

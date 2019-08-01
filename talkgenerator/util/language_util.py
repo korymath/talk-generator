@@ -4,16 +4,12 @@ import string
 
 import inflect
 import nltk
-from nltk.corpus import wordnet as wn
 
-# nltk setup check
 
 def check_and_download():
     required_corpus_list = [
-        'tokenizers/punkt', 
-        'taggers/averaged_perceptron_tagger', 
-        'corpora/wordnet'
-    ]
+        'tokenizers/punkt',
+        'taggers/averaged_perceptron_tagger']
     try:
         for corpus in required_corpus_list:
             _check_and_download_corpus(corpus, corpus.split('/')[1])
@@ -41,8 +37,10 @@ def print_corpus_download_warning():
     download the needed packages.. but it might also tell you if 
     there is another issue.
 
-    $ python3 -m nltk.downloader wordnet punkt averaged_perceptron_tagger
+    $ python3 -m nltk.downloader punkt averaged_perceptron_tagger
     '''
+
+
 # Helpers
 
 def _replace_word_one_case(sentence, word, replacement, flags=0):
@@ -97,20 +95,6 @@ def to_present_participle(action):
     return apply_function_to_verb(action, to_ing_form)
 
 
-# def to_present_participle(text):
-#     tokens = nltk.word_tokenize(text)
-#     pos_tags = nltk.pos_tag(tokens)
-#
-#     result = ""
-#     seen_verb = False
-#     for tag in pos_tags:
-#         if not seen_verb and tag[1] == 'VB':
-#             seen_verb = True
-#             result += to_ing_form(" " + tag[0])
-#         result += " " + tag[0]
-#     return result.strip()
-
-
 # From https://github.com/arsho/46-Simple-Python-Exercises-Solutions/blob/master/problem_25.py
 def _make_ing_form(passed_string):
     passed_string = passed_string.lower()
@@ -133,7 +117,8 @@ def _make_ing_form(passed_string):
     elif passed_string.endswith('y') or passed_string.endswith('w'):
         return passed_string + 'ing'
 
-    elif len(passed_string) >= 3 and passed_string[-1] in consonant and passed_string[-2] in vowel and passed_string[-3] in consonant:
+    elif len(passed_string) >= 3 and passed_string[-1] in consonant and passed_string[-2] in vowel and passed_string[
+        -3] in consonant:
         passed_string += passed_string[-1]
         return passed_string + 'ing'
     else:
@@ -149,71 +134,6 @@ def to_ing_form(passed_string):
     if passed_string.istitle():
         return result.title()
     return result
-
-
-def get_definitions(word):
-    """Get definitions of a given topic word."""
-    print('******************************************')
-    # Get definition
-    definitions = {}
-    try:
-        word_senses = wn.synsets(word)
-        for ss in word_senses:
-            definitions[ss.name()] = ss.definition()
-        print('{} definitions for "{}"'.format(len(definitions), word))
-    except AttributeError as e:
-        print(e)
-    return definitions
-
-
-def get_synonyms(word):
-    """Get all synonyms for a given word."""
-    all_synonyms = []
-    try:
-        word_senses = wn.synsets(word)
-        for ss in word_senses:
-            all_synonyms.extend(
-                [x.lower().replace('_', ' ') for x in ss.lemma_names()])
-        all_synonyms.append(word)
-        all_synonyms = list(set(all_synonyms))
-    except AttributeError as e:
-        print(e)
-    return all_synonyms
-
-
-def get_relations(word):
-    """Get relations to given definitions."""
-    rels = {}
-    all_rel_forms = []
-    all_perts = []
-    all_ants = []
-
-    word_senses = wn.synsets(word)
-    for ss in word_senses:
-        ss_name = ss.name()
-        rels[ss_name] = {}
-        for lem in ss.lemmas():
-            lem_name = lem.name()
-            rels[ss_name][lem_name] = {}
-            rel_forms = [x.name() for x in lem.derivationally_related_forms()]
-            rels[ss_name][lem_name]['related_forms'] = rel_forms
-            all_rel_forms.extend(rel_forms)
-
-            perts = [x.name() for x in lem.pertainyms()]
-            rels[ss_name][lem_name]['pertainyms'] = perts
-            all_perts.extend(perts)
-
-            ants = [x.name() for x in lem.antonyms()]
-            rels[ss_name][lem_name]['antonyms'] = ants
-            all_ants.extend(ants)
-
-    print('******************************************')
-    print('{} derivationally related forms'.format(len(all_rel_forms)))
-    print('******************************************')
-    print('{} pertainyms'.format(len(all_perts)))
-    print('******************************************')
-    print('{} antonyms'.format(len(all_ants)))
-    return rels
 
 
 inflect_engine = inflect.engine()
@@ -245,7 +165,8 @@ def add_article(word):
     # TODO: Maybe more checks, some u's cause "an", or some big letters in case it's an abbreviation
     word_lower = word.lower()
     article = "a"
-    if word_lower.startswith("a") or word_lower.startswith("e") or word_lower.startswith("i") or word_lower.startswith("o"):
+    if word_lower.startswith("a") or word_lower.startswith("e") or word_lower.startswith("i") or word_lower.startswith(
+            "o"):
         article = "an"
     return article + " " + word
 
