@@ -108,7 +108,7 @@ def _fill_in(seeds, i, distance=1):
 
 def normalise_seed(seed):
     normalised = conceptnet.normalise(seed).lower()
-    normalised = re.sub(r'[^a-z\s\b _-]+', '', normalised)
+    normalised = language_util.replace_non_alphabetical_characters(normalised)
     if ' ' in normalised:
         last_word = normalised.split(' ')[-1]
         normalised = last_word

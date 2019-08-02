@@ -212,3 +212,7 @@ def get_last_noun_and_article(sentence):
             return noun
 
     return None
+
+
+def replace_non_alphabetical_characters(text):
+    return re.sub(r'[^A-Za-z\s\b -]+', '', text)
