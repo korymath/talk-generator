@@ -1,6 +1,6 @@
 import random
 
-from talkgenerator.sources import conceptnet
+from talkgenerator.sources import conceptnet, phrasefinder
 from talkgenerator.util import language_util, random_util
 
 
@@ -109,8 +109,9 @@ def normalise_seed(seed):
     normalised = conceptnet.normalise(seed).lower()
     normalised = language_util.replace_non_alphabetical_characters(normalised)
     if ' ' in normalised:
-        last_word = normalised.split(' ')[-1]
-        normalised = last_word
+        # last_word = normalised.split(' ')[-1]
+        normalised = phrasefinder.get_rarest_word(normalised)
+        print(seed, '=>', normalised)
     return normalised
 
 
