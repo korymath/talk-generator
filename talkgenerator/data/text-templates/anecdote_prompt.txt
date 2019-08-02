@@ -8,3 +8,7 @@ Funny thing that once happened with {seed}
 My {seed.plural.title} Experience: how I learned to not {seed.wikihow_action.lower}...
 My experience with {seed.plural}
 How did I get into {topic}? Because of {seed.plural}!
+Funny story about why I first learned how to {seed.wikihow_action.2_to_1_pronouns.lower}
+What I always say to people who {seed.wikihow_action}
+"But what about {seed.wikihow_action.ing.lower}?" Well...
+Why would people like me ever {seed.wikihow_action.2_to_1_pronouns}?
