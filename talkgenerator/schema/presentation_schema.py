@@ -105,7 +105,7 @@ class PresentationSchema:
             # Generate the slide
             slide_results = self.generate_slide(
                 presentation_context=create_slide_presentation_context(main_presentation_context,
-                                                                       seed_generator.generate_seed(slide_nr)),
+                                                                       seed_generator.get_seed(slide_nr)),
                 slide_nr=slide_nr,
                 num_slides=num_slides,
                 used_elements=used_elements,
@@ -247,7 +247,7 @@ class SlideGeneratorContext(object):
         return self.presentation_schema.generate_slide(
             # presentation_context=dict(),
             create_slide_presentation_context(self.presentation_context,
-                                              self.seed_generator.generate_seed(slide_nr)
+                                              self.seed_generator.get_seed(slide_nr)
                                               # 'cat'
                                               ),
             slide_nr=slide_nr,

@@ -50,7 +50,7 @@ class SideTrackingTopicGenerator:
 
         self._seeds = seeds
 
-    def generate_seed(self, slide_nr):
+    def get_seed(self, slide_nr):
         return self._seeds[slide_nr]
 
     def all_seeds(self):
@@ -85,6 +85,9 @@ def _fill_in(seeds, i, distance=1):
 
             try:
                 related = conceptnet.get_weighted_related_words(neighbour, 50)
+                if len(related) == 0:
+                    related = conceptnet.get_weighted_related_words(normalise_seed(neighbour), 50)
+
             except Exception as e:
                 print('Conceptnet related words failing: {}'.format(e))
                 related = []
@@ -121,7 +124,7 @@ class IdentityTopicGenerator:
     def __init__(self, topics, _):
         self._topics = topics
 
-    def generate_seed(self, _):
+    def get_seed(self, _):
         return random.choice(self._topics)
 
 # class SynonymTopicGenerator:
