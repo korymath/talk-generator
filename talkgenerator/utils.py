@@ -13,7 +13,9 @@ from functools import wraps
 
 from talkgenerator import settings
 from talkgenerator.schema import schemas
+from talkgenerator.sources import phrasefinder
 
+DEFAULT_PRESENTATION_TOPIC = 'cat'
 MAX_PRESENTATION_SAVE_TRIES = 100
 
 
@@ -31,6 +33,12 @@ def generate_talk(args):
     # Generate random presenter name if no presenter name given
     if not args.presenter:
         args.presenter = schemas.full_name_generator()
+
+    if not args.topic:
+        if args.title:
+            args.topic = phrasefinder.get_rarest_word(args.title)
+        else:
+            args.topic = DEFAULT_PRESENTATION_TOPIC
 
     # Extract topics from given (possibly comma separated) topic
     args.topics = [topic.strip() for topic in args.topic.split(',')]
@@ -119,7 +127,7 @@ def str2bool(v):
 
 def get_argument_parser():
     parser = argparse.ArgumentParser(description='Quickly build a slide deck.')
-    parser.add_argument('--topic', default='cat', type=str,
+    parser.add_argument('--topic', default='', type=str,
                         help="Topic of presentation.")
     parser.add_argument('--num_slides', '--slides', default=10, type=int,
                         help="Number of slides to create.")
