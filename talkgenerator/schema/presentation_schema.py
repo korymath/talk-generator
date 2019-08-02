@@ -7,11 +7,9 @@ import time
 from multiprocessing.pool import ThreadPool
 
 from talkgenerator.schema.slide_generator_data import _filter_generated_elements
-
-from talkgenerator.util import random_util
-from talkgenerator.slide.slide_deck import SlideDeck
-
 from talkgenerator.slide import slide_generators
+from talkgenerator.slide.slide_deck import SlideDeck
+from talkgenerator.util import random_util
 
 
 class PresentationSchema:

@@ -1,9 +1,10 @@
 """ Module for interacting with Wikihow """
 
 import logging
-from talkgenerator import settings
 
 from pyunsplash import PyUnsplash
+
+from talkgenerator import settings
 
 # pyunsplash logger defaults to level logging.ERROR
 # If you need to change that, use getLogger/setLevel

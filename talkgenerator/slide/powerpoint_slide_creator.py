@@ -6,8 +6,8 @@ from functools import lru_cache
 from lxml.etree import XMLSyntaxError
 from pptx import Presentation
 
-
 from talkgenerator.util import os_util
+
 # Location of powerpoint template
 _POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
 

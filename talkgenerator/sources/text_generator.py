@@ -1,19 +1,17 @@
 """ This module helps out with generating text using templates """
-import re
 import json
 import random
+import re
 from functools import lru_cache
 
 import tracery
 from tracery.modifiers import base_english
 
-from talkgenerator.util import generator_util
-from talkgenerator.util import language_util
-from talkgenerator.util import random_util
-from talkgenerator.util import os_util
-
-from talkgenerator.sources import wikihow
 from talkgenerator.sources import conceptnet
+from talkgenerator.sources import wikihow
+from talkgenerator.util import language_util
+from talkgenerator.util import os_util
+from talkgenerator.util import random_util
 
 known_functions = {
     "title": str.title,

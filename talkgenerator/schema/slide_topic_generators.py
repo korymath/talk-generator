@@ -1,8 +1,4 @@
-import math
 import random
-import re
-
-import numpy
 
 from talkgenerator.sources import conceptnet
 from talkgenerator.util import language_util, random_util

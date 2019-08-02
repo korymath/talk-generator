@@ -1,15 +1,13 @@
-import os
-import sys
-
-import pathlib
-import logging
-import datetime
 import argparse
+import datetime
+import logging
+import os
+import pathlib
 import subprocess
+import sys
 
 from flask import jsonify
 from flask import request
-from functools import wraps
 
 from talkgenerator import settings
 from talkgenerator.schema import schemas

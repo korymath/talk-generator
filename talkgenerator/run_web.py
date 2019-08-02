@@ -3,12 +3,10 @@ import pprint
 
 from flask import Flask
 from flask import request
-from flask import render_template
 
-from talkgenerator.utils import str2bool
-from talkgenerator.utils import notify_error
 from talkgenerator.utils import generate_talk
 from talkgenerator.utils import get_argument_parser
+from talkgenerator.utils import notify_error
 
 app = Flask(__name__)
 

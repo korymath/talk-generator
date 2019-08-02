@@ -1,5 +1,7 @@
-import safygiphy
 import os
+
+import safygiphy
+
 from talkgenerator.util import os_util
 
 giphy = safygiphy.Giphy()

@@ -1,9 +1,8 @@
 import os
-from flask import Flask
-from flask_sslify import SSLify
-from flask import Flask, render_template, flash, request, send_from_directory
-from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 
+from flask import Flask, render_template, flash, request, send_from_directory
+from flask_sslify import SSLify
+from wtforms import Form, TextField, validators
 
 # App config.
 DEBUG = True

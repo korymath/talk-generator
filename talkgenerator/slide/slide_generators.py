@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+
 from talkgenerator.slide import slides
 from talkgenerator.util import generator_util
 

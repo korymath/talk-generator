@@ -1,7 +1,8 @@
 import time
-import requests
 from functools import lru_cache
 from urllib.parse import urlencode
+
+import requests
 
 from talkgenerator.util import generator_util, cache_util
 
