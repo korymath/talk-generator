@@ -1,9 +1,10 @@
 """ Module for interacting with Wikihow """
 
 import logging
-from talkgenerator import settings
 
 from pyunsplash import PyUnsplash
+
+from talkgenerator import settings
 
 # pyunsplash logger defaults to level logging.ERROR
 # If you need to change that, use getLogger/setLevel
@@ -21,7 +22,9 @@ def get_unsplash_session():
         print(
             "Warning: No login credentials were found for Unsplash. Please add these credentials file to .env.")
 
+
 pu = get_unsplash_session()
+
 
 def search_photos_return_urls(query):
     results = pu.search(type_='photos', query=query)

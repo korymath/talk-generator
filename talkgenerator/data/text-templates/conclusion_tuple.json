@@ -16,16 +16,21 @@
     "#first_description#|#first_description#|#punchline_description#"
   ],
   "first_description": [
+    "#random_nice_conclusion_word#",
+    "#random_nice_conclusion_word#",
+    "{seed.title}",
+    "#positive_word.capitalize#",
+    "{seed.plural.title} are #positive_word#",
+    "The importance of {seed.wikihow_action.ing.lower}",
+    ""
+  ],
+  "random_nice_conclusion_word": [
     "Passion",
     "Love",
     "Remember",
     "Take care",
     "Be free",
-    "Don't forget",
-    "{seed.title}",
-    "#positive_word.capitalize#",
-    "{seed.plural.title} are #positive_word#",
-    ""
+    "Don't forget"
   ],
   "punchline_description": [
     "Key Idea",
@@ -34,6 +39,8 @@
     "Watch out",
     "Remember",
     "Not #positive_word#",
+    "Do not {seed.wikihow_action}",
+    "Avoid {seed.wikihow_action.ing.lower}",
     ""
   ],
   "positive_word": [

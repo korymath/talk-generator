@@ -2,11 +2,12 @@
 import re
 import time
 from functools import lru_cache
+from itertools import chain
 
 import inflect
 import requests
 from bs4 import BeautifulSoup
-from itertools import chain
+
 from talkgenerator import settings
 
 _LOG_IN_URL = "https://www.wikihow.com/index.php?title=Special:UserLogin&action=submitlogin&type=login"

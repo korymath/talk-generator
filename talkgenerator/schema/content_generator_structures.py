@@ -4,11 +4,10 @@ This file contains structures that are helpful for certain content generators, b
 import os
 import random
 
-from talkgenerator.util.generator_util import SeededGenerator, BackupGenerator, InvalidImagesRemoverGenerator
+from talkgenerator.sources import goodreads, text_generator, reddit, wikihow
 from talkgenerator.util.generator_util import ExternalImageListGenerator
 from talkgenerator.util.generator_util import FromListGenerator
-
-from talkgenerator.sources import goodreads, text_generator, reddit, wikihow
+from talkgenerator.util.generator_util import SeededGenerator, BackupGenerator, InvalidImagesRemoverGenerator
 
 
 # = TEXT GENERATORS=

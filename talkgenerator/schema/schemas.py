@@ -1,42 +1,36 @@
-import random
-
-from talkgenerator.util import os_util
-from talkgenerator.sources import shitpostbot, unsplash
-from talkgenerator.sources import wikihow
-from talkgenerator.sources import google_images
-from talkgenerator.sources import inspirobot
-from talkgenerator.sources import chart
-from talkgenerator.sources import giphy
 from talkgenerator.schema import slide_topic_generators
+from talkgenerator.schema.content_generator_structures import CountryPrefixApplier
+from talkgenerator.schema.content_generator_structures import GoodReadsQuoteGenerator
+from talkgenerator.schema.content_generator_structures import JobPrefixApplier
+from talkgenerator.schema.content_generator_structures import ShitPostBotURLGenerator
+from talkgenerator.schema.content_generator_structures import SplitCaptionsGenerator
+from talkgenerator.schema.content_generator_structures import UnsplashURLGenerator
+from talkgenerator.schema.content_generator_structures import create_reddit_image_generator
+from talkgenerator.schema.content_generator_structures import create_templated_text_generator
+from talkgenerator.schema.content_generator_structures import create_tracery_generator
+from talkgenerator.schema.content_generator_structures import generate_google_image_generator
+from talkgenerator.schema.content_generator_structures import generate_wikihow_bold_statement
+from talkgenerator.schema.presentation_schema import PresentationSchema
+from talkgenerator.schema.slide_generator_data import ConstantWeightFunction
+from talkgenerator.schema.slide_generator_data import PeakedWeight
+from talkgenerator.schema.slide_generator_data import SlideGeneratorData
 from talkgenerator.slide import powerpoint_slide_creator
 from talkgenerator.slide import slide_generators
-from talkgenerator.util.generator_util import SeededGenerator
-from talkgenerator.util.generator_util import NoneGenerator
+from talkgenerator.sources import chart
+from talkgenerator.sources import giphy
+from talkgenerator.sources import google_images
+from talkgenerator.sources import inspirobot
+from talkgenerator.sources import shitpostbot, unsplash
+from talkgenerator.util.generator_util import BackupGenerator
 from talkgenerator.util.generator_util import CombinedGenerator
 from talkgenerator.util.generator_util import ExternalImageListGenerator
 from talkgenerator.util.generator_util import FromListGenerator
-from talkgenerator.util.generator_util import BackupGenerator
-from talkgenerator.util.generator_util import InvalidImagesRemoverGenerator
 from talkgenerator.util.generator_util import InspiredTupleGenerator
+from talkgenerator.util.generator_util import InvalidImagesRemoverGenerator
 from talkgenerator.util.generator_util import MappedGenerator
+from talkgenerator.util.generator_util import NoneGenerator
+from talkgenerator.util.generator_util import SeededGenerator
 from talkgenerator.util.generator_util import TupledGenerator
-from talkgenerator.schema.presentation_schema import PresentationSchema
-from talkgenerator.schema.slide_generator_data import SlideGeneratorData
-from talkgenerator.schema.slide_generator_data import ConstantWeightFunction
-from talkgenerator.schema.slide_generator_data import PeakedWeight
-
-from talkgenerator.schema.content_generator_structures import RedditImageGenerator
-from talkgenerator.schema.content_generator_structures import ShitPostBotURLGenerator
-from talkgenerator.schema.content_generator_structures import GoodReadsQuoteGenerator
-from talkgenerator.schema.content_generator_structures import CountryPrefixApplier
-from talkgenerator.schema.content_generator_structures import JobPrefixApplier
-from talkgenerator.schema.content_generator_structures import create_tracery_generator
-from talkgenerator.schema.content_generator_structures import create_templated_text_generator
-from talkgenerator.schema.content_generator_structures import create_reddit_image_generator
-from talkgenerator.schema.content_generator_structures import SplitCaptionsGenerator
-from talkgenerator.schema.content_generator_structures import generate_wikihow_bold_statement
-from talkgenerator.schema.content_generator_structures import generate_google_image_generator
-from talkgenerator.schema.content_generator_structures import UnsplashURLGenerator
 
 # ===============================
 # =====  CONTENT GENERATORS =====
@@ -119,13 +113,15 @@ inspirobot_image_generator = inspirobot.get_random_inspirobot_image
 
 # GIFS
 
-giphy_generator = BackupGenerator(
-    SeededGenerator(giphy.get_related_giphy),
-    giphy.get_random_giphy
+giphy_generator = SeededGenerator(
+    BackupGenerator(
+        giphy.get_related_giphy,
+        giphy.get_random_giphy
+    )
 )
 reddit_gif_generator = create_reddit_image_generator("gifs", "gif", "gifextra", "nonononoYES")
 
-combined_gif_generator = CombinedGenerator((.5, giphy_generator), (.5, reddit_gif_generator))
+combined_gif_generator = CombinedGenerator((1, giphy_generator), (1, reddit_gif_generator))
 
 # REDDIT
 
@@ -137,20 +133,21 @@ weird_reddit_image_generator = create_reddit_image_generator("hmmm", "hmm", "wtf
 shitpostbot_image_generator = ExternalImageListGenerator(
     SeededGenerator(
         BackupGenerator(
-            shitpostbot.search_images,
-            shitpostbot.get_random_images
+            shitpostbot.search_images_rated,
+            shitpostbot.get_random_images_rated
         )),
-    ShitPostBotURLGenerator()
+    ShitPostBotURLGenerator(),
+    weighted=True
 )
 
 weird_punchline_static_image_generator = CombinedGenerator(
-    (1, weird_reddit_image_generator),
-    (2, shitpostbot_image_generator)
+    (2, weird_reddit_image_generator),
+    (3, shitpostbot_image_generator)
 )
 
 weird_punchline_image_generator = CombinedGenerator(
     (5, weird_reddit_image_generator),
-    (5, shitpostbot_image_generator),
+    (4, shitpostbot_image_generator),
     (3, combined_gif_generator)
 )
 
@@ -185,8 +182,6 @@ normal_or_weird_image_generator = CombinedGenerator(
     (1, normal_image_generator),
     (1, weird_punchline_image_generator)
 )
-
-
 
 # OLD/VINTAGE
 vintage_person_generator = create_reddit_image_generator("OldSchoolCool")
@@ -615,7 +610,7 @@ test_schema = PresentationSchema(
     # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
     seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
-    slide_generators=single_image_slide_generators,
+    slide_generators=captioned_images_slide_generators,
     ignore_weights=True
 )
 

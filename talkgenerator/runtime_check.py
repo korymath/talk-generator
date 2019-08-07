@@ -1,5 +1,6 @@
+import talkgenerator.settings
 import talkgenerator.util.language_util
-import talkgenerator.settings 
+
 
 def check_that_we_can_run():
     check_env = talkgenerator.settings.check_environment_variables()

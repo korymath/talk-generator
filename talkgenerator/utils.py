@@ -1,19 +1,19 @@
-import os
-import sys
-
-import pathlib
-import logging
-import datetime
 import argparse
+import datetime
+import logging
+import os
+import pathlib
 import subprocess
+import sys
 
 from flask import jsonify
 from flask import request
-from functools import wraps
 
 from talkgenerator import settings
 from talkgenerator.schema import schemas
+from talkgenerator.sources import phrasefinder
 
+DEFAULT_PRESENTATION_TOPIC = 'cat'
 MAX_PRESENTATION_SAVE_TRIES = 100
 
 
@@ -32,13 +32,18 @@ def generate_talk(args):
     if not args.presenter:
         args.presenter = schemas.full_name_generator()
 
+    if not args.topic:
+        if args.title:
+            args.topic = phrasefinder.get_rarest_word(args.title)
+        else:
+            args.topic = DEFAULT_PRESENTATION_TOPIC
+
     # Extract topics from given (possibly comma separated) topic
     args.topics = [topic.strip() for topic in args.topic.split(',')]
 
     # Generate random talk title
     if not args.title or args.title is None:
         args.title = schemas.talk_title_generator({'seed': args.topics[0]})
-
 
     # Generate the presentation object
     presentation, slide_deck = schema.generate_presentation(
@@ -120,9 +125,9 @@ def str2bool(v):
 
 def get_argument_parser():
     parser = argparse.ArgumentParser(description='Quickly build a slide deck.')
-    parser.add_argument('--topic', default='cat', type=str,
+    parser.add_argument('--topic', default='', type=str,
                         help="Topic of presentation.")
-    parser.add_argument('--num_slides', default=10, type=int,
+    parser.add_argument('--num_slides', '--slides', default=10, type=int,
                         help="Number of slides to create.")
     parser.add_argument('--schema', default="default", type=str,
                         help="The presentation schema to generate the presentation with")

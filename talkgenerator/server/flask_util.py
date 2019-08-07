@@ -1,8 +1,9 @@
+import datetime
+import logging
+
 from flask import jsonify
 from flask import request
-from functools import wraps
-import logging
-import datetime
+
 
 # https://github.com/anonymoose/fibonacci/blob/master/fibonacci_api/common.py
 

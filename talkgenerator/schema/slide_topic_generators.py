@@ -1,10 +1,6 @@
-import math
 import random
-import re
 
-import numpy
-
-from talkgenerator.sources import conceptnet
+from talkgenerator.sources import conceptnet, phrasefinder
 from talkgenerator.util import language_util, random_util
 
 
@@ -22,18 +18,18 @@ class SideTrackingTopicGenerator:
 
         # Make it begin and end with the topic
         if num_slides > 0:
-            seeds[0] = topics[0]
-            seeds[-1] = topics[-1]
+            # End with main topic
+            seeds[-1] = topics[0]
 
-        # Add the returning topic if only one topic given
         if len(topics) == 1:
+            # Add the returning topic if only one topic given
             idx = 0
             while idx < num_slides:
                 seeds[idx] = topics[0]
                 idx += random.choice(topic_return_period_range)
-        elif len(topics) > 2:
-            topics_to_disperse = topics[1:-1]
-            _disperse(seeds, topics_to_disperse, 1, num_slides - 1)
+        else:
+            # Disperse all topics over the slides if multiple topics given
+            _disperse(seeds, topics, 0, num_slides - 1)
 
         # Fill in the blanks with related topics
         previous = seeds.copy()
@@ -50,7 +46,7 @@ class SideTrackingTopicGenerator:
 
         self._seeds = seeds
 
-    def generate_seed(self, slide_nr):
+    def get_seed(self, slide_nr):
         return self._seeds[slide_nr]
 
     def all_seeds(self):
@@ -58,12 +54,10 @@ class SideTrackingTopicGenerator:
 
 
 def _disperse(seeds, topics, min_idx, max_idx):
-    range_size = max_idx - min_idx
-    len_topics = len(topics)
+    range_size = max_idx - min_idx + 1
     step_size = range_size / len(topics)
-    offset = int(step_size / 2)
     for i in range(len(topics)):
-        seeds_index = int(min_idx + step_size * i) + offset
+        seeds_index = int(min_idx + step_size * i)
         seeds[seeds_index] = topics[i]
 
 
@@ -87,6 +81,9 @@ def _fill_in(seeds, i, distance=1):
 
             try:
                 related = conceptnet.get_weighted_related_words(neighbour, 50)
+                if len(related) == 0:
+                    related = conceptnet.get_weighted_related_words(normalise_seed(neighbour), 50)
+
             except Exception as e:
                 print('Conceptnet related words failing: {}'.format(e))
                 related = []
@@ -110,45 +107,45 @@ def _fill_in(seeds, i, distance=1):
 
 def normalise_seed(seed):
     normalised = conceptnet.normalise(seed).lower()
-    normalised = re.sub(r'[^a-z\s\b _-]+', '', normalised)
+    normalised = language_util.replace_non_alphabetical_characters(normalised)
     if ' ' in normalised:
-        last_word = normalised.split(' ')[-1]
-        normalised = last_word
+        # last_word = normalised.split(' ')[-1]
+        normalised = phrasefinder.get_rarest_word(normalised)
+        print(seed, '=>', normalised)
     return normalised
 
 
 class IdentityTopicGenerator:
     """ Generates always the given topic as the seed for each slide """
 
-    def __init__(self, topic, _):
-        self._topic = topic
+    def __init__(self, topics, _):
+        self._topics = topics
 
-    def generate_seed(self, _):
-        return self._topic
+    def get_seed(self, _):
+        return random.choice(self._topics)
 
-
-class SynonymTopicGenerator:
-    """ Generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation"""
-
-    def __init__(self, topic, number_of_slides):
-        self._topic = topic
-        self._slides_nr = number_of_slides
-        synonyms = language_util.get_synonyms(topic)
-        # seeds.extend(get_relations(topic))
-
-        # Check if enough generated
-        if len(synonyms) < number_of_slides:
-            # If nothing: big problem!
-            if len(synonyms) == 0:
-                synonyms = [topic]
-
-            # Now fill the seeds up with repeating topics
-            number_of_repeats = int(math.ceil(number_of_slides / len(synonyms)))
-            synonyms = numpy.tile(synonyms, number_of_repeats)
-
-        # Take random `number_of_slides` elements
-        random.shuffle(synonyms)
-        self._seeds = synonyms[0: number_of_slides]
-
-    def generate_seed(self, slide_nr):
-        return self._seeds[slide_nr]
+# class SynonymTopicGenerator:
+#     """ Generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation"""
+#
+#     def __init__(self, topic, number_of_slides):
+#         self._topic = topic
+#         self._slides_nr = number_of_slides
+#         synonyms = language_util.get_synonyms(topic)
+#         # seeds.extend(get_relations(topic))
+#
+#         # Check if enough generated
+#         if len(synonyms) < number_of_slides:
+#             # If nothing: big problem!
+#             if len(synonyms) == 0:
+#                 synonyms = [topic]
+#
+#             # Now fill the seeds up with repeating topics
+#             number_of_repeats = int(math.ceil(number_of_slides / len(synonyms)))
+#             synonyms = numpy.tile(synonyms, number_of_repeats)
+#
+#         # Take random `number_of_slides` elements
+#         random.shuffle(synonyms)
+#         self._seeds = synonyms[0: number_of_slides]
+#
+#     def generate_seed(self, slide_nr):
+#         return self._seeds[slide_nr]

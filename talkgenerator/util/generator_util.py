@@ -134,15 +134,16 @@ seeded_titled_identity_generator = SeededGenerator(TitledIdentityGenerator)
 
 
 class ExternalImageListGenerator(object):
-    def __init__(self, image_url_generator, file_name_generator, check_image_validness=True):
+    def __init__(self, image_url_generator, file_name_generator, check_image_validness=True, weighted=False):
         self._image_url_generator = image_url_generator
         self._file_name_generator = file_name_generator
         self._check_image_validness = check_image_validness
+        self._weighted = weighted
 
     def __call__(self, presentation_context):
         images = self._image_url_generator(presentation_context)
         while bool(images) and len(images) > 0:
-            chosen_image_url = random.choice(images)
+            chosen_image_url = random_util.weighted_random(images) if self._weighted else random.choice(images)
             downloaded_url = self._file_name_generator(chosen_image_url)
             try:
                 if not self._check_image_validness or os_util.is_image(chosen_image_url):

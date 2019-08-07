@@ -4,3 +4,6 @@ Who am I?
 Some things about me
 My background
 Personal background
+{presenter}
+{presenter}'s bio
+Short bio

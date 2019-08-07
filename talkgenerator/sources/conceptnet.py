@@ -1,7 +1,8 @@
 import time
-import requests
 from functools import lru_cache
 from urllib.parse import urlencode
+
+import requests
 
 from talkgenerator.util import generator_util, cache_util
 
@@ -112,9 +113,24 @@ def _get_from_relation(word, edges, relation_name):
 
 # EXTRACTING INFO
 
+def is_english(node):
+    return not node['language'] or node['language'] == 'en'
+
+
+def is_different_enough_label(edge, word):
+    label = edge["label"].lower()
+    word_lower = word.lower()
+    return not label in word_lower and not word_lower in label
+
+
 def get_weighted_related_words(word, limit=50):
     edges = _get_edges(word, cache_util.HashableDict(limit=limit))
-    return [(edge["weight"], edge["end"]["label"]) for edge in edges if edge["end"]["label"] != word]
+    starts = [(edge["weight"], edge["start"]["label"]) for edge in edges if
+              is_different_enough_label(edge['start'], word) and is_english(edge['start'])]
+    ends = [(edge["weight"], edge["end"]["label"]) for edge in edges if
+            is_different_enough_label(edge['end'], word) and is_english(edge['end'])]
+    result = starts + ends
+    return result
 
 
 def get_weighted_related_locations(word):

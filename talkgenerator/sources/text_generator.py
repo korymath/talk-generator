@@ -1,19 +1,17 @@
 """ This module helps out with generating text using templates """
-import re
 import json
 import random
+import re
 from functools import lru_cache
 
 import tracery
 from tracery.modifiers import base_english
 
-from talkgenerator.util import generator_util
-from talkgenerator.util import language_util
-from talkgenerator.util import random_util
-from talkgenerator.util import os_util
-
-from talkgenerator.sources import wikihow
 from talkgenerator.sources import conceptnet
+from talkgenerator.sources import wikihow
+from talkgenerator.util import language_util
+from talkgenerator.util import os_util
+from talkgenerator.util import random_util
 
 known_functions = {
     "title": str.title,
@@ -25,7 +23,7 @@ known_functions = {
     "ing": language_util.to_present_participle,
     "plural": language_util.to_plural,
     "singular": language_util.to_singular,
-    "synonym": generator_util.FromListGenerator(language_util.get_synonyms),
+    # "synonym": generator_util.FromListGenerator(language_util.get_synonyms),
     "2_to_1_pronouns": language_util.second_to_first_pronouns,
     "wikihow_action": lambda seed: random_util.choice_optional(wikihow.get_related_wikihow_actions(seed)),
     "get_last_noun_and_article": language_util.get_last_noun_and_article,

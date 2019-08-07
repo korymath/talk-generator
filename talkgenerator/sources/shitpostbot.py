@@ -11,8 +11,12 @@ _SEARCH_URL = "https://www.shitpostbot.com/gallery/sourceimages?query={" \
               "}&review_state=accepted&order=total_rating&direction=DESC&page={} "
 
 
-@lru_cache(maxsize=20)
 def _search_shitpostbot_page(search_term, page):
+    return [element[1] for element in _search_shitpostbot_page_rated(search_term, page)]
+
+
+@lru_cache(maxsize=20)
+def _search_shitpostbot_page_rated(search_term, page):
     url = _SEARCH_URL.format(search_term, page, search_term.replace(' ', '+'))
     page = requests.get(url)
     if page:
@@ -29,7 +33,10 @@ def _search_shitpostbot_page(search_term, page):
             # Get real image url
             image_url = entry.find("img").get("src")
             image_url = _get_source_image(image_url)
-            image_urls.append(image_url)
+            rating_div = entry.find("span", class_="rating")
+            rating = int(rating_div.text if rating_div else 1)
+            if rating > 0:
+                image_urls.append((rating, image_url))
 
         return image_urls
 
@@ -49,8 +56,18 @@ def get_random_images(_):
     return images
 
 
+def get_random_images_rated(_):
+    images = _search_shitpostbot_page_rated("", random.choice(range(_MAX_RANDOM_PAGE)))
+    return images
+
+
 _search_image_function = scraper_util.create_page_scraper(_search_shitpostbot_page)
+_search_image_function_rated = scraper_util.create_page_scraper(_search_shitpostbot_page_rated)
 
 
-def search_images(search_term, amount=50):
-    return _search_image_function(search_term, amount)
+def search_images(search_term, number=50):
+    return _search_image_function(search_term, number)
+
+
+def search_images_rated(search_term, number=50):
+    return _search_image_function_rated(search_term, number)

@@ -1,5 +1,4 @@
 from talkgenerator import utils
-from talkgenerator import runtime_check
 
 
 def main(args):

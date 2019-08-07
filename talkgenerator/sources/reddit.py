@@ -1,11 +1,9 @@
 from functools import lru_cache
 
+import praw
 from prawcore import ResponseException
 
 from talkgenerator import settings
-import praw
-
-from talkgenerator.util import os_util
 
 singleton_reddit = None
 

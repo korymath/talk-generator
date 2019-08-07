@@ -30,8 +30,9 @@ talkgenerator --topic 'peanuts' --num_slides 10
 | Argument               | Description               |
 | ---------------------- | ------------------------- |
 | `topic` | The topic of the generator. This works best if it is a common, well-known noun. Use comma-separated words to generate a slide deck about multiple topics |
-| `num_slides` | The number of slides in the generated presentation (*default: 10*) |
+| `slides` | The number of slides in the generated presentation (*default: 10*) |
 | `schema` | The presentation schema to use when generating the presentation. Currently, only two modes are implemented, being `default` and `test` (for testing during development) |
+| `title` | Title of the presentation. Either `topic` or this one should to be set in order to generate a slide deck (just setting `topic` is usually more fun though)  |
 | `presenter` | The name that will be present on the first slide. Leave blank for an automatically generated name |
 | `output_folder` | The folder to output the generated presentations (*default: `./output/`*) |
 | `save_ppt` | If this flag is true(*default*), the generated powerpoint will be saved on the computer in the `output_folder`|
