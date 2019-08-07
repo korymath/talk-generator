@@ -55,14 +55,6 @@ talkgenerator --topic 'peanuts' --num_slides 10
 | `open_ppt` | If this flag is true (*default*), the generated powerpoint will automatically open after generating|
 | `parallel` | If this flag is true (*default*), the generator will generate all slides in parallel |
 
-## Running the generator as a microservice
-
-Run the generator as a microservice at 0.0.0.0:5687.
-
-`sh python run_web.py`
-
-You can then hit `http://0.0.0.0:5687?topic=sometopic`. This will kick the main.py off.
-
 ## Program structure
 
 See the [wiki](https://github.com/korymath/talk-generator/wiki/Program-structure) to know more about the inner implementation.
