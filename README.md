@@ -21,7 +21,23 @@ Our program relies on certain APIs that require authentication in order to use i
 Create a file named `.env` (don't forget the period) in your project directory, and fill this with the correct API keys as described on our [wiki page about this](https://github.com/korymath/talk-generator/wiki/Setting-Up-API-Keys).
 
 ```sh
-source setup.sh
+# Make a new Python 3 virtual environment 
+python3 -m venv venv
+
+# Activate the virtual environment
+source venv/bin/activate
+
+# Upgrade pip and install  requirements
+pip install --upgrade pip
+python3 -m pip install -r requirements.txt
+
+# Download NLTK dependencies
+python3 -m nltk.downloader punkt averaged_perceptron_tagger
+
+# Install the Talk Generator 
+pip install -e .
+
+# Generate a 10 slide talk with topic peanuts
 talkgenerator --topic 'peanuts' --num_slides 10
 ```
 
