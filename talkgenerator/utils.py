@@ -5,6 +5,7 @@ import os
 import pathlib
 import subprocess
 import sys
+import logging
 
 from flask import jsonify
 from flask import request
@@ -16,14 +17,25 @@ from talkgenerator.sources import phrasefinder
 DEFAULT_PRESENTATION_TOPIC = 'cat'
 MAX_PRESENTATION_SAVE_TRIES = 100
 
+logger = logging.getLogger("talkgenerator")
+
 
 def generate_talk(args):
     """Make a talk with the given topic."""
+
+    if args.print_logs:
+        logger.setLevel(logging.DEBUG)
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
     # Print status details
-    print('******************************************')
-    print("Making {} slide talk on: {}".format(
+    logger.info('******************************************')
+    logger.info("Making {} slide talk on: {}".format(
         args.num_slides, args.topic))
-    print("S3 Enabled: {}".format(settings.AWS_S3_ENABLED))
+    logger.info("S3 Enabled: {}".format(settings.AWS_S3_ENABLED))
 
     # Retrieve the schema to generate the presentation with
     schema = schemas.get_schema(args.schema)
@@ -56,7 +68,7 @@ def generate_talk(args):
     cleaned_topics = args.topic.replace(' ', '').replace(',', '_')
     file_name = ''.join(e for e in cleaned_topics if e.isalnum() or e == '_')
 
-    print('Slide deck structured data: {}'.format(
+    logger.info('Slide deck structured data: {}'.format(
         slide_deck.get_structured_data()))
 
     # Save presentation
@@ -71,7 +83,7 @@ def generate_talk(args):
 
         if settings.AWS_S3_ENABLED:
             from talkgenerator.util import aws_s3
-            print("Saving slides to S3 key {}".format(file_name + ".pptx"))
+            logger.info("Saving slides to S3 key {}".format(file_name + ".pptx"))
             # if aws_s3.check_for_object(settings.BUCKET, args.topic):
             aws_s3.store_file(bucket=settings.BUCKET,
                               key=args.topic + ".pptx",
@@ -97,7 +109,7 @@ def save_presentation_to_pptx(output_folder, file_name, prs, index=0):
 
     try:
         prs.save(fp)
-        print('Saved talk to {}'.format(fp))
+        logger.info('Saved talk to {}'.format(fp))
         return fp
     except PermissionError:
         return save_presentation_to_pptx(
@@ -138,6 +150,8 @@ def get_argument_parser():
     parser.add_argument('--parallel', default=True, type=str2bool,
                         help=("Generated powerpoint will generate in parallel " +
                               "faster but drops some conditions)"))
+    parser.add_argument('--print_logs', default=True, type=str2bool,
+                        help="Print logs about the generation process.")
     parser.add_argument('--output_folder', default="../output/", type=str,
                         help="The folder to output the generated presentations")
     parser.add_argument('--save_ppt', default=True, type=str2bool,
