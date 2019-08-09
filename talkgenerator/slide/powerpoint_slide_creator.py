@@ -1,6 +1,7 @@
 import os
 import sys
 import traceback
+import logging
 from functools import lru_cache
 
 from lxml.etree import XMLSyntaxError
@@ -10,6 +11,8 @@ from talkgenerator.util import os_util
 
 # Location of powerpoint template
 _POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
+
+logger = logging.getLogger("talkgenerator")
 
 
 @lru_cache(maxsize=1)
@@ -91,7 +94,7 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
                 placeholder = placeholder.insert_picture(image_url)
             except (ValueError, XMLSyntaxError) as e:
                 traceback.print_exc(file=sys.stdout)
-                print('_add_image error: {}'.format(e))
+                logger.error('_add_image error: {}'.format(e))
                 return None
 
             # Calculate ratios and compare
@@ -113,14 +116,14 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
             return placeholder
         except FileNotFoundError as fnfe:
             traceback.print_exc(file=sys.stdout)
-            print('_add_image file not found: {}'.format(fnfe))
+            logger.error('_add_image file not found: {}'.format(fnfe))
             return None
     else:
         try:
             return placeholder.insert_picture(image_url)
         except OSError or ValueError:
             traceback.print_exc(file=sys.stdout)
-            print("Unexpected error inserting image:", image_url, ":", sys.exc_info()[0])
+            logger.error("Unexpected error inserting image:", image_url, ":", sys.exc_info()[0])
             return None
 
 
@@ -138,7 +141,7 @@ def _add_image_or_text(slide, placeholder_id, image_url_or_text, original_image_
 
 def _print_all_placeholders(slide):
     for shape in slide.placeholders:
-        print('%d %s' % (shape.placeholder_format.idx, shape.name))
+        logger.info('%d %s' % (shape.placeholder_format.idx, shape.name))
 
 
 # FORMAT GENERATORS
