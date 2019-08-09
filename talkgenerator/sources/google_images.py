@@ -64,10 +64,12 @@ def search_images(word, extra_arguments_dict=None, num_images=_DEFAULT_NUM_IMAGE
         'limit': num_images,
         'print_urls': False,
         'print_paths': False,
+        'print_size': False,
         'output_directory': 'downloads/google_images/',
         'language': 'English',
         'safe_search': True,
         'no_numbering': True,
+        'silent_mode': True,
     }
 
     # Add more arguments
@@ -77,7 +79,6 @@ def search_images(word, extra_arguments_dict=None, num_images=_DEFAULT_NUM_IMAGE
     # passing the arguments to the function
     paths_dict = response.download(arguments)[0]
     paths = []
-    print(paths_dict)
     for value in paths_dict.values():
         paths.extend(value)
 
