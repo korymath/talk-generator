@@ -93,7 +93,7 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
             try:
                 placeholder = placeholder.insert_picture(image_url)
             except (ValueError, XMLSyntaxError) as e:
-                traceback.print_exc(file=sys.stdout)
+                # traceback.print_exc(file=sys.stdout)
                 logger.error('_add_image error: {}'.format(e))
                 return None
 
@@ -115,14 +115,14 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
 
             return placeholder
         except FileNotFoundError as fnfe:
-            traceback.print_exc(file=sys.stdout)
+            # traceback.print_exc(file=sys.stdout)
             logger.error('_add_image file not found: {}'.format(fnfe))
             return None
     else:
         try:
             return placeholder.insert_picture(image_url)
         except OSError or ValueError:
-            traceback.print_exc(file=sys.stdout)
+            # traceback.print_exc(file=sys.stdout)
             logger.error("Unexpected error inserting image:", image_url, ":", sys.exc_info()[0])
             return None
 

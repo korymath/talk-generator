@@ -82,7 +82,7 @@ def is_valid_image(image_url):
             logger.warning("Image denied because on blacklist:" + image_url)
             return False
     except (OSError, SyntaxError) as e:
-        traceback.print_exc(file=sys.stdout)
+        # traceback.print_exc(file=sys.stdout)
         logger.error('The image format is not valid for: {}'.format(e))
         return False
 
