@@ -177,7 +177,7 @@ class PresentationSchema:
 
             slide, generated_elements = slide_result
             end_time = time.time()
-            logger.info('\n * Finished generating slide {} about {} using {} in {} seconds *'.format(
+            logger.info('* Finished generating slide {} about {} using {} in {} seconds *'.format(
                 slide_nr + 1,
                 presentation_context["seed"],
                 generator,

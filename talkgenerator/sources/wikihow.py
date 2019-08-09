@@ -1,6 +1,7 @@
 """ Module for interacting with Wikihow """
 import re
 import time
+import logging
 from functools import lru_cache
 from itertools import chain
 
@@ -9,6 +10,8 @@ import requests
 from bs4 import BeautifulSoup
 
 from talkgenerator import settings
+
+logger = logging.getLogger("talkgenerator")
 
 _LOG_IN_URL = "https://www.wikihow.com/index.php?title=Special:UserLogin&action=submitlogin&type=login"
 _ADVANCED_SEARCH_URL = "https://www.wikihow.com/index.php?title=Special%3ASearch&profile=default&search={}" \
@@ -27,7 +30,7 @@ def create_log_in_session(username, password):
             success = True
         except requests.exceptions.ConnectionError:
             wait_time = .25 * 2 ** trial
-            print('Connection error with Wikihow! Retrying in ' + str(wait_time) + ' seconds.')
+            logger.error('Connection error with Wikihow! Retrying in ' + str(wait_time) + ' seconds.')
             time.sleep(wait_time)
             return create_log_in_session(username, password)
     return session
@@ -37,11 +40,11 @@ def get_wikihow_session():
     try:
         wikihow_credentials = settings.wikihow_auth()
         if "session" in wikihow_credentials.keys():
-            print("Found Wikihow Session object in credentials, skipping loggin in")
+            logger.info("Found Wikihow Session object in credentials, skipping loggin in")
             return wikihow_credentials["session"]
         return create_log_in_session(**wikihow_credentials)
     except FileNotFoundError:
-        print(
+        logger.warning(
             "Warning: No login credentials were found for Wikihow, the program might not run as it's supposed to."
             "Please add these credentials file to /data/auth/wikihow.json, having a 'username' and 'password' field")
 
@@ -90,7 +93,7 @@ def advanced_search_wikihow(search_words):
         url = _ADVANCED_SEARCH_URL.format(search_words.replace(' ', '+'))
         resp = wikihow_session.get(url, allow_redirects=True)
         if "Login Required - wikiHow" in str(resp.content):
-            print("WARNING: Problem logging in on Wikihow: Advanced Search disabled")
+            logger.warning("WARNING: Problem logging in on Wikihow: Advanced Search disabled")
         return resp
     return None
 
@@ -117,7 +120,6 @@ def get_related_wikihow_actions_advanced_search(seed_word):
         page = advanced_search_wikihow(inflect.engine().plural(seed_word))
     if page:
         soup = BeautifulSoup(page.content, 'html.parser')
-        # print(soup)
         actions_elements = soup.find_all('div', class_='mw-search-result-heading')
         actions = [clean_wikihow_action(x.find("a")["title"]) for x in actions_elements]
         return actions
