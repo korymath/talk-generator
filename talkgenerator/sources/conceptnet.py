@@ -1,4 +1,5 @@
 import time
+import logging
 from functools import lru_cache
 from urllib.parse import urlencode
 
@@ -22,6 +23,8 @@ _DEFAULT_ARGUMENTS = cache_util.HashableDict(
 
 # HELPERS
 _PROHIBITED_SEARCH_TERMS = "a", "your", "my", "her", "his", "its", "their", "be", "an", "the", "you", "are"
+
+logger = logging.getLogger("talkgenerator.conceptnet")
 
 
 # Helpers
@@ -82,10 +85,10 @@ def _get_data(word, arguments=None):
     try:
         result = requests.get(url).json()
     except Exception as e:
-        print('conceptnet _get_data timeout: {}'.format(e))
+        logger.warning('conceptnet _get_data timeout: {}'.format(e))
         result = None
     end = time.perf_counter()
-    print("Took {} seconds to poll Conceptnet for '{}'".format(
+    logger.info("Took {} seconds to poll Conceptnet for '{}'".format(
         str(end - start), word))
     return result
 

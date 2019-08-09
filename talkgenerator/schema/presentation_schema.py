@@ -70,7 +70,7 @@ class PresentationSchema:
 
         while len(slide_nrs_to_generate) > 0:
             if len(slide_nrs_to_generate) < num_slides:
-                logger.info("Regenerating the following slides:", slide_nrs_to_generate)
+                logger.info("Regenerating the following slides: " + str(slide_nrs_to_generate))
 
             with ThreadPool(processes=num_slides) as pool:
                 all_slide_results = pool.map(
