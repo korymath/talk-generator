@@ -4,12 +4,15 @@ presentation), and slide generators, that have functions for generating slides a
 
 """
 import time
+import logging
 from multiprocessing.pool import ThreadPool
 
 from talkgenerator.schema.slide_generator_data import _filter_generated_elements
 from talkgenerator.slide import slide_generators
 from talkgenerator.slide.slide_deck import SlideDeck
 from talkgenerator.util import random_util
+
+logger = logging.getLogger("talkgenerator")
 
 
 class PresentationSchema:
@@ -60,13 +63,15 @@ class PresentationSchema:
     def _generate_slide_deck_parallel(self, slide_deck, num_slides, main_presentation_context, seed_generator,
                                       used_elements,
                                       used_tags):
-        print("TRYING TO GENERATE IN PARALLEL")
+        logger.info("Generating the slide deck in parallel")
         slide_nrs_to_generate = range(num_slides)
 
         generated_results = [None] * num_slides
 
         while len(slide_nrs_to_generate) > 0:
-            print("REGENERATING SLIDES", slide_nrs_to_generate)
+            if len(slide_nrs_to_generate) < num_slides:
+                logger.info("Regenerating the following slides:", slide_nrs_to_generate)
+
             with ThreadPool(processes=num_slides) as pool:
                 all_slide_results = pool.map(
                     SlideGeneratorContext(
@@ -112,7 +117,6 @@ class PresentationSchema:
             if slide_results:
                 success = self._update_slide_deck_with_generated_result(slide_deck, slide_results, used_elements,
                                                                         used_tags, num_slides)
-                print("success?", success)
                 assert success
 
         return slide_deck
@@ -152,7 +156,7 @@ class PresentationSchema:
 
         start_time = time.time()
         if generator:
-            print('\n * Generating slide {} about {} using {} *'.format(
+            logger.info('* Generating slide {} about {} using {} *'.format(
                 slide_nr + 1,
                 presentation_context["seed"],
                 generator))
@@ -161,7 +165,7 @@ class PresentationSchema:
             # Try again if slide is None, and prohibit generator for generating for this topic
             if not bool(slide_result):
                 end_time = time.time()
-                print(
+                logger.info(
                     "Failed to generate after {} seconds using: {}".format(round(end_time - start_time, 2), generator))
                 prohibited_generators.add(generator)
 
@@ -173,14 +177,14 @@ class PresentationSchema:
 
             slide, generated_elements = slide_result
             end_time = time.time()
-            print('\n * Finished generating slide {} about {} using {} in {} seconds *'.format(
+            logger.info('\n * Finished generating slide {} about {} using {} in {} seconds *'.format(
                 slide_nr + 1,
                 presentation_context["seed"],
                 generator,
                 round(end_time - start_time, 2)))
             return slide, generated_elements, generator, slide_nr
         else:
-            print("No generator found to generate about ", presentation_context["Presentation"])
+            logger.warning("No generator found to generate about ", presentation_context["Presentation"])
 
     def _select_generator(self, slide_nr, total_slides, prohibited_generators):
         """Select a generator for a certain slide number"""
