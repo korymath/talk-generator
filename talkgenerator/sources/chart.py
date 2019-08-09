@@ -11,15 +11,20 @@ from talkgenerator.sources import conceptnet, text_generator
 from talkgenerator.util import generator_util
 
 yes_no_question_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_texts.json', "yes_no_question").generate
+    "data/text-templates/chart_texts.json", "yes_no_question"
+).generate
 funny_yes_no_answer_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_texts.json', "funny_yes_no_answer").generate
+    "data/text-templates/chart_texts.json", "funny_yes_no_answer"
+).generate
 location_question_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_texts.json', "location_question").generate
+    "data/text-templates/chart_texts.json", "location_question"
+).generate
 property_question_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_texts.json', "property_question").generate
+    "data/text-templates/chart_texts.json", "property_question"
+).generate
 correlation_title_generator = text_generator.TraceryTextGenerator(
-    'data/text-templates/chart_texts.json', "correlation_title").generate
+    "data/text-templates/chart_texts.json", "correlation_title"
+).generate
 
 
 # DATA POINTS HELPERS
@@ -30,11 +35,16 @@ def add_noise_to_points(max_noise_ratio, datapoints):
 
 
 def add_noise_to_point(max_noise_ratio, datapoint):
-    return max(0, datapoint + (datapoint * random.uniform(-max_noise_ratio, max_noise_ratio)))
+    return max(
+        0, datapoint + (datapoint * random.uniform(-max_noise_ratio, max_noise_ratio))
+    )
 
 
 def add_gaussian_noise_to_multidim_points(max_noise_ratio, datapoints):
-    return [_add_gaussian_noise_to_multidim_point(max_noise_ratio, point) for point in datapoints]
+    return [
+        _add_gaussian_noise_to_multidim_point(max_noise_ratio, point)
+        for point in datapoints
+    ]
 
 
 def _add_gaussian_noise_to_multidim_point(max_noise_ratio, datapoint):
@@ -61,13 +71,15 @@ def create_interesting_curve_function():
     # random relative
     r = random.uniform(0, 1)
 
-    interesting_functions = [lambda x: a * x,
-                             lambda x: a / x,
-                             lambda x: a + x,
-                             lambda x: a - x,
-                             # lambda x: min(float(5e8), float(a ** math.log(x))),
-                             # lambda x: min(float(5e8), float(x ** math.log(a))),
-                             lambda x: math.sin(x)]
+    interesting_functions = [
+        lambda x: a * x,
+        lambda x: a / x,
+        lambda x: a + x,
+        lambda x: a - x,
+        # lambda x: min(float(5e8), float(a ** math.log(x))),
+        # lambda x: min(float(5e8), float(x ** math.log(a))),
+        lambda x: math.sin(x),
+    ]
 
     chosen = random.choice(interesting_functions)
 
@@ -86,7 +98,9 @@ def create_interesting_curve_function():
 # DATA SET CREATION
 
 
-def create_equal_data_with_outlier_end(size, noise_factor, normal_min, normal_max, outlier_min_size, outlier_max_size):
+def create_equal_data_with_outlier_end(
+    size, noise_factor, normal_min, normal_max, outlier_min_size, outlier_max_size
+):
     # Create data with same number between normal_min and normal_max everywhere
     datapoints = [random.uniform(normal_min, normal_max) for _ in range(0, size)]
 
@@ -109,6 +123,7 @@ def generate_y(xs, function):
 
 # CHART TYPES PROPERTIES SETTING
 
+
 def add_data_to_series(serie, data_points):
     for data_point in data_points:
         x, y = data_point
@@ -120,8 +135,9 @@ def _set_pie_label_positions(chart, series, chart_data, label_position):
     for i in range(len(chart_data.categories)):
         point = series.points[i]
         value = series.values[i]
-        point.data_label.text_frame.text = "{} ({:.0%})".format(chart_data.categories[i].label,
-                                                                value)
+        point.data_label.text_frame.text = "{} ({:.0%})".format(
+            chart_data.categories[i].label, value
+        )
         if label_position:
             point.data_label.position = label_position
 
@@ -135,7 +151,7 @@ def set_histogram_properties(chart, chart_data):
     # value_axis.visible = False
 
     tick_labels = value_axis.tick_labels
-    tick_labels.number_format = '0%'
+    tick_labels.number_format = "0%"
 
     return chart
 
@@ -148,8 +164,11 @@ def set_pie_properties(chart, chart_data):
         # Data points
         series = chart.series[0]
         # Check if there are small values that can't be contained on the pie piece
-        label_position = XL_LABEL_POSITION.OUTSIDE_END if any(
-            t < 0.10 for t in series.values) else XL_LABEL_POSITION.CENTER
+        label_position = (
+            XL_LABEL_POSITION.OUTSIDE_END
+            if any(t < 0.10 for t in series.values)
+            else XL_LABEL_POSITION.CENTER
+        )
 
         # set labels to contain category and value
         _set_pie_label_positions(chart, series, chart_data, label_position)
@@ -190,8 +209,10 @@ def generate_yes_no_large_funny_answer_chart_data(presentation_context):
 
     presentation_context["chart_title"] = title
 
-    categories = ['Yes', 'No', funny_yes_no_answer_generator(presentation_context)]
-    series_data = normalise_data(create_equal_data_with_outlier_end(len(categories), .7, 1, 2.5, 1, 20))
+    categories = ["Yes", "No", funny_yes_no_answer_generator(presentation_context)]
+    series_data = normalise_data(
+        create_equal_data_with_outlier_end(len(categories), 0.7, 1, 2.5, 1, 20)
+    )
 
     chart_data = ChartData()
     chart_data.categories = categories
@@ -199,7 +220,9 @@ def generate_yes_no_large_funny_answer_chart_data(presentation_context):
     return title, chart_data
 
 
-def _generate_conceptnet_data(presentation_context, title_generator, conceptnet_function):
+def _generate_conceptnet_data(
+    presentation_context, title_generator, conceptnet_function
+):
     seed = presentation_context["seed"]
     title = title_generator(presentation_context)
 
@@ -212,7 +235,7 @@ def _generate_conceptnet_data(presentation_context, title_generator, conceptnet_
         conceptnet_relations = conceptnet.remove_containing(conceptnet_relations, seed)
         random.shuffle(conceptnet_relations)
 
-        conceptnet_relations = conceptnet_relations[0:random.randint(2, 5)]
+        conceptnet_relations = conceptnet_relations[0 : random.randint(2, 5)]
         categories = [location[1] for location in conceptnet_relations]
         values = [float(location[0]) ** 2 for location in conceptnet_relations]
 
@@ -227,19 +250,28 @@ def _generate_conceptnet_data(presentation_context, title_generator, conceptnet_
 
 
 def generate_location_data(presentation_context):
-    return _generate_conceptnet_data(presentation_context, location_question_generator,
-                                     conceptnet.get_weighted_related_locations)
+    return _generate_conceptnet_data(
+        presentation_context,
+        location_question_generator,
+        conceptnet.get_weighted_related_locations,
+    )
 
 
 def generate_property_data(presentation_context):
-    return _generate_conceptnet_data(presentation_context, property_question_generator,
-                                     conceptnet.get_weighted_properties)
+    return _generate_conceptnet_data(
+        presentation_context,
+        property_question_generator,
+        conceptnet.get_weighted_properties,
+    )
 
 
 # FULL CHART GENERATORS
 
+
 def generate_yes_no_pie(presentation_context):
-    title, chart_data = generate_yes_no_large_funny_answer_chart_data(presentation_context)
+    title, chart_data = generate_yes_no_large_funny_answer_chart_data(
+        presentation_context
+    )
     chart_type, chart_modifier = random.choice(_YES_NO_CHART_TYPES)
     return title, chart_type, chart_data, chart_modifier
 
@@ -263,9 +295,9 @@ def generate_property_pie(presentation_context):
 _CORRELATION_WORD_GENERATOR = generator_util.WalkingGenerator(
     generator_util.CombinedGenerator(
         (2, conceptnet.unweighted_antonym_generator),
-        (1, conceptnet.unweighted_related_word_generator)
+        (1, conceptnet.unweighted_related_word_generator),
     ),
-    steps=5
+    steps=5,
 )
 
 
@@ -286,22 +318,30 @@ def generate_correlation_curve(presentation_context):
 
     chart_data = XyChartData()
 
-    serie = chart_data.add_series('Model')
+    serie = chart_data.add_series("Model")
 
     # Generate some Xs, with chance of exponential differences in size between generated x axes
-    xs = generate_random_x(0, 2 ** random.uniform(1, 10), int(2 ** random.uniform(3, 8)))
+    xs = generate_random_x(
+        0, 2 ** random.uniform(1, 10), int(2 ** random.uniform(3, 8))
+    )
 
     # Generate y
     data_points = generate_y(xs, create_interesting_curve_function())
 
     max_x = max(xs)
 
-    data_points = add_gaussian_noise_to_multidim_points(1.5 * random.uniform(0, max_x/10), data_points)
+    data_points = add_gaussian_noise_to_multidim_points(
+        1.5 * random.uniform(0, max_x / 10), data_points
+    )
 
     # Remove negatives
     data_points = [(abs(datapoint[0]), abs(datapoint[1])) for datapoint in data_points]
 
     add_data_to_series(serie, data_points)
 
-    return title, XL_CHART_TYPE.XY_SCATTER, chart_data, create_set_scatter_properties(
-        x_label, y_label)
+    return (
+        title,
+        XL_CHART_TYPE.XY_SCATTER,
+        chart_data,
+        create_set_scatter_properties(x_label, y_label),
+    )

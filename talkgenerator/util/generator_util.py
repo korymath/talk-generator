@@ -11,6 +11,7 @@ from talkgenerator.util import random_util, os_util
 
 logger = logging.getLogger("talkgenerator")
 
+
 class CombinedGenerator(object):
     def __init__(self, *weighted_generators):
         self._weighted_generators = weighted_generators
@@ -53,7 +54,9 @@ class TupledGenerator(object):
 
     def __call__(self, presentation_context):
         # print("TupledGenerator generator using", presentation_context)
-        return tuple([generator(presentation_context) for generator in self._generators])
+        return tuple(
+            [generator(presentation_context) for generator in self._generators]
+        )
 
 
 class InspiredTupleGenerator(object):
@@ -71,6 +74,7 @@ class InspiredTupleGenerator(object):
 
 
 # == TRIVIAL GENERATORS ==
+
 
 class SeededGenerator(object):
     def __init__(self, simple_generator):
@@ -126,8 +130,11 @@ class InvalidImagesRemoverGenerator(object):
         self._list_generator = list_generator
 
     def __call__(self, presentation_context):
-        return [item for item in self._list_generator(presentation_context) if
-                os_util.is_image(item) and os_util.is_valid_image(item)]
+        return [
+            item
+            for item in self._list_generator(presentation_context)
+            if os_util.is_image(item) and os_util.is_valid_image(item)
+        ]
 
 
 seeded_identity_generator = SeededGenerator(IdentityGenerator)
@@ -135,7 +142,13 @@ seeded_titled_identity_generator = SeededGenerator(TitledIdentityGenerator)
 
 
 class ExternalImageListGenerator(object):
-    def __init__(self, image_url_generator, file_name_generator, check_image_validness=True, weighted=False):
+    def __init__(
+        self,
+        image_url_generator,
+        file_name_generator,
+        check_image_validness=True,
+        weighted=False,
+    ):
         self._image_url_generator = image_url_generator
         self._file_name_generator = file_name_generator
         self._check_image_validness = check_image_validness
@@ -144,10 +157,16 @@ class ExternalImageListGenerator(object):
     def __call__(self, presentation_context):
         images = self._image_url_generator(presentation_context)
         while bool(images) and len(images) > 0:
-            chosen_image_url = random_util.weighted_random(images) if self._weighted else random.choice(images)
+            chosen_image_url = (
+                random_util.weighted_random(images)
+                if self._weighted
+                else random.choice(images)
+            )
             downloaded_url = self._file_name_generator(chosen_image_url)
             try:
-                if not self._check_image_validness or os_util.is_image(chosen_image_url):
+                if not self._check_image_validness or os_util.is_image(
+                    chosen_image_url
+                ):
                     os_util.download_image(chosen_image_url, downloaded_url)
                     if os_util.is_valid_image(downloaded_url):
                         return downloaded_url
@@ -191,7 +210,9 @@ class UnweightedGenerator(object):
     def __call__(self, argument):
         weighted_list = self._weighted_list_creator(argument)
         if weighted_list:
-            return random_util.choice_optional([element[1] for element in weighted_list])
+            return random_util.choice_optional(
+                [element[1] for element in weighted_list]
+            )
 
 
 class WalkingGenerator(object):

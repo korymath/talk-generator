@@ -18,7 +18,7 @@ def reddit_auth():
     return {
         "client_id": REDDIT_CLIENT_ID,
         "client_secret": REDDIT_CLIENT_SECRET,
-        "user_agent": REDDIT_USER_AGENT
+        "user_agent": REDDIT_USER_AGENT,
     }
 
 
@@ -27,10 +27,7 @@ WIKIHOW_PASSWORD = env.str("WIKIHOW_PASSWORD", "")
 
 
 def wikihow_auth():
-    return {
-        "username": WIKIHOW_USERNAME,
-        "password": WIKIHOW_PASSWORD,
-    }
+    return {"username": WIKIHOW_USERNAME, "password": WIKIHOW_PASSWORD}
 
 
 UNSPLASH_ACCESS_KEY = env.str("UNSPLASH_ACCESS_KEY", "")
@@ -77,7 +74,7 @@ def check_environment_variables():
 
 
 def print_env_file_warning():
-    env_message = '''
+    env_message = """
     Hi! Before you can run talkgenerator you need to set some secret keys in an .env file.
     
     Which keys?
@@ -91,6 +88,6 @@ def print_env_file_warning():
     $ echo OTHER_VARIABLE_NEEDED=VALUE >> .env
 
     or you can use your favorite text editor (vi, nano, etc) to create it.
-    '''
+    """
 
     logger.error(env_message)

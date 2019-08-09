@@ -20,7 +20,8 @@ def get_reddit():
             logger.error(
                 "No login file for Reddit exists."
                 "Please contact the creators to get access to the file or create your own app to get access to the "
-                "Reddit API, as this file is not uploaded to the git for security reasons.")
+                "Reddit API, as this file is not uploaded to the git for security reasons."
+            )
     return reddit
 
 
@@ -37,10 +38,14 @@ def get_subreddit(name):
 def search_subreddit(name, query, sort="relevance", limit=500, filter_nsfw=True):
     if has_reddit_access():
         try:
-            submissions = list(get_subreddit(name).search(query, sort=sort, limit=limit))
+            submissions = list(
+                get_subreddit(name).search(query, sort=sort, limit=limit)
+            )
 
             if filter_nsfw:
-                submissions = [submission for submission in submissions if not submission.over_18]
+                submissions = [
+                    submission for submission in submissions if not submission.over_18
+                ]
             return submissions
 
         except ResponseException as err:

@@ -24,7 +24,7 @@ def download_image(from_url, to_url):
     # tempfile.mkdtemp(dir=dir_path)
 
     # Download
-    f = open(to_url, 'wb')
+    f = open(to_url, "wb")
     # f = tempfile.NamedTemporaryFile('wb', dir=to_url)
     f.write(requests.get(from_url, allow_redirects=True).content)
     f.close()
@@ -45,7 +45,7 @@ def to_actual_file(filename=""):
 @lru_cache(maxsize=20)
 def read_lines(filename):
     actual_file = to_actual_file(filename)
-    return [line.rstrip('\n') for line in open(actual_file)]
+    return [line.rstrip("\n") for line in open(actual_file)]
 
 
 @lru_cache(maxsize=20)
@@ -62,8 +62,7 @@ _PROHIBITED_IMAGES_DIR = "data/prohibited_images/"
 @lru_cache(maxsize=1)
 def get_prohibited_images():
     actual_dir = to_actual_file(_PROHIBITED_IMAGES_DIR)
-    return list(
-        [open_image(actual_dir + url) for url in os.listdir(actual_dir)])
+    return list([open_image(actual_dir + url) for url in os.listdir(actual_dir)])
 
 
 @lru_cache(maxsize=20)
@@ -71,7 +70,12 @@ def is_image(content):
     if not bool(content) or bool(content) is content or not content.lower:
         return False
     lower_url = content.lower()
-    return ".jpg" in lower_url or ".gif" in lower_url or ".png" in lower_url or ".jpeg" in lower_url
+    return (
+        ".jpg" in lower_url
+        or ".gif" in lower_url
+        or ".png" in lower_url
+        or ".jpeg" in lower_url
+    )
 
 
 @lru_cache(maxsize=20)
@@ -83,7 +87,7 @@ def is_valid_image(image_url):
             return False
     except (OSError, SyntaxError) as e:
         # traceback.print_exc(file=sys.stdout)
-        logger.error('The image format is not valid for: {}'.format(e))
+        logger.error("The image format is not valid for: {}".format(e))
         return False
 
     return True

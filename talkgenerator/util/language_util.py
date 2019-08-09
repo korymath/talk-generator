@@ -10,12 +10,10 @@ logger = logging.getLogger("talkgenerator")
 
 
 def check_and_download():
-    required_corpus_list = [
-        'tokenizers/punkt',
-        'taggers/averaged_perceptron_tagger']
+    required_corpus_list = ["tokenizers/punkt", "taggers/averaged_perceptron_tagger"]
     try:
         for corpus in required_corpus_list:
-            _check_and_download_corpus(corpus, corpus.split('/')[1])
+            _check_and_download_corpus(corpus, corpus.split("/")[1])
     except Exception as e:
         print_corpus_download_warning()
         return False
@@ -31,7 +29,7 @@ def _check_and_download_corpus(corpus_fullname, corpus_shortname):
 
 
 def print_corpus_download_warning():
-    corpus_warning = '''
+    corpus_warning = """
     Hmm...
     ---------------------
 
@@ -41,14 +39,17 @@ def print_corpus_download_warning():
     there is another issue.
 
     $ python3 -m nltk.downloader punkt averaged_perceptron_tagger
-    '''
+    """
     logger.warning(corpus_warning)
 
 
 # Helpers
 
+
 def _replace_word_one_case(sentence, word, replacement, flags=0):
-    return re.sub(r'(^|\W)' + word + r'(\W|$)', r'\1' + replacement + r'\2', sentence, flags=flags)
+    return re.sub(
+        r"(^|\W)" + word + r"(\W|$)", r"\1" + replacement + r"\2", sentence, flags=flags
+    )
 
 
 def replace_word(sentence, word, replacement):
@@ -69,15 +70,16 @@ def get_pos_tags(word):
 
 # Verbs
 
+
 def get_verb_index(words):
     seen_adverb = False
     for i in range(len(words)):
         tags = get_pos_tags(words[i])
         # Is verb: return
-        if 'VB' in tags:
+        if "VB" in tags:
             return i
         # Is adverb: return next non adverb
-        if 'RB' in tags:
+        if "RB" in tags:
             seen_adverb = True
             continue
         # Something following an adverb thats not an adverb? See as verb
@@ -92,7 +94,13 @@ def apply_function_to_verb(action, func):
     first_word = func(words[verb_index])
     if len(words) == 1:
         return first_word
-    return (" ".join(words[:verb_index]) + " " + first_word + " " + " ".join(words[verb_index + 1:])).strip()
+    return (
+        " ".join(words[:verb_index])
+        + " "
+        + first_word
+        + " "
+        + " ".join(words[verb_index + 1 :])
+    ).strip()
 
 
 def to_present_participle(action):
@@ -103,30 +111,34 @@ def to_present_participle(action):
 def _make_ing_form(passed_string):
     passed_string = passed_string.lower()
     letter = list(string.ascii_lowercase)
-    vowel = ['a', 'e', 'i', 'o', 'u']
+    vowel = ["a", "e", "i", "o", "u"]
     consonant = [c for c in letter if c not in vowel]
-    exception = ['be', 'see', 'flee', 'knee', 'lie']
+    exception = ["be", "see", "flee", "knee", "lie"]
 
-    if passed_string.endswith('ie'):
+    if passed_string.endswith("ie"):
         passed_string = passed_string[:-2]
-        return passed_string + 'ying'
+        return passed_string + "ying"
 
-    elif passed_string.endswith('e'):
+    elif passed_string.endswith("e"):
         if passed_string in exception:
-            return passed_string + 'ing'
+            return passed_string + "ing"
         else:
             passed_string = passed_string[:-1]
-            return passed_string + 'ing'
+            return passed_string + "ing"
 
-    elif passed_string.endswith('y') or passed_string.endswith('w'):
-        return passed_string + 'ing'
+    elif passed_string.endswith("y") or passed_string.endswith("w"):
+        return passed_string + "ing"
 
-    elif len(passed_string) >= 3 and passed_string[-1] in consonant and passed_string[-2] in vowel and passed_string[
-        -3] in consonant:
+    elif (
+        len(passed_string) >= 3
+        and passed_string[-1] in consonant
+        and passed_string[-2] in vowel
+        and passed_string[-3] in consonant
+    ):
         passed_string += passed_string[-1]
-        return passed_string + 'ing'
+        return passed_string + "ing"
     else:
-        return passed_string + 'ing'
+        return passed_string + "ing"
 
 
 def to_ing_form(passed_string):
@@ -169,13 +181,18 @@ def add_article(word):
     # TODO: Maybe more checks, some u's cause "an", or some big letters in case it's an abbreviation
     word_lower = word.lower()
     article = "a"
-    if word_lower.startswith("a") or word_lower.startswith("e") or word_lower.startswith("i") or word_lower.startswith(
-            "o"):
+    if (
+        word_lower.startswith("a")
+        or word_lower.startswith("e")
+        or word_lower.startswith("i")
+        or word_lower.startswith("o")
+    ):
         article = "an"
     return article + " " + word
 
 
 # Pronouns
+
 
 def second_to_first_pronouns(sentence):
     sentence = replace_word(sentence, "yours", "mine")
@@ -188,14 +205,15 @@ def second_to_first_pronouns(sentence):
 
 # TODO: These don't work well, but might be useful features in our text generation language
 def is_noun(word):
-    return 'NN' in get_pos_tags(word)
+    return "NN" in get_pos_tags(word)
 
 
 def is_verb(word):
-    return 'VB' in get_pos_tags(word)
+    return "VB" in get_pos_tags(word)
 
 
 # Special operators
+
 
 def get_last_noun_and_article(sentence):
     tokens = nltk.word_tokenize(sentence)
@@ -219,4 +237,4 @@ def get_last_noun_and_article(sentence):
 
 
 def replace_non_alphabetical_characters(text):
-    return re.sub(r'[^A-Za-z\s\b -]+', '', text)
+    return re.sub(r"[^A-Za-z\s\b -]+", "", text)
