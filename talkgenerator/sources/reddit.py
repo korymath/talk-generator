@@ -1,3 +1,4 @@
+import logging
 from functools import lru_cache
 
 import praw
@@ -7,6 +8,8 @@ from talkgenerator import settings
 
 singleton_reddit = None
 
+logger = logging.getLogger("talkgenerator")
+
 
 def get_reddit():
     reddit = singleton_reddit
@@ -14,9 +17,8 @@ def get_reddit():
         try:
             reddit = praw.Reddit(**settings.reddit_auth())
         except FileNotFoundError:
-            print(
-                "No login file for Reddit exists. Please put a JSON containing 'client_id', 'client_secret' and "
-                "'user_agent' attributes in data/auth/reddit.json."
+            logger.error(
+                "No login file for Reddit exists."
                 "Please contact the creators to get access to the file or create your own app to get access to the "
                 "Reddit API, as this file is not uploaded to the git for security reasons.")
     return reddit
@@ -42,6 +44,6 @@ def search_subreddit(name, query, sort="relevance", limit=500, filter_nsfw=True)
             return submissions
 
         except ResponseException as err:
-            print("Exception with accessing Reddit: {}".format(err))
+            logger.error("Exception with accessing Reddit: {}".format(err))
     else:
-        print("WARNING: No reddit access!")
+        logger.warning("WARNING: No reddit access!")

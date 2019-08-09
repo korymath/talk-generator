@@ -1,9 +1,12 @@
 """ Module providing language-related operations to manipulate strings"""
+import logging
 import re
 import string
 
 import inflect
 import nltk
+
+logger = logging.getLogger("talkgenerator")
 
 
 def check_and_download():
@@ -39,6 +42,7 @@ def print_corpus_download_warning():
 
     $ python3 -m nltk.downloader punkt averaged_perceptron_tagger
     '''
+    logger.warning(corpus_warning)
 
 
 # Helpers

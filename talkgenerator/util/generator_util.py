@@ -2,13 +2,14 @@
 Light, commonly used, non-specific generators that are helpful shortcuts for creating
 certain types of (content) generators
 """
-
+import logging
 import random
 
 import requests
 
 from talkgenerator.util import random_util, os_util
 
+logger = logging.getLogger("talkgenerator")
 
 class CombinedGenerator(object):
     def __init__(self, *weighted_generators):
@@ -151,13 +152,13 @@ class ExternalImageListGenerator(object):
                     if os_util.is_valid_image(downloaded_url):
                         return downloaded_url
                 else:
-                    print("Not a image url", chosen_image_url)
+                    logger.warning("Not a image url", chosen_image_url)
             except PermissionError:
-                print("Permission error when downloading", chosen_image_url)
+                logger.warning("Permission error when downloading", chosen_image_url)
             except requests.exceptions.MissingSchema:
-                print("Missing schema for image ", chosen_image_url)
+                logger.warning("Missing schema for image ", chosen_image_url)
             except OSError:
-                print("Non existing image for: ", chosen_image_url)
+                logger.warning("Non existing image for: ", chosen_image_url)
             images.remove(chosen_image_url)
         return None
 
