@@ -1,6 +1,7 @@
 import os
 import sys
 import traceback
+import logging
 from functools import lru_cache
 
 from lxml.etree import XMLSyntaxError
@@ -9,7 +10,9 @@ from pptx import Presentation
 from talkgenerator.util import os_util
 
 # Location of powerpoint template
-_POWERPOINT_TEMPLATE_FILE = 'data/powerpoint/template.pptx'
+_POWERPOINT_TEMPLATE_FILE = "data/powerpoint/template.pptx"
+
+logger = logging.getLogger("talkgenerator")
 
 
 @lru_cache(maxsize=1)
@@ -90,8 +93,8 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
             try:
                 placeholder = placeholder.insert_picture(image_url)
             except (ValueError, XMLSyntaxError) as e:
-                traceback.print_exc(file=sys.stdout)
-                print('_add_image error: {}'.format(e))
+                # traceback.print_exc(file=sys.stdout)
+                logger.error("_add_image error: {}".format(e))
                 return None
 
             # Calculate ratios and compare
@@ -112,15 +115,17 @@ def _add_image(slide, placeholder_id, image_url, original_image_size=True):
 
             return placeholder
         except FileNotFoundError as fnfe:
-            traceback.print_exc(file=sys.stdout)
-            print('_add_image file not found: {}'.format(fnfe))
+            # traceback.print_exc(file=sys.stdout)
+            logger.error("_add_image file not found: {}".format(fnfe))
             return None
     else:
         try:
             return placeholder.insert_picture(image_url)
         except OSError or ValueError:
-            traceback.print_exc(file=sys.stdout)
-            print("Unexpected error inserting image:", image_url, ":", sys.exc_info()[0])
+            # traceback.print_exc(file=sys.stdout)
+            logger.error(
+                "Unexpected error inserting image:", image_url, ":", sys.exc_info()[0]
+            )
             return None
 
 
@@ -138,12 +143,13 @@ def _add_image_or_text(slide, placeholder_id, image_url_or_text, original_image_
 
 def _print_all_placeholders(slide):
     for shape in slide.placeholders:
-        print('%d %s' % (shape.placeholder_format.idx, shape.name))
+        logger.info("%d %s" % (shape.placeholder_format.idx, shape.name))
 
 
 # FORMAT GENERATORS
 # These are functions that get some inputs (texts, images...)
 # and create layouted slide with these inputs
+
 
 def create_new_powerpoint():
     return Presentation(get_powerpoint_template_file())
@@ -174,16 +180,27 @@ def create_large_quote_slide(prs, title, text, background_image=None):
 def create_image_slide(prs, title=None, image_url=None, original_image_size=True):
     """ Creates a slide with an image covering the whole slide"""
     # TODO debug this: the image can not be set!
-    return _create_single_image_slide(prs, title, image_url, LAYOUT_TITLE_AND_PICTURE, original_image_size)
+    return _create_single_image_slide(
+        prs, title, image_url, LAYOUT_TITLE_AND_PICTURE, original_image_size
+    )
 
 
 def create_full_image_slide(prs, title=None, image_url=None, original_image_size=True):
     """ Creates a slide with an image covering the whole slide"""
-    return _create_single_image_slide(prs, title, image_url, LAYOUT_FULL_PICTURE, original_image_size)
+    return _create_single_image_slide(
+        prs, title, image_url, LAYOUT_FULL_PICTURE, original_image_size
+    )
 
 
-def create_two_column_images_slide(prs, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
-                                   image_or_text_2=None, original_image_size=True):
+def create_two_column_images_slide(
+    prs,
+    title=None,
+    caption_1=None,
+    image_or_text_1=None,
+    caption_2=None,
+    image_or_text_2=None,
+    original_image_size=True,
+):
     if _is_valid_content(image_or_text_1) and _is_valid_content(image_or_text_2):
         slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
         _add_title(slide, title)
@@ -194,10 +211,22 @@ def create_two_column_images_slide(prs, title=None, caption_1=None, image_or_tex
         return slide
 
 
-def create_three_column_images_slide(prs, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
-                                     image_or_text_2=None, caption_3=None, image_or_text_3=None,
-                                     original_image_size=True):
-    if _is_valid_content(image_or_text_1) and _is_valid_content(image_or_text_2) and _is_valid_content(image_or_text_3):
+def create_three_column_images_slide(
+    prs,
+    title=None,
+    caption_1=None,
+    image_or_text_1=None,
+    caption_2=None,
+    image_or_text_2=None,
+    caption_3=None,
+    image_or_text_3=None,
+    original_image_size=True,
+):
+    if (
+        _is_valid_content(image_or_text_1)
+        and _is_valid_content(image_or_text_2)
+        and _is_valid_content(image_or_text_3)
+    ):
         slide = _create_slide(prs, LAYOUT_THREE_TITLE_AND_IMAGE)
         _add_title(slide, title)
         _add_text(slide, 1, caption_1)

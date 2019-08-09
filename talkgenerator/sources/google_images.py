@@ -7,14 +7,9 @@ from google_images_download import google_images_download
 
 _DEFAULT_NUM_IMAGES = 3
 
-_FULL_SCREEN_ARGUMENTS = {
-    'exact_size': '1600,900',
-}
+_FULL_SCREEN_ARGUMENTS = {"exact_size": "1600,900"}
 
-_WIDE_ARGUMENTS = {
-    'size': '>1024*768',
-    'aspect_ratio': 'wide',
-}
+_WIDE_ARGUMENTS = {"size": ">1024*768", "aspect_ratio": "wide"}
 
 
 @lru_cache(maxsize=20)
@@ -60,14 +55,16 @@ def search_images(word, extra_arguments_dict=None, num_images=_DEFAULT_NUM_IMAGE
     # Get related images at 16x9 aspect ratio
     response = google_images_download.googleimagesdownload()
     arguments = {
-        'keywords': word,
-        'limit': num_images,
-        'print_urls': False,
-        'print_paths': False,
-        'output_directory': 'downloads/google_images/',
-        'language': 'English',
-        'safe_search': True,
-        'no_numbering': True,
+        "keywords": word,
+        "limit": num_images,
+        "print_urls": False,
+        "print_paths": False,
+        "print_size": False,
+        "output_directory": "downloads/google_images/",
+        "language": "English",
+        "safe_search": True,
+        "no_numbering": True,
+        "silent_mode": True,
     }
 
     # Add more arguments
@@ -77,12 +74,12 @@ def search_images(word, extra_arguments_dict=None, num_images=_DEFAULT_NUM_IMAGE
     # passing the arguments to the function
     paths_dict = response.download(arguments)[0]
     paths = []
-    print(paths_dict)
     for value in paths_dict.values():
         paths.extend(value)
 
     # return absolute paths of the downloaded images
     return paths
+
 
 # @lru_cache(maxsize=20)
 # def _get_google_image_cached(word, num_image, lp):

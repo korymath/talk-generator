@@ -25,13 +25,13 @@ known_functions = {
     "singular": language_util.to_singular,
     # "synonym": generator_util.FromListGenerator(language_util.get_synonyms),
     "2_to_1_pronouns": language_util.second_to_first_pronouns,
-    "wikihow_action": lambda seed: random_util.choice_optional(wikihow.get_related_wikihow_actions(seed)),
+    "wikihow_action": lambda seed: random_util.choice_optional(
+        wikihow.get_related_wikihow_actions(seed)
+    ),
     "get_last_noun_and_article": language_util.get_last_noun_and_article,
-
     # Conceptnet
     "conceptnet_location": conceptnet.weighted_location_generator,
     "conceptnet_related": conceptnet.weighted_related_word_generator,
-
     # Checkers
     "is_noun": lambda word: word if language_util.is_noun(word) else None,
     "is_verb": lambda word: word if language_util.is_verb(word) else None,
@@ -43,13 +43,10 @@ class AbstractTextGenerator(object):
         raise NotImplementedError()
 
     def generate_with_seed(self, seed):
-        return self.generate({
-            "seed": seed
-        })
+        return self.generate({"seed": seed})
 
 
 class TemplatedTextGenerator(AbstractTextGenerator):
-
     def __init__(self, template_file=None, templates_list=None):
         templates = []
         if template_file:
@@ -103,11 +100,13 @@ class TraceryTextGenerator(AbstractTextGenerator):
 def get_tracery_grammar(grammar_file):
     return tracery.Grammar(json.load(grammar_file))
 
+
 def can_format_with(template, variables_dictionary):
     """ Checks if the template can be fully formatted by the given variable dictionary without errors"""
     format_variables = get_format_variables(template)
-    return (len(format_variables) == 0 and len(variables_dictionary) == 0) or set(format_variables) <= set(
-        variables_dictionary.keys())
+    return (len(format_variables) == 0 and len(variables_dictionary) == 0) or set(
+        format_variables
+    ) <= set(variables_dictionary.keys())
 
 
 def get_format_variables(template):
@@ -117,13 +116,15 @@ def get_format_variables(template):
 
 def get_format_variables_and_functions(template):
     """ Finds all the names of the variables used in the template with their functions in a large tuple"""
-    matches = re.findall(r'{(\w+)((?:[.]\w+)*)}', template)
+    matches = re.findall(r"{(\w+)((?:[.]\w+)*)}", template)
     return set(matches)
 
 
 def apply_variables_to_template(template, variables_dictionary):
     variables_and_functions = get_format_variables_and_functions(template)
-    applied = apply_functions_to_variables(template, variables_dictionary, variables_and_functions)
+    applied = apply_functions_to_variables(
+        template, variables_dictionary, variables_and_functions
+    )
     if applied:
         (template, variables_dictionary) = applied
         return template.format(**variables_dictionary)
@@ -151,7 +152,9 @@ def apply_functions(variable, functions):
     return result
 
 
-def apply_functions_to_variables(template, variables_dictionary, variables_and_functions):
+def apply_functions_to_variables(
+    template, variables_dictionary, variables_and_functions
+):
     """ Applies the functions of the variables_and_functions tuple and stores them in the variable dictionary and
     updates the template """
     for var_func in variables_and_functions:

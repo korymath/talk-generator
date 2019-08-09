@@ -35,11 +35,20 @@ def log_api_call(func):
               -- Output to logs:
               API CALL: fibonacci_foo_api TRACE: 1232345346
     """
+
     def log_api_call_wrapper(*args, **kwargs):
-        if 'Apitrace' in request.headers and request.headers['Apitrace'] is not None:
-            log = logging.getLogger('werkzeug')
-            log.info("%s | API CALL: %s TRACE: %s " % (str(datetime.datetime.now()), func.__name__, request.headers['Apitrace']))
+        if "Apitrace" in request.headers and request.headers["Apitrace"] is not None:
+            log = logging.getLogger("werkzeug")
+            log.info(
+                "%s | API CALL: %s TRACE: %s "
+                % (
+                    str(datetime.datetime.now()),
+                    func.__name__,
+                    request.headers["Apitrace"],
+                )
+            )
         return func(*args, **kwargs)
+
     return log_api_call_wrapper
 
 

@@ -5,6 +5,7 @@ import os
 import pathlib
 import subprocess
 import sys
+import logging
 
 from flask import jsonify
 from flask import request
@@ -13,17 +14,29 @@ from talkgenerator import settings
 from talkgenerator.schema import schemas
 from talkgenerator.sources import phrasefinder
 
-DEFAULT_PRESENTATION_TOPIC = 'cat'
+DEFAULT_PRESENTATION_TOPIC = "cat"
 MAX_PRESENTATION_SAVE_TRIES = 100
+
+logger = logging.getLogger("talkgenerator")
 
 
 def generate_talk(args):
     """Make a talk with the given topic."""
+
+    if args.print_logs:
+        logger.setLevel(logging.DEBUG)
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
     # Print status details
-    print('******************************************')
-    print("Making {} slide talk on: {}".format(
-        args.num_slides, args.topic))
-    print("S3 Enabled: {}".format(settings.AWS_S3_ENABLED))
+    logger.info("******************************************")
+    logger.info("Making {} slide talk on: {}".format(args.num_slides, args.topic))
+    logger.info("S3 Enabled: {}".format(settings.AWS_S3_ENABLED))
 
     # Retrieve the schema to generate the presentation with
     schema = schemas.get_schema(args.schema)
@@ -39,11 +52,11 @@ def generate_talk(args):
             args.topic = DEFAULT_PRESENTATION_TOPIC
 
     # Extract topics from given (possibly comma separated) topic
-    args.topics = [topic.strip() for topic in args.topic.split(',')]
+    args.topics = [topic.strip() for topic in args.topic.split(",")]
 
     # Generate random talk title
     if not args.title or args.title is None:
-        args.title = schemas.talk_title_generator({'seed': args.topics[0]})
+        args.title = schemas.talk_title_generator({"seed": args.topics[0]})
 
     # Generate the presentation object
     presentation, slide_deck = schema.generate_presentation(
@@ -51,18 +64,21 @@ def generate_talk(args):
         num_slides=args.num_slides,
         presenter=args.presenter,
         title=args.title,
-        parallel=args.parallel)
+        parallel=args.parallel,
+    )
 
-    cleaned_topics = args.topic.replace(' ', '').replace(',', '_')
-    file_name = ''.join(e for e in cleaned_topics if e.isalnum() or e == '_')
+    cleaned_topics = args.topic.replace(" ", "").replace(",", "_")
+    file_name = "".join(e for e in cleaned_topics if e.isalnum() or e == "_")
 
-    print('Slide deck structured data: {}'.format(
-        slide_deck.get_structured_data()))
+    logger.info(
+        "Slide deck structured data: {}".format(slide_deck.get_structured_data())
+    )
 
     # Save presentation
     if args.save_ppt or settings.AWS_S3_ENABLED:
         presentation_file = save_presentation_to_pptx(
-            args.output_folder, file_name, presentation)
+            args.output_folder, file_name, presentation
+        )
 
         # Open the presentation
         if args.open_ppt and presentation_file is not None:
@@ -71,11 +87,14 @@ def generate_talk(args):
 
         if settings.AWS_S3_ENABLED:
             from talkgenerator.util import aws_s3
-            print("Saving slides to S3 key {}".format(file_name + ".pptx"))
+
+            logger.info("Saving slides to S3 key {}".format(file_name + ".pptx"))
             # if aws_s3.check_for_object(settings.BUCKET, args.topic):
-            aws_s3.store_file(bucket=settings.BUCKET,
-                              key=args.topic + ".pptx",
-                              file=os.path.realpath(presentation_file))
+            aws_s3.store_file(
+                bucket=settings.BUCKET,
+                key=args.topic + ".pptx",
+                file=os.path.realpath(presentation_file),
+            )
     return presentation, slide_deck
 
 
@@ -89,19 +108,17 @@ def save_presentation_to_pptx(output_folder, file_name, prs, index=0):
 
     # If file already exists, don't overwrite it:
     if pathlib.Path(fp).is_file():
-        return save_presentation_to_pptx(
-            output_folder, file_name, prs, index + 1)
+        return save_presentation_to_pptx(output_folder, file_name, prs, index + 1)
 
     # Create the parent folder if it doesn't exist
     pathlib.Path(os.path.dirname(fp)).mkdir(parents=True, exist_ok=True)
 
     try:
         prs.save(fp)
-        print('Saved talk to {}'.format(fp))
+        logger.info("Saved talk to {}".format(fp))
         return fp
     except PermissionError:
-        return save_presentation_to_pptx(
-            output_folder, file_name, prs, index + 1)
+        return save_presentation_to_pptx(output_folder, file_name, prs, index + 1)
 
 
 def open_file(filename):
@@ -115,35 +132,75 @@ def open_file(filename):
 
 def str2bool(v):
     # stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+    if v.lower() in ("yes", "true", "t", "y", "1"):
         return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+    elif v.lower() in ("no", "false", "f", "n", "0"):
         return False
     else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
+        raise argparse.ArgumentTypeError("Boolean value expected.")
 
 
 def get_argument_parser():
-    parser = argparse.ArgumentParser(description='Quickly build a slide deck.')
-    parser.add_argument('--topic', default='', type=str,
-                        help="Topic of presentation.")
-    parser.add_argument('--num_slides', '--slides', default=10, type=int,
-                        help="Number of slides to create.")
-    parser.add_argument('--schema', default="default", type=str,
-                        help="The presentation schema to generate the presentation with")
-    parser.add_argument('--presenter', default=None, type=str,
-                        help="The full name of the presenter, leave blank to randomise")
-    parser.add_argument('--title', default=None, type=str,
-                        help="The title of the talk, leave blank to randomise")
-    parser.add_argument('--parallel', default=True, type=str2bool,
-                        help=("Generated powerpoint will generate in parallel " +
-                              "faster but drops some conditions)"))
-    parser.add_argument('--output_folder', default="../output/", type=str,
-                        help="The folder to output the generated presentations")
-    parser.add_argument('--save_ppt', default=True, type=str2bool,
-                        help="If this flag is true, the generated powerpoint will be saved")
-    parser.add_argument('--open_ppt', default=True, type=str2bool,
-                        help="Generated powerpoint will automatically open")
+    parser = argparse.ArgumentParser(description="Quickly build a slide deck.")
+    parser.add_argument("--topic", default="", type=str, help="Topic of presentation.")
+    parser.add_argument(
+        "--num_slides",
+        "--slides",
+        default=10,
+        type=int,
+        help="Number of slides to create.",
+    )
+    parser.add_argument(
+        "--schema",
+        default="default",
+        type=str,
+        help="The presentation schema to generate the presentation with",
+    )
+    parser.add_argument(
+        "--presenter",
+        default=None,
+        type=str,
+        help="The full name of the presenter, leave blank to randomise",
+    )
+    parser.add_argument(
+        "--title",
+        default=None,
+        type=str,
+        help="The title of the talk, leave blank to randomise",
+    )
+    parser.add_argument(
+        "--parallel",
+        default=True,
+        type=str2bool,
+        help=(
+            "Generated powerpoint will generate in parallel "
+            + "faster but drops some conditions)"
+        ),
+    )
+    parser.add_argument(
+        "--print_logs",
+        default=True,
+        type=str2bool,
+        help="Print logs about the generation process.",
+    )
+    parser.add_argument(
+        "--output_folder",
+        default="../output/",
+        type=str,
+        help="The folder to output the generated presentations",
+    )
+    parser.add_argument(
+        "--save_ppt",
+        default=True,
+        type=str2bool,
+        help="If this flag is true, the generated powerpoint will be saved",
+    )
+    parser.add_argument(
+        "--open_ppt",
+        default=True,
+        type=str2bool,
+        help="Generated powerpoint will automatically open",
+    )
     return parser
 
 
@@ -176,10 +233,16 @@ def log_api_call(func):
     """
 
     def log_api_call_wrapper(*args, **kwargs):
-        if 'Apitrace' in request.headers and request.headers['Apitrace'] is not None:
-            log = logging.getLogger('werkzeug')
-            log.info("%s | API CALL: %s TRACE: %s " % (
-                str(datetime.datetime.now()), func.__name__, request.headers['Apitrace']))
+        if "Apitrace" in request.headers and request.headers["Apitrace"] is not None:
+            log = logging.getLogger("werkzeug")
+            log.info(
+                "%s | API CALL: %s TRACE: %s "
+                % (
+                    str(datetime.datetime.now()),
+                    func.__name__,
+                    request.headers["Apitrace"],
+                )
+            )
         return func(*args, **kwargs)
 
     return log_api_call_wrapper

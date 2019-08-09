@@ -11,5 +11,5 @@ def main_cli():
     main(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(utils.get_argument_parser().parse_args())

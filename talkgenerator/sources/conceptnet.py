@@ -1,4 +1,5 @@
 import time
+import logging
 from functools import lru_cache
 from urllib.parse import urlencode
 
@@ -8,20 +9,27 @@ from talkgenerator.util import generator_util, cache_util
 
 URL = "http://api.conceptnet.io/c/en/{}?"
 
-_LOCATION_ARGUMENTS = cache_util.HashableDict(
-    rel="/r/AtLocation",
-    limit=100
-)
-_HASA_ARGUMENTS = cache_util.HashableDict(
-    rel="/r/HasA",
-    limit=200
-)
-_DEFAULT_ARGUMENTS = cache_util.HashableDict(
-    limit=200
-)
+_LOCATION_ARGUMENTS = cache_util.HashableDict(rel="/r/AtLocation", limit=100)
+_HASA_ARGUMENTS = cache_util.HashableDict(rel="/r/HasA", limit=200)
+_DEFAULT_ARGUMENTS = cache_util.HashableDict(limit=200)
 
 # HELPERS
-_PROHIBITED_SEARCH_TERMS = "a", "your", "my", "her", "his", "its", "their", "be", "an", "the", "you", "are"
+_PROHIBITED_SEARCH_TERMS = (
+    "a",
+    "your",
+    "my",
+    "her",
+    "his",
+    "its",
+    "their",
+    "be",
+    "an",
+    "the",
+    "you",
+    "are",
+)
+
+logger = logging.getLogger("talkgenerator.conceptnet")
 
 
 # Helpers
@@ -71,6 +79,7 @@ def remove_nones(entries):
 
 # RETRIEVING DATA
 
+
 @lru_cache(maxsize=20)
 def _get_data(word, arguments=None):
     if not arguments:
@@ -82,11 +91,12 @@ def _get_data(word, arguments=None):
     try:
         result = requests.get(url).json()
     except Exception as e:
-        print('conceptnet _get_data timeout: {}'.format(e))
+        logger.warning("conceptnet _get_data timeout: {}".format(e))
         result = None
     end = time.perf_counter()
-    print("Took {} seconds to poll Conceptnet for '{}'".format(
-        str(end - start), word))
+    logger.info(
+        "Took {} seconds to poll Conceptnet for '{}'".format(str(end - start), word)
+    )
     return result
 
 
@@ -108,13 +118,19 @@ def _get_relation_label(edge):
 
 def _get_from_relation(word, edges, relation_name):
     return remove_nones(
-        [_get_weight_and_word(edge, word) for edge in edges if _get_relation_label(edge) == relation_name])
+        [
+            _get_weight_and_word(edge, word)
+            for edge in edges
+            if _get_relation_label(edge) == relation_name
+        ]
+    )
 
 
 # EXTRACTING INFO
 
+
 def is_english(node):
-    return not node['language'] or node['language'] == 'en'
+    return not node["language"] or node["language"] == "en"
 
 
 def is_different_enough_label(edge, word):
@@ -125,10 +141,16 @@ def is_different_enough_label(edge, word):
 
 def get_weighted_related_words(word, limit=50):
     edges = _get_edges(word, cache_util.HashableDict(limit=limit))
-    starts = [(edge["weight"], edge["start"]["label"]) for edge in edges if
-              is_different_enough_label(edge['start'], word) and is_english(edge['start'])]
-    ends = [(edge["weight"], edge["end"]["label"]) for edge in edges if
-            is_different_enough_label(edge['end'], word) and is_english(edge['end'])]
+    starts = [
+        (edge["weight"], edge["start"]["label"])
+        for edge in edges
+        if is_different_enough_label(edge["start"], word) and is_english(edge["start"])
+    ]
+    ends = [
+        (edge["weight"], edge["end"]["label"])
+        for edge in edges
+        if is_different_enough_label(edge["end"], word) and is_english(edge["end"])
+    ]
     result = starts + ends
     return result
 
@@ -154,11 +176,19 @@ def get_weighted_antonyms(word):
 
 
 # Weighted
-weighted_location_generator = generator_util.WeightedGenerator(get_weighted_related_locations)
+weighted_location_generator = generator_util.WeightedGenerator(
+    get_weighted_related_locations
+)
 weighted_antonym_generator = generator_util.WeightedGenerator(get_weighted_antonyms)
-weighted_related_word_generator = generator_util.WeightedGenerator(get_weighted_related_words)
+weighted_related_word_generator = generator_util.WeightedGenerator(
+    get_weighted_related_words
+)
 
 # Unweighted
-unweighted_location_generator = generator_util.UnweightedGenerator(get_weighted_related_locations)
+unweighted_location_generator = generator_util.UnweightedGenerator(
+    get_weighted_related_locations
+)
 unweighted_antonym_generator = generator_util.UnweightedGenerator(get_weighted_antonyms)
-unweighted_related_word_generator = generator_util.UnweightedGenerator(get_weighted_related_words)
+unweighted_related_word_generator = generator_util.UnweightedGenerator(
+    get_weighted_related_words
+)

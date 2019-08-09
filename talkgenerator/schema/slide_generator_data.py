@@ -40,15 +40,19 @@ class ConstantWeightFunction(object):
 
 # Classes that are abstractly responsible for generating powerpoints
 
+
 class SlideGeneratorData:
     """ Responsible for providing the slide generator and other attributes, such as its name and weight"""
 
-    def __init__(self, generator,
-                 weight_function=ConstantWeightFunction(1),
-                 retries=5,
-                 allowed_repeated_elements=0,
-                 tags=None,
-                 name=None):
+    def __init__(
+        self,
+        generator,
+        weight_function=ConstantWeightFunction(1),
+        retries=5,
+        allowed_repeated_elements=0,
+        tags=None,
+        name=None,
+    ):
         self._generator = generator
         self._weight_function = weight_function
         self._retries = retries
@@ -62,8 +66,9 @@ class SlideGeneratorData:
         """Generate a slide for a given presentation using the given seed."""
         # Try a certain amount of times
         for i in range(self._retries):
-            slide_results = self._generator.generate_slide(presentation_context,
-                                                           (used_elements, self._allowed_repeated_elements))
+            slide_results = self._generator.generate_slide(
+                presentation_context, (used_elements, self._allowed_repeated_elements)
+            )
             if slide_results:
                 (slide, generated_elements) = slide_results
 
@@ -73,10 +78,16 @@ class SlideGeneratorData:
 
                 if slide:
                     # Add notes about the generation
-                    slide.set_note("Seed: " + presentation_context["seed"]
-                                   + "\nGenerator: " + str(self)
-                                   + " \n Context: " + str(presentation_context)
-                                   + " \n Generated Elements: " + str(generated_elements))
+                    slide.set_note(
+                        "Seed: "
+                        + presentation_context["seed"]
+                        + "\nGenerator: "
+                        + str(self)
+                        + " \n Context: "
+                        + str(presentation_context)
+                        + " \n Generated Elements: "
+                        + str(generated_elements)
+                    )
                     return slide, generated_elements
 
     def get_weight_for(self, slide_nr, total_slides):
@@ -94,7 +105,7 @@ class SlideGeneratorData:
         if bool(self._name):
             return str(self._name)
         name = str(self._generator.__name__)
-        if name == '<lambda>':
+        if name == "<lambda>":
             name = "Unnamed Generator"
         return "SlideGenerator[" + name + "]"
 

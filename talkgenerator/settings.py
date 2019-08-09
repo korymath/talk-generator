@@ -1,3 +1,4 @@
+import logging
 from environs import Env
 
 env = Env()
@@ -10,13 +11,14 @@ REDDIT_CLIENT_ID = env.str("REDDIT_CLIENT_ID", "")
 REDDIT_CLIENT_SECRET = env.str("REDDIT_CLIENT_SECRET", "")
 REDDIT_USER_AGENT = env.str("REDDIT_USER_AGENT", "")
 
+logger = logging.getLogger("talkgenerator")
 
 
 def reddit_auth():
     return {
         "client_id": REDDIT_CLIENT_ID,
         "client_secret": REDDIT_CLIENT_SECRET,
-        "user_agent": REDDIT_USER_AGENT
+        "user_agent": REDDIT_USER_AGENT,
     }
 
 
@@ -25,17 +27,14 @@ WIKIHOW_PASSWORD = env.str("WIKIHOW_PASSWORD", "")
 
 
 def wikihow_auth():
-    return {
-        "username": WIKIHOW_USERNAME,
-        "password": WIKIHOW_PASSWORD,
-    }
-
+    return {"username": WIKIHOW_USERNAME, "password": WIKIHOW_PASSWORD}
 
 
 UNSPLASH_ACCESS_KEY = env.str("UNSPLASH_ACCESS_KEY", "")
 UNSPLASH_SECRET_KEY = env.str("UNSPLASH_SECRET_KEY", "")
 UNSPLASH_REDIRECT_URI = env.str("UNSPLASH_REDIRECT_URI", "")
 UNSPLASH_CODE = env.str("UNSPLASH_CODE", "")
+
 
 def unsplash_auth():
     return {
@@ -45,35 +44,37 @@ def unsplash_auth():
         "unsplash_code": UNSPLASH_CODE,
     }
 
+
 def check_environment_variables():
     valid_env_file = True
     if not WIKIHOW_PASSWORD:
-        print ("Couldn't find a WIKIHOW_PASSWORD value in an .env file.")
-        valid_env_file = valid_env_file and False 
+        logger.error("Couldn't find a WIKIHOW_PASSWORD value in an .env file.")
+        valid_env_file = False
 
     if not WIKIHOW_USERNAME:
-        print ("Couldn't find a WIKIHOW_USERNAME value in an .env file.")
-        valid_env_file = valid_env_file and False
+        logger.error("Couldn't find a WIKIHOW_USERNAME value in an .env file.")
+        valid_env_file = False
 
     if not REDDIT_CLIENT_ID:
-        print ("Couldn't find a REDDIT_CLIENT_ID value in an .env file.")
-        valid_env_file = valid_env_file and False
+        logger.error("Couldn't find a REDDIT_CLIENT_ID value in an .env file.")
+        valid_env_file = False
 
     if not REDDIT_CLIENT_SECRET:
-        print ("Couldn't find a REDDIT_CLIENT_SECRET value in an .env file.")
-        valid_env_file = valid_env_file and False
+        logger.error("Couldn't find a REDDIT_CLIENT_SECRET value in an .env file.")
+        valid_env_file = False
 
     if not REDDIT_USER_AGENT:
-        print ("Couldn't find a REDDIT_USER_AGENT value in an .env file.")
-        valid_env_file = valid_env_file and False    
-    
-    if not valid_env_file:
-        print_env_file_warning() 
+        logger.error("Couldn't find a REDDIT_USER_AGENT value in an .env file.")
+        valid_env_file = False
 
-    return valid_env_file 
+    if not valid_env_file:
+        print_env_file_warning()
+
+    return valid_env_file
+
 
 def print_env_file_warning():
-    env_message = '''
+    env_message = """
     Hi! Before you can run talkgenerator you need to set some secret keys in an .env file.
     
     Which keys?
@@ -87,6 +88,6 @@ def print_env_file_warning():
     $ echo OTHER_VARIABLE_NEEDED=VALUE >> .env
 
     or you can use your favorite text editor (vi, nano, etc) to create it.
-    '''
+    """
 
-    print(env_message)
+    logger.error(env_message)

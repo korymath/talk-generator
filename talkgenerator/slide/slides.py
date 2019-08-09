@@ -1,6 +1,9 @@
+import logging
 from abc import ABCMeta, abstractmethod
 
 from talkgenerator.slide import powerpoint_slide_creator
+
+logger = logging.getLogger("talkgenerator")
 
 
 class Slide(metaclass=ABCMeta):
@@ -9,7 +12,7 @@ class Slide(metaclass=ABCMeta):
 
     def __init__(self, arguments):
         self._arguments = arguments
-        self._note = ''
+        self._note = ""
 
     def set_note(self, note):
         self._note = note
@@ -27,16 +30,13 @@ class Slide(metaclass=ABCMeta):
             if ppt_slide:
                 ppt_slide.notes_slide.notes_text_frame.text = self._note
         except AttributeError as e:
-            print('attribute error on create slide {}'.format(e))
+            logger.error("attribute error on create slide {}".format(e))
         return ppt_slide
 
 
 class TitleSlide(Slide):
     def __init__(self, title, subtitle):
-        super().__init__({
-            'title': title,
-            'subtitle': subtitle
-        })
+        super().__init__({"title": title, "subtitle": subtitle})
 
     @property
     def ppt_slide_creator(self):
@@ -45,11 +45,9 @@ class TitleSlide(Slide):
 
 class LarqeQuoteSlide(Slide):
     def __init__(self, title, text, background_image=None):
-        super().__init__({
-            'title': title,
-            'text': text,
-            'background_image': background_image
-        })
+        super().__init__(
+            {"title": title, "text": text, "background_image": background_image}
+        )
 
     @property
     def ppt_slide_creator(self):
@@ -58,11 +56,13 @@ class LarqeQuoteSlide(Slide):
 
 class ImageSlide(Slide):
     def __init__(self, title=None, image_url=None, original_image_size=True):
-        super().__init__({
-            'title': title,
-            'image_url': image_url,
-            'original_image_size': original_image_size
-        })
+        super().__init__(
+            {
+                "title": title,
+                "image_url": image_url,
+                "original_image_size": original_image_size,
+            }
+        )
 
     @property
     def ppt_slide_creator(self):
@@ -71,11 +71,13 @@ class ImageSlide(Slide):
 
 class FullImageSlide(Slide):
     def __init__(self, title=None, image_url=None, original_image_size=True):
-        super().__init__({
-            'title': title,
-            'image_url': image_url,
-            'original_image_size': original_image_size
-        })
+        super().__init__(
+            {
+                "title": title,
+                "image_url": image_url,
+                "original_image_size": original_image_size,
+            }
+        )
 
     @property
     def ppt_slide_creator(self):
@@ -83,16 +85,25 @@ class FullImageSlide(Slide):
 
 
 class TwoColumnImageSlide(Slide):
-    def __init__(self, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
-                 image_or_text_2=None, original_image_size=True):
-        super().__init__({
-            'title': title,
-            'caption_1': caption_1,
-            'image_or_text_1': image_or_text_1,
-            'caption_2': caption_2,
-            'image_or_text_2': image_or_text_2,
-            'original_image_size': original_image_size
-        })
+    def __init__(
+        self,
+        title=None,
+        caption_1=None,
+        image_or_text_1=None,
+        caption_2=None,
+        image_or_text_2=None,
+        original_image_size=True,
+    ):
+        super().__init__(
+            {
+                "title": title,
+                "caption_1": caption_1,
+                "image_or_text_1": image_or_text_1,
+                "caption_2": caption_2,
+                "image_or_text_2": image_or_text_2,
+                "original_image_size": original_image_size,
+            }
+        )
 
     @property
     def ppt_slide_creator(self):
@@ -100,19 +111,29 @@ class TwoColumnImageSlide(Slide):
 
 
 class ThreeColumnImageSlide(Slide):
-    def __init__(self, title=None, caption_1=None, image_or_text_1=None, caption_2=None,
-                 image_or_text_2=None, caption_3=None, image_or_text_3=None,
-                 original_image_size=True):
-        super().__init__({
-            'title': title,
-            'caption_1': caption_1,
-            'image_or_text_1': image_or_text_1,
-            'caption_2': caption_2,
-            'image_or_text_2': image_or_text_2,
-            'caption_3': caption_3,
-            'image_or_text_3': image_or_text_3,
-            'original_image_size': original_image_size
-        })
+    def __init__(
+        self,
+        title=None,
+        caption_1=None,
+        image_or_text_1=None,
+        caption_2=None,
+        image_or_text_2=None,
+        caption_3=None,
+        image_or_text_3=None,
+        original_image_size=True,
+    ):
+        super().__init__(
+            {
+                "title": title,
+                "caption_1": caption_1,
+                "image_or_text_1": image_or_text_1,
+                "caption_2": caption_2,
+                "image_or_text_2": image_or_text_2,
+                "caption_3": caption_3,
+                "image_or_text_3": image_or_text_3,
+                "original_image_size": original_image_size,
+            }
+        )
 
     @property
     def ppt_slide_creator(self):
@@ -121,12 +142,14 @@ class ThreeColumnImageSlide(Slide):
 
 class ChartSlide(Slide):
     def __init__(self, title, chart_type, chart_data, chart_modifier=None):
-        super().__init__({
-            'title': title,
-            'chart_type': chart_type,
-            'chart_data': chart_data,
-            'chart_modifier': chart_modifier
-        })
+        super().__init__(
+            {
+                "title": title,
+                "chart_type": chart_type,
+                "chart_data": chart_data,
+                "chart_modifier": chart_modifier,
+            }
+        )
 
     @property
     def ppt_slide_creator(self):

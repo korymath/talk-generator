@@ -1,10 +1,13 @@
 import random
+import logging
+from functools import lru_cache
 
 from talkgenerator.sources import conceptnet, phrasefinder
 from talkgenerator.util import language_util, random_util
 
-
 # == TOPIC GENERATORS ==
+
+logger = logging.getLogger("talkgenerator")
 
 
 class SideTrackingTopicGenerator:
@@ -35,7 +38,7 @@ class SideTrackingTopicGenerator:
         previous = seeds.copy()
         while None in seeds:
             fill_in_blank_topics_with_related(seeds)
-            print('SideTrackingTopicGenerator concept seeds: {}'.format(seeds))
+            logger.info("SideTrackingTopicGenerator concept seeds: {}".format(seeds))
             if seeds == previous:
                 fill_in_blanks_with(seeds, topics[0])
                 break
@@ -80,38 +83,39 @@ def _fill_in(seeds, i, distance=1):
             neighbour = seeds[i - distance]
 
             try:
-                related = conceptnet.get_weighted_related_words(neighbour, 50)
+                related = conceptnet.get_weighted_related_words(neighbour, 25)
                 if len(related) == 0:
-                    related = conceptnet.get_weighted_related_words(normalise_seed(neighbour), 50)
+                    related = conceptnet.get_weighted_related_words(
+                        normalise_seed(neighbour), 25
+                    )
 
             except Exception as e:
-                print('Conceptnet related words failing: {}'.format(e))
+                logger.info("Conceptnet related words failing: {}".format(e))
                 related = []
 
-            filtered_related = [word for word in related if
-                                not normalise_seed(word[1]) in seeds
-                                and len(normalise_seed(word[1])) > 2
-                                ]
+            filtered_related = [
+                word
+                for word in related
+                if not normalise_seed(word[1]) in seeds
+                and len(normalise_seed(word[1])) > 2
+            ]
 
             if len(filtered_related) > 0:
-                seeds[i] = normalise_seed(
-                    random_util.weighted_random(
-                        filtered_related
-                    )
-                )
+                seeds[i] = normalise_seed(random_util.weighted_random(filtered_related))
 
             # Check if still unassigned
             if seeds[i] is None:
                 _fill_in(seeds, i, distance + 1)
 
 
+@lru_cache(maxsize=300)
 def normalise_seed(seed):
     normalised = conceptnet.normalise(seed).lower()
     normalised = language_util.replace_non_alphabetical_characters(normalised)
-    if ' ' in normalised:
+    if " " in normalised:
         # last_word = normalised.split(' ')[-1]
         normalised = phrasefinder.get_rarest_word(normalised)
-        print(seed, '=>', normalised)
+        logger.info("Mapping seed " + seed + " => " + normalised)
     return normalised
 
 
@@ -123,6 +127,7 @@ class IdentityTopicGenerator:
 
     def get_seed(self, _):
         return random.choice(self._topics)
+
 
 # class SynonymTopicGenerator:
 #     """ Generates a bunch of related words (e.g. synonyms) of a word to generate topics for a presentation"""

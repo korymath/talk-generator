@@ -7,10 +7,15 @@ import random
 from talkgenerator.sources import goodreads, text_generator, reddit, wikihow
 from talkgenerator.util.generator_util import ExternalImageListGenerator
 from talkgenerator.util.generator_util import FromListGenerator
-from talkgenerator.util.generator_util import SeededGenerator, BackupGenerator, InvalidImagesRemoverGenerator
+from talkgenerator.util.generator_util import (
+    SeededGenerator,
+    BackupGenerator,
+    InvalidImagesRemoverGenerator,
+)
 
 
 # = TEXT GENERATORS=
+
 
 def create_templated_text_generator(filename):
     actual_file = os_util.to_actual_file(filename)
@@ -29,7 +34,11 @@ class GoodReadsQuoteGenerator(object):
 
     def __call__(self, presentation_context):
         def generator(seed):
-            return [quote for quote in goodreads.search_quotes(seed, 50) if len(quote) <= self._max_quote_length]
+            return [
+                quote
+                for quote in goodreads.search_quotes(seed, 50)
+                if len(quote) <= self._max_quote_length
+            ]
 
         return FromListGenerator(SeededGenerator(generator))(presentation_context)
 
@@ -48,7 +57,9 @@ class RedditLocalImageLocationGenerator(object):
         self._subreddit = subreddit
 
     def __call__(self, url):
-        filename = "downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
+        filename = (
+            "downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
+        )
         return os_util.to_actual_file(filename)
 
 
@@ -58,8 +69,8 @@ class RedditImageSearcher(object):
 
     def __call__(self, seed):
         results = reddit.search_subreddit(
-            self._subreddit,
-            str(seed) + " nsfw:no (url:.jpg OR url:.png OR url:.gif)")
+            self._subreddit, str(seed) + " nsfw:no (url:.jpg OR url:.png OR url:.gif)"
+        )
         if bool(results):
             return [post.url for post in results]
 
@@ -70,7 +81,7 @@ class RedditImageGenerator:
 
         self._generate = ExternalImageListGenerator(
             SeededGenerator(RedditImageSearcher(self._subreddit)),
-            RedditLocalImageLocationGenerator(self._subreddit)
+            RedditLocalImageLocationGenerator(self._subreddit),
         )
 
     def generate(self, presentation_context):
@@ -86,25 +97,35 @@ class ShitPostBotURLGenerator(object):
         pass
 
     def __call__(self, url):
-        return os_util.to_actual_file("downloads/shitpostbot/{}".format(
-            os_util.get_file_name(url)))
+        return os_util.to_actual_file(
+            "downloads/shitpostbot/{}".format(os_util.get_file_name(url))
+        )
 
 
 # UNSPLASH
+
 
 class UnsplashURLGenerator(object):
     def __init__(self):
         pass
 
     def __call__(self, url):
-        return os_util.to_actual_file("downloads/unsplash/{}.jpg".format(os_util.get_file_name(os.path.dirname(url))))
+        return os_util.to_actual_file(
+            "downloads/unsplash/{}.jpg".format(
+                os_util.get_file_name(os.path.dirname(url))
+            )
+        )
 
 
 # ABOUT ME
 
 _about_me_facts_grammar = "data/text-templates/about_me_facts.json"
-job_description_generator = create_tracery_generator(_about_me_facts_grammar, "job_description")
-country_description_generator = create_tracery_generator(_about_me_facts_grammar, "country_description")
+job_description_generator = create_tracery_generator(
+    _about_me_facts_grammar, "job_description"
+)
+country_description_generator = create_tracery_generator(
+    _about_me_facts_grammar, "country_description"
+)
 
 
 def _apply_country_prefix(country_name):
@@ -137,6 +158,7 @@ class JobPrefixApplier(object):
 
 # SPLITTER
 
+
 class SplitCaptionsGenerator(object):
     def __init__(self, generator):
         self._generator = generator
@@ -149,8 +171,12 @@ class SplitCaptionsGenerator(object):
 
 # BOLD STATEMENT
 
-bold_statement_templated_file = os_util.to_actual_file('data/text-templates/bold_statements.txt')
-bold_statement_templated_generator = create_templated_text_generator(bold_statement_templated_file)
+bold_statement_templated_file = os_util.to_actual_file(
+    "data/text-templates/bold_statements.txt"
+)
+bold_statement_templated_generator = create_templated_text_generator(
+    bold_statement_templated_file
+)
 
 
 def generate_wikihow_bold_statement(presentation_context):
@@ -159,8 +185,7 @@ def generate_wikihow_bold_statement(presentation_context):
     related_actions = wikihow.get_related_wikihow_actions(seed)
     if related_actions:
         action = random.choice(related_actions)
-        template_values.update({'action': action.title(),
-                                'seed': seed})
+        template_values.update({"action": action.title(), "seed": seed})
 
     return bold_statement_templated_generator(template_values)
 

@@ -1,1 +1,1 @@
-name="talkgenerator"
+name = "talkgenerator"

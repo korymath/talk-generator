@@ -4,6 +4,7 @@ presentation), and slide generators, that have functions for generating slides a
 
 """
 import time
+import logging
 from multiprocessing.pool import ThreadPool
 
 from talkgenerator.schema.slide_generator_data import _filter_generated_elements
@@ -11,13 +12,21 @@ from talkgenerator.slide import slide_generators
 from talkgenerator.slide.slide_deck import SlideDeck
 from talkgenerator.util import random_util
 
+logger = logging.getLogger("talkgenerator")
+
 
 class PresentationSchema:
     """ Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
     each slide is generated """
 
-    def __init__(self, powerpoint_creator, seed_generator, slide_generators, max_allowed_tags=None,
-                 ignore_weights=False):
+    def __init__(
+        self,
+        powerpoint_creator,
+        seed_generator,
+        slide_generators,
+        max_allowed_tags=None,
+        ignore_weights=False,
+    ):
         self._powerpoint_creator = powerpoint_creator
         self._seed_generator = seed_generator
         self._slide_generators = slide_generators
@@ -26,7 +35,9 @@ class PresentationSchema:
         self._max_allowed_tags = max_allowed_tags
         self._ignore_weights = ignore_weights
 
-    def generate_presentation(self, topics, num_slides, presenter=None, title=None, parallel=False):
+    def generate_presentation(
+        self, topics, num_slides, presenter=None, title=None, parallel=False
+    ):
         """Generate a presentation about a certain topic with a certain number of slides"""
         # Create new presentation
         presentation = self._powerpoint_creator()
@@ -48,25 +59,47 @@ class PresentationSchema:
 
         # Generate
         if parallel:
-            self._generate_slide_deck_parallel(slide_deck, num_slides, main_presentation_context, seed_generator,
-                                               used_elements, used_tags)
+            self._generate_slide_deck_parallel(
+                slide_deck,
+                num_slides,
+                main_presentation_context,
+                seed_generator,
+                used_elements,
+                used_tags,
+            )
         else:
-            self._generate_slide_deck(slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
-                                      used_tags)
+            self._generate_slide_deck(
+                slide_deck,
+                num_slides,
+                main_presentation_context,
+                seed_generator,
+                used_elements,
+                used_tags,
+            )
 
         slide_deck.save_to_powerpoint(presentation)
         return presentation, slide_deck
 
-    def _generate_slide_deck_parallel(self, slide_deck, num_slides, main_presentation_context, seed_generator,
-                                      used_elements,
-                                      used_tags):
-        print("TRYING TO GENERATE IN PARALLEL")
+    def _generate_slide_deck_parallel(
+        self,
+        slide_deck,
+        num_slides,
+        main_presentation_context,
+        seed_generator,
+        used_elements,
+        used_tags,
+    ):
+        logger.info("Generating the slide deck in parallel")
         slide_nrs_to_generate = range(num_slides)
 
         generated_results = [None] * num_slides
 
         while len(slide_nrs_to_generate) > 0:
-            print("REGENERATING SLIDES", slide_nrs_to_generate)
+            if len(slide_nrs_to_generate) < num_slides:
+                logger.info(
+                    "Regenerating the following slides: " + str(slide_nrs_to_generate)
+                )
+
             with ThreadPool(processes=num_slides) as pool:
                 all_slide_results = pool.map(
                     SlideGeneratorContext(
@@ -75,12 +108,18 @@ class PresentationSchema:
                         seed_generator=seed_generator,
                         num_slides=num_slides,
                         used_elements=used_elements,
-                        prohibited_generators=self._calculate_prohibited_generators(used_tags, num_slides)),
-                    slide_nrs_to_generate)
+                        prohibited_generators=self._calculate_prohibited_generators(
+                            used_tags, num_slides
+                        ),
+                    ),
+                    slide_nrs_to_generate,
+                )
                 slide_nrs_to_generate = []
                 for slide_result in all_slide_results:
                     if slide_result:
-                        slide, generated_elements, slide_generator_data, slide_nr = slide_result
+                        slide, generated_elements, slide_generator_data, slide_nr = (
+                            slide_result
+                        )
                         generated_results[slide_nr] = slide_result
 
             # Check Constraints
@@ -90,49 +129,72 @@ class PresentationSchema:
                     if not generated_results[i]:
                         slide_nrs_to_generate.append(i)
                     else:
-                        success = self._update_slide_deck_with_generated_result(slide_deck, generated_results[i],
-                                                                                used_elements, used_tags, num_slides)
+                        success = self._update_slide_deck_with_generated_result(
+                            slide_deck,
+                            generated_results[i],
+                            used_elements,
+                            used_tags,
+                            num_slides,
+                        )
                         if not success:
                             slide_nrs_to_generate.append(i)
 
         return slide_deck
 
-    def _generate_slide_deck(self, slide_deck, num_slides, main_presentation_context, seed_generator, used_elements,
-                             used_tags):
+    def _generate_slide_deck(
+        self,
+        slide_deck,
+        num_slides,
+        main_presentation_context,
+        seed_generator,
+        used_elements,
+        used_tags,
+    ):
         for slide_nr in range(num_slides):
             # Generate the slide
             slide_results = self.generate_slide(
-                presentation_context=create_slide_presentation_context(main_presentation_context,
-                                                                       seed_generator.get_seed(slide_nr)),
+                presentation_context=create_slide_presentation_context(
+                    main_presentation_context, seed_generator.get_seed(slide_nr)
+                ),
                 slide_nr=slide_nr,
                 num_slides=num_slides,
                 used_elements=used_elements,
-                prohibited_generators=self._calculate_prohibited_generators(used_tags, num_slides))
+                prohibited_generators=self._calculate_prohibited_generators(
+                    used_tags, num_slides
+                ),
+            )
 
             if slide_results:
-                success = self._update_slide_deck_with_generated_result(slide_deck, slide_results, used_elements,
-                                                                        used_tags, num_slides)
-                print("success?", success)
+                success = self._update_slide_deck_with_generated_result(
+                    slide_deck, slide_results, used_elements, used_tags, num_slides
+                )
                 assert success
 
         return slide_deck
 
-    def _update_slide_deck_with_generated_result(self, slide_deck, generated_result, used_elements, used_tags,
-                                                 num_slides):
+    def _update_slide_deck_with_generated_result(
+        self, slide_deck, generated_result, used_elements, used_tags, num_slides
+    ):
         slide, generated_elements, slide_generator_data, slide_nr = generated_result
         # Check if allowed according to repeated elements & slide type tags
-        if slide_generators \
-                .is_different_enough_for_allowed_repeated(generated_elements,
-                                                          used_elements,
-                                                          slide_generator_data.get_allowed_repeated_elements()) \
-                and slide_generator_data not in self._calculate_prohibited_generators(used_tags, num_slides):
+        if slide_generators.is_different_enough_for_allowed_repeated(
+            generated_elements,
+            used_elements,
+            slide_generator_data.get_allowed_repeated_elements(),
+        ) and slide_generator_data not in self._calculate_prohibited_generators(
+            used_tags, num_slides
+        ):
             slide_deck.add_slide(slide_nr, slide)
-            self._update_used_elements(used_elements, used_tags, generated_elements, slide_generator_data)
+            self._update_used_elements(
+                used_elements, used_tags, generated_elements, slide_generator_data
+            )
             return True
         return False
 
     @classmethod
-    def _update_used_elements(cls, used_elements, used_tags, generated_elements, slide_generator_data):
+    def _update_used_elements(
+        cls, used_elements, used_tags, generated_elements, slide_generator_data
+    ):
         # Add generated items to used_elements list
         generated_elements = set(generated_elements)
         _filter_generated_elements(generated_elements)
@@ -141,8 +203,14 @@ class PresentationSchema:
         # Add generator tags to used_tags list
         add_tags(used_tags, slide_generator_data.get_tags())
 
-    def generate_slide(self, presentation_context, slide_nr, num_slides, used_elements=None,
-                       prohibited_generators=None):
+    def generate_slide(
+        self,
+        presentation_context,
+        slide_nr,
+        num_slides,
+        used_elements=None,
+        prohibited_generators=None,
+    ):
         # Default arguments: avoid mutable defaults
         if prohibited_generators is None:
             prohibited_generators = set()
@@ -152,50 +220,70 @@ class PresentationSchema:
 
         start_time = time.time()
         if generator:
-            print('\n * Generating slide {} about {} using {} *'.format(
-                slide_nr + 1,
-                presentation_context["seed"],
-                generator))
+            logger.info(
+                "* Generating slide {} about {} using {} *".format(
+                    slide_nr + 1, presentation_context["seed"], generator
+                )
+            )
             slide_result = generator.generate(presentation_context, used_elements)
 
             # Try again if slide is None, and prohibit generator for generating for this topic
             if not bool(slide_result):
                 end_time = time.time()
-                print(
-                    "Failed to generate after {} seconds using: {}".format(round(end_time - start_time, 2), generator))
+                logger.info(
+                    "Failed to generate after {} seconds using: {}".format(
+                        round(end_time - start_time, 2), generator
+                    )
+                )
                 prohibited_generators.add(generator)
 
-                return self.generate_slide(presentation_context=presentation_context,
-                                           slide_nr=slide_nr,
-                                           num_slides=num_slides,
-                                           used_elements=used_elements,
-                                           prohibited_generators=prohibited_generators)
+                return self.generate_slide(
+                    presentation_context=presentation_context,
+                    slide_nr=slide_nr,
+                    num_slides=num_slides,
+                    used_elements=used_elements,
+                    prohibited_generators=prohibited_generators,
+                )
 
             slide, generated_elements = slide_result
             end_time = time.time()
-            print('\n * Finished generating slide {} about {} using {} in {} seconds *'.format(
-                slide_nr + 1,
-                presentation_context["seed"],
-                generator,
-                round(end_time - start_time, 2)))
+            logger.info(
+                "* Finished generating slide {} about {} using {} in {} seconds *".format(
+                    slide_nr + 1,
+                    presentation_context["seed"],
+                    generator,
+                    round(end_time - start_time, 2),
+                )
+            )
             return slide, generated_elements, generator, slide_nr
         else:
-            print("No generator found to generate about ", presentation_context["Presentation"])
+            logger.warning(
+                "No generator found to generate about ",
+                presentation_context["Presentation"],
+            )
 
     def _select_generator(self, slide_nr, total_slides, prohibited_generators):
         """Select a generator for a certain slide number"""
         if self._ignore_weights:
             return random_util.choice_optional(self._slide_generators)
         return random_util.weighted_random(
-            self._get_weighted_generators_for_slide_nr(slide_nr, total_slides, prohibited_generators))
+            self._get_weighted_generators_for_slide_nr(
+                slide_nr, total_slides, prohibited_generators
+            )
+        )
 
-    def _get_weighted_generators_for_slide_nr(self, slide_nr, total_slides, prohibited_generators):
+    def _get_weighted_generators_for_slide_nr(
+        self, slide_nr, total_slides, prohibited_generators
+    ):
         weighted_generators = []
         for i in range(len(self._slide_generators)):
             generator = self._slide_generators[i]
             if generator in prohibited_generators:
                 continue
-            weighted_generator = generator.get_weight_for(slide_nr, total_slides), generator
+            weighted_generator = (
+                generator.get_weight_for(slide_nr, total_slides),
+                generator,
+            )
             weighted_generators.append(weighted_generator)
 
         if len(weighted_generators) == 0:
@@ -229,11 +317,15 @@ class PresentationSchema:
 
 
 class SlideGeneratorContext(object):
-    def __init__(self, presentation_schema,
-                 presentation_context,
-                 seed_generator,
-                 num_slides, used_elements=None,
-                 prohibited_generators=None):
+    def __init__(
+        self,
+        presentation_schema,
+        presentation_context,
+        seed_generator,
+        num_slides,
+        used_elements=None,
+        prohibited_generators=None,
+    ):
         self.presentation_schema = presentation_schema
         self.presentation_context = presentation_context
         self.seed_generator = seed_generator
@@ -244,14 +336,16 @@ class SlideGeneratorContext(object):
     def __call__(self, slide_nr):
         return self.presentation_schema.generate_slide(
             # presentation_context=dict(),
-            create_slide_presentation_context(self.presentation_context,
-                                              self.seed_generator.get_seed(slide_nr)
-                                              # 'cat'
-                                              ),
+            create_slide_presentation_context(
+                self.presentation_context,
+                self.seed_generator.get_seed(slide_nr)
+                # 'cat'
+            ),
             slide_nr=slide_nr,
             num_slides=self.num_slides,
             used_elements=self.used_elements,
-            prohibited_generators=self.prohibited_generators)
+            prohibited_generators=self.prohibited_generators,
+        )
 
 
 # Helper functions
