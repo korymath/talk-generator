@@ -1,6 +1,9 @@
+import logging
 from abc import ABCMeta, abstractmethod
 
 from talkgenerator.slide import powerpoint_slide_creator
+
+logger = logging.getLogger("talkgenerator")
 
 
 class Slide(metaclass=ABCMeta):
@@ -27,7 +30,7 @@ class Slide(metaclass=ABCMeta):
             if ppt_slide:
                 ppt_slide.notes_slide.notes_text_frame.text = self._note
         except AttributeError as e:
-            print('attribute error on create slide {}'.format(e))
+            logger.error('attribute error on create slide {}'.format(e))
         return ppt_slide
 
 

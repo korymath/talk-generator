@@ -1,5 +1,6 @@
 import ntpath
 import os
+import logging
 import pathlib
 import sys
 import traceback
@@ -9,8 +10,10 @@ import requests
 from PIL import Image
 from PIL.Image import DecompressionBombError
 
-
 # import tempfile
+
+
+logger = logging.getLogger("talkgenerator")
 
 
 def download_image(from_url, to_url):
@@ -76,11 +79,11 @@ def is_valid_image(image_url):
     try:
         im = open_image(os.path.normpath(image_url))
         if not im or im in get_prohibited_images():
-            print(image_url, " IS DENIED")
+            logger.warning("Image denied because on blacklist:" + image_url)
             return False
     except (OSError, SyntaxError) as e:
         traceback.print_exc(file=sys.stdout)
-        print('is_valid_image error: {}'.format(e))
+        logger.error('The image format is not valid for: {}'.format(e))
         return False
 
     return True
