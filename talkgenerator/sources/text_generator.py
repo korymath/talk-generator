@@ -7,7 +7,7 @@ from functools import lru_cache
 import tracery
 from tracery.modifiers import base_english
 
-from talkgenerator.sources import conceptnet
+from talkgenerator.sources import conceptnet, phrasefinder
 from talkgenerator.sources import wikihow
 from talkgenerator.util import language_util
 from talkgenerator.util import os_util
@@ -32,6 +32,9 @@ known_functions = {
     # Conceptnet
     "conceptnet_location": conceptnet.weighted_location_generator,
     "conceptnet_related": conceptnet.weighted_related_word_generator,
+    "conceptnet_related_single_word": lambda word: phrasefinder.get_rarest_word(
+        conceptnet.weighted_related_word_generator(word)
+    ),
     # Checkers
     "is_noun": lambda word: word if language_util.is_noun(word) else None,
     "is_verb": lambda word: word if language_util.is_verb(word) else None,
