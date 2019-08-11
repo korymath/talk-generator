@@ -29,15 +29,14 @@
     "#science_specifier# {seed.title} #science_type#",
     "#science_specifier# {seed.title} #science_type#",
     "#science_specifier# {seed.title} #science_type#",
-    "#science_prefix#{seed.lower}#science_suffix#",
-    "#science_prefix#{seed.lower} #science_specifier#"
-    "#science_specifier# #science_prefix#{seed.lower} #science_specifier#"
+    "#science_prefix#{seed.title}#science_suffix#",
+    "#science_prefix#{seed.title} #science_type#",
+    "#science_specifier# #science_prefix#{seed.title} #science_type#"
   ],
   "science_prefix": [
     "Meta-",
     "Aero",
     "Bio",
-    "Astro",
     "Anti-",
     "Eco",
     "Electro",
