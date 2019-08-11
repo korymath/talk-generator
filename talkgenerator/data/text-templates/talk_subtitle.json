@@ -18,10 +18,21 @@
     "",
     ""
   ],
+  "knowledge_person": [
+    "Researcher",
+    "Expert",
+    "Professor",
+    "Doctor",
+    "Master",
+    "Guru",
+    "PhD",
+    "Fanatic"
+  ],
   "job": [
-    "researcher in #science#",
-    "#science# PhD",
-    "professor in #science#"
+    "#knowledge_person# in #science#",
+    "#knowledge_person# of #science#",
+    "#science# #knowledge_person#",
+    "#science# #knowledge_person#"
   ],
   "science": [
     "{seed.title} #science_type#",

@@ -23,7 +23,6 @@ class SpecificTextGeneratorTest(unittest.TestCase):
             for _ in range(0, number_of_generations)
         ]
         if print_generations:
-            print(generations)
             print("\n".join(generations))
         self.assertEqual(len(generations), number_of_generations)
 
@@ -31,7 +30,7 @@ class SpecificTextGeneratorTest(unittest.TestCase):
         self._tracery_tester("data/text-templates/talk_title.json")
 
     def test_talk_subtitle_generator(self):
-        self._tracery_tester("data/text-templates/talk_subtitle.json", "science", True)
+        self._tracery_tester("data/text-templates/talk_subtitle.json", "job", True)
 
 
 if __name__ == "__main__":
