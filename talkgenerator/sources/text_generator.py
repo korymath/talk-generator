@@ -19,6 +19,12 @@ known_functions = {
     "upper": str.upper,
     "dashes": lambda words: words.replace(" ", "-"),
     "first_letter": lambda words: words[0],
+    "last_letter_is_vowel": lambda word: word
+    if language_util.is_vowel(word[-1])
+    else None,
+    "last_letter_is_consonant": lambda word: word
+    if language_util.is_consonant(word[-1])
+    else None,
     "a": lambda word: language_util.add_article(word),
     "ing": language_util.to_present_participle,
     "plural": language_util.to_plural,
@@ -38,6 +44,8 @@ known_functions = {
     # Checkers
     "is_noun": lambda word: word if language_util.is_noun(word) else None,
     "is_verb": lambda word: word if language_util.is_verb(word) else None,
+    "is_vowel": lambda word: word if language_util.is_vowel(word) else None,
+    "is_consonant": lambda word: word if language_util.is_consonant(word) else None,
 }
 
 

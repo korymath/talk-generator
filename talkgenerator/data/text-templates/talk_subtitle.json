@@ -40,7 +40,8 @@
     "#science_specifier# {seed.title} #science_type#",
     "#science_specifier# {seed.title} #science_type#",
     "#science_specifier# {seed.title} #science_type#",
-    "#science_prefix#{seed.title}#science_suffix#",
+    "#science_prefix#{seed.title.last_letter_is_vowel}#science_suffix#",
+    "#science_prefix#{seed.title.last_letter_is_consonant}o#science_suffix#",
     "#science_prefix#{seed.title} #science_type#",
     "#science_specifier# #science_prefix#{seed.title} #science_type#"
   ],
@@ -57,9 +58,9 @@
     "Poly"
   ],
   "science_suffix": [
-    "ography",
-    "ology",
-    "onomy"
+    "graphy",
+    "logy",
+    "nomy"
   ],
   "science_specifier": [
     "Advanced",

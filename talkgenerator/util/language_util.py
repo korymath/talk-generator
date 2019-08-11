@@ -238,3 +238,11 @@ def get_last_noun_and_article(sentence):
 
 def replace_non_alphabetical_characters(text):
     return re.sub(r"[^A-Za-z\s\b -]+", "", text)
+
+
+def is_vowel(word):
+    return word in ["a", "e", "i", "o,", "u"]
+
+
+def is_consonant(word):
+    return not is_vowel(word)
