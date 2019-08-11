@@ -19,27 +19,88 @@
     ""
   ],
   "job": [
-    "reseacher in #science#",
+    "researcher in #science#",
     "#science# PhD",
     "professor in #science#"
   ],
   "science": [
     "{seed.title} #science_type#",
-    "#science_specifier# {seed.title} #science_type#"
+    "{seed.title} #science_type#",
+    "#science_specifier# {seed.title} #science_type#",
+    "#science_specifier# {seed.title} #science_type#",
+    "#science_specifier# {seed.title} #science_type#",
+    "#science_prefix#{seed.lower}#science_suffix#",
+    "#science_prefix#{seed.lower} #science_specifier#"
+    "#science_specifier# #science_prefix#{seed.lower} #science_specifier#"
+  ],
+  "science_prefix": [
+    "Meta-",
+    "Aero",
+    "Bio",
+    "Astro",
+    "Anti-",
+    "Eco",
+    "Electro",
+    "Micro",
+    "Macro",
+    "Nano",
+    "Poly"
+  ],
+  "science_suffix": [
+    "ography",
+    "ology",
+    "onomy"
   ],
   "science_specifier": [
-    "Molecular",
-    "Nuclear",
-    "Applied",
     "Advanced",
-    "Executive"
+    "Applied",
+    "Comparative",
+    "Descriptive",
+    "Digital",
+    "Dynamical",
+    "Ecological",
+    "Electronic",
+    "Empirical",
+    "Ethical",
+    "Executive",
+    "Exploratory",
+    "Fundamental",
+    "Instrumental",
+    "Logical",
+    "Molecular",
+    "Moral",
+    "Neural",
+    "Nuclear",
+    "Observational",
+    "Philosophy of",
+    "Physical",
+    "Pure",
+    "Quantum",
+    "Renewable",
+    "Social",
+    "Statistical",
+    "Systematic",
+    "Theoretical"
   ],
   "science_type": [
-    "Studies",
-    "Science",
-    "Literature",
-    "Physics",
+    "Biology",
+    "Chemistry",
+    "Design",
+    "Dynamics",
     "Engineering",
-    "Technology"
+    "Fusion",
+    "Literature",
+    "Logic",
+    "Mechanics",
+    "Medicine",
+    "Methodology",
+    "Philosophy",
+    "Physics",
+    "Science",
+    "Statistics",
+    "Studies",
+    "Systems",
+    "Technology",
+    "Theory"
   ]
 }
