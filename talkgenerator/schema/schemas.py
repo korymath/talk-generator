@@ -47,9 +47,7 @@ from talkgenerator.util.generator_util import TupledGenerator
 # === TEXT GENERATORS ===
 
 # TITLES
-talk_title_generator = create_templated_text_generator(
-    "data/text-templates/talk_title.txt"
-)
+talk_title_generator = create_tracery_generator("data/text-templates/talk_title.json")
 talk_subtitle_generator = create_tracery_generator(
     "data/text-templates/talk_subtitle.json"
 )
