@@ -3,14 +3,15 @@
     "#title#"
   ],
   "title": [
-    "10 Things You Didn't Know About {seed.plural.title}",
+    "#two_or_larger# Things You Didn't Know About {seed.plural.title}",
+    "#one_or_larger##number# Things You Didn't Know About {seed.plural.title}",
     "99 problems but {seed.a} ain't one",
     "Despite what you've heard, stupid {seed.plural} exists",
     "From {seed.title} to {seed.conceptnet_related_single_word.title}: {seed.wikihow_action.ing.title}",
     "Help, I Keep Having To {seed.wikihow_action.title}",
     "Help, My Boyfriend Is Obsessed With {seed.plural.title}",
     "How a {seed.singular.title} Made Me Feel like a Millionaire",
-    "How I Held My {seed.plural.title} for 17 Minutes",
+    "How I Held My {seed.plural.title} for #one_or_larger##number# Minutes",
     "How I {seed.wikihow_action.ing.title}: Confessions of a {seed.title}",
     "How many {seed.plural.lower} are \"too many {seed.plural.lower}\"?",
     "How to Fail Miserably at {seed.wikihow_action.ing.title}",
@@ -40,13 +41,12 @@
     "Never, Ever {seed.wikihow_action.title}",
     "Putting {seed.plural.title} On The Blockchain",
     "Sci-fi stories that imagine {seed.wikihow_action.ing.lower}",
-    "The 3 {seed.first_letter.title}'s of {seed.plural.title}",
+    "The #two_or_larger# {seed.first_letter.title}'s of {seed.plural.title}",
     "The Art of {seed.plural.title}",
     "The Art of {seed.wikihow_action.ing.title}",
     "The Biggest Concerns About {seed.plural.title}",
     "The Danger of a Single {seed.singular.title}",
     "The Happy Secret to Better {seed.plural.title}",
-    "The Happy Secret To Better {seed.plural.title}",
     "The Power of {seed.plural.title}",
     "The Puzzle of {seed.plural.title}",
     "The Surprising Science of {seed.plural.title}",
@@ -82,8 +82,11 @@
     "{seed.title.first_letter}... {seed.first_letter}... {seed.plural}?",
     "{seed.title}, No Matter What",
     "{seed.title}: The Power of {seed.wikihow_action.ing.title}",
-    "{seed.wikihow_action.ing.title} in 142 easy steps",
+    "{seed.wikihow_action.ing.title} in #one_or_larger##number##number# easy steps",
     "{seed.wikihow_action.ing.title}: Amazing Delight or Sign of Apocalypse?",
     "More {seed.plural.title}, More {seed.conceptnet_related_single_word.plural.title}"
-  ]
+  ],
+  "number": ["0","1","2","3","4","5","6","7","8","9"],
+  "one_or_larger": ["1","2","3","4","5","6","7","8","9"],
+  "two_or_larger": ["2","3","4","5","6","7","8","9"]
 }
