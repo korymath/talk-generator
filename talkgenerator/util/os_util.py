@@ -91,3 +91,14 @@ def is_valid_image(image_url):
         return False
 
     return True
+
+
+def show_logs(given_logger: object) -> object:
+    given_logger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    handler.setFormatter(formatter)
+    given_logger.addHandler(handler)
