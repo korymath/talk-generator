@@ -1,17 +1,15 @@
 import logging
 from environs import Env
 
+logger = logging.getLogger("talkgenerator")
+
 env = Env()
 env.read_env()
 
-AWS_TALK_BUCKET_KEY = env.str("AWS_TALK_BUCKET_KEY", "")
-BUCKET = AWS_TALK_BUCKET_KEY  # Shortcut for the lazy
-AWS_S3_ENABLED = len(AWS_TALK_BUCKET_KEY) > 0
+
 REDDIT_CLIENT_ID = env.str("REDDIT_CLIENT_ID", "")
 REDDIT_CLIENT_SECRET = env.str("REDDIT_CLIENT_SECRET", "")
 REDDIT_USER_AGENT = env.str("REDDIT_USER_AGENT", "")
-
-logger = logging.getLogger("talkgenerator")
 
 
 def reddit_auth():
