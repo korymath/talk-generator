@@ -7,9 +7,6 @@ import subprocess
 import sys
 import logging
 
-from flask import jsonify
-from flask import request
-
 from talkgenerator import settings
 from talkgenerator.schema import schemas
 from talkgenerator.sources import phrasefinder
@@ -30,7 +27,6 @@ def generate_talk(args):
     # Print status details
     logger.info("******************************************")
     logger.info("Making {} slide talk on: {}".format(args.num_slides, args.topic))
-    logger.info("S3 Enabled: {}".format(settings.AWS_S3_ENABLED))
 
     # Retrieve the schema to generate the presentation with
     schema = schemas.get_schema(args.schema)
@@ -69,7 +65,7 @@ def generate_talk(args):
     )
 
     # Save presentation
-    if args.save_ppt or settings.AWS_S3_ENABLED:
+    if args.save_ppt:
         presentation_file = save_presentation_to_pptx(
             args.output_folder, file_name, presentation
         )
@@ -79,16 +75,6 @@ def generate_talk(args):
             path = os.path.realpath(presentation_file)
             open_file(path)
 
-        if settings.AWS_S3_ENABLED:
-            from talkgenerator.util import aws_s3
-
-            logger.info("Saving slides to S3 key {}".format(file_name + ".pptx"))
-            # if aws_s3.check_for_object(settings.BUCKET, args.topic):
-            aws_s3.store_file(
-                bucket=settings.BUCKET,
-                key=args.topic + ".pptx",
-                file=os.path.realpath(presentation_file),
-            )
     return presentation, slide_deck
 
 
@@ -196,70 +182,3 @@ def get_argument_parser():
         help="Generated powerpoint will automatically open",
     )
     return parser
-
-
-def log_api_call(func):
-    """
-    function:  log_api_call
-
-    params:    function this decorator is decorating.
-
-    returns:   function that being wrapped.  The inner wrapped function is optionally logging api calls and returns the result of the function being wrapped.
-
-    notes:      This decorator function may be applied to any flask api call.  The idea is that if a "Apitrace" header value is supplied, then this can be output
-                to a log.  This is useful for clients using multiple micro services and want to trace transactions through all of them.
-                Currently using the default flask log.  Could be easily augmented to log to centralized syslog, RabbitMQ, or any other mechanism.
-
-    examples:
-
-              -- The code
-
-              @log_api_call
-              @app.route('/fibonacci/foo', methods=['GET'])
-              def fibonacci_foo_api():
-                   do something interesting...
-
-              -- The client
-              curl -H "Apitrace: 1232345346" http://localhost:5000/fibonacci/foo
-
-              -- Output to logs:
-              API CALL: fibonacci_foo_api TRACE: 1232345346
-    """
-
-    def log_api_call_wrapper(*args, **kwargs):
-        if "Apitrace" in request.headers and request.headers["Apitrace"] is not None:
-            log = logging.getLogger("werkzeug")
-            log.info(
-                "%s | API CALL: %s TRACE: %s "
-                % (
-                    str(datetime.datetime.now()),
-                    func.__name__,
-                    request.headers["Apitrace"],
-                )
-            )
-        return func(*args, **kwargs)
-
-    return log_api_call_wrapper
-
-
-def notify_error(msg, status_code):
-    """
-    function:  notify_error
-
-    params:    msg - message to send back to the client.
-               status_code - http status code to send to the client.
-
-    returns:   flask response object suitable for return to the client.  Will have an "error" key with the message from our caller.
-
-    notes:     Common status codes for client side problems:  https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_Error
-               Common status codes for server side problems:  https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#5xx_Server_Error
-
-    examples:
-
-    if 'count' not in request.args:
-        return notify_error("'count' argument required to /fibonacci/api", 403)
-
-    """
-    resp = jsonify(error=str(msg))
-    resp.status_code = status_code
-    return resp
