@@ -2,7 +2,6 @@ import unittest
 from talkgenerator.sources import wikihow
 
 
-
 class WikiHowTest(unittest.TestCase):
     def test_wrong_wikihow_links_regression_test(self):
         actions = wikihow.get_related_wikihow_actions_basic_search("cat")
@@ -17,5 +16,5 @@ class WikiHowTest(unittest.TestCase):
             self.assertFalse(" views" in action and "Updated" in action)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
