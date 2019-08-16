@@ -130,7 +130,7 @@ def _get_from_relation(word, edges, relation_name):
 
 
 def is_english(node):
-    return not node["language"] or node["language"] == "en"
+    return node and (not "language" in node or node["language"] == "en")
 
 
 def is_different_enough_label(edge, word):
