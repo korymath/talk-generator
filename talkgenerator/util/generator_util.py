@@ -171,13 +171,15 @@ class ExternalImageListGenerator(object):
                     if os_util.is_valid_image(downloaded_url):
                         return downloaded_url
                 else:
-                    logger.warning("Not a image url", chosen_image_url)
+                    logger.warning("Not a image url" + str(chosen_image_url))
             except PermissionError:
-                logger.warning("Permission error when downloading", chosen_image_url)
+                logger.warning(
+                    "Permission error when downloading" + str(chosen_image_url)
+                )
             except requests.exceptions.MissingSchema:
-                logger.warning("Missing schema for image ", chosen_image_url)
+                logger.warning("Missing schema for image " + str(chosen_image_url))
             except OSError:
-                logger.warning("Non existing image for: ", chosen_image_url)
+                logger.warning("Non existing image for: " + str(chosen_image_url))
             images.remove(chosen_image_url)
         return None
 
