@@ -53,10 +53,10 @@ def get_rarest_word(sentence):
     words = filter(lambda word: word is not None and len(word.strip()) > 0, words)
 
     min_word = None
-    min_freq = 0
+    min_freq = -1
     for word in words:
         freq = get_absolute_frequency_any_casing(word)
-        if freq is not None and freq > min_freq:
+        if freq is not None and (min_freq == -1 or freq < min_freq):
             min_word = word
             min_freq = freq
     return min_word
