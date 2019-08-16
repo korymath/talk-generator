@@ -121,8 +121,13 @@ def normalise_seed(seed):
     normalised = conceptnet.normalise(seed).lower()
     normalised = language_util.replace_non_alphabetical_characters(normalised)
     if " " in normalised:
-        # last_word = normalised.split(' ')[-1]
-        normalised = phrasefinder.get_rarest_word(normalised)
+        rarest_word = phrasefinder.get_rarest_word(normalised)
+        if rarest_word is not None:
+            normalised = rarest_word
+        else:
+            last_word = normalised.split(" ")[-1]
+            normalised = last_word
+
         logger.info("Mapping seed " + seed + " => " + normalised)
     return normalised
 

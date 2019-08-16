@@ -1,3 +1,5 @@
+from json import JSONDecodeError
+
 import requests
 
 from talkgenerator.util import language_util
@@ -8,19 +10,24 @@ URL = "https://api.phrasefinder.io/search?corpus=eng-us&query={}&nmax=1"
 def _search(word):
     word.replace(" ", "%20")
     url = URL.format(word)
-    result = requests.get(url).json()
-    if result:
-        return result["phrases"]
+    try:
+        result = requests.get(url)
+        result = result.json()
+        if result:
+            return result["phrases"]
+    except JSONDecodeError:
+        return None
 
 
 def _get_absolute_frequencies(word):
     pf_results = _search(word)
-    absolute_frequencies = []
-    for word_count in pf_results:
-        word = word_count["tks"][0]["tt"]
-        count = word_count["mc"]
-        absolute_frequencies.append((word, count))
-    return absolute_frequencies
+    if pf_results:
+        absolute_frequencies = []
+        for word_count in pf_results:
+            word = word_count["tks"][0]["tt"]
+            count = word_count["mc"]
+            absolute_frequencies.append((word, count))
+        return absolute_frequencies
 
 
 def get_absolute_frequency(word):
@@ -34,7 +41,8 @@ def get_absolute_frequency(word):
 
 def get_absolute_frequency_any_casing(word):
     absolute_frequencies = _get_absolute_frequencies(word)
-    return sum(map(lambda word_count: word_count[1], absolute_frequencies))
+    if absolute_frequencies:
+        return sum(map(lambda word_count: word_count[1], absolute_frequencies))
 
 
 def get_rarest_word(sentence):
@@ -43,4 +51,13 @@ def get_rarest_word(sentence):
         for word in sentence.split(" ")
     ]
     words = filter(lambda word: word is not None and len(word.strip()) > 0, words)
-    return min(words, key=lambda word: get_absolute_frequency_any_casing(word))
+
+    min_word = None
+    min_freq = 0
+    for word in words:
+        freq = get_absolute_frequency_any_casing(word)
+        if freq is not None and freq > min_freq:
+            min_word = word
+            min_freq = freq
+    return min_word
+    # return min(words, key=lambda word: get_absolute_frequency_any_casing(word))
