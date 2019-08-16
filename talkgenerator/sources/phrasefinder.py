@@ -1,3 +1,5 @@
+from json import JSONDecodeError
+
 import requests
 
 from talkgenerator.util import language_util
@@ -8,9 +10,12 @@ URL = "https://api.phrasefinder.io/search?corpus=eng-us&query={}&nmax=1"
 def _search(word):
     word.replace(" ", "%20")
     url = URL.format(word)
-    result = requests.get(url).json()
-    if result:
-        return result["phrases"]
+    try:
+        result = requests.get(url).json()
+        if result:
+            return result["phrases"]
+    except JSONDecodeError:
+        return None
 
 
 def _get_absolute_frequencies(word):
