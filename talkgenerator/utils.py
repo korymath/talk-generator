@@ -8,6 +8,7 @@ import sys
 import logging
 
 from talkgenerator import settings
+from talkgenerator import runtime_checker
 from talkgenerator.schema import schemas
 from talkgenerator.sources import phrasefinder
 from talkgenerator.util import os_util
@@ -23,6 +24,8 @@ def generate_talk(args):
 
     if args.print_logs:
         os_util.show_logs(logger)
+
+    runtime_checker.check_runtime_environment()
 
     # Print status details
     logger.info("******************************************")

@@ -1,14 +1,18 @@
+import logging
+
 import talkgenerator.settings
 import talkgenerator.util.language_util
 
+logger = logging.getLogger("talkgenerator")
 
-def check_that_we_can_run():
+
+def check_runtime_environment():
     check_env = talkgenerator.settings.check_environment_variables()
     if check_env:
-        print("Environment Variables passed")
+        logger.info("Successful check: Environment variables")
 
     check_ntlk = talkgenerator.util.language_util.check_and_download()
     if check_ntlk:
-        print("NLTK Dictionaries available")
+        logger.info("Successful check: NLTK Dictionaries available")
 
-    return check_ntlk and check_env
+    return check_ntlk
