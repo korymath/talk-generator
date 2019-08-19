@@ -46,11 +46,16 @@ def unsplash_auth():
     }
 
 
-def check_keys(key_variables, name):
+def _get_missing_keys(key_variables):
     missing = []
     for key_name in key_variables:
         if len(env.str(key_name, "").strip()) == 0:
             missing.append(key_name)
+    return missing
+
+
+def check_keys(key_variables, name):
+    missing = _get_missing_keys(key_variables)
     if len(missing) > 0:
         logger.warning("Missing keys for {}: {}".format(name, missing))
         return False
