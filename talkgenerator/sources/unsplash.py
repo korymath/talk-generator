@@ -28,9 +28,11 @@ pu = get_unsplash_session()
 
 
 def search_photos_return_urls(query):
-    results = pu.search(type_="photos", query=query)
-    image_urls = []
-    for photo in results.entries:
-        link_download = photo.link_download
-        image_urls.append(link_download)
-    return image_urls
+    if pu:
+        results = pu.search(type_="photos", query=query)
+        if results and results.body:
+            image_urls = []
+            for photo in results.entries:
+                link_download = photo.link_download
+                image_urls.append(link_download)
+            return image_urls
