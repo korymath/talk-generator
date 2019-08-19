@@ -10,6 +10,7 @@ from talkgenerator import settings
 # If you need to change that, use getLogger/setLevel
 # on the module logger, like this:
 logging.getLogger("pyunsplash").setLevel(logging.DEBUG)
+logger = logging.getLogger("talkgenerator")
 
 
 def get_unsplash_session():
@@ -36,3 +37,7 @@ def search_photos_return_urls(query):
                 link_download = photo.link_download
                 image_urls.append(link_download)
             return image_urls
+        else:
+            logger.warning(
+                'Unsplash could not find results for "{}", which might be due to missing/erroneous access keys'
+            )
