@@ -29,7 +29,7 @@ from talkgenerator.sources import giphy
 from talkgenerator.sources import google_images
 from talkgenerator.sources import inspirobot
 from talkgenerator.sources import shitpostbot, unsplash
-from talkgenerator.util.generator_util import BackupGenerator
+from talkgenerator.util.generator_util import BackupGenerator, UnseededGenerator
 from talkgenerator.util.generator_util import CombinedGenerator
 from talkgenerator.util.generator_util import ExternalImageListGenerator
 from talkgenerator.util.generator_util import FromListGenerator
@@ -177,7 +177,13 @@ combined_gif_generator = CombinedGenerator(
 # REDDIT
 
 meme_reddit_image_generator = create_reddit_image_generator(
-    "meme", "memes", "MemeEconomy", "wholesomememes", "dankmemes", "AdviceAnimals"
+    "meme",
+    "memes",
+    "MemeEconomy",
+    "wholesomememes",
+    "dankmemes",
+    "AdviceAnimals",
+    "comics",
 )
 weird_reddit_image_generator = create_reddit_image_generator(
     "hmmm",
@@ -193,6 +199,17 @@ weird_reddit_image_generator = create_reddit_image_generator(
     "EyeBleach",
     "natureismetal",
     "195",
+)
+
+neutral_reddit_image_generator = create_reddit_image_generator(
+    "Cinemagraphs",
+    "itookapicture",
+    "Art",
+    "artstore",
+    "pics",
+    "analog",
+    "ExposurePorn",
+    "Illustration",
 )
 
 shitpostbot_image_generator = ExternalImageListGenerator(
@@ -247,16 +264,20 @@ generate_unsplash_image_from_word = ExternalImageListGenerator(
     check_image_validness=False,
 )
 
-normal_image_generator = CombinedGenerator(
-    (1000, generate_unsplash_image), (1, generate_google_image)
+neutral_image_generator = CombinedGenerator(
+    (1000, generate_unsplash_image),
+    (1, generate_google_image),
+    (300, neutral_reddit_image_generator),
 )
 
-normal_image_generator_from_word = CombinedGenerator(
-    (1000, generate_unsplash_image_from_word), (1, generate_google_image_from_word)
+neutral_image_generator_from_word = CombinedGenerator(
+    (1000, generate_unsplash_image_from_word),
+    (1, generate_google_image_from_word),
+    (300, UnseededGenerator(neutral_reddit_image_generator)),
 )
 
-normal_or_weird_image_generator = CombinedGenerator(
-    (1, normal_image_generator), (1, weird_punchline_image_generator)
+neutral_or_weird_image_generator = CombinedGenerator(
+    (1, neutral_image_generator), (1, weird_punchline_image_generator)
 )
 
 # OLD/VINTAGE
@@ -287,13 +308,13 @@ about_me_location_tuple_generator = TupledGenerator(
 
 about_me_job_tuple_generator = MappedGenerator(
     InspiredTupleGenerator(
-        MappedGenerator(job_generator, str.title), normal_image_generator_from_word
+        MappedGenerator(job_generator, str.title), neutral_image_generator_from_word
     ),
     JobPrefixApplier(),
 )
 
 about_me_country_tuple_generator = MappedGenerator(
-    InspiredTupleGenerator(country_generator, normal_image_generator_from_word),
+    InspiredTupleGenerator(country_generator, neutral_image_generator_from_word),
     CountryPrefixApplier(),
 )
 
@@ -431,7 +452,7 @@ single_image_slide_generators = [
         slide_generators.FullImageSlideGenerator.of(
             NoneGenerator(),
             CombinedGenerator(
-                (3, normal_image_generator), (1, generate_full_screen_google_image)
+                (3, neutral_image_generator), (1, generate_full_screen_google_image)
             ),
         ),
         tags=["full_image", "google_images"],
@@ -450,7 +471,7 @@ single_image_slide_generators = [
         slide_generators.FullImageSlideGenerator.of(
             default_slide_title_generator,
             CombinedGenerator(
-                (3, normal_image_generator), (1, generate_wide_google_image)
+                (3, neutral_image_generator), (1, generate_wide_google_image)
             ),
         ),
         tags=["full_image", "google_images"],
@@ -509,7 +530,7 @@ captioned_images_slide_generators = [
         slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             double_image_captions_generator,
-            normal_or_weird_image_generator,
+            neutral_or_weird_image_generator,
             combined_gif_generator,
         ),
         weight_function=ConstantWeightFunction(2),
@@ -545,7 +566,7 @@ captioned_images_slide_generators = [
         slide_generators.ThreeColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             triple_image_captions_generator,
-            normal_or_weird_image_generator,
+            neutral_or_weird_image_generator,
             weird_punchline_image_generator,
             weird_punchline_static_image_generator,
         ),
@@ -613,7 +634,7 @@ conclusion_slide_generators = [
         slide_generators.TwoImagesAndTupledCaptions(
             conclusion_title_generator,
             conclusion_two_captions_tuple_generator,
-            normal_image_generator,
+            neutral_image_generator,
             weird_reddit_image_generator,
         ),
         weight_function=PeakedWeight((-1,), 10000, 0),
@@ -626,7 +647,7 @@ conclusion_slide_generators = [
         slide_generators.ThreeImagesAndTupledCaptions(
             conclusion_title_generator,
             conclusion_three_captions_tuple_generator,
-            normal_image_generator,
+            neutral_image_generator,
             weird_reddit_image_generator,
             combined_gif_generator,
         ),
