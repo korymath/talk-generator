@@ -176,6 +176,9 @@ combined_gif_generator = CombinedGenerator(
 
 # REDDIT
 
+meme_reddit_image_generator = create_reddit_image_generator(
+    "meme", "memes", "MemeEconomy", "wholesomememes", "dankmemes", "AdviceAnimals"
+)
 weird_reddit_image_generator = create_reddit_image_generator(
     "hmmm",
     "hmm",
@@ -189,6 +192,7 @@ weird_reddit_image_generator = create_reddit_image_generator(
     "HybridAnimals",
     "EyeBleach",
     "natureismetal",
+    "195",
 )
 
 shitpostbot_image_generator = ExternalImageListGenerator(
@@ -202,13 +206,16 @@ shitpostbot_image_generator = ExternalImageListGenerator(
 )
 
 weird_punchline_static_image_generator = CombinedGenerator(
-    (2, weird_reddit_image_generator), (3, shitpostbot_image_generator)
+    (4, weird_reddit_image_generator),
+    (6, shitpostbot_image_generator),
+    (1, meme_reddit_image_generator),
 )
 
 weird_punchline_image_generator = CombinedGenerator(
-    (5, weird_reddit_image_generator),
-    (4, shitpostbot_image_generator),
-    (3, combined_gif_generator),
+    (10, weird_reddit_image_generator),
+    (8, shitpostbot_image_generator),
+    (6, combined_gif_generator),
+    (1, meme_reddit_image_generator),
 )
 
 # GOOGLE IMAGES
@@ -424,7 +431,7 @@ single_image_slide_generators = [
         slide_generators.FullImageSlideGenerator.of(
             NoneGenerator(),
             CombinedGenerator(
-                (1, normal_image_generator), (1, generate_wide_google_image)
+                (3, normal_image_generator), (1, generate_full_screen_google_image)
             ),
         ),
         tags=["full_image", "google_images"],
@@ -433,9 +440,17 @@ single_image_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
+            NoneGenerator(), meme_reddit_image_generator
+        ),
+        tags=["full_image", "meme"],
+        name="Full Screen Meme",
+    ),
+    SlideGeneratorData(
+        # slide_templates.generate_full_image_slide(
+        slide_generators.FullImageSlideGenerator.of(
             default_slide_title_generator,
             CombinedGenerator(
-                (1, normal_image_generator), (1, generate_wide_google_image)
+                (3, normal_image_generator), (1, generate_wide_google_image)
             ),
         ),
         tags=["full_image", "google_images"],
@@ -649,6 +664,7 @@ default_max_allowed_tags = {
     "quote": 0.2,
     "statement": 0.2,
     "chart": 0.3,
+    "meme": 0.2,
 }
 
 # ==================================
