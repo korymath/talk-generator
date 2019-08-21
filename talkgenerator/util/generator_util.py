@@ -84,6 +84,15 @@ class SeededGenerator(object):
         return self._simple_generator(presentation_context["seed"])
 
 
+class UnseededGenerator(object):
+    def __init__(self, simple_generator):
+        self._simple_generator = simple_generator
+
+    def __call__(self, seed):
+        presentation_context = {"seed": seed}
+        return self._simple_generator(presentation_context)
+
+
 class NoneGenerator(object):
     def __init__(self):
         pass
