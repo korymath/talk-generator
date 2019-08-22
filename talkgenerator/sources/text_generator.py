@@ -7,7 +7,8 @@ from functools import lru_cache
 import tracery
 from tracery.modifiers import base_english
 
-from talkgenerator.sources import conceptnet, phrasefinder
+from talkgenerator.sources import conceptnet
+from talkgenerator.sources import phrasefinder
 from talkgenerator.sources import wikihow
 from talkgenerator.util import language_util
 from talkgenerator.util import os_util
@@ -43,8 +44,6 @@ known_functions = {
     ),
     # Checkers
     "is_noun": lambda word: word if language_util.is_noun(word) else None,
-    "is_verb": lambda word: word if language_util.is_verb(word) else None,
-    "is_vowel": lambda word: word if language_util.is_vowel(word) else None,
     "is_consonant": lambda word: word if language_util.is_consonant(word) else None,
 }
 
