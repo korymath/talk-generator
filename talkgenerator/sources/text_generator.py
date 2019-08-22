@@ -44,7 +44,7 @@ known_functions = {
     ),
     # Checkers
     "is_noun": lambda word: word if language_util.is_noun(word) else None,
-    "is_consonant": lambda word: word if language_util.is_consonant(word) else None,
+    "is_verb": lambda word: word if language_util.is_verb(word) else None,
 }
 
 
