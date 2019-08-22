@@ -29,7 +29,8 @@ from talkgenerator.sources import giphy
 from talkgenerator.sources import google_images
 from talkgenerator.sources import inspirobot
 from talkgenerator.sources import shitpostbot, unsplash
-from talkgenerator.util.generator_util import BackupGenerator, UnseededGenerator
+from talkgenerator.util.generator_util import BackupGenerator
+from talkgenerator.util.generator_util import UnseededGenerator
 from talkgenerator.util.generator_util import CombinedGenerator
 from talkgenerator.util.generator_util import ExternalImageListGenerator
 from talkgenerator.util.generator_util import FromListGenerator

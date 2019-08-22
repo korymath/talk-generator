@@ -2,7 +2,8 @@ import logging
 from functools import lru_cache
 
 import praw
-from prawcore import ResponseException, RequestException
+from prawcore import ResponseException
+from prawcore import RequestException
 
 from talkgenerator import settings
 
