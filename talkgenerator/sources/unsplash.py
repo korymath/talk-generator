@@ -25,12 +25,12 @@ def get_unsplash_session():
         )
 
 
-pu = get_unsplash_session()
+unsplash_session = get_unsplash_session()
 
 
 def search_photos_return_urls(query):
-    if pu:
-        results = pu.search(type_="photos", query=query)
+    if unsplash_session:
+        results = unsplash_session.search(type_="photos", query=query)
         if results and results.body:
             image_urls = []
             for photo in results.entries:

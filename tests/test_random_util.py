@@ -18,7 +18,7 @@ class RandomUtilTest(unittest.TestCase):
         self.assertEqual({"one", "four", "six", "seven"}, results)
 
     def test_weighted_random_all_appear_double_values(self):
-        possibilities = (.1, "one"), (.4, "four"), (.6, "six"), (.7, "seven")
+        possibilities = (0.1, "one"), (0.4, "four"), (0.6, "six"), (0.7, "seven")
         results = set()
         for _ in range(1000):
             if len(results) == len(possibilities):
@@ -27,7 +27,7 @@ class RandomUtilTest(unittest.TestCase):
         self.assertEqual({"one", "four", "six", "seven"}, results)
 
     def test_weighted_random_all_appear_double_values_appearances(self):
-        possibilities = (.1, "one"), (.4, "four")
+        possibilities = (0.1, "one"), (0.4, "four")
         ones = 0
         fours = 0
         for _ in range(1000):
@@ -43,5 +43,5 @@ class RandomUtilTest(unittest.TestCase):
         self.assertTrue(750 < fours < 850)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

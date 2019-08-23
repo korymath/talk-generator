@@ -9,18 +9,19 @@ from talkgenerator.schema import schemas
 
 
 class TestTalkGenerator(unittest.TestCase):
-
     def setUp(self):
         random.seed(1)
 
     def test_google_images(self):
-        self.assertTrue(bool(schemas.generate_full_screen_google_image({"seed": "cat"})))
+        self.assertTrue(
+            bool(schemas.generate_full_screen_google_image({"seed": "cat"}))
+        )
 
     def test_serial(self):
         args = mock.Mock()
-        args.configure_mock(topic='cat')
+        args.configure_mock(topic="cat")
         args.configure_mock(num_slides=3)
-        args.configure_mock(schema='default')
+        args.configure_mock(schema="default")
         args.configure_mock(title=None)
         args.configure_mock(parallel=False)
         args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
@@ -32,10 +33,10 @@ class TestTalkGenerator(unittest.TestCase):
 
     def test_parallel(self):
         args = mock.Mock()
-        args.configure_mock(topic='dog')
+        args.configure_mock(topic="dog")
         args.configure_mock(num_slides=3)
         args.configure_mock(title=None)
-        args.configure_mock(schema='default')
+        args.configure_mock(schema="default")
         args.configure_mock(parallel=True)
         args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
         args.configure_mock(open_ppt=False)
@@ -46,10 +47,10 @@ class TestTalkGenerator(unittest.TestCase):
 
     def test_multiple_topics(self):
         args = mock.Mock()
-        args.configure_mock(topic='cat, dog, bread, house')
+        args.configure_mock(topic="cat, dog, bread, house")
         args.configure_mock(num_slides=6)
         args.configure_mock(title=None)
-        args.configure_mock(schema='default')
+        args.configure_mock(schema="default")
         args.configure_mock(parallel=True)
         args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
         args.configure_mock(open_ppt=False)
@@ -60,19 +61,21 @@ class TestTalkGenerator(unittest.TestCase):
 
     def test_all_slide_generators(self):
         basic_presentation_context = {
-            'topic': 'dog',
-            'seed': 'cat',
-            'presenter': 'An O. Nymous',
-            'title': 'Mock title'
+            "topic": "dog",
+            "seed": "cat",
+            "presenter": "An O. Nymous",
+            "title": "Mock title",
         }
 
         presentation = powerpoint_slide_creator.create_new_powerpoint()
 
         for slide_generator in schemas.all_slide_generators:
             print("Testing Slide Generator", slide_generator)
-            slide, generated_elements = slide_generator.generate(basic_presentation_context, [])
+            slide, generated_elements = slide_generator.generate(
+                basic_presentation_context, []
+            )
             slide.create_powerpoint_slide(presentation)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

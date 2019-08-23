@@ -240,9 +240,9 @@ def replace_non_alphabetical_characters(text):
     return re.sub(r"[^A-Za-z\s\b -]+", "", text)
 
 
-def is_vowel(word):
-    return word in ["a", "e", "i", "o,", "u"]
+def is_vowel(character):
+    return character in ["a", "e", "i", "o,", "u"]
 
 
-def is_consonant(word):
-    return not is_vowel(word)
+def is_consonant(character):
+    return not is_vowel(character)

@@ -10,7 +10,19 @@ def run_time_test(start_idx, end_idx):
 
     for topic in words:
         args = utils.get_argument_parser().parse_args(
-            ['--topic', topic, '--num_slides', '7', '--save_ppt', 'True', '--open_ppt', 'False', '--parallel', 'True'])
+            [
+                "--topic",
+                topic,
+                "--num_slides",
+                "7",
+                "--save_ppt",
+                "True",
+                "--open_ppt",
+                "False",
+                "--parallel",
+                "True",
+            ]
+        )
 
         start = time.process_time()
         clock_start = time.perf_counter()
@@ -21,9 +33,11 @@ def run_time_test(start_idx, end_idx):
         clock_end = time.perf_counter()
         timing = end - start
         clock_timing = clock_end - clock_start
-        print("It took {} seconds to generate the presentation" +
-              ", and {} seconds system-wide ".format(str(timing), str(clock_timing)))
-        result_file.write(topic + ", " + str(timing) + ", " + str(clock_timing) + '\n')
+        print(
+            "It took {} seconds to generate the presentation"
+            + ", and {} seconds system-wide ".format(str(timing), str(clock_timing))
+        )
+        result_file.write(topic + ", " + str(timing) + ", " + str(clock_timing) + "\n")
         result_file.flush()
 
     result_file.close()
