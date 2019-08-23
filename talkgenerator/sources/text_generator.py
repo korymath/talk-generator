@@ -45,6 +45,8 @@ known_functions = {
     # Checkers
     "is_noun": lambda word: word if language_util.is_noun(word) else None,
     "is_verb": lambda word: word if language_util.is_verb(word) else None,
+    # Unique: To make a variable not be the same as something else with the same parameters
+    "unique": lambda x: x,
 }
 
 
@@ -167,6 +169,9 @@ def apply_functions_to_variables(
 ):
     """ Applies the functions of the variables_and_functions tuple and stores them in the variable dictionary and
     updates the template """
+    variables_and_functions = list(variables_and_functions)
+    variables_and_functions.sort(key=lambda a: len(a), reverse=True)
+
     for var_func in variables_and_functions:
         # Check if it has functions to apply
         if len(var_func) > 1 and len(var_func[1]) > 0:

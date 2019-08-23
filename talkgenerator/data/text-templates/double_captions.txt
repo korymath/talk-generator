@@ -1,36 +1,36 @@
+Bad {seed.plural.title}|Good {seed.plural.title}
+Bad {seed.plural.title}|Worse {seed.plural.title}
+Bad|Good
+Bad|Worse
 Before|After
-Previously|Currently
-Me|Them
-What I initially did|The actual solution
-Let's turn this:|Into this:
-Past|Present
-Past|Future
-Present|Future
-The Plan|How it worked out
-The {seed.title} Plan|How {seed.singular.lower} worked out
-Plan|Execution
+Do {seed.wikihow_action.lower.unique}|Don't {seed.wikihow_action.lower}
+Don't {seed.wikihow_action.lower.unique}|Do {seed.wikihow_action.lower}
+Don't|Do
+Do|Don't
+Expectation|Reality
+Good|Bad
+Good|Better
+How I initially approached {seed.wikihow_action.ing.lower}|What I should have done
+How I see it|What it actually is
 How I see {seed.plural}:|What {seed.plural} actually are:
-How I used to {seed.wikihow_action.lower.lower}|After I learned how to {seed.wikihow_action.lower}
-My {seed.singular.title} Plan|Their {seed.singular.title} Plan
+How I used to {seed.wikihow_action.lower.unique}|After I learned how to {seed.wikihow_action.lower}
+How people used to {seed.wikihow_action.lower}|My proposal
+How people used to {seed.wikihow_action.lower}|Now
 How they see it|What it actually is
 How they see {seed.wikihow_action.ing.lower}|What it actually is
 How they see {seed.wikihow_action.ing.lower}|What {seed.singular} actually means
-How I see it|What it actually is
+Let's turn this:|Into this:
+Me|Them
+My {seed.singular.title} Plan|Their {seed.singular.title} Plan
+Past|Future
+Past|Present
+Plan|Execution
+Present|Future
+Previously|Currently
 Stereotype|Reality
-{seed.title}'s Stereotype|{seed.title}'s Reality
-Don't|Do
-Don't {seed.wikihow_action.lower.lower}|Do {seed.wikihow_action.lower}
-Do {seed.wikihow_action.lower.lower}|Don't {seed.wikihow_action.lower}
-Do|Don't
-Bad|Worse
-Good|Better
-Good|Bad
-Bad|Good
-Bad {seed.plural.title}|Good {seed.plural.title}
-Bad {seed.plural.title}|Worse {seed.plural.title}
-Expectation|Reality
-How people used to {seed.wikihow_action.lower}|Now
-How people used to {seed.wikihow_action.lower}|My proposal
-How I initially approached {seed.wikihow_action.ing.lower}|What I should have done
+The Plan|How it worked out
+The {seed.title} Plan|How {seed.singular.lower} worked out
+What I initially did|The actual solution
 Why {seed.plural} are great|Why {seed.plural} are awful
-{seed.wikihow_action.title.title}|{seed.wikihow_action.title}
+{seed.title}'s Stereotype|{seed.title}'s Reality
+{seed.wikihow_action.title.unique}|{seed.wikihow_action.title}
