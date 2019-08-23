@@ -1,3 +1,4 @@
+import multiprocessing
 import random
 import logging
 from functools import lru_cache
@@ -75,6 +76,10 @@ def fill_in_blanks_with(seeds, topic):
             seeds[i] = topic
 
 
+def normalise_weighted_word(weighted_word):
+    return weighted_word[0], normalise_seed(weighted_word[1])
+
+
 def _fill_in(seeds, i, distance=1):
     if seeds[i] is None:
 
@@ -93,11 +98,14 @@ def _fill_in(seeds, i, distance=1):
                 logger.info("Conceptnet related words failing: {}".format(e))
                 related = []
 
+            pool = multiprocessing.Pool()
+            normalised_related = pool.map(normalise_weighted_word, related)
+            pool.close()
+
             filtered_related = [
-                word
-                for word in related
-                if not normalise_seed(word[1]) in seeds
-                and len(normalise_seed(word[1])) > 2
+                weighted_word
+                for weighted_word in normalised_related
+                if not weighted_word[1] in seeds and len(weighted_word[1]) > 2
             ]
 
             if len(filtered_related) > 0:

@@ -20,7 +20,7 @@ _ADVANCED_SEARCH_URL = (
 )
 
 
-def create_log_in_session(username, password):
+def _create_log_in_session(username, password):
     log_in_credentials = {"wpName": username, "wpPassword": password}
     session = requests.session()
 
@@ -38,7 +38,11 @@ def create_log_in_session(username, password):
                 + " seconds."
             )
             time.sleep(wait_time)
-            return create_log_in_session(username, password)
+            return _create_log_in_session(username, password)
+    if trial < 16:
+        logger.info("Logged into Wikihow")
+    else:
+        logger.warning("Failed logging into Wikihow")
     return session
 
 
@@ -50,15 +54,12 @@ def get_wikihow_session():
                 "Found Wikihow Session object in credentials, skipping loggin in"
             )
             return wikihow_credentials["session"]
-        return create_log_in_session(**wikihow_credentials)
+        return _create_log_in_session(**wikihow_credentials)
     except FileNotFoundError:
         logger.warning(
             "Warning: No login credentials were found for Wikihow, the program might not run as it's supposed to."
             "Please add these credentials file to /data/auth/wikihow.json, having a 'username' and 'password' field"
         )
-
-
-wikihow_session = get_wikihow_session()
 
 
 def remove_how_to(wikihow_title):
@@ -95,8 +96,11 @@ def basic_search_wikihow(search_words):
     )
 
 
+wikihow_session = get_wikihow_session()
+
+
 @lru_cache(maxsize=20)
-def advanced_search_wikihow(search_words):
+def _advanced_search_wikihow(search_words):
     # session = get_wikihow_session()
     if wikihow_session:
         url = _ADVANCED_SEARCH_URL.format(search_words.replace(" ", "+"))
@@ -131,10 +135,10 @@ def get_related_wikihow_actions_basic_search(seed_word):
 
 
 def get_related_wikihow_actions_advanced_search(seed_word):
-    page = advanced_search_wikihow(seed_word)
+    page = _advanced_search_wikihow(seed_word)
     # Try again but with plural if nothing is found
     if not page:
-        page = advanced_search_wikihow(inflect.engine().plural(seed_word))
+        page = _advanced_search_wikihow(inflect.engine().plural(seed_word))
     if page:
         soup = BeautifulSoup(page.content, "html.parser")
         actions_elements = soup.find_all("div", class_="mw-search-result-heading")

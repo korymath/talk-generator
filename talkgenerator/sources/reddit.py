@@ -3,6 +3,7 @@ from functools import lru_cache
 
 import praw
 from prawcore import ResponseException
+from prawcore import RequestException
 
 from talkgenerator import settings
 
@@ -14,14 +15,7 @@ logger = logging.getLogger("talkgenerator")
 def get_reddit():
     reddit = singleton_reddit
     if not bool(reddit):
-        try:
-            reddit = praw.Reddit(**settings.reddit_auth())
-        except FileNotFoundError:
-            logger.error(
-                "No login file for Reddit exists."
-                "Please contact the creators to get access to the file or create your own app to get access to the "
-                "Reddit API, as this file is not uploaded to the git for security reasons."
-            )
+        reddit = praw.Reddit(**settings.reddit_auth())
     return reddit
 
 
@@ -31,7 +25,9 @@ def has_reddit_access():
 
 def get_subreddit(name):
     if has_reddit_access():
-        return get_reddit().subreddit(name)
+        subreddit = get_reddit().subreddit(name)
+        if subreddit:
+            return subreddit
 
 
 @lru_cache(maxsize=20)
@@ -49,6 +45,8 @@ def search_subreddit(name, query, sort="relevance", limit=500, filter_nsfw=True)
             return submissions
 
         except ResponseException as err:
+            logger.error("Exception with accessing Reddit: {}".format(err))
+        except RequestException as err:
             logger.error("Exception with accessing Reddit: {}".format(err))
     else:
         logger.warning("WARNING: No reddit access!")

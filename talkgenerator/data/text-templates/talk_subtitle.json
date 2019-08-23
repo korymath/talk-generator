@@ -18,28 +18,100 @@
     "",
     ""
   ],
+  "knowledge_person": [
+    "Researcher",
+    "Expert",
+    "Professor",
+    "Doctor",
+    "Master",
+    "Guru",
+    "PhD",
+    "Fanatic"
+  ],
   "job": [
-    "reseacher in #science#",
-    "#science# PhD",
-    "professor in #science#"
+    "#knowledge_person# in #science#",
+    "#knowledge_person# of #science#",
+    "#science# #knowledge_person#",
+    "#science# #knowledge_person#"
   ],
   "science": [
     "{seed.title} #science_type#",
-    "#science_specifier# {seed.title} #science_type#"
+    "{seed.title} #science_type#",
+    "#science_specifier# {seed.title} #science_type#",
+    "#science_specifier# {seed.title} #science_type#",
+    "#science_specifier# {seed.title} #science_type#",
+    "#science_prefix#{seed.title.last_letter_is_vowel}#science_suffix#",
+    "#science_prefix#{seed.title.last_letter_is_consonant}o#science_suffix#",
+    "#science_prefix#{seed.title} #science_type#",
+    "#science_specifier# #science_prefix#{seed.title} #science_type#"
+  ],
+  "science_prefix": [
+    "Meta-",
+    "Aero",
+    "Bio",
+    "Anti-",
+    "Eco",
+    "Electro",
+    "Micro",
+    "Macro",
+    "Nano",
+    "Poly"
+  ],
+  "science_suffix": [
+    "graphy",
+    "logy",
+    "nomy"
   ],
   "science_specifier": [
-    "Molecular",
-    "Nuclear",
-    "Applied",
     "Advanced",
-    "Executive"
+    "Applied",
+    "Comparative",
+    "Descriptive",
+    "Digital",
+    "Dynamical",
+    "Ecological",
+    "Electronic",
+    "Empirical",
+    "Ethical",
+    "Executive",
+    "Exploratory",
+    "Fundamental",
+    "Instrumental",
+    "Logical",
+    "Molecular",
+    "Moral",
+    "Neural",
+    "Nuclear",
+    "Observational",
+    "Philosophy of",
+    "Physical",
+    "Pure",
+    "Quantum",
+    "Renewable",
+    "Social",
+    "Statistical",
+    "Systematic",
+    "Theoretical"
   ],
   "science_type": [
-    "Studies",
-    "Science",
-    "Literature",
-    "Physics",
+    "Biology",
+    "Chemistry",
+    "Design",
+    "Dynamics",
     "Engineering",
-    "Technology"
+    "Fusion",
+    "Literature",
+    "Logic",
+    "Mechanics",
+    "Medicine",
+    "Methodology",
+    "Philosophy",
+    "Physics",
+    "Science",
+    "Statistics",
+    "Studies",
+    "Systems",
+    "Technology",
+    "Theory"
   ]
 }

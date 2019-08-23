@@ -30,6 +30,7 @@ from talkgenerator.sources import google_images
 from talkgenerator.sources import inspirobot
 from talkgenerator.sources import shitpostbot, unsplash
 from talkgenerator.util.generator_util import BackupGenerator
+from talkgenerator.util.generator_util import UnseededGenerator
 from talkgenerator.util.generator_util import CombinedGenerator
 from talkgenerator.util.generator_util import ExternalImageListGenerator
 from talkgenerator.util.generator_util import FromListGenerator
@@ -47,9 +48,7 @@ from talkgenerator.util.generator_util import TupledGenerator
 # === TEXT GENERATORS ===
 
 # TITLES
-talk_title_generator = create_templated_text_generator(
-    "data/text-templates/talk_title.txt"
-)
+talk_title_generator = create_tracery_generator("data/text-templates/talk_title.json")
 talk_subtitle_generator = create_tracery_generator(
     "data/text-templates/talk_subtitle.json"
 )
@@ -178,6 +177,15 @@ combined_gif_generator = CombinedGenerator(
 
 # REDDIT
 
+meme_reddit_image_generator = create_reddit_image_generator(
+    "meme",
+    "memes",
+    "MemeEconomy",
+    "wholesomememes",
+    "dankmemes",
+    "AdviceAnimals",
+    "comics",
+)
 weird_reddit_image_generator = create_reddit_image_generator(
     "hmmm",
     "hmm",
@@ -191,6 +199,18 @@ weird_reddit_image_generator = create_reddit_image_generator(
     "HybridAnimals",
     "EyeBleach",
     "natureismetal",
+    "195",
+)
+
+neutral_reddit_image_generator = create_reddit_image_generator(
+    "Cinemagraphs",
+    "itookapicture",
+    "Art",
+    "artstore",
+    "pics",
+    "analog",
+    "ExposurePorn",
+    "Illustration",
 )
 
 shitpostbot_image_generator = ExternalImageListGenerator(
@@ -204,13 +224,16 @@ shitpostbot_image_generator = ExternalImageListGenerator(
 )
 
 weird_punchline_static_image_generator = CombinedGenerator(
-    (2, weird_reddit_image_generator), (3, shitpostbot_image_generator)
+    (4, weird_reddit_image_generator),
+    (6, shitpostbot_image_generator),
+    (1, meme_reddit_image_generator),
 )
 
 weird_punchline_image_generator = CombinedGenerator(
-    (5, weird_reddit_image_generator),
-    (4, shitpostbot_image_generator),
-    (3, combined_gif_generator),
+    (10, weird_reddit_image_generator),
+    (8, shitpostbot_image_generator),
+    (6, combined_gif_generator),
+    (1, meme_reddit_image_generator),
 )
 
 # GOOGLE IMAGES
@@ -242,16 +265,20 @@ generate_unsplash_image_from_word = ExternalImageListGenerator(
     check_image_validness=False,
 )
 
-normal_image_generator = CombinedGenerator(
-    (1000, generate_unsplash_image), (1, generate_google_image)
+neutral_image_generator = CombinedGenerator(
+    (1000, generate_unsplash_image),
+    (1, generate_google_image),
+    (300, neutral_reddit_image_generator),
 )
 
-normal_image_generator_from_word = CombinedGenerator(
-    (1000, generate_unsplash_image_from_word), (1, generate_google_image_from_word)
+neutral_image_generator_from_word = CombinedGenerator(
+    (1000, generate_unsplash_image_from_word),
+    (1, generate_google_image_from_word),
+    (300, UnseededGenerator(neutral_reddit_image_generator)),
 )
 
-normal_or_weird_image_generator = CombinedGenerator(
-    (1, normal_image_generator), (1, weird_punchline_image_generator)
+neutral_or_weird_image_generator = CombinedGenerator(
+    (1, neutral_image_generator), (1, weird_punchline_image_generator)
 )
 
 # OLD/VINTAGE
@@ -282,13 +309,13 @@ about_me_location_tuple_generator = TupledGenerator(
 
 about_me_job_tuple_generator = MappedGenerator(
     InspiredTupleGenerator(
-        MappedGenerator(job_generator, str.title), normal_image_generator_from_word
+        MappedGenerator(job_generator, str.title), neutral_image_generator_from_word
     ),
     JobPrefixApplier(),
 )
 
 about_me_country_tuple_generator = MappedGenerator(
-    InspiredTupleGenerator(country_generator, normal_image_generator_from_word),
+    InspiredTupleGenerator(country_generator, neutral_image_generator_from_word),
     CountryPrefixApplier(),
 )
 
@@ -426,7 +453,7 @@ single_image_slide_generators = [
         slide_generators.FullImageSlideGenerator.of(
             NoneGenerator(),
             CombinedGenerator(
-                (1, normal_image_generator), (1, generate_wide_google_image)
+                (3, neutral_image_generator), (1, generate_full_screen_google_image)
             ),
         ),
         tags=["full_image", "google_images"],
@@ -435,9 +462,17 @@ single_image_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generators.FullImageSlideGenerator.of(
+            NoneGenerator(), meme_reddit_image_generator
+        ),
+        tags=["full_image", "meme"],
+        name="Full Screen Meme",
+    ),
+    SlideGeneratorData(
+        # slide_templates.generate_full_image_slide(
+        slide_generators.FullImageSlideGenerator.of(
             default_slide_title_generator,
             CombinedGenerator(
-                (1, normal_image_generator), (1, generate_wide_google_image)
+                (3, neutral_image_generator), (1, generate_wide_google_image)
             ),
         ),
         tags=["full_image", "google_images"],
@@ -496,7 +531,7 @@ captioned_images_slide_generators = [
         slide_generators.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             double_image_captions_generator,
-            normal_or_weird_image_generator,
+            neutral_or_weird_image_generator,
             combined_gif_generator,
         ),
         weight_function=ConstantWeightFunction(2),
@@ -532,7 +567,7 @@ captioned_images_slide_generators = [
         slide_generators.ThreeColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             triple_image_captions_generator,
-            normal_or_weird_image_generator,
+            neutral_or_weird_image_generator,
             weird_punchline_image_generator,
             weird_punchline_static_image_generator,
         ),
@@ -569,7 +604,7 @@ chart_slide_generators = [
         slide_generators.ChartSlideGenerator(chart.generate_location_pie),
         allowed_repeated_elements=4,
         retries=1,
-        weight_function=ConstantWeightFunction(0.08),
+        weight_function=ConstantWeightFunction(0.3),
         tags=["location_chart", "pie_chart", "chart"],
         name="Location Chart",
     ),
@@ -578,7 +613,7 @@ chart_slide_generators = [
         slide_generators.ChartSlideGenerator(chart.generate_property_pie),
         allowed_repeated_elements=4,
         retries=1,
-        weight_function=ConstantWeightFunction(0.04),
+        weight_function=ConstantWeightFunction(0.15),
         tags=["property_chart", "pie_chart", "chart"],
         name="Property Chart",
     ),
@@ -587,7 +622,7 @@ chart_slide_generators = [
         slide_generators.ChartSlideGenerator(chart.generate_correlation_curve),
         allowed_repeated_elements=4,
         retries=1,
-        weight_function=ConstantWeightFunction(0.5),
+        weight_function=ConstantWeightFunction(0.25),
         tags=["curve", "chart"],
         name="Correlation Curve",
     ),
@@ -600,7 +635,7 @@ conclusion_slide_generators = [
         slide_generators.TwoImagesAndTupledCaptions(
             conclusion_title_generator,
             conclusion_two_captions_tuple_generator,
-            normal_image_generator,
+            neutral_image_generator,
             weird_reddit_image_generator,
         ),
         weight_function=PeakedWeight((-1,), 10000, 0),
@@ -613,7 +648,7 @@ conclusion_slide_generators = [
         slide_generators.ThreeImagesAndTupledCaptions(
             conclusion_title_generator,
             conclusion_three_captions_tuple_generator,
-            normal_image_generator,
+            neutral_image_generator,
             weird_reddit_image_generator,
             combined_gif_generator,
         ),
@@ -651,6 +686,7 @@ default_max_allowed_tags = {
     "quote": 0.2,
     "statement": 0.2,
     "chart": 0.3,
+    "meme": 0.2,
 }
 
 # ==================================

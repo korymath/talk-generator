@@ -8,8 +8,10 @@ import sys
 import logging
 
 from talkgenerator import settings
+from talkgenerator import runtime_checker
 from talkgenerator.schema import schemas
 from talkgenerator.sources import phrasefinder
+from talkgenerator.util import os_util
 
 DEFAULT_PRESENTATION_TOPIC = "cat"
 MAX_PRESENTATION_SAVE_TRIES = 100
@@ -21,14 +23,9 @@ def generate_talk(args):
     """Make a talk with the given topic."""
 
     if args.print_logs:
-        logger.setLevel(logging.DEBUG)
-        handler = logging.StreamHandler(sys.stdout)
-        handler.setLevel(logging.DEBUG)
-        formatter = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        )
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
+        os_util.show_logs(logger)
+
+    runtime_checker.check_runtime_environment()
 
     # Print status details
     logger.info("******************************************")

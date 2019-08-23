@@ -84,6 +84,15 @@ class SeededGenerator(object):
         return self._simple_generator(presentation_context["seed"])
 
 
+class UnseededGenerator(object):
+    def __init__(self, simple_generator):
+        self._simple_generator = simple_generator
+
+    def __call__(self, seed):
+        presentation_context = {"seed": seed}
+        return self._simple_generator(presentation_context)
+
+
 class NoneGenerator(object):
     def __init__(self):
         pass
@@ -167,7 +176,8 @@ class ExternalImageListGenerator(object):
                 if not self._check_image_validness or os_util.is_image(
                     chosen_image_url
                 ):
-                    os_util.download_image(chosen_image_url, downloaded_url)
+                    url_without_query = chosen_image_url.split("?", maxsplit=1)[0]
+                    os_util.download_image(url_without_query, downloaded_url)
                     if os_util.is_valid_image(downloaded_url):
                         return downloaded_url
                 else:

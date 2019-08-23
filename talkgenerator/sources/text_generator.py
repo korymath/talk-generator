@@ -8,6 +8,7 @@ import tracery
 from tracery.modifiers import base_english
 
 from talkgenerator.sources import conceptnet
+from talkgenerator.sources import phrasefinder
 from talkgenerator.sources import wikihow
 from talkgenerator.util import language_util
 from talkgenerator.util import os_util
@@ -19,6 +20,12 @@ known_functions = {
     "upper": str.upper,
     "dashes": lambda words: words.replace(" ", "-"),
     "first_letter": lambda words: words[0],
+    "last_letter_is_vowel": lambda word: word
+    if language_util.is_vowel(word[-1])
+    else None,
+    "last_letter_is_consonant": lambda word: word
+    if language_util.is_consonant(word[-1])
+    else None,
     "a": lambda word: language_util.add_article(word),
     "ing": language_util.to_present_participle,
     "plural": language_util.to_plural,
@@ -32,9 +39,14 @@ known_functions = {
     # Conceptnet
     "conceptnet_location": conceptnet.weighted_location_generator,
     "conceptnet_related": conceptnet.weighted_related_word_generator,
+    "conceptnet_related_single_word": lambda word: phrasefinder.get_rarest_word(
+        conceptnet.weighted_related_word_generator(word)
+    ),
     # Checkers
     "is_noun": lambda word: word if language_util.is_noun(word) else None,
     "is_verb": lambda word: word if language_util.is_verb(word) else None,
+    # Unique: To make a variable not be the same as something else with the same parameters
+    "unique": lambda x: x,
 }
 
 
@@ -157,6 +169,9 @@ def apply_functions_to_variables(
 ):
     """ Applies the functions of the variables_and_functions tuple and stores them in the variable dictionary and
     updates the template """
+    variables_and_functions = list(variables_and_functions)
+    variables_and_functions.sort(key=lambda a: len(a), reverse=True)
+
     for var_func in variables_and_functions:
         # Check if it has functions to apply
         if len(var_func) > 1 and len(var_func[1]) > 0:
