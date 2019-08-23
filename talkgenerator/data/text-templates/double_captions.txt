@@ -13,8 +13,8 @@ How I see {seed.plural}:|What {seed.plural} actually are:
 How I used to {seed.wikihow_action.lower}|After I learned how to {seed.wikihow_action.lower}
 My {seed.singular.title} Plan|Their {seed.singular.title} Plan
 How they see it|What it actually is
-How they see {seed.wikihow_action.lower}|What it actually is
-How they see {seed.wikihow_action.lower}|What {seed.singular} actually means
+How they see {seed.wikihow_action.ing.lower}|What it actually is
+How they see {seed.wikihow_action.ing.lower}|What {seed.singular} actually means
 How I see it|What it actually is
 Stereotype|Reality
 {seed.title}'s Stereotype|{seed.title}'s Reality
@@ -33,4 +33,4 @@ How people used to {seed.wikihow_action.lower}|Now
 How people used to {seed.wikihow_action.lower}|My proposal
 How I initially approached {seed.wikihow_action.ing.lower}|What I should have done
 Why {seed.plural} are great|Why {seed.plural} are awful
-{seed.wikihow_action}|{seed.wikihow_action}
+{seed.wikihow_action}|{topic.wikihow_action}
