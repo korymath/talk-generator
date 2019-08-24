@@ -5,6 +5,7 @@ from talkgenerator.sources import wikihow
 class WikiHowTest(unittest.TestCase):
     def test_wrong_wikihow_links_regression_test(self):
         actions = wikihow.get_related_wikihow_actions_basic_search("cat")
+        print(actions)
         self.assertFalse("articles from wikiHow" in actions)
 
     def test_no_views_in_wikihow_action(self):

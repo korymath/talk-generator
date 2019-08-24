@@ -23,15 +23,23 @@ _ADVANCED_SEARCH_URL = (
 def _create_log_in_session(username, password):
     log_in_credentials = {"wpName": username, "wpPassword": password}
     session = requests.session()
-
+    max_session_attempts = 16
     trial = 1
     success = False
-    while not success and trial < 16:
+
+    while not success and trial < max_session_attempts:
         try:
-            session.post(_LOG_IN_URL, log_in_credentials, log_in_credentials)
-            success = True
+            resp = session.post(_LOG_IN_URL, log_in_credentials, log_in_credentials)
+            if "Unable to continue login." in resp.text:
+                logger.warning("Requests login failed. Unable to continue login.")
+                return False
+            else:
+                success = True
         except requests.exceptions.ConnectionError:
             wait_time = 0.25 * 2 ** trial
+
+            # increment the trial counter
+            trial += 1
             logger.error(
                 "Connection error with Wikihow! Retrying in "
                 + str(wait_time)
@@ -39,7 +47,8 @@ def _create_log_in_session(username, password):
             )
             time.sleep(wait_time)
             return _create_log_in_session(username, password)
-    if trial < 16:
+
+    if trial < max_session_attempts:
         logger.info("Logged into Wikihow")
     else:
         logger.warning("Failed logging into Wikihow")
@@ -50,10 +59,14 @@ def get_wikihow_session():
     try:
         wikihow_credentials = settings.wikihow_auth()
         if "session" in wikihow_credentials.keys():
-            logger.info(
+            logger.warning(
                 "Found Wikihow Session object in credentials, skipping loggin in"
             )
             return wikihow_credentials["session"]
+        else:
+            logger.warning(
+                "No Wikihow Session object in credentials, attempting log in..."
+            )
         return _create_log_in_session(**wikihow_credentials)
     except FileNotFoundError:
         logger.warning(
