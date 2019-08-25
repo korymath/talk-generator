@@ -4,7 +4,7 @@ environs==5.2.1
 google_images_download==2.8.0
 inflect==2.1.0
 lxml==4.4.1
-nltk==3.4.4
+nltk==3.4.5
 Pillow==6.1.0
 praw==6.3.1
 prawcore==1.0.1
