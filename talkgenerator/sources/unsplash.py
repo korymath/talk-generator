@@ -36,3 +36,5 @@ def search_photos_return_urls(query):
             logger.warning(
                 'Unsplash could not find results for "{}", which might be due to missing/erroneous access keys'
             )
+    else:
+        logger.warning("No active Unsplash session due to missing/wrong credentials.")
