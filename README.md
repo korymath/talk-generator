@@ -38,7 +38,7 @@ python3 -m nltk.downloader punkt averaged_perceptron_tagger
 pip install -e .
 
 # Generate a 10 slide talk with topic peanuts
-talkgenerator --topic 'peanuts' --num_slides 10
+talkgenerator --topic "peanuts" --num_slides 10
 ```
 
 ### Run arguments
