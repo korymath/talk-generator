@@ -56,23 +56,19 @@ def _create_log_in_session(username, password):
 
 
 def get_wikihow_session():
-    try:
-        wikihow_credentials = settings.wikihow_auth()
-        if "session" in wikihow_credentials.keys():
-            logger.warning(
-                "Found Wikihow Session object in credentials, skipping loggin in"
-            )
-            return wikihow_credentials["session"]
-        else:
-            logger.warning(
-                "No Wikihow Session object in credentials, attempting log in..."
-            )
-        return _create_log_in_session(**wikihow_credentials)
-    except FileNotFoundError:
-        logger.warning(
-            "Warning: No login credentials were found for Wikihow, the program might not run as it's supposed to."
-            "Please add these credentials file to /data/auth/wikihow.json, having a 'username' and 'password' field"
-        )
+    wikihow_credentials = settings.wikihow_auth()
+    # if session:
+    #     logger.warning(
+    #         "Found Wikihow Session object in credentials, skipping loggin in"
+    #     )
+    #     return wikihow_credentials["session"]
+    # else:
+    #     logger.warning(
+    #         "No Wikihow Session object in credentials, attempting log in..."
+    #     )
+    session = _create_log_in_session(**wikihow_credentials)
+    wikihow_credentials["session"] = session
+    return session
 
 
 def remove_how_to(wikihow_title):
@@ -109,7 +105,8 @@ def basic_search_wikihow(search_words):
     )
 
 
-wikihow_session = get_wikihow_session()
+# wikihow_session = get_wikihow_session()
+wikihow_session = None
 
 
 @lru_cache(maxsize=20)
@@ -162,7 +159,7 @@ def get_related_wikihow_actions_advanced_search(seed_word):
 
 def get_related_wikihow_actions(seed_word):
     """ Uses the advanced search unless it doesn't return anything """
-    actions = get_related_wikihow_actions_advanced_search(seed_word)
-    if actions:
-        return actions
+    # actions = get_related_wikihow_actions_advanced_search(seed_word)
+    # if actions:
+    #     return actions
     return get_related_wikihow_actions_basic_search(seed_word)
