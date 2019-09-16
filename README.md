@@ -13,7 +13,7 @@ For a demo of this generator, please visit [talkgenerator.com](http://talkgenera
 
 ### Example
 
-![Automatically Generated](https://media.giphy.com/media/MEun38qiaievJrIODq/giphy.gif)
+![Automatically Generated](https://media.giphy.com/media/MXXe522nIAA9JZjExI/giphy.gif)
 
 ## Easy Install and Run
 
