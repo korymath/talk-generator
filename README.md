@@ -5,7 +5,7 @@
 
 ## Description
 
-Software to automatically generate talks, presentations for PowerPoint and/or Keynote. Their main purpose is for the improvisational comedy format *"Improvised TED talk"* or *"Powerpoint Karaoke"*, where the actors have to present an unseen presentation. This software can be extended to be used for any sort of presentation including Pecha Kucha, Powerpoint Kareoke, etc.
+Software to automatically generate talks, presentations for PowerPoint and/or Keynote. Their main purpose is for the improvisational comedy format *"Improvised TED talk"* or *"Powerpoint Karaoke"*, where the actors have to present an unseen presentation slide deck, but pretend to be an expert and explain their slide show choices.
 
 ## Demo
 
