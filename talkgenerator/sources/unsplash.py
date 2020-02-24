@@ -14,15 +14,10 @@ logger = logging.getLogger("talkgenerator")
 
 
 def get_unsplash_session():
-    try:
-        creds = settings.unsplash_auth()
-        # instantiate PyUnsplash object
-        api = PyUnsplash(api_key=creds["unsplash_access_key"])
-        return api
-    except FileNotFoundError:
-        print(
-            "Warning: No login credentials were found for Unsplash. Please add these credentials file to .env."
-        )
+    creds = settings.unsplash_auth()
+    # instantiate PyUnsplash object
+    api = PyUnsplash(api_key=creds["unsplash_access_key"])
+    return api
 
 
 unsplash_session = get_unsplash_session()
@@ -41,3 +36,5 @@ def search_photos_return_urls(query):
             logger.warning(
                 'Unsplash could not find results for "{}", which might be due to missing/erroneous access keys'
             )
+    else:
+        logger.warning("No active Unsplash session due to missing/wrong credentials.")

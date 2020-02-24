@@ -62,7 +62,9 @@ _PROHIBITED_IMAGES_DIR = "data/prohibited_images/"
 @lru_cache(maxsize=1)
 def get_prohibited_images():
     actual_dir = to_actual_file(_PROHIBITED_IMAGES_DIR)
-    return list([open_image(actual_dir + url) for url in os.listdir(actual_dir)])
+    return list(
+        [open_image(os.path.join(actual_dir, url)) for url in os.listdir(actual_dir)]
+    )
 
 
 @lru_cache(maxsize=20)
