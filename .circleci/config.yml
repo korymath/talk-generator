@@ -27,6 +27,7 @@ jobs:
             . venv/bin/activate
             pip install --upgrade pip
             pip install -r requirements.txt
+            sudo pip install --user codecov
             python3 -m nltk.downloader wordnet punkt averaged_perceptron_tagger
 
       - save_cache:
