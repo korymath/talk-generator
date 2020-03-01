@@ -98,9 +98,10 @@ def _fill_in(seeds, i, distance=1):
                 logger.info("Conceptnet related words failing: {}".format(e))
                 related = []
 
-            pool = multiprocessing.Pool()
-            normalised_related = pool.map(normalise_weighted_word, related)
-            pool.close()
+            normalised_related = map(normalise_weighted_word, related)
+            # pool = multiprocessing.Pool()
+            # normalised_related = pool.map(normalise_weighted_word, related)
+            # pool.close()
 
             filtered_related = [
                 weighted_word
