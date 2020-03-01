@@ -27,7 +27,6 @@ jobs:
             . venv/bin/activate
             pip install --upgrade pip
             pip install -r requirements.txt
-            pip install codecov
             python3 -m nltk.downloader wordnet punkt averaged_perceptron_tagger
 
       - save_cache:
@@ -39,6 +38,8 @@ jobs:
       - run:
           name: run tests
           command: |
+            pip install pytest
+            pip install codecov
             pytest --cov=talkgenerator tests/
             codecov --token=e25ce249-b3da-4d80-b8d3-074f7d288969
 
