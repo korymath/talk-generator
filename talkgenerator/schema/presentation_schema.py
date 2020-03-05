@@ -37,7 +37,13 @@ class PresentationSchema:
         self._ignore_weights = ignore_weights
 
     def generate_presentation(
-        self, topics, num_slides, presenter=None, title=None, parallel=False, int_seed=None
+        self,
+        topics,
+        num_slides,
+        presenter=None,
+        title=None,
+        parallel=False,
+        int_seed=None,
     ):
         """Generate a presentation about a certain topic with a certain number of slides"""
         # Create new presentation
@@ -77,7 +83,7 @@ class PresentationSchema:
                 seed_generator,
                 used_elements,
                 used_tags,
-                int_seed
+                int_seed,
             )
 
         slide_deck.save_to_powerpoint(presentation)
@@ -115,16 +121,19 @@ class PresentationSchema:
                         prohibited_generators=self._calculate_prohibited_generators(
                             used_tags, num_slides
                         ),
-                        int_seed=int_seed
+                        int_seed=int_seed,
                     ),
                     slide_nrs_to_generate,
                 )
                 slide_nrs_to_generate = []
                 for slide_result in all_slide_results:
                     if slide_result:
-                        slide, generated_elements, slide_generator_data, slide_nr = (
-                            slide_result
-                        )
+                        (
+                            slide,
+                            generated_elements,
+                            slide_generator_data,
+                            slide_nr,
+                        ) = slide_result
                         generated_results[slide_nr] = slide_result
 
             # Check Constraints
@@ -168,7 +177,7 @@ class PresentationSchema:
                 prohibited_generators=self._calculate_prohibited_generators(
                     used_tags, num_slides
                 ),
-                int_seed=int_seed
+                int_seed=int_seed,
             )
 
             if slide_results:
@@ -220,7 +229,7 @@ class PresentationSchema:
         int_seed=None,
     ):
         if int_seed is not None:
-            random.seed(int_seed+slide_nr)
+            random.seed(int_seed + slide_nr)
 
         # Default arguments: avoid mutable defaults
         if prohibited_generators is None:

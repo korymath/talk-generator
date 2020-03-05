@@ -62,7 +62,7 @@ def generate_talk(args):
         presenter=args.presenter,
         title=args.title,
         parallel=args.parallel,
-        int_seed=args.int_seed
+        int_seed=args.int_seed,
     )
 
     cleaned_topics = args.topic.replace(" ", "").replace(",", "_")
