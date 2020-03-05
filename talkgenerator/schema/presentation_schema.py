@@ -348,8 +348,7 @@ class SlideGeneratorContext(object):
 
     def __call__(self, slide_nr):
         if self and self.int_seed and self.int_seed is not None:
-            actual_seed = self.int_seed + slide_nr
-            random.seed(actual_seed)
+            random.seed(self.int_seed + slide_nr)
 
         return self.presentation_schema.generate_slide(
             # presentation_context=dict(),
