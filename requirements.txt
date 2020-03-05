@@ -5,7 +5,6 @@ google_images_download==2.8.0
 inflect==2.1.0
 lxml==4.4.1
 nltk==3.4.5
-Pillow==6.2.0
 praw==6.3.1
 prawcore==1.0.1
 pytest==5.0.1
