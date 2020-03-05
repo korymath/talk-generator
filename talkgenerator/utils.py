@@ -3,6 +3,7 @@ import datetime
 import logging
 import os
 import pathlib
+import random
 import subprocess
 import sys
 import logging
@@ -24,6 +25,9 @@ def generate_talk(args):
 
     if args.print_logs:
         os_util.show_logs(logger)
+
+    if args.int_seed is not None:
+        random.seed(args.int_seed)
 
     runtime_checker.check_runtime_environment()
 
@@ -58,6 +62,7 @@ def generate_talk(args):
         presenter=args.presenter,
         title=args.title,
         parallel=args.parallel,
+        int_seed=args.int_seed
     )
 
     cleaned_topics = args.topic.replace(" ", "").replace(",", "_")
@@ -132,6 +137,12 @@ def get_argument_parser():
         default=10,
         type=int,
         help="Number of slides to create.",
+    )
+    parser.add_argument(
+        "--int_seed",
+        default=None,
+        type=int,
+        help="Seed used for random.seed(int_seed). Fill in any number to add more consistency between runs.",
     )
     parser.add_argument(
         "--schema",
