@@ -4,6 +4,9 @@ from talkgenerator.schema.slide_topic_generators import SideTrackingTopicGenerat
 
 
 class SlideTopicGeneratorsTest(unittest.TestCase):
+    def setUp(self) -> None:
+        random.seed(123)
+
     def test_conceptnet_sidetracking_standard(self):
         generator = SideTrackingTopicGenerator(["cat"], 5)
         self.assertTrue(

@@ -1,9 +1,13 @@
+import random
 import unittest
 
 from talkgenerator.sources import text_generator
 
 
 class TextGeneratorTest(unittest.TestCase):
+    def setUp(self) -> None:
+        random.seed(123)
+
     def test_variable_extraction(self):
         self.assertEqual(
             {"test", "adjective"},
