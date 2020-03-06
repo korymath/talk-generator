@@ -12,11 +12,16 @@ from talkgenerator.util import random_util, os_util
 logger = logging.getLogger("talkgenerator")
 
 
-class CombinedGenerator(object):
+class Generator(object):
+    def __call__(self, seed: str):
+        raise NotImplemented(str(self) + " has not provided an implementation for the generator")
+
+
+class CombinedGenerator(Generator):
     def __init__(self, *weighted_generators):
         self._weighted_generators = weighted_generators
 
-    def __call__(self, seed):
+    def __call__(self, seed: str):
         current_weighted_generators = list(self._weighted_generators)
         while len(current_weighted_generators) > 0:
             # print("combined generator using", current_weighted_generators)
@@ -33,7 +38,7 @@ def _remove_object_from_weighted_list(current_weighted_generators, generator):
             current_weighted_generators.remove(i)
 
 
-class MappedGenerator(object):
+class MappedGenerator(Generator):
     def __init__(self, generator, *functions):
         self._generator = generator
         self._functions = functions
@@ -46,7 +51,7 @@ class MappedGenerator(object):
         return generated
 
 
-class TupledGenerator(object):
+class TupledGenerator(Generator):
     """ Creates a tuple generator that generates every tuple value independent from the others"""
 
     def __init__(self, *generators):
@@ -59,7 +64,7 @@ class TupledGenerator(object):
         )
 
 
-class InspiredTupleGenerator(object):
+class InspiredTupleGenerator(Generator):
     """ The second generator will get the generator 1 as input, outputting the tuple """
 
     def __init__(self, generator_1, generator_2):
@@ -76,7 +81,7 @@ class InspiredTupleGenerator(object):
 # == TRIVIAL GENERATORS ==
 
 
-class SeededGenerator(object):
+class SeededGenerator(Generator):
     def __init__(self, simple_generator):
         self._simple_generator = simple_generator
 
@@ -84,7 +89,7 @@ class SeededGenerator(object):
         return self._simple_generator(presentation_context["seed"])
 
 
-class UnseededGenerator(object):
+class UnseededGenerator(Generator):
     def __init__(self, simple_generator):
         self._simple_generator = simple_generator
 
@@ -93,7 +98,7 @@ class UnseededGenerator(object):
         return self._simple_generator(presentation_context)
 
 
-class NoneGenerator(object):
+class NoneGenerator(Generator):
     def __init__(self):
         pass
 
@@ -101,7 +106,7 @@ class NoneGenerator(object):
         return None
 
 
-class IdentityGenerator(object):
+class IdentityGenerator(Generator):
     def __init__(self, input_word):
         self._input_word = input_word
 
@@ -109,7 +114,7 @@ class IdentityGenerator(object):
         return self._input_word
 
 
-class TitledIdentityGenerator(object):
+class TitledIdentityGenerator(Generator):
     def __init__(self, input_word):
         self._input_word = input_word
 
@@ -118,7 +123,7 @@ class TitledIdentityGenerator(object):
             return self._input_word.title()
 
 
-class StaticGenerator(object):
+class StaticGenerator(Generator):
     def __init__(self, always_generate_this):
         self._always_generate_this = always_generate_this
 
@@ -126,7 +131,7 @@ class StaticGenerator(object):
         return self._always_generate_this
 
 
-class FromListGenerator(object):
+class FromListGenerator(Generator):
     def __init__(self, list_generator):
         self._list_generator = list_generator
 
@@ -134,7 +139,7 @@ class FromListGenerator(object):
         return random_util.choice_optional(self._list_generator(presentation_context))
 
 
-class InvalidImagesRemoverGenerator(object):
+class InvalidImagesRemoverGenerator(Generator):
     def __init__(self, list_generator):
         self._list_generator = list_generator
 
@@ -150,7 +155,7 @@ seeded_identity_generator = SeededGenerator(IdentityGenerator)
 seeded_titled_identity_generator = SeededGenerator(TitledIdentityGenerator)
 
 
-class ExternalImageListGenerator(object):
+class ExternalImageListGenerator(Generator):
     def __init__(
         self,
         image_url_generator,
@@ -194,7 +199,7 @@ class ExternalImageListGenerator(object):
         return None
 
 
-class BackupGenerator(object):
+class BackupGenerator(Generator):
     def __init__(self, *generator_list):
         self._generator_list = generator_list
 
@@ -205,7 +210,7 @@ class BackupGenerator(object):
                 return generated
 
 
-class WeightedGenerator(object):
+class WeightedGenerator(Generator):
     def __init__(self, weighted_list_creator):
         self._weighted_list_creator = weighted_list_creator
 
@@ -215,7 +220,7 @@ class WeightedGenerator(object):
             return random_util.weighted_random(weighted_list)
 
 
-class UnweightedGenerator(object):
+class UnweightedGenerator(Generator):
     def __init__(self, weighted_list_creator):
         self._weighted_list_creator = weighted_list_creator
 
@@ -227,7 +232,7 @@ class UnweightedGenerator(object):
             )
 
 
-class WalkingGenerator(object):
+class WalkingGenerator(Generator):
     """ This type of generator uses its output as input for a next step, taking concepts a few steps away """
 
     def __init__(self, inner_generator, steps):
