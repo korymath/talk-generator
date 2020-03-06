@@ -2,7 +2,7 @@ import random
 import unittest
 from unittest import mock
 
-from talkgenerator import utils
+from talkgenerator import talkgenerator_main
 from talkgenerator.slide import powerpoint_slide_creator
 from talkgenerator.util import os_util
 from talkgenerator.schema import schemas
@@ -31,7 +31,7 @@ class TestTalkGenerator(unittest.TestCase):
         args.configure_mock(open_ppt=False)
         args.configure_mock(save_ppt=True)
         args.configure_mock(int_seed=None)
-        ppt, slide_deck = utils.generate_talk(args)
+        ppt, slide_deck = talkgenerator_main.generate_talk(args)
 
         self.assertEqual(3, len(ppt.slides))
 
@@ -46,7 +46,7 @@ class TestTalkGenerator(unittest.TestCase):
         args.configure_mock(open_ppt=False)
         args.configure_mock(save_ppt=True)
         args.configure_mock(int_seed=None)
-        ppt, slide_deck = utils.generate_talk(args)
+        ppt, slide_deck = talkgenerator_main.generate_talk(args)
 
         self.assertEqual(3, len(ppt.slides))
 
@@ -61,7 +61,7 @@ class TestTalkGenerator(unittest.TestCase):
         args.configure_mock(open_ppt=False)
         args.configure_mock(save_ppt=True)
         args.configure_mock(int_seed=None)
-        ppt, slide_deck = utils.generate_talk(args)
+        ppt, slide_deck = talkgenerator_main.generate_talk(args)
 
         self.assertEqual(6, len(ppt.slides))
 
