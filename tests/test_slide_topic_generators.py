@@ -11,7 +11,7 @@ class SlideTopicGeneratorsTest(unittest.TestCase):
     def test_conceptnet_sidetracking_standard(self):
         generator = SideTrackingTopicGenerator(["cat"], 5)
         self.assertTrue(
-            len([seed for seed in generator.all_seeds() if seed is None]) is 0
+            len([seed for seed in generator.all_seeds() if seed is None]) == 0
         )
 
     def test_conceptnet_sidetracking_non_existing_topic(self):
@@ -25,7 +25,7 @@ class SlideTopicGeneratorsTest(unittest.TestCase):
     def test_conceptnet_sidetracking_hard_topic(self):
         generator = SideTrackingTopicGenerator(["scratch furniture"], 10)
         self.assertTrue(
-            len([seed for seed in generator.all_seeds() if seed is None]) is 0
+            len([seed for seed in generator.all_seeds() if seed is None]) == 0
         )
 
     def test_conceptnet_sidetracking_multi_topic(self):
