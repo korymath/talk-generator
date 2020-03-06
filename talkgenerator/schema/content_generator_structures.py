@@ -3,6 +3,7 @@ This file contains structures that are helpful for certain content generators, b
 """
 import os
 import random
+from typing import Tuple
 
 from talkgenerator.sources import goodreads, text_generator, reddit, wikihow
 from talkgenerator.util.generator_util import ExternalImageListGenerator
@@ -53,7 +54,7 @@ def create_reddit_image_generator(*name):
 
 
 class RedditLocalImageLocationGenerator(object):
-    def __init__(self, subreddit):
+    def __init__(self, subreddit: str):
         self._subreddit = subreddit
 
     def __call__(self, url):
@@ -64,10 +65,10 @@ class RedditLocalImageLocationGenerator(object):
 
 
 class RedditImageSearcher(object):
-    def __init__(self, subreddit):
+    def __init__(self, subreddit: str):
         self._subreddit = subreddit
 
-    def __call__(self, seed):
+    def __call__(self, seed: str):
         results = reddit.search_subreddit(
             self._subreddit, str(seed) + " nsfw:no (url:.jpg OR url:.png OR url:.gif)"
         )
@@ -76,7 +77,7 @@ class RedditImageSearcher(object):
 
 
 class RedditImageGenerator:
-    def __init__(self, subreddit):
+    def __init__(self, subreddit: str):
         self._subreddit = subreddit
 
         self._generate = ExternalImageListGenerator(
@@ -138,7 +139,7 @@ class CountryPrefixApplier(object):
     def __init__(self):
         pass
 
-    def __call__(self, x):
+    def __call__(self, x: Tuple[str, str]):
         return _apply_country_prefix(x[0]), x[1]
 
 
@@ -152,7 +153,7 @@ class JobPrefixApplier(object):
     def __init__(self):
         pass
 
-    def __call__(self, x):
+    def __call__(self, x: Tuple[str, str]):
         return _apply_job_prefix(x[0]), x[1]
 
 

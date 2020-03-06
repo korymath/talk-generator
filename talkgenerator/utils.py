@@ -86,7 +86,7 @@ def generate_talk(args):
     return presentation, slide_deck
 
 
-def save_presentation_to_pptx(output_folder, file_name, prs, index=0):
+def save_presentation_to_pptx(output_folder: str, file_name: str, prs, index=0):
     """Save the talk."""
     if index > MAX_PRESENTATION_SAVE_TRIES:
         return None
@@ -109,7 +109,7 @@ def save_presentation_to_pptx(output_folder, file_name, prs, index=0):
         return save_presentation_to_pptx(output_folder, file_name, prs, index + 1)
 
 
-def open_file(filename):
+def open_file(filename: str):
     """Platform independent open method to cover different OS."""
     if sys.platform == "win32":
         os.startfile(filename)
