@@ -1,3 +1,4 @@
+import random
 import unittest
 
 from talkgenerator.schema.slide_topic_generators import SideTrackingTopicGenerator
