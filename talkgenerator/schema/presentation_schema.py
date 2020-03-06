@@ -6,6 +6,7 @@ presentation), and slide generators, that have functions for generating slides a
 import time
 import logging
 from multiprocessing.pool import ThreadPool
+import random
 
 from talkgenerator.schema.slide_generator_data import _filter_generated_elements
 from talkgenerator.slide import slide_generators
@@ -36,7 +37,13 @@ class PresentationSchema:
         self._ignore_weights = ignore_weights
 
     def generate_presentation(
-        self, topics, num_slides, presenter=None, title=None, parallel=False
+        self,
+        topics,
+        num_slides,
+        presenter=None,
+        title=None,
+        parallel=False,
+        int_seed=None,
     ):
         """Generate a presentation about a certain topic with a certain number of slides"""
         # Create new presentation
@@ -66,6 +73,7 @@ class PresentationSchema:
                 seed_generator,
                 used_elements,
                 used_tags,
+                int_seed,
             )
         else:
             self._generate_slide_deck(
@@ -75,6 +83,7 @@ class PresentationSchema:
                 seed_generator,
                 used_elements,
                 used_tags,
+                int_seed,
             )
 
         slide_deck.save_to_powerpoint(presentation)
@@ -88,6 +97,7 @@ class PresentationSchema:
         seed_generator,
         used_elements,
         used_tags,
+        int_seed,
     ):
         logger.info("Generating the slide deck in parallel")
         slide_nrs_to_generate = range(num_slides)
@@ -111,15 +121,19 @@ class PresentationSchema:
                         prohibited_generators=self._calculate_prohibited_generators(
                             used_tags, num_slides
                         ),
+                        int_seed=int_seed,
                     ),
                     slide_nrs_to_generate,
                 )
                 slide_nrs_to_generate = []
                 for slide_result in all_slide_results:
                     if slide_result:
-                        slide, generated_elements, slide_generator_data, slide_nr = (
-                            slide_result
-                        )
+                        (
+                            slide,
+                            generated_elements,
+                            slide_generator_data,
+                            slide_nr,
+                        ) = slide_result
                         generated_results[slide_nr] = slide_result
 
             # Check Constraints
@@ -149,6 +163,7 @@ class PresentationSchema:
         seed_generator,
         used_elements,
         used_tags,
+        int_seed=None,
     ):
         for slide_nr in range(num_slides):
             # Generate the slide
@@ -162,6 +177,7 @@ class PresentationSchema:
                 prohibited_generators=self._calculate_prohibited_generators(
                     used_tags, num_slides
                 ),
+                int_seed=int_seed,
             )
 
             if slide_results:
@@ -210,7 +226,11 @@ class PresentationSchema:
         num_slides,
         used_elements=None,
         prohibited_generators=None,
+        int_seed=None,
     ):
+        if int_seed is not None:
+            random.seed(int_seed + slide_nr)
+
         # Default arguments: avoid mutable defaults
         if prohibited_generators is None:
             prohibited_generators = set()
@@ -325,6 +345,7 @@ class SlideGeneratorContext(object):
         num_slides,
         used_elements=None,
         prohibited_generators=None,
+        int_seed=None,
     ):
         self.presentation_schema = presentation_schema
         self.presentation_context = presentation_context
@@ -332,8 +353,12 @@ class SlideGeneratorContext(object):
         self.num_slides = num_slides
         self.used_elements = used_elements
         self.prohibited_generators = prohibited_generators
+        self.int_seed = int_seed
 
     def __call__(self, slide_nr):
+        if self and self.int_seed and self.int_seed is not None:
+            random.seed(self.int_seed + slide_nr)
+
         return self.presentation_schema.generate_slide(
             # presentation_context=dict(),
             create_slide_presentation_context(
