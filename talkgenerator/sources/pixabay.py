@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 from cachier import cachier
 from pixabay import Image

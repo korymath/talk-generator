@@ -1,6 +1,6 @@
 import unittest
 
-from talkgenerator import pexels
+from talkgenerator.sources import pexels
 
 
 class PexelsTest(unittest.TestCase):

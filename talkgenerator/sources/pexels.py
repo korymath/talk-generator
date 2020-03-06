@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 from cachier import cachier
 from pexels_api import API
@@ -18,7 +19,7 @@ def get_pexels_session():
 pexels_session = get_pexels_session()
 
 
-@cachier(cache_dir="../.cache")
+@cachier(cache_dir=Path("..", ".cache").absolute())
 def search_photos_return_urls(query):
     if pexels_session:
         results = pexels_session.search(query)
