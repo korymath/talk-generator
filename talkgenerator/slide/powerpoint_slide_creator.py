@@ -3,6 +3,7 @@ import sys
 import traceback
 import logging
 from functools import lru_cache
+from typing import List
 
 from lxml.etree import XMLSyntaxError
 from pptx import Presentation
@@ -19,6 +20,8 @@ logger = logging.getLogger("talkgenerator")
 def get_powerpoint_template_file():
     return os_util.to_actual_file(_POWERPOINT_TEMPLATE_FILE)
 
+
+SOURCES_PLACEHOLDER = 10
 
 # Layouts index in template
 LAYOUT_TITLE_SLIDE = 0
@@ -143,7 +146,11 @@ def _add_image_or_text(slide, placeholder_id, image_url_or_text, original_image_
 
 def _print_all_placeholders(slide):
     for shape in slide.placeholders:
-        logger.info("%d %s" % (shape.placeholder_format.idx, shape.name))
+        print("%d %s" % (shape.placeholder_format.idx, shape.name))
+
+
+def add_sources_note(slide, _sources: List[str]):
+    return _add_text(slide, SOURCES_PLACEHOLDER, "(sources: " + "".join(_sources) + ")")
 
 
 # FORMAT GENERATORS
