@@ -211,7 +211,7 @@ def generate_yes_no_large_funny_answer_chart_data(presentation_context):
 
     categories = ["Yes", "No", funny_yes_no_answer_generator(presentation_context)]
     series_data = normalise_data(
-        create_equal_data_with_outlier_end(len(categories), 0.7, 1, 2.5, 1, 20)
+        create_equal_data_with_outlier_end(len(categories), 0.2, 1, 2.5, 1, 20)
     )
 
     chart_data = ChartData()
