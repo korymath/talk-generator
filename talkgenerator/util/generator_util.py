@@ -14,7 +14,9 @@ logger = logging.getLogger("talkgenerator")
 
 class Generator(object):
     def __call__(self, seed: str):
-        raise NotImplemented(str(self) + " has not provided an implementation for the generator")
+        raise NotImplemented(
+            str(self) + " has not provided an implementation for the generator"
+        )
 
 
 class CombinedGenerator(Generator):

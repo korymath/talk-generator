@@ -10,11 +10,13 @@ from functools import lru_cache
 #         return other_weight
 #
 #     return weight_function
-from typing import List, Collection, Union, Set, Callable
+from typing import List, Collection, Union, Set, Callable, Tuple
 
 
 class PeakedWeight(object):
-    def __init__(self, peak_values: List[int], weight: float, other_weight: float):
+    def __init__(
+        self, peak_values: Tuple[int, ...], weight: float, other_weight: float
+    ):
         self._peak_values = peak_values
         self._weight = weight
         self._other_weight = other_weight
