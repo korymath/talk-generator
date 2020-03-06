@@ -18,7 +18,7 @@ def get_pixabay_session():
 pixabay_session = get_pixabay_session()
 
 
-@cachier(cache_dir="../.cache")
+@cachier(cache_dir=Path("..", ".cache").absolute())
 def search_photos_return_urls(query):
     if pixabay_session:
         results = pixabay_session.search(q=query)

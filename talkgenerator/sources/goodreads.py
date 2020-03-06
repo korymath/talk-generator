@@ -1,4 +1,5 @@
 from functools import lru_cache
+from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
@@ -13,7 +14,7 @@ quote_search_url = (
 
 
 @lru_cache(maxsize=20)
-@cachier(cache_dir="../../.cache")
+@cachier(cache_dir=Path("..", ".cache").absolute())
 def _search_quotes_page(search_term, page):
     url = quote_search_url.format(page, search_term.replace(" ", "+"))
     try:

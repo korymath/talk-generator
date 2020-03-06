@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import safygiphy
 from cachier import cachier
@@ -8,7 +9,7 @@ from talkgenerator.util import os_util
 giphy = safygiphy.Giphy()
 
 
-@cachier(cache_dir="../../.cache")
+@cachier(cache_dir=Path("..", ".cache").absolute())
 def get_related_giphy(seed_word):
     if bool(seed_word):
         response = giphy.random(tag=seed_word)

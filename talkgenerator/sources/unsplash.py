@@ -1,6 +1,7 @@
 """ Module for interacting with Wikihow """
 
 import logging
+from pathlib import Path
 
 from cachier import cachier
 from pyunsplash import PyUnsplash
@@ -24,7 +25,7 @@ def get_unsplash_session():
 unsplash_session = get_unsplash_session()
 
 
-@cachier(cache_dir="../.cache")
+@cachier(cache_dir=Path("..", ".cache").absolute())
 def search_photos_return_urls(query):
     if unsplash_session:
         results = unsplash_session.search(type_="photos", query=query)

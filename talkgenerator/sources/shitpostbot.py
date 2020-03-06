@@ -1,5 +1,6 @@
 import random
 from functools import lru_cache
+from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
@@ -19,7 +20,7 @@ def _search_shitpostbot_page(search_term, page):
 
 
 @lru_cache(maxsize=20)
-@cachier(cache_dir="../../.cache")
+@cachier(cache_dir=Path("..", ".cache").absolute())
 def _search_shitpostbot_page_rated(search_term, page):
     url = _SEARCH_URL.format(search_term, page, search_term.replace(" ", "+"))
     page = requests.get(url)
