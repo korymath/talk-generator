@@ -8,6 +8,7 @@ from itertools import chain
 import inflect
 import requests
 from bs4 import BeautifulSoup
+from cachier import cachier
 
 from talkgenerator import settings
 
@@ -99,6 +100,7 @@ def _remove_trademarks(action):
 
 
 @lru_cache(maxsize=20)
+@cachier(cache_dir="../../.cache")
 def basic_search_wikihow(search_words):
     return requests.get(
         "https://en.wikihow.com/wikiHowTo?search=" + search_words.replace(" ", "+")
@@ -110,6 +112,7 @@ wikihow_session = None
 
 
 @lru_cache(maxsize=20)
+@cachier(cache_dir="../../.cache")
 def _advanced_search_wikihow(search_words):
     # session = get_wikihow_session()
     if wikihow_session:
