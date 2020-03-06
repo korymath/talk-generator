@@ -30,6 +30,7 @@ class TestTalkGenerator(unittest.TestCase):
         args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
         args.configure_mock(open_ppt=False)
         args.configure_mock(save_ppt=True)
+        args.configure_mock(int_seed=None)
         ppt, slide_deck = utils.generate_talk(args)
 
         self.assertEqual(3, len(ppt.slides))
@@ -44,6 +45,7 @@ class TestTalkGenerator(unittest.TestCase):
         args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
         args.configure_mock(open_ppt=False)
         args.configure_mock(save_ppt=True)
+        args.configure_mock(int_seed=None)
         ppt, slide_deck = utils.generate_talk(args)
 
         self.assertEqual(3, len(ppt.slides))
@@ -58,6 +60,7 @@ class TestTalkGenerator(unittest.TestCase):
         args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
         args.configure_mock(open_ppt=False)
         args.configure_mock(save_ppt=True)
+        args.configure_mock(int_seed=None)
         ppt, slide_deck = utils.generate_talk(args)
 
         self.assertEqual(6, len(ppt.slides))
