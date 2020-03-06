@@ -27,7 +27,7 @@ def run_time_test(start_idx, end_idx):
         start = time.process_time()
         clock_start = time.perf_counter()
 
-        utils.generate_talk(args)
+        talkgenerator_main.generate_talk(args)
 
         end = time.process_time()
         clock_end = time.perf_counter()
