@@ -1,9 +1,8 @@
 import multiprocessing
 import random
 import logging
-from collections import Collection
 from functools import lru_cache
-from typing import List
+from typing import List, Collection
 
 from talkgenerator.sources import conceptnet, phrasefinder
 from talkgenerator.util import language_util, random_util
