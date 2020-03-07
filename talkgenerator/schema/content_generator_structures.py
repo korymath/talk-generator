@@ -16,6 +16,7 @@ from talkgenerator.util.generator_util import (
 
 
 # = TEXT GENERATORS=
+from util.image_data import ImageData
 
 
 def create_templated_text_generator(filename):
@@ -73,7 +74,17 @@ class RedditImageSearcher(object):
             self._subreddit, str(seed) + " nsfw:no (url:.jpg OR url:.png OR url:.gif)"
         )
         if bool(results):
-            return [post.url for post in results]
+            return [
+                ImageData(
+                    image_url=post.url,
+                    source="u/"
+                    + post.author.name
+                    + " (on "
+                    + post.subreddit_name_prefixed
+                    + ")",
+                )
+                for post in results
+            ]
 
 
 class RedditImageGenerator:
