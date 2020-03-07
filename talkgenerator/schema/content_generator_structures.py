@@ -19,6 +19,21 @@ from talkgenerator.util.generator_util import (
 from talkgenerator.util.image_data import ImageData
 
 
+class FileURLGenerator:
+    def __call__(self, image_url: str):
+        raise NotImplementedError("There was no file URL generator specified")
+
+
+class FolderFileURLGenerator(FileURLGenerator):
+    def __init__(self, folder: str):
+        self._folder = folder
+
+    def __call__(self, url):
+        return os_util.to_actual_file(
+            "downloads/" + self._folder + "/{}".format(os_util.get_file_name(url))
+        )
+
+
 def create_templated_text_generator(filename):
     actual_file = os_util.to_actual_file(filename)
     return text_generator.TemplatedTextGenerator(actual_file).generate
@@ -54,15 +69,9 @@ def create_reddit_image_generator(*name):
     return BackupGenerator(reddit_generator.generate, reddit_generator.generate_random)
 
 
-class RedditLocalImageLocationGenerator(object):
+class RedditLocalImageLocationGenerator(FolderFileURLGenerator):
     def __init__(self, subreddit: str):
-        self._subreddit = subreddit
-
-    def __call__(self, url):
-        filename = (
-            "downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
-        )
-        return os_util.to_actual_file(filename)
+        super().__init__("reddit/" + subreddit)
 
 
 class RedditImageSearcher(object):
@@ -103,21 +112,7 @@ class RedditImageGenerator:
         return self.generate({"seed": ""})
 
 
-# SHITPOSTBOT
-class ShitPostBotURLGenerator(object):
-    def __init__(self):
-        pass
-
-    def __call__(self, url):
-        return os_util.to_actual_file(
-            "downloads/shitpostbot/{}".format(os_util.get_file_name(url))
-        )
-
-
 # UNSPLASH
-class FileURLGenerator:
-    def __call__(self, image_url: str) -> str:
-        raise NotImplementedError("There was no file URL generator specified")
 
 
 class UnsplashURLGenerator(FileURLGenerator):

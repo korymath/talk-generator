@@ -1,10 +1,6 @@
-from schema.content_generator_structures import create_tracery_generator, create_templated_text_generator, \
-    GoodReadsQuoteGenerator, SplitCaptionsGenerator, create_reddit_image_generator, ShitPostBotURLGenerator, \
-    generate_google_image_generator, UnsplashURLGenerator, JobPrefixApplier, CountryPrefixApplier
+from schema.content_generator_structures import *
 from sources import inspirobot, giphy, shitpostbot, google_images, unsplash
-from util.generator_util import CombinedGenerator, NoneGenerator, SeededGenerator, BackupGenerator, \
-    ExternalImageListGenerator, FromListGenerator, InvalidImagesRemoverGenerator, UnseededGenerator, TupledGenerator, \
-    MappedGenerator, InspiredTupleGenerator
+from util.generator_util import *
 
 # ===============================
 # =====  CONTENT GENERATORS =====
@@ -184,7 +180,7 @@ shitpostbot_image_generator = ExternalImageListGenerator(
             shitpostbot.search_images_rated, shitpostbot.get_random_images_rated
         )
     ),
-    ShitPostBotURLGenerator(),
+    FolderFileURLGenerator("shitpostbot"),
     weighted=True,
 )
 
@@ -227,6 +223,9 @@ generate_unsplash_image = ExternalImageListGenerator(
 generate_unsplash_image_from_word = ExternalImageListGenerator(
     unsplash.search_photos, UnsplashURLGenerator(), check_image_validness=False,
 )
+
+# PIXABAY
+
 
 neutral_image_generator = CombinedGenerator(
     (1000, generate_unsplash_image),
