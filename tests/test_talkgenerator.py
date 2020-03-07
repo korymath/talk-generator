@@ -44,6 +44,7 @@ class TestTalkGenerator(unittest.TestCase):
 
     def test_multiple_topics(self):
         self.default_args.configure_mock(topic="cat, dog, bread, house")
+        self.default_args.configure_mock(num_slides=6)
         ppt, slide_deck = talkgenerator_main.generate_talk(self.default_args)
 
         self.assertEqual(6, len(ppt.slides))
