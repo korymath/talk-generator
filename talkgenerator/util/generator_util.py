@@ -176,7 +176,7 @@ class ExternalImageListGenerator(Generator):
         images = self._image_url_generator(presentation_context)
         while bool(images) and len(images) > 0:
             original_chosen_image = (
-                random_util.weighted_random(images)
+                random_util.weighted_random([image for image in images if image[0] > 0])
                 if self._weighted
                 else random.choice(images)
             )
