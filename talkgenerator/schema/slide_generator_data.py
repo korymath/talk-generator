@@ -12,6 +12,8 @@ from functools import lru_cache
 #     return weight_function
 from typing import List, Collection, Union, Set, Callable, Tuple
 
+from schema.image_generator import ImageData
+
 
 class PeakedWeight(object):
     def __init__(
@@ -91,6 +93,12 @@ class SlideGeneratorData:
                         + " \n Generated Elements: "
                         + str(generated_elements)
                     )
+
+                    # Add all sources of generated elements
+                    for generated_element in generated_elements:
+                        if isinstance(generated_element, ImageData):
+                            slide.add_source(generated_element.get_source())
+
                     return slide, generated_elements
 
     def get_weight_for(self, slide_nr: int, total_slides: int) -> float:
