@@ -2,6 +2,7 @@ import random
 import unittest
 from unittest import mock
 
+import schema.slide_schemas
 from talkgenerator import talkgenerator_main
 from talkgenerator.slide import powerpoint_slide_creator
 from talkgenerator.util import os_util
@@ -75,7 +76,7 @@ class TestTalkGenerator(unittest.TestCase):
 
         presentation = powerpoint_slide_creator.create_new_powerpoint()
 
-        for slide_generator in schemas.all_slide_generators:
+        for slide_generator in schema.slide_schemas.all_slide_generators:
             print("Testing Slide Generator", slide_generator)
             slide, generated_elements = slide_generator.generate(
                 basic_presentation_context, []
