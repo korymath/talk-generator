@@ -5,9 +5,11 @@ from talkgenerator.sources import pexels
 
 class PexelsTest(unittest.TestCase):
     def test_pexels_access(self):
-        image_urls = pexels.search_photos_return_urls("office")
-        print(image_urls)
-        self.assertTrue(len(image_urls) > 0)
+        images = pexels.search_photos("office")
+        print(images)
+        self.assertTrue(len(images) > 0)
+        sources = [image.get_source() for image in images if image.get_source() is not None]
+        self.assertTrue(len(sources) > 0)
 
 
 if __name__ == "__main__":

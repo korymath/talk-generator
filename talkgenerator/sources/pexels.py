@@ -1,10 +1,11 @@
 import logging
 from pathlib import Path
+from typing import List
 
 from cachier import cachier
 from pexels_api import API
 from talkgenerator import settings
-
+from util.image_data import ImageData
 
 logging.getLogger("pexels").setLevel(logging.DEBUG)
 logger = logging.getLogger("talkgenerator")
@@ -20,15 +21,24 @@ pexels_session = get_pexels_session()
 
 
 @cachier(cache_dir=Path("..", ".cache").absolute())
-def search_photos_return_urls(query):
+def _search_pexels(query):
+    return pexels_session.search(query)
+
+
+def search_photos(query) -> List[ImageData]:
     if pexels_session:
-        results = pexels_session.search(query)
+        results = _search_pexels(query)
         if results and results["photos"]:
-            image_urls = []
+            images = []
             for photo in results["photos"]:
                 link_download = photo["url"]
-                image_urls.append(link_download)
-            return image_urls
+                creator = (
+                    (photo["photographer"] + " (via Pexels)")
+                    if "photographer" in photo
+                    else None
+                )
+                images.append(ImageData(image_url=link_download, source=creator))
+            return images
         else:
             logger.warning(
                 'pexels could not find results for "{}", which might be due to missing/erroneous access keys'

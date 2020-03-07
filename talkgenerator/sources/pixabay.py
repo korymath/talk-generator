@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+from typing import List
 
 from cachier import cachier
 from pixabay import Image
@@ -20,7 +21,7 @@ pixabay_session = get_pixabay_session()
 
 
 @cachier(cache_dir=Path("..", ".cache").absolute())
-def search_photos(query):
+def search_photos(query) -> List[ImageData]:
     if pixabay_session:
         results = pixabay_session.search(q=query)
         if results and results["hits"]:
