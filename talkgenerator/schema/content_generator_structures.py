@@ -115,16 +115,19 @@ class ShitPostBotURLGenerator(object):
 
 
 # UNSPLASH
+class FileURLGenerator:
+    def __call__(self, image_url: str) -> str:
+        raise NotImplementedError("There was no file URL generator specified")
 
 
-class UnsplashURLGenerator(object):
+class UnsplashURLGenerator(FileURLGenerator):
     def __init__(self):
         pass
 
-    def __call__(self, image_data: ImageData):
+    def __call__(self, image_url: str):
         return os_util.to_actual_file(
             "downloads/unsplash/{}.jpg".format(
-                os_util.get_file_name(os.path.dirname(image_data.get_image_url()))
+                os_util.get_file_name(os.path.dirname(image_url))
             )
         )
 
