@@ -1,6 +1,10 @@
 {
   "origin": [
-    "#title#"
+    "#title#",
+    "#ted_title"
+  ],
+  "ted_title": [
+
   ],
   "title": [
     "#two_or_larger# Things You Didn't Know About {seed.plural.title}",

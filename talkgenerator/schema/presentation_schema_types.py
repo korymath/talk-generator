@@ -1,5 +1,4 @@
-from schema.content_generators import *
-from schema.slide_schemas import *
+from talkgenerator.schema.slide_schemas import *
 from talkgenerator.schema import slide_topic_generators
 from talkgenerator.schema.presentation_schema import PresentationSchema
 from talkgenerator.schema.slide_generator_data import ConstantWeightFunction

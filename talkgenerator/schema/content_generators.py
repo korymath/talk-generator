@@ -1,4 +1,4 @@
-from schema.content_generator_structures import *
+from talkgenerator.schema.content_generator_structures import *
 from sources import inspirobot, giphy, shitpostbot, google_images, unsplash
 from util.generator_util import *
 
