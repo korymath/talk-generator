@@ -9,7 +9,7 @@ from talkgenerator.schema.slide_generator_data import (
 )
 from talkgenerator.slide import slide_generator_types
 from talkgenerator.sources import chart
-from util.generator_util import NoneGenerator, CombinedGenerator
+from talkgenerator.util.generator_util import NoneGenerator, CombinedGenerator
 
 # ==============================
 # =====  SLIDE GENERATORS  =====

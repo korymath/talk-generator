@@ -6,7 +6,7 @@ from talkgenerator.sources import (
     google_images,
     unsplash,
 )
-from util.generator_util import *
+from talkgenerator.util.generator_util import *
 
 # ===============================
 # =====  CONTENT GENERATORS =====
