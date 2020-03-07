@@ -42,7 +42,7 @@ class PrefixedPresentationContextGenerator(Generator):
 
 
 class CombinedGenerator(Generator):
-    def __init__(self, *weighted_generators : List[Tuple[int, Generator]]):
+    def __init__(self, *weighted_generators : Tuple[Union[int,float], Generator]):
         self._weighted_generators = weighted_generators
 
     def __call__(self, seed: Union[str, Dict[str,str]]):
