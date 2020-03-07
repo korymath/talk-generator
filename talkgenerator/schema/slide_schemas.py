@@ -1,8 +1,8 @@
 from talkgenerator.schema.content_generator_structures import generate_wikihow_bold_statement
 from talkgenerator.schema.content_generators import *
 from talkgenerator.schema.slide_generator_data import SlideGeneratorData, PeakedWeight, ConstantWeightFunction
-from slide import slide_generator_types
-from sources import chart
+from talkgenerator.slide import slide_generator_types
+from talkgenerator.sources import chart
 from util.generator_util import NoneGenerator, CombinedGenerator
 
 # ==============================
