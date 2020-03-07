@@ -81,7 +81,10 @@ ted_schema = PresentationSchema(
     slide_generators=title_slide_generators
     + history_slide_generators_copyright_free
     + single_image_slide_generators_copyright_free
-    +statement_slide_generators_copyright_free,
+    + statement_slide_generators_copyright_free
+    + captioned_images_slide_generators_copyright_free
+    + own_chart_generators
+    + conclusion_slide_generators_copyright_free,
     # Max tags
     max_allowed_tags={
         # Absolute maxima

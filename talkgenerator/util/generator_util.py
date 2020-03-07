@@ -4,7 +4,7 @@ certain types of (content) generators
 """
 import logging
 import random
-from typing import Callable, Optional, Dict, Union
+from typing import Callable, Optional, Dict, Union, List, Tuple
 
 import requests
 
@@ -42,7 +42,7 @@ class PrefixedPresentationContextGenerator(Generator):
 
 
 class CombinedGenerator(Generator):
-    def __init__(self, *weighted_generators):
+    def __init__(self, *weighted_generators : List[Tuple[int, Generator]]):
         self._weighted_generators = weighted_generators
 
     def __call__(self, seed: Union[str, Dict[str,str]]):

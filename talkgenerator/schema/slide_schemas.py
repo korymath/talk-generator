@@ -117,7 +117,9 @@ history_slide_generators_copyright_free = [
         slide_generator_types.TwoColumnImageSlideGenerator.of(
             history_and_history_person_title_generator,
             historical_name_generator,
-            copyright_free_prefixed_generator(["historic person", "person", "man", "woman"]),
+            copyright_free_prefixed_generator(
+                ["historic person", "person", "man", "woman"]
+            ),
             NoneGenerator(),
             goodreads_short_quote_generator,
         ),
@@ -131,8 +133,12 @@ history_slide_generators_copyright_free = [
         slide_generator_types.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             history_title_generator,
             historic_double_captions_generator,
-            copyright_free_prefixed_generator(["vintage", "historic", "old", "ancient"]),
-            copyright_free_prefixed_generator(["vintage", "historic", "old", "ancient"]),
+            copyright_free_prefixed_generator(
+                ["vintage", "historic", "old", "ancient"]
+            ),
+            copyright_free_prefixed_generator(
+                ["vintage", "historic", "old", "ancient"]
+            ),
         ),
         weight_function=PeakedWeight((2, 3), 12, 0.1),
         allowed_repeated_elements=2,
@@ -195,21 +201,18 @@ single_image_slide_generators = [
 single_image_slide_generators_copyright_free = [
     SlideGeneratorData(
         slide_generator_types.FullImageSlideGenerator.of(
-            default_slide_title_generator,
-            generate_horizontal_pixabay_image
+            default_slide_title_generator, generate_horizontal_pixabay_image
         ),
         tags=["full_image"],
         name="Full Screen Pixabay",
     ),
     SlideGeneratorData(
         slide_generator_types.ImageSlideGenerator.of(
-            default_slide_title_generator,
-            copyright_free_prefixed_generator
+            default_slide_title_generator, copyright_free_prefixed_generator
         ),
         tags=["single_image"],
         name="Single Image Copyright free",
     ),
-
 ]
 
 # WISE STATEMENTS
@@ -333,17 +336,35 @@ captioned_images_slide_generators = [
     ),
 ]
 
-# CHART GENERATORS
-chart_slide_generators = [
+captioned_images_slide_generators_copyright_free = [
     SlideGeneratorData(
-        slide_generator_types.FullImageSlideGenerator.of(
-            NoneGenerator(), reddit_chart_generator
+        slide_generator_types.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
+            default_or_no_title_generator,
+            double_image_captions_generator,
+            normal_or_weird_copyright_free_generator,
+            normal_or_weird_copyright_free_generator,
         ),
-        weight_function=ConstantWeightFunction(4),
-        allowed_repeated_elements=0,
-        tags=["chart"],
-        name="Reddit Chart",
+        weight_function=ConstantWeightFunction(5),
+        tags=["multi_caption", "two_captions"],
+        name="Two Captions Copyright free",
     ),
+    SlideGeneratorData(
+        slide_generator_types.ThreeColumnImageSlideGenerator.of_images_and_tupled_captions(
+            default_or_no_title_generator,
+            triple_image_captions_generator,
+            copyright_free_generator,
+            normal_or_weird_copyright_free_generator,
+            weird_copyright_free_generator,
+        ),
+        weight_function=ConstantWeightFunction(2),
+        allowed_repeated_elements=4,
+        tags=["multi_caption", "three_captions"],
+        name="Three Captions Weird",
+    ),
+]
+
+# CHART GENERATORS
+own_chart_generators = [
     SlideGeneratorData(
         slide_generator_types.ChartSlideGenerator(chart.generate_yes_no_pie),
         retries=1,
@@ -378,6 +399,18 @@ chart_slide_generators = [
     ),
 ]
 
+chart_slide_generators = [
+    SlideGeneratorData(
+        slide_generator_types.FullImageSlideGenerator.of(
+            NoneGenerator(), reddit_chart_generator
+        ),
+        weight_function=ConstantWeightFunction(4),
+        allowed_repeated_elements=0,
+        tags=["chart"],
+        name="Reddit Chart",
+    ),
+] + own_chart_generators
+
 # CONCLUSIONS
 conclusion_slide_generators = [
     SlideGeneratorData(
@@ -407,6 +440,34 @@ conclusion_slide_generators = [
     ),
 ]
 
+conclusion_slide_generators_copyright_free = [
+    SlideGeneratorData(
+        slide_generator_types.TwoImagesAndTupledCaptions(
+            conclusion_title_generator,
+            conclusion_two_captions_tuple_generator,
+            copyright_free_generator,
+            weird_copyright_free_generator,
+        ),
+        weight_function=PeakedWeight((-1,), 10000, 0),
+        allowed_repeated_elements=10,
+        tags=["conclusion"],
+        name="2 Conclusions (CRF)",
+    ),
+    SlideGeneratorData(
+        slide_generator_types.ThreeImagesAndTupledCaptions(
+            conclusion_title_generator,
+            conclusion_three_captions_tuple_generator,
+            copyright_free_generator,
+            copyright_free_generator,
+            weird_copyright_free_generator,
+        ),
+        weight_function=PeakedWeight((-1,), 8000, 0),
+        allowed_repeated_elements=10,
+        tags=["conclusion"],
+        name="3 Conclusions (CRF)",
+    ),
+]
+
 all_slide_generators = (
     title_slide_generators
     + about_me_slide_generators
@@ -428,7 +489,7 @@ default_max_allowed_tags = {
     # Relative (procentual) maxima
     "two_captions": 0.3,
     "three_captions": 0.2,
-    "multi_captions": 0.3,
+    "multi_captions": 0.35,
     "gif": 0.5,
     "weird": 0.5,
     "quote": 0.2,
