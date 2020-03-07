@@ -18,8 +18,11 @@ class ImageData:
         return (
             "ImageData("
             + self._original_image_url
-            + ","
-            + self._image_url
+            + (
+                (", " + self._image_url)
+                if self._original_image_url != self._image_url
+                else ""
+            )
             + ((", " + self._source) if self._source is not None else "")
             + ")"
         )
