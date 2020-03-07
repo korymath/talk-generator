@@ -30,6 +30,7 @@ class PresentationSchema:
         self,
         powerpoint_creator,
         seed_generator: Callable[[List[str], int], SlideSeedGenerator],
+        title_generator,
         slide_generators: List[SlideGeneratorData],
         max_allowed_tags=None,
         ignore_weights=False,
@@ -41,6 +42,7 @@ class PresentationSchema:
             max_allowed_tags = {}
         self._max_allowed_tags = max_allowed_tags
         self._ignore_weights = ignore_weights
+        self._title_generator = title_generator
 
     def generate_presentation(
         self,
@@ -52,6 +54,14 @@ class PresentationSchema:
         int_seed: int = None,
     ):
         """Generate a presentation about a certain topic with a certain number of slides"""
+
+        # Generate random talk title
+        if not title or title is None:
+            if self._title_generator is not None:
+                title = self._title_generator({"seed": topics[0]})
+            else:
+                title = "About " + topics[0]
+
         # Create new presentation
         presentation = self._powerpoint_creator()
         slide_deck = SlideDeck(num_slides)

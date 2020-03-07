@@ -48,9 +48,6 @@ def generate_talk(args):
     # Extract topics from given (possibly comma separated) topic
     args.topics = [topic.strip() for topic in args.topic.split(",")]
 
-    # Generate random talk title
-    if not args.title or args.title is None:
-        args.title = schemas.talk_title_generator({"seed": args.topics[0]})
 
     # Generate the presentation object
     presentation, slide_deck = schema.generate_presentation(

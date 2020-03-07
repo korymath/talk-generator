@@ -698,6 +698,8 @@ presentation_schema = PresentationSchema(
     powerpoint_creator=powerpoint_slide_creator.create_new_powerpoint,
     # Topic per slide generator
     seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
+    # Title of the presentation
+    title_generator= talk_title_generator,
     # Slide generators
     slide_generators=all_slide_generators,
     # Max tags
@@ -713,6 +715,8 @@ interview_schema = PresentationSchema(
     powerpoint_creator=powerpoint_slide_creator.create_new_powerpoint,
     # Topic per slide generator
     seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
+    # Title of the presentation
+    title_generator= talk_title_generator,
     # Slide generators
     slide_generators=all_slide_generators,
     # Max tags
@@ -724,6 +728,8 @@ interview_schema = PresentationSchema(
 test_schema = PresentationSchema(
     # Basic powerpoint generator
     powerpoint_slide_creator.create_new_powerpoint,
+    # Title of the presentation
+    title_generator= talk_title_generator,
     # Topic per slide generator
     # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
     seed_generator=slide_topic_generators.IdentityTopicGenerator,
