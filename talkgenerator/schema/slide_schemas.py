@@ -210,7 +210,7 @@ single_image_slide_generators_copyright_free = [
         ),
         weight_function=PeakedWeight((2, 3, 4, 5), 2.5, 1),
         tags=["full_image"],
-        name="Full Screen Pixabay",
+        name="Full Screen Pixabay Deep",
     ),
     SlideGeneratorData(
         slide_generator_types.LarqeQuoteSlideGenerator.of(
@@ -219,11 +219,11 @@ single_image_slide_generators_copyright_free = [
             generate_horizontal_pixabay_image
         ),
         tags=["full_image", "quote"],
-        name="Full Screen Pixabay",
+        name="Full Screen Pixabay Goodreads",
     ),
     SlideGeneratorData(
         slide_generator_types.ImageSlideGenerator.of(
-            default_slide_title_generator, copyright_free_prefixed_generator
+            default_slide_title_generator, copyright_free_generator
         ),
         tags=["single_image"],
         name="Single Image Copyright free",
@@ -501,9 +501,9 @@ default_max_allowed_tags = {
     "anecdote": 1,
     "location_chart": 1,
     # Relative (procentual) maxima
-    "two_captions": 0.3,
+    "two_captions": 0.2,
     "three_captions": 0.2,
-    "multi_captions": 0.35,
+    "multi_captions": 0.3,
     "gif": 0.5,
     "weird": 0.5,
     "quote": 0.2,
