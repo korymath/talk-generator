@@ -20,10 +20,14 @@ def get_pixabay_session():
 pixabay_session = get_pixabay_session()
 
 
+def search_horizontal(query):
+    return search_photos(query, orientation="horizontal")
+
+
 @cachier(cache_dir=Path("..", ".cache").absolute())
-def search_photos(query) -> List[ImageData]:
+def search_photos(query, orientation="all") -> List[ImageData]:
     if pixabay_session:
-        results = pixabay_session.search(q=query)
+        results = pixabay_session.search(q=query, orientation=orientation)
         if results and results["hits"]:
             images = []
             for photo in results["hits"]:
@@ -33,8 +37,9 @@ def search_photos(query) -> List[ImageData]:
             return images
         else:
             logger.warning(
-                'Pixabay could not find results for "{}", which might be due to missing/erroneous access keys'
-                .format(query)
+                'Pixabay could not find results for "{}", which might be due to missing/erroneous access keys'.format(
+                    query
+                )
             )
     else:
         logger.warning("No active Pixabay session due to missing/wrong credentials.")
