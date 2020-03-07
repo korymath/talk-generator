@@ -47,8 +47,9 @@ def search_photos(query) -> List[ImageData]:
             return images
         else:
             logger.warning(
-                'pexels could not find results for "{}", which might be due to missing/erroneous access keys'
-                .format(query)
+                'pexels could not find results for "{}", which might be due to missing/erroneous access keys'.format(
+                    query
+                )
             )
     else:
         logger.warning("No active pexels session due to missing/wrong credentials.")

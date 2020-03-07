@@ -27,9 +27,26 @@ def get_unsplash_session():
 unsplash_session = get_unsplash_session()
 
 
+
+def _map_to_image_data(photo):
+    link_download = photo.link_download
+    creator_user = photo.body["user"]
+    creator_name = None
+    if creator_user:
+        creator_name = creator_user["name"] + " (Unsplash)"
+    return ImageData(image_url=link_download, source=creator_name)
+
+
 @cachier(cache_dir=Path("..", ".cache").absolute())
 def search_photos_return_urls(query):
     return [im.get_image_url() for im in search_photos(query)]
+
+
+def random():
+    random_image = unsplash_session.photos(type_="random")
+    image_url = random_image.body["links"]["download"]
+    creator_name = random_image.body["user"]["name"]
+    return ImageData(image_url=image_url, source=creator_name)
 
 
 @cachier(cache_dir=Path("..", ".cache").absolute())
@@ -39,17 +56,13 @@ def search_photos(query) -> List[ImageData]:
         if results and results.body:
             images = []
             for photo in results.entries:
-                link_download = photo.link_download
-                creator_user = photo.body["user"]
-                creator_name = None
-                if creator_user:
-                    creator_name = creator_user["name"] + " (Unsplash)"
-                images.append(ImageData(image_url=link_download, source=creator_name))
+                images.append(_map_to_image_data(photo))
             return images
         else:
             logger.warning(
-                'Unsplash could not find results for "{}", which might be due to missing/erroneous access keys'
-                .format(query)
+                'Unsplash could not find results for "{}", which might be due to missing/erroneous access keys'.format(
+                    query
+                )
             )
     else:
         logger.warning("No active Unsplash session due to missing/wrong credentials.")
