@@ -6,7 +6,6 @@ import schema.slide_schemas
 from talkgenerator import talkgenerator_main
 from talkgenerator.slide import powerpoint_slide_creator
 from talkgenerator.util import os_util
-from talkgenerator.schema import presentation_schema_types
 
 
 class TestTalkGenerator(unittest.TestCase):
@@ -18,18 +17,10 @@ class TestTalkGenerator(unittest.TestCase):
         self.default_args.configure_mock(schema="default")
         self.default_args.configure_mock(title=None)
         self.default_args.configure_mock(parallel=False)
-        self.default_args.configure_mock(output_folder=os_util.to_actual_file("output/test/"))
+        self.default_args.configure_mock(output_folder=os_util.to_actual_file("../output/test/"))
         self.default_args.configure_mock(open_ppt=False)
         self.default_args.configure_mock(save_ppt=True)
         self.default_args.configure_mock(int_seed=123)
-
-    # def test_google_images(self):
-    # """ Google image search is broken """
-    # image = schemas.generate_full_screen_google_image({"seed": "cat"})
-    # print(image)
-    # self.assertTrue(
-    #     bool(image)
-    # )
 
     def test_serial(self):
         ppt, slide_deck = talkgenerator_main.generate_talk(self.default_args)
