@@ -1,5 +1,11 @@
 from talkgenerator.schema.content_generator_structures import *
-from talkgenerator.sources import inspirobot, giphy, shitpostbot, google_images, unsplash
+from talkgenerator.sources import (
+    inspirobot,
+    giphy,
+    shitpostbot,
+    google_images,
+    unsplash,
+)
 from util.generator_util import *
 
 # ===============================
@@ -10,7 +16,9 @@ from util.generator_util import *
 
 # TITLES
 talk_title_generator = create_tracery_generator("data/text-templates/talk_title.json")
-talk_ted_title_generator = create_tracery_generator("data/text-templates/talk_title.json", "ted_title")
+talk_ted_title_generator = create_tracery_generator(
+    "data/text-templates/talk_title.json", "ted_title"
+)
 talk_subtitle_generator = create_tracery_generator(
     "data/text-templates/talk_subtitle.json"
 )

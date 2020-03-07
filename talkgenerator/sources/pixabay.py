@@ -28,7 +28,7 @@ def search_photos(query) -> List[ImageData]:
             images = []
             for photo in results["hits"]:
                 link_download = photo["largeImageURL"]
-                creator = photo['user'] + ' (via Pixabay)' if "user" in photo else None
+                creator = photo["user"] + " (via Pixabay)" if "user" in photo else None
                 images.append(ImageData(image_url=link_download, source=creator))
             return images
         else:

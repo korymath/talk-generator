@@ -155,7 +155,9 @@ def _print_all_placeholders(slide):
 
 
 def add_sources_note(slide, _sources: List[str]):
-    return _add_text(slide, SOURCES_PLACEHOLDER, "[Image sources: " + ", ".join(_sources) + "]")
+    return _add_text(
+        slide, SOURCES_PLACEHOLDER, "[Image sources: " + ", ".join(_sources) + "]"
+    )
 
 
 # FORMAT GENERATORS

@@ -19,7 +19,11 @@ def get_related_giphy(seed_word):
     if bool(response):
         data = response.get("data")
         if bool(data):
-            creator = data['username'] if "username" in data and len(data["username"].strip()) > 0 else None
+            creator = (
+                data["username"]
+                if "username" in data and len(data["username"].strip()) > 0
+                else None
+            )
             images = data.get("images")
             original = images.get("original")
             giphy_url = original.get("url")
