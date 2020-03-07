@@ -111,6 +111,36 @@ history_slide_generators = [
         name="Two History Pictures",
     ),
 ]
+history_slide_generators_copyright_free = [
+    SlideGeneratorData(
+        # slide_templates.generate_two_column_images_slide(
+        slide_generator_types.TwoColumnImageSlideGenerator.of(
+            history_and_history_person_title_generator,
+            historical_name_generator,
+            copyright_free_prefixed_generator(["historic person", "person", "man", "woman"]),
+            NoneGenerator(),
+            goodreads_short_quote_generator,
+        ),
+        weight_function=PeakedWeight((2, 3), 20, 0.3),
+        allowed_repeated_elements=2,
+        tags=["history", "quote"],
+        name="Historical Figure Quote",
+    ),
+    SlideGeneratorData(
+        # slide_templates.generate_two_column_images_slide_tuple_caption(
+        slide_generator_types.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
+            history_title_generator,
+            historic_double_captions_generator,
+            copyright_free_prefixed_generator(["vintage", "historic", "old", "ancient"]),
+            copyright_free_prefixed_generator(["vintage", "historic", "old", "ancient"]),
+        ),
+        weight_function=PeakedWeight((2, 3), 12, 0.1),
+        allowed_repeated_elements=2,
+        tags=["history", "two_images"],
+        name="Two History Pictures",
+    ),
+]
+
 
 # FULL SCREEN RELATED IMAGES
 single_image_slide_generators = [

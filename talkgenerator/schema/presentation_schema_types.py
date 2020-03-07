@@ -2,7 +2,6 @@ from talkgenerator.schema.slide_schemas import *
 from talkgenerator.schema import slide_topic_generators
 from talkgenerator.schema.presentation_schema import PresentationSchema
 from talkgenerator.schema.slide_generator_data import ConstantWeightFunction
-from talkgenerator.schema.slide_generator_data import PeakedWeight
 from talkgenerator.schema.slide_generator_data import SlideGeneratorData
 from talkgenerator.slide import powerpoint_slide_creator
 from talkgenerator.slide import slide_generator_types
@@ -69,6 +68,8 @@ test_schema = PresentationSchema(
     # ignore_weights=True,
 )
 
+
+
 # TED schema: using only images from approved sources
 ted_schema = PresentationSchema(
     # Basic powerpoint generator
@@ -78,28 +79,16 @@ ted_schema = PresentationSchema(
     # Title of the presentation
     title_generator=talk_ted_title_generator,
     # Slide generators
-    slide_generators=[
-        SlideGeneratorData(
-            slide_generator_types.TitleSlideGenerator.of(
-                talk_title_generator_if_not_generated, talk_subtitle_generator
-            ),
-            allowed_repeated_elements=3,
-            weight_function=PeakedWeight((0,), 100000, 0),
-            tags=["title"],
-            name="Title slide",
-        )
-    ],
+    slide_generators=title_slide_generators
+                     + history_slide_generators_copyright_free,
     # Max tags
     max_allowed_tags={
         # Absolute maxima
         "title": 1,
-        "about_me": 1,
         "history": 1,
         "anecdote": 1,
         "location_chart": 1,
         "chart": 1,
-        "weird": 0,
-        "meme": 0,
         # Relative (procentual) maxima
         "two_captions": 0.3,
         "three_captions": 0.2,
