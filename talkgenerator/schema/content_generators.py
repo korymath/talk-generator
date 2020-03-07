@@ -1,3 +1,5 @@
+from typing import Collection, Union
+
 from sources import pixabay, pexels
 from talkgenerator.schema.content_generator_structures import *
 from talkgenerator.sources import (
@@ -256,16 +258,31 @@ generate_pexels_image_from_word = ExternalImageListGenerator(
 
 # COPYRIGHT FREE
 
-copyrigyt_free_generator = CombinedGenerator(
+copyright_free_generator = CombinedGenerator(
     (1, generate_unsplash_image),
     (1, generate_pixabay_image),
     (1, generate_pexels_image),
 )
-copyrigyt_free_generator_from_word = CombinedGenerator(
+copyright_free_generator_from_word = CombinedGenerator(
     (1, generate_unsplash_image_from_word),
     (1, generate_pixabay_image_from_word),
     (1, generate_pexels_image_from_word),
 )
+
+
+def copyright_free_prefixed_generator(prefixes: Union[str,Collection[str]]):
+    if isinstance(prefixes, str):
+        return PrefixedGenerator(prefixes, copyright_free_generator)
+    generators = [(1, PrefixedGenerator(p, copyright_free_generator)) for p in prefixes]
+    return CombinedGenerator(generators)
+
+
+def copyright_free_prefixed_generator_from_word(prefixes: Union[str,Collection[str]]):
+    if isinstance(prefixes, str):
+        return PrefixedGenerator(prefixes, copyright_free_generator_from_word)
+    generators = [(1, PrefixedGenerator(p, copyright_free_generator_from_word)) for p in prefixes]
+    return CombinedGenerator(generators)
+
 
 # NEUTRAL
 

@@ -21,6 +21,26 @@ class Generator(object):
         )
 
 
+class PrefixedGenerator(Generator):
+    def __init__(self, prefix: str, generator: Generator):
+        self._prefix = prefix
+        self._generator = generator
+
+    def __call__(self, seed: str):
+        return self._generator(self._prefix + " " + seed)
+
+
+class PrefixedPresentationContextGenerator(Generator):
+    def __init__(self, prefix: str, generator):
+        self._prefix = prefix
+        self._generator = generator
+
+    def __call__(self, presentation_context):
+        presentation_context = dict(presentation_context)
+        presentation_context["seed"] = self._prefix + " " + presentation_context["seed"]
+        return self._generator(presentation_context)
+
+
 class CombinedGenerator(Generator):
     def __init__(self, *weighted_generators):
         self._weighted_generators = weighted_generators
