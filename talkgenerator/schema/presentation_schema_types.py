@@ -69,7 +69,6 @@ test_schema = PresentationSchema(
 )
 
 
-
 # TED schema: using only images from approved sources
 ted_schema = PresentationSchema(
     # Basic powerpoint generator
@@ -80,7 +79,9 @@ ted_schema = PresentationSchema(
     title_generator=talk_ted_title_generator,
     # Slide generators
     slide_generators=title_slide_generators
-                     + history_slide_generators_copyright_free,
+    + history_slide_generators_copyright_free
+    + single_image_slide_generators_copyright_free
+    +statement_slide_generators_copyright_free,
     # Max tags
     max_allowed_tags={
         # Absolute maxima

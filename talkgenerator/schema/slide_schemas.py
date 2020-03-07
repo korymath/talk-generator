@@ -192,10 +192,29 @@ single_image_slide_generators = [
     ),
 ]
 
+single_image_slide_generators_copyright_free = [
+    SlideGeneratorData(
+        slide_generator_types.FullImageSlideGenerator.of(
+            default_slide_title_generator,
+            generate_horizontal_pixabay_image
+        ),
+        tags=["full_image"],
+        name="Full Screen Pixabay",
+    ),
+    SlideGeneratorData(
+        slide_generator_types.ImageSlideGenerator.of(
+            default_slide_title_generator,
+            copyright_free_prefixed_generator
+        ),
+        tags=["single_image"],
+        name="Single Image Copyright free",
+    ),
+
+]
+
 # WISE STATEMENTS
 statement_slide_generators = [
     SlideGeneratorData(
-        # slide_templates.generate_image_slide(
         slide_generator_types.ImageSlideGenerator.of(
             inspiration_title_generator, inspirobot_image_generator
         ),
@@ -204,7 +223,6 @@ statement_slide_generators = [
         name="Inspirobot",
     ),
     SlideGeneratorData(
-        # slide_templates.generate_large_quote_slide(
         slide_generator_types.LarqeQuoteSlideGenerator.of(
             title_generator=NoneGenerator(),
             text_generator=generate_wikihow_bold_statement,
@@ -214,7 +232,6 @@ statement_slide_generators = [
         name="Wikihow Bold Statement",
     ),
     SlideGeneratorData(
-        # slide_templates.generate_large_quote_slide(
         slide_generator_types.LarqeQuoteSlideGenerator.of(
             title_generator=NoneGenerator(),
             text_generator=goodreads_quote_generator,
@@ -225,7 +242,6 @@ statement_slide_generators = [
         name="Goodreads Quote",
     ),
     SlideGeneratorData(
-        # slide_templates.generate_large_quote_slide(
         slide_generator_types.LarqeQuoteSlideGenerator.of(
             title_generator=NoneGenerator(),
             text_generator=anecdote_prompt_generator,
@@ -236,10 +252,40 @@ statement_slide_generators = [
     ),
 ]
 
+statement_slide_generators_copyright_free = [
+    SlideGeneratorData(
+        slide_generator_types.LarqeQuoteSlideGenerator.of(
+            title_generator=NoneGenerator(),
+            text_generator=generate_wikihow_bold_statement,
+            background_image_generator=generate_horizontal_pixabay_image,
+        ),
+        tags=["bold_statement", "statement"],
+        name="Wikihow Bold Statement (CRF)",
+    ),
+    SlideGeneratorData(
+        slide_generator_types.LarqeQuoteSlideGenerator.of(
+            title_generator=NoneGenerator(),
+            text_generator=goodreads_quote_generator,
+            background_image_generator=generate_horizontal_pixabay_image,
+        ),
+        weight_function=ConstantWeightFunction(0.6),
+        tags=["quote", "statement"],
+        name="Goodreads Quote (CRF)",
+    ),
+    SlideGeneratorData(
+        slide_generator_types.LarqeQuoteSlideGenerator.of(
+            title_generator=NoneGenerator(),
+            text_generator=anecdote_prompt_generator,
+            background_image_generator=generate_horizontal_pixabay_image,
+        ),
+        tags=["anecdote"],
+        name="Anecdote (CRF)",
+    ),
+]
+
 # TWO CAPTIONS VARIATIONS
 captioned_images_slide_generators = [
     SlideGeneratorData(
-        # slide_templates.generate_two_column_images_slide_tuple_caption(
         slide_generator_types.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             double_image_captions_generator,
@@ -251,7 +297,6 @@ captioned_images_slide_generators = [
         name="Two Captions Gifs",
     ),
     SlideGeneratorData(
-        # slide_templates.generate_two_column_images_slide_tuple_caption(
         slide_generator_types.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             double_image_captions_generator,
@@ -263,7 +308,6 @@ captioned_images_slide_generators = [
         name="Two Captions Weird Reddit",
     ),
     SlideGeneratorData(
-        # slide_templates.generate_two_column_images_slide_tuple_caption(
         slide_generator_types.TwoColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             double_image_captions_generator,
@@ -275,7 +319,6 @@ captioned_images_slide_generators = [
         name="Two Captions Weird",
     ),
     SlideGeneratorData(
-        # slide_templates.generate_three_column_images_slide_tuple_caption(
         slide_generator_types.ThreeColumnImageSlideGenerator.of_images_and_tupled_captions(
             default_or_no_title_generator,
             triple_image_captions_generator,
@@ -293,7 +336,6 @@ captioned_images_slide_generators = [
 # CHART GENERATORS
 chart_slide_generators = [
     SlideGeneratorData(
-        # slide_templates.generate_full_image_slide(
         slide_generator_types.FullImageSlideGenerator.of(
             NoneGenerator(), reddit_chart_generator
         ),
@@ -303,7 +345,6 @@ chart_slide_generators = [
         name="Reddit Chart",
     ),
     SlideGeneratorData(
-        # slide_templates.generate_chart_slide_tuple(
         slide_generator_types.ChartSlideGenerator(chart.generate_yes_no_pie),
         retries=1,
         allowed_repeated_elements=4,
@@ -312,7 +353,6 @@ chart_slide_generators = [
         name="Yes/No/Funny Chart",
     ),
     SlideGeneratorData(
-        # slide_templates.generate_chart_slide_tuple(
         slide_generator_types.ChartSlideGenerator(chart.generate_location_pie),
         allowed_repeated_elements=4,
         retries=1,
@@ -321,7 +361,6 @@ chart_slide_generators = [
         name="Location Chart",
     ),
     SlideGeneratorData(
-        # slide_templates.generate_chart_slide_tuple(
         slide_generator_types.ChartSlideGenerator(chart.generate_property_pie),
         allowed_repeated_elements=4,
         retries=1,
@@ -330,7 +369,6 @@ chart_slide_generators = [
         name="Property Chart",
     ),
     SlideGeneratorData(
-        # slide_templates.generate_chart_slide_tuple(
         slide_generator_types.ChartSlideGenerator(chart.generate_correlation_curve),
         allowed_repeated_elements=4,
         retries=1,
@@ -343,7 +381,6 @@ chart_slide_generators = [
 # CONCLUSIONS
 conclusion_slide_generators = [
     SlideGeneratorData(
-        # slide_templates.generate_two_column_images_slide(
         slide_generator_types.TwoImagesAndTupledCaptions(
             conclusion_title_generator,
             conclusion_two_captions_tuple_generator,
@@ -356,7 +393,6 @@ conclusion_slide_generators = [
         name="2 Conclusions",
     ),
     SlideGeneratorData(
-        # slide_templates.generate_three_column_images_slide(
         slide_generator_types.ThreeImagesAndTupledCaptions(
             conclusion_title_generator,
             conclusion_three_captions_tuple_generator,
