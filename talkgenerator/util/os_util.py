@@ -108,7 +108,7 @@ def is_valid_image(image: Union[str,ImageData]):
     return True
 
 
-def show_logs(given_logger: object) -> object:
+def show_logs(given_logger: logging.Logger):
     given_logger.setLevel(logging.DEBUG)
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.DEBUG)

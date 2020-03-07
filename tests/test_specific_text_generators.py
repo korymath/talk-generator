@@ -59,7 +59,7 @@ class SpecificTextGeneratorTest(unittest.TestCase):
         generations = self._templated_text_generator_tester(
             "data/text-templates/double_captions.txt",
             True,
-            number_of_generations=1000,
+            number_of_generations=100,
             seed="cat",
         )
 
