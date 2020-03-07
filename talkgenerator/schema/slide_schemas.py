@@ -202,10 +202,7 @@ single_image_slide_generators_copyright_free = [
     SlideGeneratorData(
         slide_generator_types.LarqeQuoteSlideGenerator.of(
             NoneGenerator(),
-            CombinedGenerator(
-                (1, default_slide_title_generator),
-                (2.5, deep_abstract_generator)
-            ),
+            deep_abstract_generator,
             generate_horizontal_pixabay_image
         ),
         weight_function=PeakedWeight((2, 3, 4, 5), 2.5, 1),
