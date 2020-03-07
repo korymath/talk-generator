@@ -4,7 +4,7 @@ certain types of (content) generators
 """
 import logging
 import random
-from typing import Callable
+from typing import Callable, Optional
 
 import requests
 
@@ -172,7 +172,7 @@ class ExternalImageListGenerator(Generator):
         self._check_image_validness = check_image_validness
         self._weighted = weighted
 
-    def __call__(self, presentation_context) -> ImageData:
+    def __call__(self, presentation_context) -> Optional[ImageData]:
         images = self._image_url_generator(presentation_context)
         while bool(images) and len(images) > 0:
             original_chosen_image = (
@@ -180,10 +180,19 @@ class ExternalImageListGenerator(Generator):
                 if self._weighted
                 else random.choice(images)
             )
-            if not isinstance(original_chosen_image, ImageData):
+            if isinstance(original_chosen_image, str):
                 chosen_image = ImageData(image_url=original_chosen_image)
-            else:
+            elif isinstance(original_chosen_image, ImageData):
                 chosen_image = original_chosen_image
+            else:
+                logger.warning(
+                    "INVALID IMAGE INPUT FOR EXTERNAL IMAGE GENERATOR / "
+                    + str(original_chosen_image)
+                    + " / "
+                    + str(type(original_chosen_image))
+                )
+                images.remove(original_chosen_image)
+                continue
 
             downloaded_url = self._file_name_generator(chosen_image.get_image_url())
             try:
