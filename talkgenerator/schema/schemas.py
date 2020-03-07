@@ -255,12 +255,12 @@ generate_google_image_from_word = FromListGenerator(
 # UNSPLASH
 
 generate_unsplash_image = ExternalImageListGenerator(
-    SeededGenerator(unsplash.search_photos_return_urls),
+    SeededGenerator(unsplash.search_photos),
     UnsplashURLGenerator(),
     check_image_validness=False,
 )
 generate_unsplash_image_from_word = ExternalImageListGenerator(
-    unsplash.search_photos_return_urls,
+    unsplash.search_photos,
     UnsplashURLGenerator(),
     check_image_validness=False,
 )
