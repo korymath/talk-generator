@@ -43,7 +43,7 @@ def search_photos(query) -> List[ImageData]:
                 creator_user = photo.body["user"]
                 creator_name = None
                 if creator_user:
-                    creator_name = creator_user['name'] + ' (Unsplash)'
+                    creator_name = creator_user["name"] + " (Unsplash)"
                 images.append(ImageData(image_url=link_download, source=creator_name))
             return images
         else:

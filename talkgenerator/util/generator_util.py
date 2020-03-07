@@ -187,10 +187,10 @@ class ExternalImageListGenerator(Generator):
 
             downloaded_url = self._file_name_generator(chosen_image.get_image_url())
             try:
-                if not self._check_image_validness or os_util.is_image(
-                    chosen_image
-                ):
-                    url_without_query = chosen_image.get_image_url().split("?", maxsplit=1)[0]
+                if not self._check_image_validness or os_util.is_image(chosen_image):
+                    url_without_query = chosen_image.get_image_url().split(
+                        "?", maxsplit=1
+                    )[0]
                     os_util.download_image(url_without_query, downloaded_url)
                     if os_util.is_valid_image(downloaded_url):
                         chosen_image.set_local_image_url(downloaded_url)
@@ -198,9 +198,7 @@ class ExternalImageListGenerator(Generator):
                 else:
                     logger.warning("Not a image url" + str(chosen_image))
             except PermissionError:
-                logger.warning(
-                    "Permission error when downloading" + str(chosen_image)
-                )
+                logger.warning("Permission error when downloading" + str(chosen_image))
             except requests.exceptions.MissingSchema:
                 logger.warning("Missing schema for image " + str(chosen_image))
             except OSError:

@@ -88,7 +88,7 @@ def _is_image_path(content: str):
 
 
 @lru_cache(maxsize=20)
-def is_valid_image(image: Union[str,ImageData]):
+def is_valid_image(image: Union[str, ImageData]):
     try:
         if isinstance(image, ImageData):
             image_url = image.get_image_url()

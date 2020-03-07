@@ -260,9 +260,7 @@ generate_unsplash_image = ExternalImageListGenerator(
     check_image_validness=False,
 )
 generate_unsplash_image_from_word = ExternalImageListGenerator(
-    unsplash.search_photos,
-    UnsplashURLGenerator(),
-    check_image_validness=False,
+    unsplash.search_photos, UnsplashURLGenerator(), check_image_validness=False,
 )
 
 neutral_image_generator = CombinedGenerator(
