@@ -4,7 +4,7 @@ certain types of (content) generators
 """
 import logging
 import random
-from typing import Callable, Optional
+from typing import Callable, Optional, Dict, Union
 
 import requests
 
@@ -45,7 +45,7 @@ class CombinedGenerator(Generator):
     def __init__(self, *weighted_generators):
         self._weighted_generators = weighted_generators
 
-    def __call__(self, seed: str):
+    def __call__(self, seed: Union[str, Dict[str,str]]):
         current_weighted_generators = list(self._weighted_generators)
         while len(current_weighted_generators) > 0:
             # print("combined generator using", current_weighted_generators)
