@@ -8,6 +8,7 @@ from typing import List
 from lxml.etree import XMLSyntaxError
 from pptx import Presentation
 
+from schema.image_generator import ImageData
 from talkgenerator.util import os_util
 
 # Location of powerpoint template
@@ -75,7 +76,12 @@ def _add_text(slide, placeholder_id, text):
         return True
 
 
-def _add_image(slide, placeholder_id, image_url, original_image_size=True):
+def _add_image(slide, placeholder_id, image, original_image_size=True):
+    if isinstance(image, ImageData):
+        image_url = image.get_image_url()
+    else:
+        image_url = image
+
     if not os.path.isfile(image_url):
         return None
 

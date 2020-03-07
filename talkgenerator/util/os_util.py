@@ -5,13 +5,14 @@ import pathlib
 import sys
 import traceback
 from functools import lru_cache
+from typing import Union
 
 import requests
 from PIL import Image
 from PIL.Image import DecompressionBombError
 
 # import tempfile
-
+from schema.image_generator import ImageData
 
 logger = logging.getLogger("talkgenerator")
 
@@ -68,7 +69,14 @@ def get_prohibited_images():
 
 
 @lru_cache(maxsize=20)
-def is_image(content):
+def is_image(content: Union[str, ImageData]):
+    if isinstance(content, ImageData):
+        return _is_image_path(content.get_image_url())
+    else:
+        return _is_image_path(content)
+
+
+def _is_image_path(content: str):
     if not bool(content) or bool(content) is content or not content.lower:
         return False
     lower_url = content.lower()
