@@ -89,8 +89,13 @@ def _is_image_path(content: str):
 
 
 @lru_cache(maxsize=20)
-def is_valid_image(image_url):
+def is_valid_image(image: Union[str,ImageData]):
     try:
+        if isinstance(image, ImageData):
+            image_url = image.get_image_url()
+        else:
+            image_url = image
+
         im = open_image(os.path.normpath(image_url))
         if not im or im in get_prohibited_images():
             logger.warning("Image denied because on blacklist:" + image_url)
