@@ -1,6 +1,7 @@
 import random
 
 from talkgenerator.util import os_util
+from util.image_data import ImageData
 
 
 def get_random_inspirobot_image(_):
@@ -17,4 +18,4 @@ def get_random_inspirobot_image(_):
     )
     os_util.download_image(inspirobot_url, image_url)
 
-    return image_url
+    return ImageData(image_url=image_url, source="Inspirobot")
