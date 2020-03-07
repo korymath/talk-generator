@@ -6,6 +6,8 @@ import subprocess
 import sys
 import logging
 
+from talkgenerator.schema.content_generators import full_name_generator
+from talkgenerator.schema.presentation_schema_types import get_schema
 from talkgenerator import runtime_checker
 from talkgenerator.schema import presentation_schema_types
 from talkgenerator.sources import phrasefinder
@@ -33,11 +35,11 @@ def generate_talk(args):
     logger.info("Making {} slide talk on: {}".format(args.num_slides, args.topic))
 
     # Retrieve the schema to generate the presentation with
-    schema = presentation_schema_types.get_schema(args.schema)
+    schema = get_schema(args.schema)
 
     # Generate random presenter name if no presenter name given
     if not args.presenter:
-        args.presenter = schema.content_generators.full_name_generator()
+        args.presenter = full_name_generator()
 
     if not args.topic:
         if args.title:

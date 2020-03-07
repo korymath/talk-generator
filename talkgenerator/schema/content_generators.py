@@ -10,6 +10,7 @@ from util.generator_util import *
 
 # TITLES
 talk_title_generator = create_tracery_generator("data/text-templates/talk_title.json")
+talk_ted_title_generator = create_tracery_generator("data/text-templates/talk_title.json", "ted_title")
 talk_subtitle_generator = create_tracery_generator(
     "data/text-templates/talk_subtitle.json"
 )

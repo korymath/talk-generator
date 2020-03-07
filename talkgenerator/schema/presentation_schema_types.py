@@ -76,7 +76,7 @@ ted_schema = PresentationSchema(
     # Topic per slide generator
     seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
     # Title of the presentation
-    title_generator=talk_title_generator,
+    title_generator=talk_ted_title_generator,
     # Slide generators
     slide_generators=[
         SlideGeneratorData(

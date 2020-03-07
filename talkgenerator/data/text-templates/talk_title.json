@@ -12,7 +12,6 @@
     "Despite what you've heard, stupid {seed.plural} exists",
     "From {seed.title} to {seed.conceptnet_related_single_word.title}: {seed.wikihow_action.ing.title}",
     "Help, I Keep Having To {seed.wikihow_action.title}",
-    "How I {seed.wikihow_action.title}: Confessions of {seed.title.a}",
     "How many {seed.plural.lower} are \"too many {seed.plural.lower}\"?",
     "Never, Ever {seed.wikihow_action.title}",
     "Putting {seed.plural.title} On The Blockchain",
@@ -36,7 +35,8 @@
     "More {seed.plural.title}, More Happiness",
     "Why I Disallow My Children to {seed.wikihow_action.title.2_to_1_pronouns} (and so should you)",
     "Why We All Need to {seed.wikihow_action.title}",
-    "You are {seed.wikihow_action.ing} (and Don't Even Know It)"
+    "You are {seed.wikihow_action.ing} (and Don't Even Know It)",
+    "How I {seed.wikihow_action.title}: Confessions of {seed.title.a}"
   ],
   "title": [
     "#two_or_larger# Things You Didn't Know About {seed.plural.title}",
