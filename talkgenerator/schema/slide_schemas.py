@@ -123,7 +123,7 @@ history_slide_generators_copyright_free = [
             NoneGenerator(),
             goodreads_short_quote_generator,
         ),
-        weight_function=PeakedWeight((2, 3), 20, 0.3),
+        weight_function=PeakedWeight((1, 2), 20, 0.3),
         allowed_repeated_elements=2,
         tags=["history", "quote"],
         name="Historical Figure Quote",
@@ -140,7 +140,7 @@ history_slide_generators_copyright_free = [
                 ["vintage", "historic", "old", "ancient"]
             ),
         ),
-        weight_function=PeakedWeight((2, 3), 12, 0.1),
+        weight_function=PeakedWeight((1, 2), 12, 0.1),
         allowed_repeated_elements=2,
         tags=["history", "two_images"],
         name="Two History Pictures",
