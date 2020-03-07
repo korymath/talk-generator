@@ -34,6 +34,7 @@ def search_photos(query) -> List[ImageData]:
         else:
             logger.warning(
                 'Pixabay could not find results for "{}", which might be due to missing/erroneous access keys'
+                .format(query)
             )
     else:
         logger.warning("No active Pixabay session due to missing/wrong credentials.")
