@@ -42,7 +42,7 @@ def search_photos_return_urls(query):
     return [im.get_image_url() for im in search_photos(query)]
 
 
-def random(_):
+def random(_=None):
     random_image = unsplash_session.photos(type_="random")
     image_url = random_image.body["links"]["download"]
     creator_name = random_image.body["user"]["name"]
