@@ -16,7 +16,7 @@ from talkgenerator.util.generator_util import (
 
 
 # = TEXT GENERATORS=
-from util.image_data import ImageData
+from talkgenerator.util.image_data import ImageData
 
 
 def create_templated_text_generator(filename):

@@ -5,7 +5,7 @@ import safygiphy
 from cachier import cachier
 
 from talkgenerator.util import os_util
-from util.image_data import ImageData
+from talkgenerator.util.image_data import ImageData
 
 giphy_connection = safygiphy.Giphy()
 

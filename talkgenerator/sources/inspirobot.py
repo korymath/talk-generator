@@ -1,7 +1,7 @@
 import random
 
 from talkgenerator.util import os_util
-from util.image_data import ImageData
+from talkgenerator.util.image_data import ImageData
 
 
 def get_random_inspirobot_image(_):
