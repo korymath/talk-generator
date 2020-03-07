@@ -31,7 +31,13 @@ def search_photos(query) -> List[ImageData]:
         if results and results["photos"]:
             images = []
             for photo in results["photos"]:
-                link_download = photo["url"]
+                source = photo["src"]
+                # link_download = (
+                #     source["large"]
+                #     if "large" in source
+                #     else (source["original"] if "original" in source else photo["url"])
+                # )
+                link_download = source["original"]
                 creator = (
                     (photo["photographer"] + " (via Pexels)")
                     if "photographer" in photo
