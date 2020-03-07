@@ -1,3 +1,4 @@
+from sources import pixabay, pexels
 from talkgenerator.schema.content_generator_structures import *
 from talkgenerator.sources import (
     inspirobot,
@@ -234,7 +235,39 @@ generate_unsplash_image_from_word = ExternalImageListGenerator(
 )
 
 # PIXABAY
+pixabay_url_generator = FolderFileURLGenerator("pixabay")
+generate_pixabay_image = ExternalImageListGenerator(
+    SeededGenerator(pixabay.search_photos), pixabay_url_generator
+)
+generate_pixabay_image_from_word = ExternalImageListGenerator(
+    pixabay.search_photos, pixabay_url_generator
+)
 
+# PEXELS
+
+generate_pexels_image = ExternalImageListGenerator(
+    SeededGenerator(pexels.search_photos),
+    FolderFileURLGenerator("pexels"),
+    check_image_validness=False,
+)
+generate_pexels_image_from_word = ExternalImageListGenerator(
+    pexels.search_photos, pixabay_url_generator
+)
+
+# COPYRIGHT FREE
+
+copyrigyt_free_generator = CombinedGenerator(
+    (1, generate_unsplash_image),
+    (1, generate_pixabay_image),
+    (1, generate_pexels_image),
+)
+copyrigyt_free_generator_from_word = CombinedGenerator(
+    (1, generate_unsplash_image_from_word),
+    (1, generate_pixabay_image_from_word),
+    (1, generate_pexels_image_from_word),
+)
+
+# NEUTRAL
 
 neutral_image_generator = CombinedGenerator(
     (1000, generate_unsplash_image),
