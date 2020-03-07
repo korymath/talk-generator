@@ -97,6 +97,7 @@ anecdote_prompt_generator = create_templated_text_generator(
 
 # QUOTES
 goodreads_quote_generator = GoodReadsQuoteGenerator(250)
+goodreads_short_quote_generator = GoodReadsQuoteGenerator(140)
 
 # DOUBLE CAPTIONS
 
@@ -270,18 +271,17 @@ copyright_free_generator_from_word = CombinedGenerator(
 )
 
 
-def copyright_free_prefixed_generator(prefixes: Union[str,Collection[str]]):
-    if isinstance(prefixes, str):
-        return PrefixedGenerator(prefixes, copyright_free_generator)
-    generators = [(1, PrefixedGenerator(p, copyright_free_generator)) for p in prefixes]
-    return CombinedGenerator(generators)
+def copyright_free_prefixed_generator(prefixes: Union[str, Collection[str]]):
+    return SeededGenerator(copyright_free_prefixed_generator_from_word(prefixes))
 
 
-def copyright_free_prefixed_generator_from_word(prefixes: Union[str,Collection[str]]):
+def copyright_free_prefixed_generator_from_word(prefixes: Union[str, Collection[str]]):
     if isinstance(prefixes, str):
         return PrefixedGenerator(prefixes, copyright_free_generator_from_word)
-    generators = [(1, PrefixedGenerator(p, copyright_free_generator_from_word)) for p in prefixes]
-    return CombinedGenerator(generators)
+    generators = [
+        (1, PrefixedGenerator(p, copyright_free_generator_from_word)) for p in prefixes
+    ]
+    return CombinedGenerator(*generators)
 
 
 # NEUTRAL
