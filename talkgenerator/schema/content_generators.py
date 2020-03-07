@@ -1,6 +1,6 @@
 from typing import Collection, Union
 
-from sources import pixabay, pexels
+from talkgenerator.sources import pixabay, pexels
 from talkgenerator.schema.content_generator_structures import *
 from talkgenerator.sources import (
     inspirobot,
