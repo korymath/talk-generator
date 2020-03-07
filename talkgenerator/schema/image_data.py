@@ -18,14 +18,11 @@ class ImageData:
         return (
             "ImageData("
             + self._original_image_url
-            + ", "
+            + ","
             + self._image_url
-            + ", "
-            + self._source
+            + ((", " + self._source) if self._source is not None else "")
             + ")"
         )
 
     def __repr__(self):
         return str(self)
-
-
