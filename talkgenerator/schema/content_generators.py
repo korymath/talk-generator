@@ -36,6 +36,9 @@ def talk_title_generator_if_not_generated(presentation_context):
 default_slide_title_generator = create_templated_text_generator(
     "data/text-templates/default_slide_title.txt"
 )
+deep_abstract_generator = create_templated_text_generator(
+    "data/text-templates/deep_abstract.txt"
+)
 
 default_or_no_title_generator = CombinedGenerator(
     (1, default_slide_title_generator), (1, NoneGenerator())

@@ -200,10 +200,25 @@ single_image_slide_generators = [
 
 single_image_slide_generators_copyright_free = [
     SlideGeneratorData(
-        slide_generator_types.FullImageSlideGenerator.of(
-            default_slide_title_generator, generate_horizontal_pixabay_image
+        slide_generator_types.LarqeQuoteSlideGenerator.of(
+            NoneGenerator(),
+            CombinedGenerator(
+                (1, default_slide_title_generator),
+                (2.5, deep_abstract_generator)
+            ),
+            generate_horizontal_pixabay_image
         ),
+        weight_function=PeakedWeight((2, 3, 4, 5), 2.5, 1),
         tags=["full_image"],
+        name="Full Screen Pixabay",
+    ),
+    SlideGeneratorData(
+        slide_generator_types.LarqeQuoteSlideGenerator.of(
+            NoneGenerator(),
+            goodreads_short_quote_generator,
+            generate_horizontal_pixabay_image
+        ),
+        tags=["full_image", "quote"],
         name="Full Screen Pixabay",
     ),
     SlideGeneratorData(
@@ -271,7 +286,6 @@ statement_slide_generators_copyright_free = [
             text_generator=goodreads_quote_generator,
             background_image_generator=generate_horizontal_pixabay_image,
         ),
-        weight_function=ConstantWeightFunction(0.6),
         tags=["quote", "statement"],
         name="Goodreads Quote (CRF)",
     ),
