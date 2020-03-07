@@ -15,7 +15,7 @@ from talkgenerator.schema.slide_generator_data import (
     _filter_generated_elements,
     SlideGeneratorData,
 )
-from talkgenerator.slide import slide_generators
+from talkgenerator.slide import slide_generator_types
 from talkgenerator.slide.slide_deck import SlideDeck
 from talkgenerator.util import random_util
 
@@ -209,7 +209,7 @@ class PresentationSchema:
     ):
         slide, generated_elements, slide_generator_data, slide_nr = generated_result
         # Check if allowed according to repeated elements & slide type tags
-        if slide_generators.is_different_enough_for_allowed_repeated(
+        if slide_generator_types.is_different_enough_for_allowed_repeated(
             generated_elements,
             used_elements,
             slide_generator_data.get_allowed_repeated_elements(),

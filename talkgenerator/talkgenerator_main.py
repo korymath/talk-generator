@@ -6,6 +6,7 @@ import subprocess
 import sys
 import logging
 
+import schema.content_generators
 from talkgenerator import runtime_checker
 from talkgenerator.schema import schemas
 from talkgenerator.sources import phrasefinder
@@ -37,7 +38,7 @@ def generate_talk(args):
 
     # Generate random presenter name if no presenter name given
     if not args.presenter:
-        args.presenter = schemas.full_name_generator()
+        args.presenter = schema.content_generators.full_name_generator()
 
     if not args.topic:
         if args.title:
