@@ -19,7 +19,7 @@ class SlideTopicGeneratorsTest(unittest.TestCase):
         generator = SideTrackingTopicGenerator([non_existing_word], 10)
         self.assertTrue(
             len([seed for seed in generator.all_seeds() if seed == non_existing_word])
-            is 10
+            == 10
         )
 
     def test_conceptnet_sidetracking_hard_topic(self):
@@ -37,7 +37,7 @@ class SlideTopicGeneratorsTest(unittest.TestCase):
         self.assertTrue(seeds[4] == "dog")
         # Nothing is none
         self.assertTrue(
-            len([seed for seed in generator.all_seeds() if seed is None]) is 0
+            len([seed for seed in generator.all_seeds() if seed is None]) == 0
         )
 
     def test_conceptnet_sidetracking_multi_topic_one_each(self):

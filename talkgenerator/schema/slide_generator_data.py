@@ -12,7 +12,7 @@ from functools import lru_cache
 #     return weight_function
 from typing import List, Collection, Union, Set, Callable, Tuple
 
-from schema.image_generator import ImageData
+from schema.image_data import ImageData
 
 
 class PeakedWeight(object):

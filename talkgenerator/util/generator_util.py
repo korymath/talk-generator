@@ -4,9 +4,11 @@ certain types of (content) generators
 """
 import logging
 import random
+from typing import Callable
 
 import requests
 
+from schema.image_data import ImageData
 from talkgenerator.util import random_util, os_util
 
 logger = logging.getLogger("talkgenerator")
@@ -170,34 +172,38 @@ class ExternalImageListGenerator(Generator):
         self._check_image_validness = check_image_validness
         self._weighted = weighted
 
-    def __call__(self, presentation_context):
+    def __call__(self, presentation_context) -> ImageData:
         images = self._image_url_generator(presentation_context)
         while bool(images) and len(images) > 0:
-            chosen_image_url = (
+            chosen_image = (
                 random_util.weighted_random(images)
                 if self._weighted
                 else random.choice(images)
             )
-            downloaded_url = self._file_name_generator(chosen_image_url)
+            if not isinstance(chosen_image, ImageData):
+                chosen_image = ImageData(image_url=chosen_image)
+
+            downloaded_url = self._file_name_generator(chosen_image.get_image_url())
             try:
                 if not self._check_image_validness or os_util.is_image(
-                    chosen_image_url
+                    chosen_image
                 ):
-                    url_without_query = chosen_image_url.split("?", maxsplit=1)[0]
+                    url_without_query = chosen_image.get_image_url().split("?", maxsplit=1)[0]
                     os_util.download_image(url_without_query, downloaded_url)
                     if os_util.is_valid_image(downloaded_url):
-                        return downloaded_url
+                        chosen_image.set_local_image_url(downloaded_url)
+                        return chosen_image
                 else:
-                    logger.warning("Not a image url" + str(chosen_image_url))
+                    logger.warning("Not a image url" + str(chosen_image))
             except PermissionError:
                 logger.warning(
-                    "Permission error when downloading" + str(chosen_image_url)
+                    "Permission error when downloading" + str(chosen_image)
                 )
             except requests.exceptions.MissingSchema:
-                logger.warning("Missing schema for image " + str(chosen_image_url))
+                logger.warning("Missing schema for image " + str(chosen_image))
             except OSError:
-                logger.warning("Non existing image for: " + str(chosen_image_url))
-            images.remove(chosen_image_url)
+                logger.warning("Non existing image for: " + str(chosen_image))
+            images.remove(chosen_image)
         return None
 
 
@@ -252,3 +258,16 @@ class WalkingGenerator(Generator):
                 history.add(current)
 
         return current
+
+
+class ImageGenerator(Generator):
+    def __call__(self, seed: str) -> ImageData:
+        raise NotImplementedError("Not implemented image generator")
+
+
+class UnsourcedImageGenerator(ImageGenerator):
+    def __init__(self, image_url_generator: Callable[[str], str]):
+        self._image_url_generator = image_url_generator
+
+    def __call__(self, seed: str) -> ImageData:
+        return ImageData(image_url=self._image_url_generator(seed))
