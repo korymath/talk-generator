@@ -217,10 +217,14 @@ class ExternalImageListGenerator(Generator):
             downloaded_url = self._file_name_generator(chosen_image.get_image_url())
             try:
                 if not self._check_image_validness or os_util.is_image(chosen_image):
-                    url_without_query = chosen_image.get_image_url().split(
-                        "?", maxsplit=1
-                    )[0]
-                    os_util.download_image(url_without_query, downloaded_url)
+                    try:
+                        os_util.download_image(chosen_image.get_image_url(), downloaded_url)
+                    except OSError:
+                        url_without_query = chosen_image.get_image_url().split(
+                            "?", maxsplit=1
+                        )[0]
+                        os_util.download_image(url_without_query, downloaded_url)
+
                     if os_util.is_valid_image(downloaded_url):
                         chosen_image.set_local_image_url(downloaded_url)
                         return chosen_image
