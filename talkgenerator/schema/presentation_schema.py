@@ -7,8 +7,14 @@ import time
 import logging
 from multiprocessing.pool import ThreadPool
 import random
+from typing import List, Collection, Callable, Dict, Union, Optional
 
-from talkgenerator.schema.slide_generator_data import _filter_generated_elements
+from schema.image_data import ImageData
+from schema.slide_topic_generators import SlideSeedGenerator
+from talkgenerator.schema.slide_generator_data import (
+    _filter_generated_elements,
+    SlideGeneratorData,
+)
 from talkgenerator.slide import slide_generators
 from talkgenerator.slide.slide_deck import SlideDeck
 from talkgenerator.util import random_util
@@ -23,8 +29,8 @@ class PresentationSchema:
     def __init__(
         self,
         powerpoint_creator,
-        seed_generator,
-        slide_generators,
+        seed_generator: Callable[[List[str], int], SlideSeedGenerator],
+        slide_generators: List[SlideGeneratorData],
         max_allowed_tags=None,
         ignore_weights=False,
     ):
@@ -38,12 +44,12 @@ class PresentationSchema:
 
     def generate_presentation(
         self,
-        topics,
-        num_slides,
+        topics: List[str],
+        num_slides: int,
         presenter=None,
-        title=None,
-        parallel=False,
-        int_seed=None,
+        title: str = None,
+        parallel: bool = False,
+        int_seed: int = None,
     ):
         """Generate a presentation about a certain topic with a certain number of slides"""
         # Create new presentation
@@ -92,12 +98,12 @@ class PresentationSchema:
     def _generate_slide_deck_parallel(
         self,
         slide_deck,
-        num_slides,
+        num_slides: int,
         main_presentation_context,
-        seed_generator,
+        seed_generator: SlideSeedGenerator,
         used_elements,
-        used_tags,
-        int_seed,
+        used_tags: Dict[str, int],
+        int_seed: int,
     ):
         logger.info("Generating the slide deck in parallel")
         slide_nrs_to_generate = range(num_slides)
@@ -311,7 +317,9 @@ class PresentationSchema:
 
         return weighted_generators
 
-    def _calculate_prohibited_generators(self, used_tags, num_slides):
+    def _calculate_prohibited_generators(
+        self, used_tags: Dict[str, int], num_slides: int
+    ):
         prohibited_tags = set()
         for key, value in used_tags.items():
             if key in self._max_allowed_tags:
@@ -341,15 +349,15 @@ class SlideGeneratorContext(object):
         self,
         presentation_schema,
         presentation_context,
-        seed_generator,
-        num_slides,
-        used_elements=None,
-        prohibited_generators=None,
-        int_seed=None,
+        seed_generator: SlideSeedGenerator,
+        num_slides: int,
+        used_elements: Optional[Collection[Union[str, ImageData]]] = None,
+        prohibited_generators: Optional[Collection[SlideGeneratorData]] = None,
+        int_seed: Optional[int] = None,
     ):
         self.presentation_schema = presentation_schema
         self.presentation_context = presentation_context
-        self.seed_generator = seed_generator
+        self.seed_generator: SlideSeedGenerator = seed_generator
         self.num_slides = num_slides
         self.used_elements = used_elements
         self.prohibited_generators = prohibited_generators
