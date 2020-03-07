@@ -1,6 +1,4 @@
 import argparse
-import datetime
-import logging
 import os
 import pathlib
 import random
@@ -8,7 +6,6 @@ import subprocess
 import sys
 import logging
 
-from talkgenerator import settings
 from talkgenerator import runtime_checker
 from talkgenerator.schema import schemas
 from talkgenerator.sources import phrasefinder

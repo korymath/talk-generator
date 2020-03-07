@@ -11,7 +11,7 @@ from PIL import Image
 from PIL.Image import DecompressionBombError
 
 # import tempfile
-from util.image_data import ImageData
+from talkgenerator.util.image_data import ImageData
 
 logger = logging.getLogger("talkgenerator")
 
