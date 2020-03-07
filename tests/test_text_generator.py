@@ -2,6 +2,7 @@ import random
 import unittest
 
 from talkgenerator.sources import text_generator
+from talkgenerator.util import os_util
 
 
 class TextGeneratorTest(unittest.TestCase):
@@ -116,6 +117,24 @@ class TextGeneratorTest(unittest.TestCase):
         tracery = text_generator.TraceryTextGenerator("data/text-templates/name.json")
         for i in range(5):
             self.assertTrue(tracery.generate())
+
+    def test_ted_title(self):
+        tracery = text_generator.TraceryTextGenerator(
+            "data/text-templates/talk_title.json", "ted_title"
+        )
+        words = list(os_util.read_lines("data/eval/common_words.txt"))
+        random.shuffle(words)
+        words = words[0:10]
+        generations = set()
+        for i in range(100):
+            topic = random.choice(words)
+            generated = tracery.generate({"seed": topic})
+            generations.add(generated)
+            self.assertTrue(generated)
+
+        generations = list(generations)
+        generations.sort()
+        print("\n".join(generations))
 
 
 if __name__ == "__main__":
