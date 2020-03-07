@@ -3,7 +3,6 @@ import os
 import logging
 import pathlib
 import sys
-import traceback
 from functools import lru_cache
 from typing import Union
 
@@ -12,7 +11,7 @@ from PIL import Image
 from PIL.Image import DecompressionBombError
 
 # import tempfile
-from schema.image_data import ImageData
+from util.image_data import ImageData
 
 logger = logging.getLogger("talkgenerator")
 

@@ -8,7 +8,7 @@ from typing import Callable
 
 import requests
 
-from schema.image_data import ImageData
+from util.image_data import ImageData
 from talkgenerator.util import random_util, os_util
 
 logger = logging.getLogger("talkgenerator")

@@ -730,8 +730,19 @@ test_schema = PresentationSchema(
     # seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
     seed_generator=slide_topic_generators.IdentityTopicGenerator,
     # Slide generators
-    slide_generators=captioned_images_slide_generators,
-    ignore_weights=True,
+    slide_generators=title_slide_generators
+    + [
+        SlideGeneratorData(
+            # slide_templates.generate_image_slide(
+            slide_generators.ImageSlideGenerator.of(
+                inspiration_title_generator, generate_unsplash_image
+            ),
+            weight_function=ConstantWeightFunction(8),
+            allowed_repeated_elements=10,
+            name="Test sourcing",
+        )
+    ],
+    # ignore_weights=True,
 )
 
 schemas = {

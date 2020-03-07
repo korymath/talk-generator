@@ -10,9 +10,9 @@ from functools import lru_cache
 #         return other_weight
 #
 #     return weight_function
-from typing import List, Collection, Union, Set, Callable, Tuple
+from typing import Collection, Union, Set, Callable, Tuple
 
-from schema.image_data import ImageData
+from util.image_data import ImageData
 
 
 class PeakedWeight(object):
