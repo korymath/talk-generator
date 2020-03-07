@@ -17,7 +17,8 @@ class Slide(metaclass=ABCMeta):
         self._sources = []
 
     def add_source(self, source: str):
-        self._sources.append(source)
+        if source is not None:
+            self._sources.append(source)
 
     def set_note(self, note: str):
         self._note = note
