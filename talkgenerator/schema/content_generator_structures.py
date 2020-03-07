@@ -121,10 +121,10 @@ class UnsplashURLGenerator(object):
     def __init__(self):
         pass
 
-    def __call__(self, url):
+    def __call__(self, image_data: ImageData):
         return os_util.to_actual_file(
             "downloads/unsplash/{}.jpg".format(
-                os_util.get_file_name(os.path.dirname(url))
+                os_util.get_file_name(os.path.dirname(image_data.get_image_url()))
             )
         )
 
