@@ -6,7 +6,7 @@ import schema.slide_schemas
 from talkgenerator import talkgenerator_main
 from talkgenerator.slide import powerpoint_slide_creator
 from talkgenerator.util import os_util
-from talkgenerator.schema import schemas
+from talkgenerator.schema import presentation_schema_types
 
 
 class TestTalkGenerator(unittest.TestCase):

@@ -8,7 +8,7 @@ import logging
 
 import schema.content_generators
 from talkgenerator import runtime_checker
-from talkgenerator.schema import schemas
+from talkgenerator.schema import presentation_schema_types
 from talkgenerator.sources import phrasefinder
 from talkgenerator.util import os_util
 

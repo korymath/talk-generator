@@ -70,10 +70,52 @@ test_schema = PresentationSchema(
     # ignore_weights=True,
 )
 
+# TED schema: using only images from approved sources
+ted_schema = PresentationSchema(
+    # Basic powerpoint generator
+    powerpoint_creator=powerpoint_slide_creator.create_new_powerpoint,
+    # Topic per slide generator
+    seed_generator=slide_topic_generators.SideTrackingTopicGenerator,
+    # Title of the presentation
+    title_generator=talk_title_generator,
+    # Slide generators
+    slide_generators=[
+        SlideGeneratorData(
+            slide_generator_types.TitleSlideGenerator.of(
+                talk_title_generator_if_not_generated, talk_subtitle_generator
+            ),
+            allowed_repeated_elements=3,
+            weight_function=PeakedWeight((0,), 100000, 0),
+            tags=["title"],
+            name="Title slide",
+        )
+    ],
+    # Max tags
+    max_allowed_tags={
+        # Absolute maxima
+        "title": 1,
+        "about_me": 1,
+        "history": 1,
+        "anecdote": 1,
+        "location_chart": 1,
+        "chart": 1,
+        "weird": 0,
+        "meme": 0,
+        # Relative (procentual) maxima
+        "two_captions": 0.3,
+        "three_captions": 0.2,
+        "multi_captions": 0.3,
+        "gif": 0.5,
+        "quote": 0.2,
+        "statement": 0.2,
+    },
+)
+
 schemas = {
     "default": presentation_schema,
     "interview": interview_schema,
     "test": test_schema,
+    "ted": ted_schema,
 }
 
 
