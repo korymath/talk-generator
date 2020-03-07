@@ -175,13 +175,15 @@ class ExternalImageListGenerator(Generator):
     def __call__(self, presentation_context) -> ImageData:
         images = self._image_url_generator(presentation_context)
         while bool(images) and len(images) > 0:
-            chosen_image = (
+            original_chosen_image = (
                 random_util.weighted_random(images)
                 if self._weighted
                 else random.choice(images)
             )
-            if not isinstance(chosen_image, ImageData):
-                chosen_image = ImageData(image_url=chosen_image)
+            if not isinstance(original_chosen_image, ImageData):
+                chosen_image = ImageData(image_url=original_chosen_image)
+            else:
+                chosen_image = original_chosen_image
 
             downloaded_url = self._file_name_generator(chosen_image.get_image_url())
             try:
@@ -203,7 +205,7 @@ class ExternalImageListGenerator(Generator):
                 logger.warning("Missing schema for image " + str(chosen_image))
             except OSError:
                 logger.warning("Non existing image for: " + str(chosen_image))
-            images.remove(chosen_image)
+            images.remove(original_chosen_image)
         return None
 
 
