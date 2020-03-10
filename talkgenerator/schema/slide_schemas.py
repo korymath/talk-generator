@@ -201,9 +201,7 @@ single_image_slide_generators = [
 single_image_slide_generators_copyright_free = [
     SlideGeneratorData(
         slide_generator_types.LarqeQuoteSlideGenerator.of(
-            NoneGenerator(),
-            deep_abstract_generator,
-            generate_horizontal_pixabay_image
+            NoneGenerator(), deep_abstract_generator, generate_horizontal_pixabay_image
         ),
         weight_function=PeakedWeight((2, 3, 4, 5), 2.5, 1),
         tags=["full_image"],
@@ -213,7 +211,7 @@ single_image_slide_generators_copyright_free = [
         slide_generator_types.LarqeQuoteSlideGenerator.of(
             NoneGenerator(),
             goodreads_short_quote_generator,
-            generate_horizontal_pixabay_image
+            generate_horizontal_pixabay_image,
         ),
         tags=["full_image", "quote"],
         name="Full Screen Pixabay Goodreads",
@@ -420,7 +418,7 @@ chart_slide_generators = [
         allowed_repeated_elements=0,
         tags=["chart"],
         name="Reddit Chart",
-    ),
+    )
 ] + own_chart_generators
 
 # CONCLUSIONS

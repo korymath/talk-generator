@@ -231,10 +231,10 @@ generate_google_image_from_word = FromListGenerator(
 
 # UNSPLASH
 generate_unsplash_image_from_word = ExternalImageListGenerator(
-    unsplash.search_photos, UnsplashURLGenerator(), check_image_validness=False,
+    unsplash.search_photos, UnsplashURLGenerator(), check_image_validness=False
 )
 generate_random_unsplash_image_from_word = ExternalImageListGenerator(
-    unsplash.random, UnsplashURLGenerator(), check_image_validness=False,
+    unsplash.random, UnsplashURLGenerator(), check_image_validness=False
 )
 generate_unsplash_image = SeededGenerator(generate_unsplash_image_from_word)
 generate_random_unsplash_image = SeededGenerator(
@@ -257,8 +257,7 @@ generate_horizontal_pixabay_image = SeededGenerator(
 # PEXELS
 
 generate_pexels_image_from_word = ExternalImageListGenerator(
-    pexels.search_photos,
-    FolderFileURLGenerator("pexels"),
+    pexels.search_photos, FolderFileURLGenerator("pexels")
 )
 generate_pexels_image = SeededGenerator(generate_pexels_image_from_word)
 

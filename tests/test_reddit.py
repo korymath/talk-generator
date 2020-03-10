@@ -7,7 +7,9 @@ class RedditTest(unittest.TestCase):
     def test_reddit_simple(self):
         images = RedditImageSearcher("memes")("cat")
         self.assertTrue(len(images) > 0)
-        sources = [image.get_source() for image in images if image.get_source() is not None]
+        sources = [
+            image.get_source() for image in images if image.get_source() is not None
+        ]
         print(sources)
         self.assertTrue(len(sources) > 0)
 

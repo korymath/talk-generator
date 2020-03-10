@@ -17,7 +17,9 @@ class TestTalkGenerator(unittest.TestCase):
         self.default_args.configure_mock(schema="default")
         self.default_args.configure_mock(title=None)
         self.default_args.configure_mock(parallel=False)
-        self.default_args.configure_mock(output_folder=os_util.to_actual_file("../output/test/"))
+        self.default_args.configure_mock(
+            output_folder=os_util.to_actual_file("../output/test/")
+        )
         self.default_args.configure_mock(open_ppt=False)
         self.default_args.configure_mock(save_ppt=True)
         self.default_args.configure_mock(int_seed=123)

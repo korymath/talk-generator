@@ -27,7 +27,6 @@ def get_unsplash_session():
 unsplash_session = get_unsplash_session()
 
 
-
 def _map_to_image_data(photo):
     link_download = photo.link_download
     creator_user = photo.body["user"]
