@@ -5,7 +5,7 @@ from typing import List
 from cachier import cachier
 from pixabay import Image
 from talkgenerator import settings
-from talkgenerator.util.image_data import ImageData
+from talkgenerator.datastructures.image_data import ImageData
 
 logging.getLogger("pixabay").setLevel(logging.DEBUG)
 logger = logging.getLogger("talkgenerator")

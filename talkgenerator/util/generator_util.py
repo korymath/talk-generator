@@ -4,11 +4,11 @@ certain types of (content) generators
 """
 import logging
 import random
-from typing import Callable, Optional, Dict, Union, List, Tuple
+from typing import Callable, Optional, Dict, Union, Tuple
 
 import requests
 
-from talkgenerator.util.image_data import ImageData
+from talkgenerator.datastructures.image_data import ImageData
 from talkgenerator.util import random_util, os_util
 
 logger = logging.getLogger("talkgenerator")
@@ -42,10 +42,10 @@ class PrefixedPresentationContextGenerator(Generator):
 
 
 class CombinedGenerator(Generator):
-    def __init__(self, *weighted_generators : Tuple[Union[int,float], Generator]):
+    def __init__(self, *weighted_generators: Tuple[Union[int, float], Generator]):
         self._weighted_generators = weighted_generators
 
-    def __call__(self, seed: Union[str, Dict[str,str]]):
+    def __call__(self, seed: Union[str, Dict[str, str]]):
         current_weighted_generators = list(self._weighted_generators)
         while len(current_weighted_generators) > 0:
             # print("combined generator using", current_weighted_generators)
@@ -218,7 +218,9 @@ class ExternalImageListGenerator(Generator):
             try:
                 if not self._check_image_validness or os_util.is_image(chosen_image):
                     try:
-                        os_util.download_image(chosen_image.get_image_url(), downloaded_url)
+                        os_util.download_image(
+                            chosen_image.get_image_url(), downloaded_url
+                        )
                     except OSError:
                         url_without_query = chosen_image.get_image_url().split(
                             "?", maxsplit=1

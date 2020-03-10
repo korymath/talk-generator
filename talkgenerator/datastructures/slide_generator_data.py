@@ -12,7 +12,7 @@ from functools import lru_cache
 #     return weight_function
 from typing import Collection, Union, Set, Callable, Tuple
 
-from talkgenerator.util.image_data import ImageData
+from talkgenerator.datastructures.image_data import ImageData
 
 
 class PeakedWeight(object):

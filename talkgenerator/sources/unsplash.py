@@ -7,7 +7,7 @@ from typing import List
 from cachier import cachier
 from pyunsplash import PyUnsplash
 
-from talkgenerator.util.image_data import ImageData
+from talkgenerator.datastructures.image_data import ImageData
 from talkgenerator import settings
 
 # pyunsplash logger defaults to level logging.ERROR
@@ -25,7 +25,6 @@ def get_unsplash_session():
 
 
 unsplash_session = get_unsplash_session()
-
 
 
 def _map_to_image_data(photo):

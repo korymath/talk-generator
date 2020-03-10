@@ -9,7 +9,6 @@
   ],
   "ted_title": [
     "I Quit {seed.wikihow_action.ing.title} (and so should you)",
-    "Despite what you've heard, stupid {seed.plural} exists",
     "From {seed.title} to {seed.conceptnet_related_single_word.title}: {seed.wikihow_action.ing.title}",
     "Help, I Keep Having To {seed.wikihow_action.title}",
     "How many {seed.plural.lower} are \"too many {seed.plural.lower}\"?",
@@ -24,9 +23,11 @@
     "Want to be Happier? {seed.wikihow_action.title}!",
     "Want to Be Happy? {seed.wikihow_action.title}!",
     "Why People Call Me \"The {seed.singular.title}\"",
-    "More {seed.plural.title}, More {seed.conceptnet_related_single_word.plural.title}"
+    "More {seed.plural.title}, More {seed.conceptnet_related_single_word.plural.title}",
+    "Why We All Need to {seed.wikihow_action.title}"
   ],
   "in_between": [
+    "Despite what you've heard, stupid {seed.plural} exists",
     "How {seed.plural.title} Can Change the World",
     "How {seed.plural.title} Caused My Bankruptcy",
     "How to {seed.wikihow_action.lower} (without getting fired)",
@@ -34,7 +35,6 @@
     "Less {seed.plural.title}, More Happiness",
     "More {seed.plural.title}, More Happiness",
     "Why I Disallow My Children to {seed.wikihow_action.title.2_to_1_pronouns} (and so should you)",
-    "Why We All Need to {seed.wikihow_action.title}",
     "You are {seed.wikihow_action.ing} (and Don't Even Know It)",
     "How I {seed.wikihow_action.title}: Confessions of {seed.title.a}"
   ],
