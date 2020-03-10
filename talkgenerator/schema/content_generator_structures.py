@@ -5,8 +5,12 @@ import os
 import random
 from typing import Tuple
 
+from sources import conceptnet
 from talkgenerator.sources import goodreads, text_generator, reddit, wikihow
-from talkgenerator.util.generator_util import ExternalImageListGenerator
+from talkgenerator.util.generator_util import (
+    ExternalImageListGenerator,
+    RelatedMappingGenerator,
+)
 from talkgenerator.util.generator_util import FromListGenerator
 from talkgenerator.util.generator_util import (
     SeededGenerator,
@@ -203,3 +207,8 @@ def generate_wikihow_bold_statement(presentation_context):
 # GOOGLE
 def generate_google_image_generator(generator):
     return FromListGenerator(InvalidImagesRemoverGenerator(SeededGenerator(generator)))
+
+
+class ConceptNetMapper(RelatedMappingGenerator):
+    def __init__(self, generator):
+        super().__init__(conceptnet.weighted_related_word_generator, generator)

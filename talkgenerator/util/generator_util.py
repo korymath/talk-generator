@@ -306,3 +306,13 @@ class UnsourcedImageGenerator(ImageGenerator):
 
     def __call__(self, seed: str) -> ImageData:
         return ImageData(image_url=self._image_url_generator(seed))
+
+
+class RelatedMappingGenerator(Generator):
+    def __init__(self, related_word_generator: Callable[[str], str], generator: Generator):
+        self._related_word_generator = related_word_generator
+        self._generator = generator
+
+    def __call__(self, seed: str) -> Optional[str]:
+        mapped_seed = self._related_word_generator(seed)
+        return self._generator(mapped_seed)
