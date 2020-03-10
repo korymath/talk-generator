@@ -1,6 +1,7 @@
 """ Module for interacting with Wikihow """
 
 import logging
+from json import JSONDecodeError
 from pathlib import Path
 from typing import List
 
@@ -42,10 +43,22 @@ def search_photos_return_urls(query):
 
 
 def random(_=None):
-    random_image = unsplash_session.photos(type_="random")
-    image_url = random_image.body["links"]["download"]
-    creator_name = random_image.body["user"]["name"]
-    return ImageData(image_url=image_url, source=creator_name)
+    try:
+        random_image = unsplash_session.photos(type_="random")
+        image_url = random_image.body["links"]["download"]
+        creator_name = random_image.body["user"]["name"]
+        return ImageData(image_url=image_url, source=creator_name)
+    except JSONDecodeError:
+        logger.warning("Couldn't get random Unsplash image")
+        return None
+
+
+def random_as_list(_=None):
+    result = random(_)
+    if result:
+        return [result]
+    else:
+        return []
 
 
 @cachier(cache_dir=Path("..", ".cache").absolute())

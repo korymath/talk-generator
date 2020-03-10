@@ -234,7 +234,7 @@ generate_unsplash_image_from_word = ExternalImageListGenerator(
     unsplash.search_photos, UnsplashURLGenerator(), check_image_validness=False
 )
 generate_random_unsplash_image_from_word = ExternalImageListGenerator(
-    unsplash.random, UnsplashURLGenerator(), check_image_validness=False
+    unsplash.random_as_list, UnsplashURLGenerator(), check_image_validness=False
 )
 generate_unsplash_image = SeededGenerator(generate_unsplash_image_from_word)
 generate_random_unsplash_image = SeededGenerator(
