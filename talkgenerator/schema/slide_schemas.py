@@ -204,7 +204,7 @@ single_image_slide_generators_copyright_free = [
             NoneGenerator(), deep_abstract_generator, generate_horizontal_pixabay_image
         ),
         weight_function=PeakedWeight((2, 3, 4, 5), 2.5, 1),
-        tags=["full_image"],
+        tags=["full_image", "deep"],
         name="Full Screen Pixabay Deep",
     ),
     SlideGeneratorData(

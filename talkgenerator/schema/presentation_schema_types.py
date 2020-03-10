@@ -93,6 +93,7 @@ ted_schema = PresentationSchema(
         "anecdote": 1,
         "location_chart": 1,
         "chart": 1,
+        "deep": 2,
         # Relative (procentual) maxima
         "two_captions": 0.3,
         "three_captions": 0.2,
