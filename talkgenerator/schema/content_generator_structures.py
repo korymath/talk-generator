@@ -5,7 +5,7 @@ import os
 import random
 from typing import Tuple
 
-from sources import conceptnet
+from talkgenerator.sources import conceptnet
 from talkgenerator.sources import goodreads, text_generator, reddit, wikihow
 from talkgenerator.util.generator_util import (
     ExternalImageListGenerator,
