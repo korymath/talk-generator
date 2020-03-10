@@ -7,7 +7,7 @@ from typing import List
 from lxml.etree import XMLSyntaxError
 from pptx import Presentation
 
-from talkgenerator.util.image_data import ImageData
+from talkgenerator.datastructures.image_data import ImageData
 from talkgenerator.util import os_util
 
 # Location of powerpoint template

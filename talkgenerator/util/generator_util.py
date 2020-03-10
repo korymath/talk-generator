@@ -4,11 +4,11 @@ certain types of (content) generators
 """
 import logging
 import random
-from typing import Callable, Optional, Dict, Union, List, Tuple
+from typing import Callable, Optional, Dict, Union, Tuple
 
 import requests
 
-from talkgenerator.util.image_data import ImageData
+from talkgenerator.datastructures.image_data import ImageData
 from talkgenerator.util import random_util, os_util
 
 logger = logging.getLogger("talkgenerator")

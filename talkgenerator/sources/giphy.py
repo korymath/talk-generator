@@ -1,11 +1,9 @@
 import os
-from pathlib import Path
 
 import safygiphy
-from cachier import cachier
 
 from talkgenerator.util import os_util
-from talkgenerator.util.image_data import ImageData
+from talkgenerator.datastructures.image_data import ImageData
 
 giphy_connection = safygiphy.Giphy()
 

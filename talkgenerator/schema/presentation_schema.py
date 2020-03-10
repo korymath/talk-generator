@@ -9,9 +9,9 @@ from multiprocessing.pool import ThreadPool
 import random
 from typing import List, Collection, Callable, Dict, Union, Optional
 
-from talkgenerator.util.image_data import ImageData
+from talkgenerator.datastructures.image_data import ImageData
 from talkgenerator.schema.slide_topic_generators import SlideSeedGenerator
-from talkgenerator.schema.slide_generator_data import (
+from talkgenerator.datastructures.slide_generator_data import (
     _filter_generated_elements,
     SlideGeneratorData,
 )

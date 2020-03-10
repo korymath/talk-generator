@@ -16,7 +16,7 @@ from talkgenerator.util.generator_util import (
 
 
 # = TEXT GENERATORS=
-from talkgenerator.util.image_data import ImageData
+from talkgenerator.datastructures.image_data import ImageData
 
 
 class FileURLGenerator:

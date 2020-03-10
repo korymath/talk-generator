@@ -1,8 +1,8 @@
 from talkgenerator.schema.slide_schemas import *
 from talkgenerator.schema import slide_topic_generators
 from talkgenerator.schema.presentation_schema import PresentationSchema
-from talkgenerator.schema.slide_generator_data import ConstantWeightFunction
-from talkgenerator.schema.slide_generator_data import SlideGeneratorData
+from talkgenerator.datastructures.slide_generator_data import ConstantWeightFunction
+from talkgenerator.datastructures.slide_generator_data import SlideGeneratorData
 from talkgenerator.slide import powerpoint_slide_creator
 from talkgenerator.slide import slide_generator_types
 

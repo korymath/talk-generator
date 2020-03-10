@@ -1,8 +1,5 @@
-from talkgenerator.schema.content_generator_structures import (
-    generate_wikihow_bold_statement,
-)
 from talkgenerator.schema.content_generators import *
-from talkgenerator.schema.slide_generator_data import (
+from talkgenerator.datastructures.slide_generator_data import (
     SlideGeneratorData,
     PeakedWeight,
     ConstantWeightFunction,
