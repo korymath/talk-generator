@@ -24,16 +24,16 @@
     "Want to Be Happy? {seed.wikihow_action.title}!",
     "Why People Call Me \"The {seed.singular.title}\"",
     "More {seed.plural.title}, More {seed.conceptnet_related_single_word.plural.title}",
+    "More {seed.plural.title}, More Happiness",
     "Why We All Need to {seed.wikihow_action.title}"
   ],
   "in_between": [
+    "Less {seed.plural.title}, More Happiness",
     "Despite what you've heard, stupid {seed.plural} exists",
     "How {seed.plural.title} Can Change the World",
     "How {seed.plural.title} Caused My Bankruptcy",
     "How to {seed.wikihow_action.lower} (without getting fired)",
     "How {seed.plural} can save humanity and why we should legalize them everywhere now",
-    "Less {seed.plural.title}, More Happiness",
-    "More {seed.plural.title}, More Happiness",
     "Why I Disallow My Children to {seed.wikihow_action.title.2_to_1_pronouns} (and so should you)",
     "You are {seed.wikihow_action.ing} (and Don't Even Know It)",
     "How I {seed.wikihow_action.title}: Confessions of {seed.title.a}"
