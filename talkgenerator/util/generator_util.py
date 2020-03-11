@@ -310,7 +310,9 @@ class UnsourcedImageGenerator(ImageGenerator):
 
 
 class RelatedMappingGenerator(Generator):
-    def __init__(self, related_word_generator: Callable[[str], str], generator: Generator):
+    def __init__(
+        self, related_word_generator: Callable[[str], str], generator: Generator
+    ):
         self._related_word_generator = related_word_generator
         self._generator = generator
 

@@ -278,8 +278,12 @@ generate_horizontal_pixabay_image = CombinedGenerator(
     (0.01, copyright_free_generator),
 )
 
-copyright_free_related_generator_from_word = ConceptNetMapper(copyright_free_generator_from_word)
-copyright_free_related_generator = SeededGenerator(copyright_free_related_generator_from_word)
+copyright_free_related_generator_from_word = ConceptNetMapper(
+    copyright_free_generator_from_word
+)
+copyright_free_related_generator = SeededGenerator(
+    copyright_free_related_generator_from_word
+)
 
 
 def copyright_free_prefixed_generator(prefixes: Union[str, Collection[str]]):
