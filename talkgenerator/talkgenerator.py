@@ -32,7 +32,7 @@ def generate_talk(args):
     logger.info("******************************************")
     logger.info("Making {} slide talk on: {}".format(args.num_slides, args.topic))
 
-    generate_presentation(
+    return generate_presentation(
         schema=args.schema,
         slides=args.num_slides,
         topic=args.topic,
