@@ -25,20 +25,20 @@ class TestTalkGenerator(unittest.TestCase):
         self.default_args.configure_mock(int_seed=123)
 
     def test_serial(self):
-        ppt, slide_deck = talkgenerator.generate_talk(self.default_args)
+        ppt, slide_deck = talkgenerator.generate_presentation_using_cli_arguments(self.default_args)
 
         self.assertEqual(3, len(ppt.slides))
 
     def test_parallel(self):
         self.default_args.configure_mock(parallel=True)
-        ppt, slide_deck = talkgenerator.generate_talk(self.default_args)
+        ppt, slide_deck = talkgenerator.generate_presentation_using_cli_arguments(self.default_args)
 
         self.assertEqual(3, len(ppt.slides))
 
     def test_multiple_topics(self):
         self.default_args.configure_mock(topic="cat, dog, bread, house")
         self.default_args.configure_mock(num_slides=6)
-        ppt, slide_deck = talkgenerator.generate_talk(self.default_args)
+        ppt, slide_deck = talkgenerator.generate_presentation_using_cli_arguments(self.default_args)
 
         self.assertEqual(6, len(ppt.slides))
 

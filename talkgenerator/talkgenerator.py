@@ -20,11 +20,9 @@ MAX_PRESENTATION_SAVE_TRIES = 100
 logger = logging.getLogger("talkgenerator")
 
 
-def generate_talk(args):
+def generate_presentation_using_cli_arguments(args):
     """Make a talk with the given topic."""
 
-    if args.print_logs:
-        os_util.show_logs(logger)
 
     runtime_checker.check_runtime_environment()
 
@@ -54,7 +52,11 @@ def generate_presentation(
     save_ppt: bool = True,
     output_folder: str = "../output/",
     open_ppt: bool = False,
+    print_logs=False
 ):
+    if print_logs:
+        os_util.show_logs(logger)
+
     if int_seed is not None:
         random.seed(int_seed)
 
