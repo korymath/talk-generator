@@ -3,7 +3,9 @@ from talkgenerator import talkgenerator
 
 def main(args):
     """Main run method for command line talk generation."""
-    presentations, slide_deck = talkgenerator.generate_presentation_using_cli_arguments(args)
+    presentations, slide_deck = talkgenerator.generate_presentation_using_cli_arguments(
+        args
+    )
 
 
 def main_cli():
