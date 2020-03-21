@@ -5,6 +5,7 @@ import random
 import subprocess
 import sys
 import logging
+from typing import List, Union
 
 from talkgenerator.schema.content_generators import full_name_generator
 from talkgenerator.schema.presentation_schema_types import get_schema
@@ -25,42 +26,68 @@ def generate_talk(args):
     if args.print_logs:
         os_util.show_logs(logger)
 
-    if args.int_seed is not None:
-        random.seed(args.int_seed)
-
     runtime_checker.check_runtime_environment()
 
     # Print status details
     logger.info("******************************************")
     logger.info("Making {} slide talk on: {}".format(args.num_slides, args.topic))
 
-    # Retrieve the schema to generate the presentation with
-    schema = get_schema(args.schema)
-
-    # Generate random presenter name if no presenter name given
-    if not args.presenter:
-        args.presenter = full_name_generator()
-
-    if not args.topic:
-        if args.title:
-            args.topic = phrasefinder.get_rarest_word(args.title)
-        else:
-            args.topic = DEFAULT_PRESENTATION_TOPIC
-
-    # Extract topics from given (possibly comma separated) topic
-    args.topics = [topic.strip() for topic in args.topic.split(",")]
-
-    # Generate the presentation object
-    presentation, slide_deck = schema.generate_presentation(
-        topics=args.topics,
-        num_slides=args.num_slides,
-        presenter=args.presenter,
+    generate_presentation(
+        schema=args.schema,
+        slides=args.num_slides,
+        topic=args.topic,
         title=args.title,
+        presenter=args.presenter,
         parallel=args.parallel,
         int_seed=args.int_seed,
     )
 
-    cleaned_topics = args.topic.replace(" ", "").replace(",", "_")
+
+def generate_presentation(
+    schema: str,
+    slides: int,
+    topic: Union[str, List[str]] = None,
+    title: str = None,
+    presenter: str = None,
+    parallel: bool = True,
+    int_seed: int = None,
+    save_ppt: bool = True,
+    output_folder: str = "../output/",
+    open_ppt: bool = False,
+):
+    if int_seed is not None:
+        random.seed(int_seed)
+
+    # Retrieve the schema to generate the presentation with
+    presentation_schema = get_schema(schema)
+
+    # Generate random presenter name if no presenter name given
+    if not presenter:
+        presenter = full_name_generator()
+
+    if not topic:
+        if title:
+            topic = phrasefinder.get_rarest_word(title)
+        else:
+            topic = DEFAULT_PRESENTATION_TOPIC
+
+    # Extract topics from given (possibly comma separated) topic
+    if type(topic) in [list, tuple]:
+        topics = topic
+    else:
+        topics = [topic.strip() for topic in topic.split(",")]
+
+    # Generate the presentation object
+    presentation, slide_deck = presentation_schema.generate_presentation(
+        topics=topics,
+        num_slides=slides,
+        presenter=presenter,
+        title=title,
+        parallel=parallel,
+        int_seed=int_seed,
+    )
+
+    cleaned_topics = ",".join(topics).replace(" ", "").replace(",", "_")
     file_name = "".join(e for e in cleaned_topics if e.isalnum() or e == "_")
 
     logger.info(
@@ -68,15 +95,15 @@ def generate_talk(args):
     )
 
     # Save presentation
-    if args.save_ppt:
+    if save_ppt:
         presentation_file = save_presentation_to_pptx(
-            args.output_folder, file_name, presentation
+            output_folder, file_name, presentation
         )
 
         # Open the presentation
-        if args.open_ppt and presentation_file is not None:
+        if open_ppt and presentation_file is not None:
             path = os.path.realpath(presentation_file)
-            open_file(path)
+            _open_file(path)
 
     return presentation, slide_deck
 
@@ -104,7 +131,7 @@ def save_presentation_to_pptx(output_folder: str, file_name: str, prs, index=0):
         return save_presentation_to_pptx(output_folder, file_name, prs, index + 1)
 
 
-def open_file(filename: str):
+def _open_file(filename: str):
     """Platform independent open method to cover different OS."""
     if sys.platform == "win32":
         os.startfile(filename)
@@ -123,7 +150,7 @@ def str2bool(v):
         raise argparse.ArgumentTypeError("Boolean value expected.")
 
 
-def get_argument_parser():
+def _get_argument_parser():
     parser = argparse.ArgumentParser(description="Quickly build a slide deck.")
     parser.add_argument("--topic", default="", type=str, help="Topic of presentation.")
     parser.add_argument(
