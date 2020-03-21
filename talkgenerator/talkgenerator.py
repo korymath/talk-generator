@@ -97,6 +97,7 @@ def generate_presentation(
     )
 
     # Save presentation
+    presentation_file = None
     if save_ppt:
         presentation_file = save_presentation_to_pptx(
             output_folder, file_name, presentation
@@ -107,7 +108,7 @@ def generate_presentation(
             path = os.path.realpath(presentation_file)
             _open_file(path)
 
-    return presentation, slide_deck
+    return presentation, slide_deck, presentation_file
 
 
 def save_presentation_to_pptx(output_folder: str, file_name: str, prs, index=0):
