@@ -3,13 +3,13 @@
 [![codecov](https://codecov.io/gh/korymath/talk-generator/branch/master/graph/badge.svg?token=gqkCyuXop0)](https://codecov.io/gh/korymath/talk-generator)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/korymath/britbot/blob/master/LICENSE.md)
 
-## Description
-
-Software to automatically generate talks, presentations for PowerPoint and/or Keynote. Their main purpose is for the improvisational comedy format *"Improvised TED talk"* or *"Powerpoint Karaoke"*, where the actors have to present an unseen presentation slide deck, but pretend to be an expert and explain their slide show choices.
+This program automatically generates PowerPoints about any topic.
+These presentation slide decks can be used by improvisers for the improvisational comedy format *"Improvised TED talk"* or *"Powerpoint Karaoke"*.
+In such games, the actors have to present an unseen presentation slide deck, but pretend to be an expert and explain *"their"* slide show choices.
 
 ## Demo
 
-For a demo of this generator, please visit [talkgenerator.com](http://talkgenerator.com/), a platform created by [Shaun Farrugia](https://github.com/h0h0h0) to give easier access to this talk generator.
+Ty out this generator on our online platform: [talkgenerator.com](http://talkgenerator.com/).
 
 ### Example
 
@@ -72,9 +72,12 @@ Test coverage is automatically handled by `codecov`. Tests are automatically run
 
 ## Credits
 
-This ``Talk Generator`` is made by [Kory Mathewson](https://github.com/korymath)
-and [Thomas Winters](https://github.com/TWinters),
-with help from [Shaun Farrugia](https://github.com/h0h0h0), [Piotr Mirowski](https://github.com/piotrmirowski) and [Julian Faid](https://github.com/jfaid).
+This generator is made by
+[Thomas Winters](https://github.com/TWinters)
+and [Kory Mathewson](https://github.com/korymath),
+with contributions from
+[Shaun Farrugia](https://github.com/h0h0h0)
+and [Julian Faid](https://github.com/jfaid).
 
 If you would like to refer to this project in academic work, please cite the following paper:
 
@@ -99,4 +102,4 @@ Winters T., Mathewson K.W. (2019) **Automatically Generating Engaging Presentati
 
 ## License
 
-MIT License. Copyright (c) 2018 [Kory Mathewson](https://github.com/korymath), [Thomas Winters](https://github.com/TWinters), and [Shaun Farrugia](https://github.com/h0h0h0).
+MIT License. Copyright (c) 2018-2020 [Kory Mathewson](https://github.com/korymath) and [Thomas Winters](https://github.com/TWinters)
