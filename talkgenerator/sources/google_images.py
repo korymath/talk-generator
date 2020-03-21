@@ -72,13 +72,17 @@ def search_images(word, extra_arguments_dict=None, num_images=_DEFAULT_NUM_IMAGE
         arguments.update(extra_arguments_dict)
 
     # passing the arguments to the function
-    paths_dict = response.download(arguments)[0]
-    paths = []
-    for value in paths_dict.values():
-        paths.extend(value)
+    downloaded = response.download(arguments)
+    if isinstance(downloaded, dict):
+        return downloaded[word]
+    else:
+        paths_dict = downloaded[0]
+        paths = []
+        for value in paths_dict.values():
+            paths.extend(value)
 
-    # return absolute paths of the downloaded images
-    return paths
+        # return absolute paths of the downloaded images
+        return paths
 
 
 # @lru_cache(maxsize=20)

@@ -1,9 +1,13 @@
+import random
 import unittest
 
 from talkgenerator.util import language_util
 
 
 class LanguageUtilTest(unittest.TestCase):
+    def setUp(self) -> None:
+        random.seed(123)
+
     def test_check_and_download_no_exception(self):
         language_util.check_and_download()
 

@@ -3,9 +3,14 @@ This file contains structures that are helpful for certain content generators, b
 """
 import os
 import random
+from typing import Tuple
 
+from talkgenerator.sources import conceptnet
 from talkgenerator.sources import goodreads, text_generator, reddit, wikihow
-from talkgenerator.util.generator_util import ExternalImageListGenerator
+from talkgenerator.util.generator_util import (
+    ExternalImageListGenerator,
+    RelatedMappingGenerator,
+)
 from talkgenerator.util.generator_util import FromListGenerator
 from talkgenerator.util.generator_util import (
     SeededGenerator,
@@ -15,6 +20,22 @@ from talkgenerator.util.generator_util import (
 
 
 # = TEXT GENERATORS=
+from talkgenerator.datastructures.image_data import ImageData
+
+
+class FileURLGenerator:
+    def __call__(self, image_url: str):
+        raise NotImplementedError("There was no file URL generator specified")
+
+
+class FolderFileURLGenerator(FileURLGenerator):
+    def __init__(self, folder: str):
+        self._folder = folder
+
+    def __call__(self, url):
+        return os_util.to_actual_file(
+            "downloads/" + self._folder + "/{}".format(os_util.get_file_name(url))
+        )
 
 
 def create_templated_text_generator(filename):
@@ -52,31 +73,35 @@ def create_reddit_image_generator(*name):
     return BackupGenerator(reddit_generator.generate, reddit_generator.generate_random)
 
 
-class RedditLocalImageLocationGenerator(object):
-    def __init__(self, subreddit):
-        self._subreddit = subreddit
-
-    def __call__(self, url):
-        filename = (
-            "downloads/reddit/" + self._subreddit + "/" + os_util.get_file_name(url)
-        )
-        return os_util.to_actual_file(filename)
+class RedditLocalImageLocationGenerator(FolderFileURLGenerator):
+    def __init__(self, subreddit: str):
+        super().__init__("reddit/" + subreddit)
 
 
 class RedditImageSearcher(object):
-    def __init__(self, subreddit):
+    def __init__(self, subreddit: str):
         self._subreddit = subreddit
 
-    def __call__(self, seed):
+    def __call__(self, seed: str):
         results = reddit.search_subreddit(
             self._subreddit, str(seed) + " nsfw:no (url:.jpg OR url:.png OR url:.gif)"
         )
         if bool(results):
-            return [post.url for post in results]
+            return [
+                ImageData(
+                    image_url=post.url,
+                    source="u/"
+                    + post.author.name
+                    + " (on "
+                    + post.subreddit_name_prefixed
+                    + ")",
+                )
+                for post in results
+            ]
 
 
 class RedditImageGenerator:
-    def __init__(self, subreddit):
+    def __init__(self, subreddit: str):
         self._subreddit = subreddit
 
         self._generate = ExternalImageListGenerator(
@@ -91,28 +116,17 @@ class RedditImageGenerator:
         return self.generate({"seed": ""})
 
 
-# SHITPOSTBOT
-class ShitPostBotURLGenerator(object):
-    def __init__(self):
-        pass
-
-    def __call__(self, url):
-        return os_util.to_actual_file(
-            "downloads/shitpostbot/{}".format(os_util.get_file_name(url))
-        )
-
-
 # UNSPLASH
 
 
-class UnsplashURLGenerator(object):
+class UnsplashURLGenerator(FileURLGenerator):
     def __init__(self):
         pass
 
-    def __call__(self, url):
+    def __call__(self, image_url: str):
         return os_util.to_actual_file(
             "downloads/unsplash/{}.jpg".format(
-                os_util.get_file_name(os.path.dirname(url))
+                os_util.get_file_name(os.path.dirname(image_url))
             )
         )
 
@@ -138,7 +152,7 @@ class CountryPrefixApplier(object):
     def __init__(self):
         pass
 
-    def __call__(self, x):
+    def __call__(self, x: Tuple[str, str]):
         return _apply_country_prefix(x[0]), x[1]
 
 
@@ -152,7 +166,7 @@ class JobPrefixApplier(object):
     def __init__(self):
         pass
 
-    def __call__(self, x):
+    def __call__(self, x: Tuple[str, str]):
         return _apply_job_prefix(x[0]), x[1]
 
 
@@ -193,3 +207,8 @@ def generate_wikihow_bold_statement(presentation_context):
 # GOOGLE
 def generate_google_image_generator(generator):
     return FromListGenerator(InvalidImagesRemoverGenerator(SeededGenerator(generator)))
+
+
+class ConceptNetMapper(RelatedMappingGenerator):
+    def __init__(self, generator):
+        super().__init__(conceptnet.weighted_related_word_generator, generator)

@@ -1,5 +1,6 @@
 import logging
 from abc import ABCMeta, abstractmethod
+from random import random
 
 from talkgenerator.slide import powerpoint_slide_creator
 
@@ -13,8 +14,13 @@ class Slide(metaclass=ABCMeta):
     def __init__(self, arguments):
         self._arguments = arguments
         self._note = ""
+        self._sources = []
 
-    def set_note(self, note):
+    def add_source(self, source: str):
+        if source is not None:
+            self._sources.append(source)
+
+    def set_note(self, note: str):
         self._note = note
 
     @property
@@ -29,6 +35,10 @@ class Slide(metaclass=ABCMeta):
         try:
             if ppt_slide:
                 ppt_slide.notes_slide.notes_text_frame.text = self._note
+
+                if len(self._sources):
+                    powerpoint_slide_creator.add_sources_note(ppt_slide, self._sources)
+
         except AttributeError as e:
             logger.error("attribute error on create slide {}".format(e))
         return ppt_slide

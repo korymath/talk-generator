@@ -46,6 +46,14 @@ def unsplash_auth():
     }
 
 
+def pixabay_auth():
+    return {"pixabay_key": env.str("PIXABAY_KEY", "")}
+
+
+def pexels_auth():
+    return {"pexels_key": env.str("PEXELS_KEY", "")}
+
+
 def _get_missing_keys(key_variables):
     missing = []
     for key_name in key_variables:

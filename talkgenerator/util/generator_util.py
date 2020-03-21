@@ -4,19 +4,48 @@ certain types of (content) generators
 """
 import logging
 import random
+from typing import Callable, Optional, Dict, Union, Tuple
 
 import requests
 
+from talkgenerator.datastructures.image_data import ImageData
 from talkgenerator.util import random_util, os_util
 
 logger = logging.getLogger("talkgenerator")
 
 
-class CombinedGenerator(object):
-    def __init__(self, *weighted_generators):
+class Generator(object):
+    def __call__(self, seed: str):
+        raise NotImplemented(
+            str(self) + " has not provided an implementation for the generator"
+        )
+
+
+class PrefixedGenerator(Generator):
+    def __init__(self, prefix: str, generator: Generator):
+        self._prefix = prefix
+        self._generator = generator
+
+    def __call__(self, seed: str):
+        return self._generator(self._prefix + " " + seed)
+
+
+class PrefixedPresentationContextGenerator(Generator):
+    def __init__(self, prefix: str, generator):
+        self._prefix = prefix
+        self._generator = generator
+
+    def __call__(self, presentation_context):
+        presentation_context = dict(presentation_context)
+        presentation_context["seed"] = self._prefix + " " + presentation_context["seed"]
+        return self._generator(presentation_context)
+
+
+class CombinedGenerator(Generator):
+    def __init__(self, *weighted_generators: Tuple[Union[int, float], Generator]):
         self._weighted_generators = weighted_generators
 
-    def __call__(self, seed):
+    def __call__(self, seed: Union[str, Dict[str, str]]):
         current_weighted_generators = list(self._weighted_generators)
         while len(current_weighted_generators) > 0:
             # print("combined generator using", current_weighted_generators)
@@ -33,7 +62,7 @@ def _remove_object_from_weighted_list(current_weighted_generators, generator):
             current_weighted_generators.remove(i)
 
 
-class MappedGenerator(object):
+class MappedGenerator(Generator):
     def __init__(self, generator, *functions):
         self._generator = generator
         self._functions = functions
@@ -46,7 +75,7 @@ class MappedGenerator(object):
         return generated
 
 
-class TupledGenerator(object):
+class TupledGenerator(Generator):
     """ Creates a tuple generator that generates every tuple value independent from the others"""
 
     def __init__(self, *generators):
@@ -59,7 +88,7 @@ class TupledGenerator(object):
         )
 
 
-class InspiredTupleGenerator(object):
+class InspiredTupleGenerator(Generator):
     """ The second generator will get the generator 1 as input, outputting the tuple """
 
     def __init__(self, generator_1, generator_2):
@@ -76,7 +105,7 @@ class InspiredTupleGenerator(object):
 # == TRIVIAL GENERATORS ==
 
 
-class SeededGenerator(object):
+class SeededGenerator(Generator):
     def __init__(self, simple_generator):
         self._simple_generator = simple_generator
 
@@ -84,7 +113,7 @@ class SeededGenerator(object):
         return self._simple_generator(presentation_context["seed"])
 
 
-class UnseededGenerator(object):
+class UnseededGenerator(Generator):
     def __init__(self, simple_generator):
         self._simple_generator = simple_generator
 
@@ -93,7 +122,7 @@ class UnseededGenerator(object):
         return self._simple_generator(presentation_context)
 
 
-class NoneGenerator(object):
+class NoneGenerator(Generator):
     def __init__(self):
         pass
 
@@ -101,7 +130,7 @@ class NoneGenerator(object):
         return None
 
 
-class IdentityGenerator(object):
+class IdentityGenerator(Generator):
     def __init__(self, input_word):
         self._input_word = input_word
 
@@ -109,7 +138,7 @@ class IdentityGenerator(object):
         return self._input_word
 
 
-class TitledIdentityGenerator(object):
+class TitledIdentityGenerator(Generator):
     def __init__(self, input_word):
         self._input_word = input_word
 
@@ -118,7 +147,7 @@ class TitledIdentityGenerator(object):
             return self._input_word.title()
 
 
-class StaticGenerator(object):
+class StaticGenerator(Generator):
     def __init__(self, always_generate_this):
         self._always_generate_this = always_generate_this
 
@@ -126,7 +155,7 @@ class StaticGenerator(object):
         return self._always_generate_this
 
 
-class FromListGenerator(object):
+class FromListGenerator(Generator):
     def __init__(self, list_generator):
         self._list_generator = list_generator
 
@@ -134,7 +163,7 @@ class FromListGenerator(object):
         return random_util.choice_optional(self._list_generator(presentation_context))
 
 
-class InvalidImagesRemoverGenerator(object):
+class InvalidImagesRemoverGenerator(Generator):
     def __init__(self, list_generator):
         self._list_generator = list_generator
 
@@ -150,51 +179,71 @@ seeded_identity_generator = SeededGenerator(IdentityGenerator)
 seeded_titled_identity_generator = SeededGenerator(TitledIdentityGenerator)
 
 
-class ExternalImageListGenerator(object):
+class ExternalImageListGenerator(Generator):
     def __init__(
         self,
-        image_url_generator,
+        image_generator,
         file_name_generator,
         check_image_validness=True,
         weighted=False,
     ):
-        self._image_url_generator = image_url_generator
+        self._image_generator = image_generator
         self._file_name_generator = file_name_generator
         self._check_image_validness = check_image_validness
         self._weighted = weighted
 
-    def __call__(self, presentation_context):
-        images = self._image_url_generator(presentation_context)
+    def __call__(self, presentation_context) -> Optional[ImageData]:
+        images = self._image_generator(presentation_context)
+
         while bool(images) and len(images) > 0:
-            chosen_image_url = (
-                random_util.weighted_random(images)
+            original_chosen_image = (
+                random_util.weighted_random([image for image in images if image[0] > 0])
                 if self._weighted
                 else random.choice(images)
             )
-            downloaded_url = self._file_name_generator(chosen_image_url)
-            try:
-                if not self._check_image_validness or os_util.is_image(
-                    chosen_image_url
-                ):
-                    url_without_query = chosen_image_url.split("?", maxsplit=1)[0]
-                    os_util.download_image(url_without_query, downloaded_url)
-                    if os_util.is_valid_image(downloaded_url):
-                        return downloaded_url
-                else:
-                    logger.warning("Not a image url" + str(chosen_image_url))
-            except PermissionError:
+            if isinstance(original_chosen_image, str):
+                chosen_image = ImageData(image_url=original_chosen_image)
+            elif isinstance(original_chosen_image, ImageData):
+                chosen_image = original_chosen_image
+            else:
                 logger.warning(
-                    "Permission error when downloading" + str(chosen_image_url)
+                    "INVALID IMAGE INPUT FOR EXTERNAL IMAGE GENERATOR / "
+                    + str(original_chosen_image)
+                    + " / "
+                    + str(type(original_chosen_image))
                 )
+                images.remove(original_chosen_image)
+                continue
+
+            downloaded_url = self._file_name_generator(chosen_image.get_image_url())
+            try:
+                if not self._check_image_validness or os_util.is_image(chosen_image):
+                    try:
+                        os_util.download_image(
+                            chosen_image.get_image_url(), downloaded_url
+                        )
+                    except OSError:
+                        url_without_query = chosen_image.get_image_url().split(
+                            "?", maxsplit=1
+                        )[0]
+                        os_util.download_image(url_without_query, downloaded_url)
+
+                    if os_util.is_valid_image(downloaded_url):
+                        chosen_image.set_local_image_url(downloaded_url)
+                        return chosen_image
+                else:
+                    logger.warning("Not a image url" + str(chosen_image))
+            except PermissionError:
+                logger.warning("Permission error when downloading" + str(chosen_image))
             except requests.exceptions.MissingSchema:
-                logger.warning("Missing schema for image " + str(chosen_image_url))
+                logger.warning("Missing schema for image " + str(chosen_image))
             except OSError:
-                logger.warning("Non existing image for: " + str(chosen_image_url))
-            images.remove(chosen_image_url)
+                logger.warning("Non existing image for: " + str(chosen_image))
+            images.remove(original_chosen_image)
         return None
 
 
-class BackupGenerator(object):
+class BackupGenerator(Generator):
     def __init__(self, *generator_list):
         self._generator_list = generator_list
 
@@ -205,7 +254,7 @@ class BackupGenerator(object):
                 return generated
 
 
-class WeightedGenerator(object):
+class WeightedGenerator(Generator):
     def __init__(self, weighted_list_creator):
         self._weighted_list_creator = weighted_list_creator
 
@@ -215,7 +264,7 @@ class WeightedGenerator(object):
             return random_util.weighted_random(weighted_list)
 
 
-class UnweightedGenerator(object):
+class UnweightedGenerator(Generator):
     def __init__(self, weighted_list_creator):
         self._weighted_list_creator = weighted_list_creator
 
@@ -227,7 +276,7 @@ class UnweightedGenerator(object):
             )
 
 
-class WalkingGenerator(object):
+class WalkingGenerator(Generator):
     """ This type of generator uses its output as input for a next step, taking concepts a few steps away """
 
     def __init__(self, inner_generator, steps):
@@ -245,3 +294,28 @@ class WalkingGenerator(object):
                 history.add(current)
 
         return current
+
+
+class ImageGenerator(Generator):
+    def __call__(self, seed: str) -> ImageData:
+        raise NotImplementedError("Not implemented image generator")
+
+
+class UnsourcedImageGenerator(ImageGenerator):
+    def __init__(self, image_url_generator: Callable[[str], str]):
+        self._image_url_generator = image_url_generator
+
+    def __call__(self, seed: str) -> ImageData:
+        return ImageData(image_url=self._image_url_generator(seed))
+
+
+class RelatedMappingGenerator(Generator):
+    def __init__(
+        self, related_word_generator: Callable[[str], str], generator: Generator
+    ):
+        self._related_word_generator = related_word_generator
+        self._generator = generator
+
+    def __call__(self, seed: str) -> Optional[str]:
+        mapped_seed = self._related_word_generator(seed)
+        return self._generator(mapped_seed)

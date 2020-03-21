@@ -1,7 +1,10 @@
+import datetime
 import logging
 from functools import lru_cache
+from pathlib import Path
 
 import praw
+from cachier import cachier
 from prawcore import ResponseException
 from prawcore import RequestException
 
@@ -31,6 +34,9 @@ def get_subreddit(name):
 
 
 @lru_cache(maxsize=20)
+@cachier(
+    cache_dir=Path("..", ".cache").absolute(), stale_after=datetime.timedelta(weeks=2)
+)
 def search_subreddit(name, query, sort="relevance", limit=500, filter_nsfw=True):
     if has_reddit_access():
         try:

@@ -2,6 +2,7 @@ import multiprocessing
 import random
 import logging
 from functools import lru_cache
+from typing import List, Collection
 
 from talkgenerator.sources import conceptnet, phrasefinder
 from talkgenerator.util import language_util, random_util
@@ -11,14 +12,21 @@ from talkgenerator.util import language_util, random_util
 logger = logging.getLogger("talkgenerator")
 
 
-class SideTrackingTopicGenerator:
+class SlideSeedGenerator:
+    def get_seed(self, slide_nr: int) -> str:
+        raise NotImplementedError("")
+
+
+class SideTrackingTopicGenerator(SlideSeedGenerator):
     """ This generator will make small side tracks around topics, but keeps returning every X slides"""
 
-    def __init__(self, topics, num_slides, topic_return_period_range=range(3, 6)):
+    def __init__(
+        self, topics: List[str], num_slides: int, topic_return_period_range=range(3, 6)
+    ):
         self._topics = topics
         self._num_slides = num_slides
 
-        seeds = [None] * num_slides
+        seeds: List[str] = [None] * num_slides
 
         # Make it begin and end with the topic
         if num_slides > 0:
@@ -50,7 +58,7 @@ class SideTrackingTopicGenerator:
 
         self._seeds = seeds
 
-    def get_seed(self, slide_nr):
+    def get_seed(self, slide_nr: int) -> str:
         return self._seeds[slide_nr]
 
     def all_seeds(self):
@@ -133,13 +141,13 @@ def normalise_seed(seed):
     return normalised
 
 
-class IdentityTopicGenerator:
+class IdentityTopicGenerator(SlideSeedGenerator):
     """ Generates always the given topic as the seed for each slide """
 
-    def __init__(self, topics, _):
+    def __init__(self, topics: Collection[str], _):
         self._topics = topics
 
-    def get_seed(self, _):
+    def get_seed(self, _) -> str:
         return random.choice(self._topics)
 
 

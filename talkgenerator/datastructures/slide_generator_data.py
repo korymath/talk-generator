@@ -10,15 +10,20 @@ from functools import lru_cache
 #         return other_weight
 #
 #     return weight_function
+from typing import Collection, Union, Set, Callable, Tuple
+
+from talkgenerator.datastructures.image_data import ImageData
 
 
 class PeakedWeight(object):
-    def __init__(self, peak_values, weight, other_weight):
+    def __init__(
+        self, peak_values: Tuple[int, ...], weight: float, other_weight: float
+    ):
         self._peak_values = peak_values
         self._weight = weight
         self._other_weight = other_weight
 
-    def __call__(self, slide_nr, num_slides):
+    def __call__(self, slide_nr: int, num_slides: int):
         actual_peak_values = fix_indices(self._peak_values, num_slides)
         if slide_nr in actual_peak_values:
             return self._weight
@@ -26,7 +31,7 @@ class PeakedWeight(object):
 
 
 @lru_cache(maxsize=30)
-def fix_indices(values, num_slides):
+def fix_indices(values: Collection[int], num_slides: int):
     return [value % num_slides if value < 0 else value for value in values]
 
 
@@ -47,9 +52,9 @@ class SlideGeneratorData:
     def __init__(
         self,
         generator,
-        weight_function=ConstantWeightFunction(1),
-        retries=5,
-        allowed_repeated_elements=0,
+        weight_function: Callable[[int, int], float] = ConstantWeightFunction(1),
+        retries: int = 5,
+        allowed_repeated_elements: int = 0,
         tags=None,
         name=None,
     ):
@@ -88,17 +93,23 @@ class SlideGeneratorData:
                         + " \n Generated Elements: "
                         + str(generated_elements)
                     )
+
+                    # Add all sources of generated elements
+                    for generated_element in generated_elements:
+                        if isinstance(generated_element, ImageData):
+                            slide.add_source(generated_element.get_source())
+
                     return slide, generated_elements
 
-    def get_weight_for(self, slide_nr, total_slides):
+    def get_weight_for(self, slide_nr: int, total_slides: int) -> float:
         """The weight of the generator for a particular slide.
         Determines how much chance it has being picked for a particular slide number"""
         return self._weight_function(slide_nr, total_slides)
 
-    def get_allowed_repeated_elements(self):
+    def get_allowed_repeated_elements(self) -> int:
         return self._allowed_repeated_elements
 
-    def get_tags(self):
+    def get_tags(self) -> Set[str]:
         return self._tags
 
     def __str__(self):
@@ -110,13 +121,13 @@ class SlideGeneratorData:
         return "SlideGenerator[" + name + "]"
 
 
-def _has_not_generated_something(generated_elements):
+def _has_not_generated_something(generated_elements) -> bool:
     generated_elements = set(generated_elements)
     _filter_generated_elements(generated_elements)
     return len(generated_elements) == 0
 
 
-def _filter_generated_elements(generated_elements):
+def _filter_generated_elements(generated_elements: Set[Union[str, bool, None]]):
     if "" in generated_elements:
         generated_elements.remove("")
     if None in generated_elements:

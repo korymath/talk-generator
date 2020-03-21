@@ -1,9 +1,11 @@
 import time
 import logging
 from functools import lru_cache
+from pathlib import Path
 from urllib.parse import urlencode
 
 import requests
+from cachier import cachier
 
 from talkgenerator.util import generator_util, cache_util
 
@@ -81,6 +83,7 @@ def remove_nones(entries):
 
 
 @lru_cache(maxsize=20)
+@cachier(cache_dir=Path("..", ".cache").absolute())
 def _get_data(word, arguments=None):
     if not arguments:
         arguments = _DEFAULT_ARGUMENTS

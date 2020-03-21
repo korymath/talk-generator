@@ -1,12 +1,13 @@
 import os
 import sys
-import traceback
 import logging
 from functools import lru_cache
+from typing import List
 
 from lxml.etree import XMLSyntaxError
 from pptx import Presentation
 
+from talkgenerator.datastructures.image_data import ImageData
 from talkgenerator.util import os_util
 
 # Location of powerpoint template
@@ -19,6 +20,8 @@ logger = logging.getLogger("talkgenerator")
 def get_powerpoint_template_file():
     return os_util.to_actual_file(_POWERPOINT_TEMPLATE_FILE)
 
+
+SOURCES_PLACEHOLDER = 10
 
 # Layouts index in template
 LAYOUT_TITLE_SLIDE = 0
@@ -72,7 +75,12 @@ def _add_text(slide, placeholder_id, text):
         return True
 
 
-def _add_image(slide, placeholder_id, image_url, original_image_size=True):
+def _add_image(slide, placeholder_id, image, original_image_size=True):
+    if isinstance(image, ImageData):
+        image_url = image.get_image_url()
+    else:
+        image_url = image
+
     if not os.path.isfile(image_url):
         return None
 
@@ -143,7 +151,13 @@ def _add_image_or_text(slide, placeholder_id, image_url_or_text, original_image_
 
 def _print_all_placeholders(slide):
     for shape in slide.placeholders:
-        logger.info("%d %s" % (shape.placeholder_format.idx, shape.name))
+        print("%d %s" % (shape.placeholder_format.idx, shape.name))
+
+
+def add_sources_note(slide, _sources: List[str]):
+    return _add_text(
+        slide, SOURCES_PLACEHOLDER, "[Image sources: " + ", ".join(_sources) + "]"
+    )
 
 
 # FORMAT GENERATORS
@@ -169,10 +183,10 @@ def create_large_quote_slide(prs, title, text, background_image=None):
             _add_title(slide, title)
         _add_text(slide, 1, text)
         if background_image:
-            _add_image(slide, 10, background_image, False)
+            _add_image(slide, 11, background_image, False)
 
         # Add black transparent image for making other image behind it transparent (missing feature in python-pptx)
-        _add_image(slide, 11, "data/images/black-transparent.png", False)
+        _add_image(slide, 12, "data/images/black-transparent.png", False)
 
         return slide
 

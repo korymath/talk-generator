@@ -1,15 +1,15 @@
 import argparse
-import datetime
-import logging
 import os
 import pathlib
+import random
 import subprocess
 import sys
 import logging
 
-from talkgenerator import settings
+from talkgenerator.schema.content_generators import full_name_generator
+from talkgenerator.schema.presentation_schema_types import get_schema
 from talkgenerator import runtime_checker
-from talkgenerator.schema import schemas
+from talkgenerator.schema import presentation_schema_types
 from talkgenerator.sources import phrasefinder
 from talkgenerator.util import os_util
 
@@ -25,6 +25,9 @@ def generate_talk(args):
     if args.print_logs:
         os_util.show_logs(logger)
 
+    if args.int_seed is not None:
+        random.seed(args.int_seed)
+
     runtime_checker.check_runtime_environment()
 
     # Print status details
@@ -32,11 +35,11 @@ def generate_talk(args):
     logger.info("Making {} slide talk on: {}".format(args.num_slides, args.topic))
 
     # Retrieve the schema to generate the presentation with
-    schema = schemas.get_schema(args.schema)
+    schema = get_schema(args.schema)
 
     # Generate random presenter name if no presenter name given
     if not args.presenter:
-        args.presenter = schemas.full_name_generator()
+        args.presenter = full_name_generator()
 
     if not args.topic:
         if args.title:
@@ -47,10 +50,6 @@ def generate_talk(args):
     # Extract topics from given (possibly comma separated) topic
     args.topics = [topic.strip() for topic in args.topic.split(",")]
 
-    # Generate random talk title
-    if not args.title or args.title is None:
-        args.title = schemas.talk_title_generator({"seed": args.topics[0]})
-
     # Generate the presentation object
     presentation, slide_deck = schema.generate_presentation(
         topics=args.topics,
@@ -58,6 +57,7 @@ def generate_talk(args):
         presenter=args.presenter,
         title=args.title,
         parallel=args.parallel,
+        int_seed=args.int_seed,
     )
 
     cleaned_topics = args.topic.replace(" ", "").replace(",", "_")
@@ -81,7 +81,7 @@ def generate_talk(args):
     return presentation, slide_deck
 
 
-def save_presentation_to_pptx(output_folder, file_name, prs, index=0):
+def save_presentation_to_pptx(output_folder: str, file_name: str, prs, index=0):
     """Save the talk."""
     if index > MAX_PRESENTATION_SAVE_TRIES:
         return None
@@ -104,7 +104,7 @@ def save_presentation_to_pptx(output_folder, file_name, prs, index=0):
         return save_presentation_to_pptx(output_folder, file_name, prs, index + 1)
 
 
-def open_file(filename):
+def open_file(filename: str):
     """Platform independent open method to cover different OS."""
     if sys.platform == "win32":
         os.startfile(filename)
@@ -132,6 +132,12 @@ def get_argument_parser():
         default=10,
         type=int,
         help="Number of slides to create.",
+    )
+    parser.add_argument(
+        "--int_seed",
+        default=None,
+        type=int,
+        help="Seed used for random.seed(int_seed). Fill in any number to add more consistency between runs.",
     )
     parser.add_argument(
         "--schema",

@@ -3,15 +3,15 @@ import os
 import logging
 import pathlib
 import sys
-import traceback
 from functools import lru_cache
+from typing import Union
 
 import requests
 from PIL import Image
 from PIL.Image import DecompressionBombError
 
 # import tempfile
-
+from talkgenerator.datastructures.image_data import ImageData
 
 logger = logging.getLogger("talkgenerator")
 
@@ -68,7 +68,14 @@ def get_prohibited_images():
 
 
 @lru_cache(maxsize=20)
-def is_image(content):
+def is_image(content: Union[str, ImageData]):
+    if isinstance(content, ImageData):
+        return _is_image_path(content.get_image_url())
+    else:
+        return _is_image_path(content)
+
+
+def _is_image_path(content: str):
     if not bool(content) or bool(content) is content or not content.lower:
         return False
     lower_url = content.lower()
@@ -81,8 +88,13 @@ def is_image(content):
 
 
 @lru_cache(maxsize=20)
-def is_valid_image(image_url):
+def is_valid_image(image: Union[str, ImageData]):
     try:
+        if isinstance(image, ImageData):
+            image_url = image.get_image_url()
+        else:
+            image_url = image
+
         im = open_image(os.path.normpath(image_url))
         if not im or im in get_prohibited_images():
             logger.warning("Image denied because on blacklist:" + image_url)
@@ -95,7 +107,7 @@ def is_valid_image(image_url):
     return True
 
 
-def show_logs(given_logger: object) -> object:
+def show_logs(given_logger: logging.Logger):
     given_logger.setLevel(logging.DEBUG)
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.DEBUG)
