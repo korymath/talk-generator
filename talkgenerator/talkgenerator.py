@@ -38,6 +38,7 @@ def generate_presentation_using_cli_arguments(args):
         presenter=args.presenter,
         parallel=args.parallel,
         int_seed=args.int_seed,
+        print_logs=args.print_logs,
     )
 
 
