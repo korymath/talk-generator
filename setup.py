@@ -41,7 +41,7 @@ setup(
     author_email="info@thomaswinters.be",
     url="https://github.com/korymath/talk-generator",
     license=license,
-    packages=["talkgenerator"],
+    packages=find_packages(),  # auto-discovery submodules ["talkgenerator"],
     package_dir={"talkgenerator": "talkgenerator"},
     data_files=[
         ("images", [DATA_PATH + "images/black-transparent.png"]),
