@@ -7,6 +7,9 @@ class ImageData:
     def get_image_url(self) -> str:
         return self._image_url
 
+    def get_original_image_url(self) -> str:
+        return self._original_image_url
+
     def set_local_image_url(self, image_url: str):
         """ Use this method when downloading image locally """
         self._image_url = image_url

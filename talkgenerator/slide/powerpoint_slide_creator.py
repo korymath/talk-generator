@@ -2,8 +2,10 @@ import os
 import sys
 import logging
 from functools import lru_cache
+from io import BytesIO
 from typing import List
 
+import requests
 from lxml.etree import XMLSyntaxError
 from pptx import Presentation
 
@@ -84,7 +86,8 @@ def _add_image(slide, placeholder_id, image, original_image_size=True):
     if not os.path.isfile(image_url):
         return None
 
-    image_url = os_util.to_actual_file(image_url)
+    response = requests.get(image.get_original_image_url())
+    tmp_img = BytesIO(response.content)
 
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:
@@ -99,7 +102,7 @@ def _add_image(slide, placeholder_id, image, original_image_size=True):
 
             # Insert the picture
             try:
-                placeholder = placeholder.insert_picture(image_url)
+                placeholder = placeholder.insert_picture(tmp_img)
             except (ValueError, XMLSyntaxError) as e:
                 # traceback.print_exc(file=sys.stdout)
                 logger.error("_add_image error: {}".format(e))
@@ -128,11 +131,11 @@ def _add_image(slide, placeholder_id, image, original_image_size=True):
             return None
     else:
         try:
-            return placeholder.insert_picture(image_url)
+            return placeholder.insert_picture(tmp_img)
         except OSError or ValueError:
             # traceback.print_exc(file=sys.stdout)
             logger.error(
-                "Unexpected error inserting image:", image_url, ":", sys.exc_info()[0]
+                "Unexpected error inserting image:", image, ":", sys.exc_info()[0]
             )
             return None
 
