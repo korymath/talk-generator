@@ -52,7 +52,7 @@ def get_prohibited_images():
 @lru_cache(maxsize=20)
 def is_image(content: Union[str, ImageData]):
     if isinstance(content, ImageData):
-        return _is_image_path(content.get_image_url())
+        return True
     else:
         return _is_image_path(content)
 
