@@ -9,7 +9,7 @@ def run_time_test(start_idx, end_idx):
     result_file = open("data/eval/timings.txt", "a+")
 
     for topic in words:
-        args = talkgenerator._get_argument_parser().parse_args(
+        args = talkgenerator.get_argument_parser().parse_args(
             [
                 "--topic",
                 topic,
