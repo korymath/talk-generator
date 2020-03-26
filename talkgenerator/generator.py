@@ -10,7 +10,6 @@ from typing import List, Union
 from talkgenerator.schema.content_generators import full_name_generator
 from talkgenerator.schema.presentation_schema_types import get_schema
 from talkgenerator import runtime_checker
-from talkgenerator.schema import presentation_schema_types
 from talkgenerator.sources import phrasefinder
 from talkgenerator.util import os_util
 
@@ -153,7 +152,7 @@ def str2bool(v):
         raise argparse.ArgumentTypeError("Boolean value expected.")
 
 
-def _get_argument_parser():
+def get_argument_parser():
     parser = argparse.ArgumentParser(description="Quickly build a slide deck.")
     parser.add_argument("--topic", default="", type=str, help="Topic of presentation.")
     parser.add_argument(

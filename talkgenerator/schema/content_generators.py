@@ -6,7 +6,6 @@ from talkgenerator.sources import (
     inspirobot,
     giphy,
     shitpostbot,
-    google_images,
     unsplash,
 )
 from talkgenerator.util.generator_util import *
@@ -213,21 +212,7 @@ weird_punchline_image_generator = CombinedGenerator(
     (1, meme_reddit_image_generator),
 )
 
-# GOOGLE IMAGES
 
-generate_full_screen_google_image = generate_google_image_generator(
-    google_images.FullImageGenerator()
-)
-
-generate_wide_google_image = generate_google_image_generator(
-    google_images.WideImageGenerator()
-)
-
-generate_google_image = generate_google_image_generator(google_images.ImageGenerator())
-
-generate_google_image_from_word = FromListGenerator(
-    InvalidImagesRemoverGenerator(google_images.ImageGenerator())
-)
 
 # UNSPLASH
 generate_unsplash_image_from_word = ExternalImageListGenerator(
@@ -309,14 +294,12 @@ normal_or_weird_copyright_free_generator = CombinedGenerator(
 # NEUTRAL
 
 neutral_image_generator = CombinedGenerator(
-    (1000, generate_unsplash_image),
-    (1, generate_google_image),
+    (1000, copyright_free_generator),
     (300, neutral_reddit_image_generator),
 )
 
 neutral_image_generator_from_word = CombinedGenerator(
-    (1000, generate_unsplash_image_from_word),
-    (1, generate_google_image_from_word),
+    (1000, copyright_free_generator_from_word),
     (300, UnseededGenerator(neutral_reddit_image_generator)),
 )
 

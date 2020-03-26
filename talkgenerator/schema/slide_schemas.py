@@ -166,17 +166,6 @@ single_image_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generator_types.FullImageSlideGenerator.of(
-            NoneGenerator(),
-            CombinedGenerator(
-                (3, neutral_image_generator), (1, generate_full_screen_google_image)
-            ),
-        ),
-        tags=["full_image", "google_images"],
-        name="Full Screen Google Images",
-    ),
-    SlideGeneratorData(
-        # slide_templates.generate_full_image_slide(
-        slide_generator_types.FullImageSlideGenerator.of(
             NoneGenerator(), meme_reddit_image_generator
         ),
         tags=["full_image", "meme"],
@@ -185,13 +174,12 @@ single_image_slide_generators = [
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(
         slide_generator_types.FullImageSlideGenerator.of(
-            default_slide_title_generator,
-            CombinedGenerator(
-                (3, neutral_image_generator), (1, generate_wide_google_image)
-            ),
+            CombinedGenerator((1,NoneGenerator()),
+                              (1,default_slide_title_generator)),
+            neutral_image_generator
         ),
-        tags=["full_image", "google_images"],
-        name="Wide Google Images",
+        tags=["full_image", "neutral"],
+        name="Full Screen Neutral Images",
     ),
 ]
 
@@ -236,7 +224,7 @@ statement_slide_generators = [
         slide_generator_types.LarqeQuoteSlideGenerator.of(
             title_generator=NoneGenerator(),
             text_generator=generate_wikihow_bold_statement,
-            background_image_generator=generate_full_screen_google_image,
+            background_image_generator=generate_horizontal_pixabay_image,
         ),
         tags=["bold_statement", "statement"],
         name="Wikihow Bold Statement",
@@ -245,7 +233,7 @@ statement_slide_generators = [
         slide_generator_types.LarqeQuoteSlideGenerator.of(
             title_generator=NoneGenerator(),
             text_generator=goodreads_quote_generator,
-            background_image_generator=generate_full_screen_google_image,
+            background_image_generator=generate_horizontal_pixabay_image,
         ),
         weight_function=ConstantWeightFunction(1),
         tags=["quote", "statement"],
@@ -255,7 +243,7 @@ statement_slide_generators = [
         slide_generator_types.LarqeQuoteSlideGenerator.of(
             title_generator=NoneGenerator(),
             text_generator=anecdote_prompt_generator,
-            background_image_generator=generate_full_screen_google_image,
+            background_image_generator=generate_horizontal_pixabay_image,
         ),
         weight_function=ConstantWeightFunction(1.2),
         tags=["anecdote"],

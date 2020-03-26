@@ -1,7 +1,6 @@
 beautifulsoup4
 cachier==1.4.2
 environs
-google_images_download
 inflect
 lxml==4.5.0
 nltk
