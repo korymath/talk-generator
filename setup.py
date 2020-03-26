@@ -34,14 +34,14 @@ for f in prohibited_images_files:
 
 setup(
     name="talkgenerator",
-    version="2.1.0",
+    version="2.1.1",
     description="Automatically generating presentation slide decks based on a given topic for improvised presentations",
     long_description=readme,
     author="Thomas Winters, Kory Mathewson",
     author_email="info@thomaswinters.be",
     url="https://github.com/korymath/talk-generator",
     license=license,
-    packages=["talkgenerator"],
+    packages=find_packages(),  # auto-discovery submodules ["talkgenerator"],
     package_dir={"talkgenerator": "talkgenerator"},
     data_files=[
         ("images", [DATA_PATH + "images/black-transparent.png"]),
