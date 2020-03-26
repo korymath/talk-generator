@@ -195,7 +195,6 @@ shitpostbot_image_generator = ExternalImageListGenerator(
             shitpostbot.search_images_rated, shitpostbot.get_random_images_rated
         )
     ),
-    FolderFileURLGenerator("shitpostbot"),
     weighted=True,
 )
 
@@ -213,13 +212,12 @@ weird_punchline_image_generator = CombinedGenerator(
 )
 
 
-
 # UNSPLASH
 generate_unsplash_image_from_word = ExternalImageListGenerator(
-    unsplash.search_photos, UnsplashURLGenerator(), check_image_validness=False
+    unsplash.search_photos, check_image_validness=False
 )
 generate_random_unsplash_image_from_word = ExternalImageListGenerator(
-    unsplash.random_as_list, UnsplashURLGenerator(), check_image_validness=False
+    unsplash.random_as_list, check_image_validness=False
 )
 generate_unsplash_image = SeededGenerator(generate_unsplash_image_from_word)
 generate_random_unsplash_image = SeededGenerator(
@@ -227,19 +225,14 @@ generate_random_unsplash_image = SeededGenerator(
 )
 
 # PIXABAY
-pixabay_url_generator = FolderFileURLGenerator("pixabay")
-generate_pixabay_image_from_word = ExternalImageListGenerator(
-    pixabay.search_photos, pixabay_url_generator
-)
+generate_pixabay_image_from_word = ExternalImageListGenerator(pixabay.search_photos)
 generate_horizontal_pixabay_image_from_word = ExternalImageListGenerator(
-    pixabay.search_horizontal, pixabay_url_generator
+    pixabay.search_horizontal
 )
 generate_pixabay_image = SeededGenerator(generate_pixabay_image_from_word)
 # PEXELS
 
-generate_pexels_image_from_word = ExternalImageListGenerator(
-    pexels.search_photos, FolderFileURLGenerator("pexels")
-)
+generate_pexels_image_from_word = ExternalImageListGenerator(pexels.search_photos)
 generate_pexels_image = SeededGenerator(generate_pexels_image_from_word)
 
 # COPYRIGHT FREE
@@ -294,8 +287,7 @@ normal_or_weird_copyright_free_generator = CombinedGenerator(
 # NEUTRAL
 
 neutral_image_generator = CombinedGenerator(
-    (1000, copyright_free_generator),
-    (300, neutral_reddit_image_generator),
+    (1000, copyright_free_generator), (300, neutral_reddit_image_generator),
 )
 
 neutral_image_generator_from_word = CombinedGenerator(

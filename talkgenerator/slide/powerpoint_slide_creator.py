@@ -81,18 +81,6 @@ class InternalImage(FileLikeImage):
     def image(self):
         return Image.open(self._file_location())
 
-
-# VALIDITY CHECKING
-
-
-def _is_valid_content(content):
-    if not bool(content):
-        return False
-    if os_util.is_image(content):
-        return os_util.is_valid_image(content)
-    return True
-
-
 # CREATION
 def _create_slide(prs, slide_type):
     """ Creates a new slide in the given presentation using the slide_type template """
@@ -138,6 +126,7 @@ def _add_image(
         # Calculate the image size of the image
         try:
             # im = os_util.open_image(image_url)
+            print("image", image_url, image_ref)
             width, height = image_ref.image().size
 
             # Make sure the placeholder doesn't zoom in
