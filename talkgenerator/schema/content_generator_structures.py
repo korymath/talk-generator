@@ -204,11 +204,6 @@ def generate_wikihow_bold_statement(presentation_context):
     return bold_statement_templated_generator(template_values)
 
 
-# GOOGLE
-def generate_google_image_generator(generator):
-    return FromListGenerator(InvalidImagesRemoverGenerator(SeededGenerator(generator)))
-
-
 class ConceptNetMapper(RelatedMappingGenerator):
     def __init__(self, generator):
         super().__init__(conceptnet.weighted_related_word_generator, generator)
