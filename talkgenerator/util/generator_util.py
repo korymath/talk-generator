@@ -163,32 +163,15 @@ class FromListGenerator(Generator):
         return random_util.choice_optional(self._list_generator(presentation_context))
 
 
-class InvalidImagesRemoverGenerator(Generator):
-    def __init__(self, list_generator):
-        self._list_generator = list_generator
-
-    def __call__(self, presentation_context):
-        return [
-            item
-            for item in self._list_generator(presentation_context)
-            if os_util.is_image(item) and os_util.is_valid_image(item)
-        ]
-
-
 seeded_identity_generator = SeededGenerator(IdentityGenerator)
 seeded_titled_identity_generator = SeededGenerator(TitledIdentityGenerator)
 
 
 class ExternalImageListGenerator(Generator):
     def __init__(
-        self,
-        image_generator,
-        file_name_generator,
-        check_image_validness=True,
-        weighted=False,
+        self, image_generator, check_image_validness=True, weighted=False,
     ):
         self._image_generator = image_generator
-        self._file_name_generator = file_name_generator
         self._check_image_validness = check_image_validness
         self._weighted = weighted
 

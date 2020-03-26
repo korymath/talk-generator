@@ -22,21 +22,6 @@ from talkgenerator.util.generator_util import (
 from talkgenerator.datastructures.image_data import ImageData
 
 
-class FileURLGenerator:
-    def __call__(self, image_url: str):
-        raise NotImplementedError("There was no file URL generator specified")
-
-
-class FolderFileURLGenerator(FileURLGenerator):
-    def __init__(self, folder: str):
-        self._folder = folder
-
-    def __call__(self, url):
-        return os_util.to_actual_file(
-            "downloads/" + self._folder + "/{}".format(os_util.get_file_name(url))
-        )
-
-
 def create_templated_text_generator(filename):
     actual_file = os_util.to_actual_file(filename)
     return text_generator.TemplatedTextGenerator(actual_file).generate
@@ -72,11 +57,6 @@ def create_reddit_image_generator(*name):
     return BackupGenerator(reddit_generator.generate, reddit_generator.generate_random)
 
 
-class RedditLocalImageLocationGenerator(FolderFileURLGenerator):
-    def __init__(self, subreddit: str):
-        super().__init__("reddit/" + subreddit)
-
-
 class RedditImageSearcher(object):
     def __init__(self, subreddit: str):
         self._subreddit = subreddit
@@ -105,7 +85,6 @@ class RedditImageGenerator:
 
         self._generate = ExternalImageListGenerator(
             SeededGenerator(RedditImageSearcher(self._subreddit)),
-            RedditLocalImageLocationGenerator(self._subreddit),
         )
 
     def generate(self, presentation_context):
@@ -113,21 +92,6 @@ class RedditImageGenerator:
 
     def generate_random(self, _):
         return self.generate({"seed": ""})
-
-
-# UNSPLASH
-
-
-class UnsplashURLGenerator(FileURLGenerator):
-    def __init__(self):
-        pass
-
-    def __call__(self, image_url: str):
-        return os_util.to_actual_file(
-            "downloads/unsplash/{}.jpg".format(
-                os_util.get_file_name(os.path.dirname(image_url))
-            )
-        )
 
 
 # ABOUT ME
