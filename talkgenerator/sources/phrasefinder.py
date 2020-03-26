@@ -9,7 +9,7 @@ from talkgenerator.util import language_util
 URL = "https://api.phrasefinder.io/search?corpus=eng-us&query={}&nmax=1"
 
 
-@cachier(cache_dir=Path("..", ".cache").absolute())
+@cachier(cache_dir=Path("..", "tmp").absolute())
 def _search(word):
     word.replace(" ", "%20")
     url = URL.format(word)

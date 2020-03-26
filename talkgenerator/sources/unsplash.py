@@ -37,7 +37,7 @@ def _map_to_image_data(photo):
     return ImageData(image_url=link_download, source=creator_name)
 
 
-@cachier(cache_dir=Path("..", ".cache").absolute())
+@cachier(cache_dir=Path("..", "tmp").absolute())
 def search_photos_return_urls(query):
     return [im.get_image_url() for im in search_photos(query)]
 
@@ -61,7 +61,7 @@ def random_as_list(_=None):
         return []
 
 
-@cachier(cache_dir=Path("..", ".cache").absolute())
+@cachier(cache_dir=Path("..", "tmp").absolute())
 def search_photos(query) -> List[ImageData]:
     if unsplash_session:
         results = unsplash_session.search(type_="photos", query=query)
