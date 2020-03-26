@@ -3,6 +3,7 @@ import sys
 import logging
 from functools import lru_cache
 from io import BytesIO
+from pathlib import Path
 from typing import List
 
 import requests
@@ -45,7 +46,15 @@ LAYOUT_TITLE_AND_CHART = 16
 
 
 # = HELPERS =
-class ExternalImage:
+class FileLikeImage:
+    def get_file_like(self):
+        return NotImplemented()
+
+    def image(self):
+        return NotImplemented()
+
+
+class ExternalImage(FileLikeImage):
     def __init__(self, url):
         self._url = url
 
@@ -55,8 +64,22 @@ class ExternalImage:
         tmp_img = BytesIO(response.content)
         return tmp_img
 
+    def get_file_like(self):
+        return self.get_bytes_io()
+
     def image(self):
         return Image.open(self.get_bytes_io())
+
+
+class InternalImage(FileLikeImage):
+    def __init__(self, file_location):
+        self._file_location = file_location
+
+    def get_file_like(self):
+        return self._file_location
+
+    def image(self):
+        return Image.open(self._file_location())
 
 
 # VALIDITY CHECKING
@@ -91,6 +114,10 @@ def _add_text(slide, placeholder_id, text):
         return True
 
 
+def is_external_url(url: str):
+    return url.startswith("http")
+
+
 def _add_image(
     slide, placeholder_id: int, image: ImageData, original_image_size: bool = True
 ):
@@ -99,14 +126,19 @@ def _add_image(
     else:
         image_url = image
 
-    external_image = ExternalImage(image_url)
+    if is_external_url(image_url):
+        image_ref = ExternalImage(image_url)
+    else:
+        path = Path(image_url).absolute()
+        print("INTERNAL", image_url, path, str(path))
+        image_ref = InternalImage(str(path))
 
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:
         # Calculate the image size of the image
         try:
             # im = os_util.open_image(image_url)
-            width, height = external_image.image().size
+            width, height = image_ref.image().size
 
             # Make sure the placeholder doesn't zoom in
             placeholder.height = height
@@ -114,7 +146,7 @@ def _add_image(
 
             # Insert the picture
             try:
-                placeholder = placeholder.insert_picture(external_image.get_bytes_io())
+                placeholder = placeholder.insert_picture(image_ref.get_file_like())
             except (ValueError, XMLSyntaxError) as e:
                 logger.error("_add_image error: {}".format(e))
                 return None
@@ -141,7 +173,7 @@ def _add_image(
             return None
     else:
         try:
-            return placeholder.insert_picture(external_image.get_bytes_io())
+            return placeholder.insert_picture(image_ref.get_file_like())
         except OSError or ValueError:
             logger.error(
                 "Unexpected error inserting image:", image, ":", sys.exc_info()[0]
@@ -198,7 +230,8 @@ def create_large_quote_slide(prs, title, text, background_image=None):
             _add_image(slide, 11, background_image, False)
 
         # Add black transparent image for making other image behind it transparent (missing feature in python-pptx)
-        _add_image(slide, 12, "data/images/black-transparent.png", False)
+        data_folder = Path(__file__).parent.parent / "data" / "images" / "black-transparent.png"
+        _add_image(slide, 12, ImageData(str(data_folder.absolute())), False)
 
         return slide
 
