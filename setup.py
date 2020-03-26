@@ -36,6 +36,7 @@ setup(
     name="talkgenerator",
     version="2.1.2",
     description="Automatically generating presentation slide decks based on a given topic for improvised presentations",
+    long_description_content_type="text/markdown",
     long_description=readme,
     author="Thomas Winters, Kory Mathewson",
     author_email="info@thomaswinters.be",
