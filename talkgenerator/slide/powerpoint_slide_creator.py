@@ -218,14 +218,14 @@ def create_two_column_images_slide(
     image_or_text_2=None,
     original_image_size=True,
 ):
-    if _is_valid_content(image_or_text_1) and _is_valid_content(image_or_text_2):
-        slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
-        _add_title(slide, title)
-        _add_text(slide, 1, caption_1)
-        _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
-        _add_text(slide, 3, caption_2)
-        _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
-        return slide
+    # if _is_valid_content(image_or_text_1) and _is_valid_content(image_or_text_2):
+    slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
+    _add_title(slide, title)
+    _add_text(slide, 1, caption_1)
+    _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
+    _add_text(slide, 3, caption_2)
+    _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
+    return slide
 
 
 def create_three_column_images_slide(
@@ -239,20 +239,20 @@ def create_three_column_images_slide(
     image_or_text_3=None,
     original_image_size=True,
 ):
-    if (
-        _is_valid_content(image_or_text_1)
-        and _is_valid_content(image_or_text_2)
-        and _is_valid_content(image_or_text_3)
-    ):
-        slide = _create_slide(prs, LAYOUT_THREE_TITLE_AND_IMAGE)
-        _add_title(slide, title)
-        _add_text(slide, 1, caption_1)
-        _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
-        _add_text(slide, 3, caption_2)
-        _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
-        _add_text(slide, 15, caption_3)
-        _add_image_or_text(slide, 16, image_or_text_3, original_image_size)
-        return slide
+    # if (
+    #     _is_valid_content(image_or_text_1)
+    #     and _is_valid_content(image_or_text_2)
+    #     and _is_valid_content(image_or_text_3)
+    # ):
+    slide = _create_slide(prs, LAYOUT_THREE_TITLE_AND_IMAGE)
+    _add_title(slide, title)
+    _add_text(slide, 1, caption_1)
+    _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
+    _add_text(slide, 3, caption_2)
+    _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
+    _add_text(slide, 15, caption_3)
+    _add_image_or_text(slide, 16, image_or_text_3, original_image_size)
+    return slide
 
 
 # def create_two_column_images_slide_text_second(prs, title=None, caption_1=None, image_1=None, caption_2=None,
@@ -269,11 +269,11 @@ def create_three_column_images_slide(
 
 
 def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_image):
-    if _is_valid_content(image_url):
-        slide = _create_slide(prs, slide_template_idx)
-        _add_title(slide, title)
-        _add_image_or_text(slide, 1, image_url, fit_image)
-        return slide
+    # if _is_valid_content(image_url):
+    slide = _create_slide(prs, slide_template_idx)
+    _add_title(slide, title)
+    _add_image_or_text(slide, 1, image_url, fit_image)
+    return slide
 
 
 def create_chart_slide(prs, title, chart_type, chart_data, chart_modifier=None):
