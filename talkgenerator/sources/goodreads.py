@@ -14,7 +14,7 @@ quote_search_url = (
 
 
 @lru_cache(maxsize=20)
-@cachier(cache_dir=Path("..", ".cache").absolute())
+@cachier(cache_dir=Path("..", "tmp").absolute())
 def _search_quotes_page(search_term, page):
     url = quote_search_url.format(page, search_term.replace(" ", "+"))
     try:

@@ -83,7 +83,7 @@ def remove_nones(entries):
 
 
 @lru_cache(maxsize=20)
-@cachier(cache_dir=Path("..", ".cache").absolute())
+@cachier(cache_dir=Path("..", "tmp").absolute())
 def _get_data(word, arguments=None):
     if not arguments:
         arguments = _DEFAULT_ARGUMENTS

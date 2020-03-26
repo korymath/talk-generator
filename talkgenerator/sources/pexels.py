@@ -20,7 +20,7 @@ def get_pexels_session():
 pexels_session = get_pexels_session()
 
 
-@cachier(cache_dir=Path("..", ".cache").absolute())
+@cachier(cache_dir=Path("..", "tmp").absolute())
 def _search_pexels(query):
     return pexels_session.search(query)
 
