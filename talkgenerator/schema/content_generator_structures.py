@@ -15,7 +15,6 @@ from talkgenerator.util.generator_util import FromListGenerator
 from talkgenerator.util.generator_util import (
     SeededGenerator,
     BackupGenerator,
-    InvalidImagesRemoverGenerator,
 )
 
 

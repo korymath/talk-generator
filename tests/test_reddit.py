@@ -10,7 +10,6 @@ class RedditTest(unittest.TestCase):
         sources = [
             image.get_source() for image in images if image.get_source() is not None
         ]
-        print(sources)
         self.assertTrue(len(sources) > 0)
 
 

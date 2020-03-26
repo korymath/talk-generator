@@ -25,11 +25,7 @@ def get_related_giphy(seed_word):
             images = data.get("images")
             original = images.get("original")
             giphy_url = original.get("url")
-            gif_name = os.path.basename(os.path.dirname(giphy_url))
-            filename = "downloads/giphy/" + str(seed_word) + "/" + gif_name + ".gif"
-            image_url = os_util.to_actual_file(filename)
-            os_util.download_image(giphy_url, image_url)
-            return ImageData(image_url=image_url, source=creator)
+            return ImageData(image_url=giphy_url, source=creator)
 
 
 def get_random_giphy(_):

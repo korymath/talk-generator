@@ -2,8 +2,12 @@ import os
 import sys
 import logging
 from functools import lru_cache
+from io import BytesIO
+from pathlib import Path
 from typing import List
 
+import requests
+from PIL import Image
 from lxml.etree import XMLSyntaxError
 from pptx import Presentation
 
@@ -42,6 +46,41 @@ LAYOUT_TITLE_AND_CHART = 16
 
 
 # = HELPERS =
+class FileLikeImage:
+    def get_file_like(self):
+        return NotImplemented()
+
+    def image(self):
+        return NotImplemented()
+
+
+class ExternalImage(FileLikeImage):
+    def __init__(self, url):
+        self._url = url
+
+    @lru_cache()
+    def get_bytes_io(self):
+        response = requests.get(self._url)
+        tmp_img = BytesIO(response.content)
+        return tmp_img
+
+    def get_file_like(self):
+        return self.get_bytes_io()
+
+    def image(self):
+        return Image.open(self.get_bytes_io())
+
+
+class InternalImage(FileLikeImage):
+    def __init__(self, file_location):
+        self._file_location = file_location
+
+    def get_file_like(self):
+        return self._file_location
+
+    def image(self):
+        return Image.open(self._file_location())
+
 
 # VALIDITY CHECKING
 
@@ -75,23 +114,31 @@ def _add_text(slide, placeholder_id, text):
         return True
 
 
-def _add_image(slide, placeholder_id, image, original_image_size=True):
+def is_external_url(url: str):
+    return url.startswith("http")
+
+
+def _add_image(
+    slide, placeholder_id: int, image: ImageData, original_image_size: bool = True
+):
     if isinstance(image, ImageData):
-        image_url = image.get_image_url()
+        image_url = image.get_original_image_url()
     else:
         image_url = image
 
-    if not os.path.isfile(image_url):
-        return None
-
-    image_url = os_util.to_actual_file(image_url)
+    if is_external_url(image_url):
+        image_ref = ExternalImage(image_url)
+    else:
+        path = Path(image_url).absolute()
+        print("INTERNAL", image_url, path, str(path))
+        image_ref = InternalImage(str(path))
 
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:
         # Calculate the image size of the image
         try:
-            im = os_util.open_image(image_url)
-            width, height = im.size
+            # im = os_util.open_image(image_url)
+            width, height = image_ref.image().size
 
             # Make sure the placeholder doesn't zoom in
             placeholder.height = height
@@ -99,9 +146,8 @@ def _add_image(slide, placeholder_id, image, original_image_size=True):
 
             # Insert the picture
             try:
-                placeholder = placeholder.insert_picture(image_url)
+                placeholder = placeholder.insert_picture(image_ref.get_file_like())
             except (ValueError, XMLSyntaxError) as e:
-                # traceback.print_exc(file=sys.stdout)
                 logger.error("_add_image error: {}".format(e))
                 return None
 
@@ -123,16 +169,14 @@ def _add_image(slide, placeholder_id, image, original_image_size=True):
 
             return placeholder
         except FileNotFoundError as fnfe:
-            # traceback.print_exc(file=sys.stdout)
             logger.error("_add_image file not found: {}".format(fnfe))
             return None
     else:
         try:
-            return placeholder.insert_picture(image_url)
+            return placeholder.insert_picture(image_ref.get_file_like())
         except OSError or ValueError:
-            # traceback.print_exc(file=sys.stdout)
             logger.error(
-                "Unexpected error inserting image:", image_url, ":", sys.exc_info()[0]
+                "Unexpected error inserting image:", image, ":", sys.exc_info()[0]
             )
             return None
 
@@ -186,7 +230,8 @@ def create_large_quote_slide(prs, title, text, background_image=None):
             _add_image(slide, 11, background_image, False)
 
         # Add black transparent image for making other image behind it transparent (missing feature in python-pptx)
-        _add_image(slide, 12, "data/images/black-transparent.png", False)
+        data_folder = Path(__file__).parent.parent / "data" / "images" / "black-transparent.png"
+        _add_image(slide, 12, ImageData(str(data_folder.absolute())), False)
 
         return slide
 
@@ -215,14 +260,14 @@ def create_two_column_images_slide(
     image_or_text_2=None,
     original_image_size=True,
 ):
-    if _is_valid_content(image_or_text_1) and _is_valid_content(image_or_text_2):
-        slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
-        _add_title(slide, title)
-        _add_text(slide, 1, caption_1)
-        _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
-        _add_text(slide, 3, caption_2)
-        _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
-        return slide
+    # if _is_valid_content(image_or_text_1) and _is_valid_content(image_or_text_2):
+    slide = _create_slide(prs, LAYOUT_TWO_TITLE_AND_IMAGE)
+    _add_title(slide, title)
+    _add_text(slide, 1, caption_1)
+    _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
+    _add_text(slide, 3, caption_2)
+    _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
+    return slide
 
 
 def create_three_column_images_slide(
@@ -236,20 +281,20 @@ def create_three_column_images_slide(
     image_or_text_3=None,
     original_image_size=True,
 ):
-    if (
-        _is_valid_content(image_or_text_1)
-        and _is_valid_content(image_or_text_2)
-        and _is_valid_content(image_or_text_3)
-    ):
-        slide = _create_slide(prs, LAYOUT_THREE_TITLE_AND_IMAGE)
-        _add_title(slide, title)
-        _add_text(slide, 1, caption_1)
-        _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
-        _add_text(slide, 3, caption_2)
-        _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
-        _add_text(slide, 15, caption_3)
-        _add_image_or_text(slide, 16, image_or_text_3, original_image_size)
-        return slide
+    # if (
+    #     _is_valid_content(image_or_text_1)
+    #     and _is_valid_content(image_or_text_2)
+    #     and _is_valid_content(image_or_text_3)
+    # ):
+    slide = _create_slide(prs, LAYOUT_THREE_TITLE_AND_IMAGE)
+    _add_title(slide, title)
+    _add_text(slide, 1, caption_1)
+    _add_image_or_text(slide, 13, image_or_text_1, original_image_size)
+    _add_text(slide, 3, caption_2)
+    _add_image_or_text(slide, 14, image_or_text_2, original_image_size)
+    _add_text(slide, 15, caption_3)
+    _add_image_or_text(slide, 16, image_or_text_3, original_image_size)
+    return slide
 
 
 # def create_two_column_images_slide_text_second(prs, title=None, caption_1=None, image_1=None, caption_2=None,
@@ -266,11 +311,11 @@ def create_three_column_images_slide(
 
 
 def _create_single_image_slide(prs, title, image_url, slide_template_idx, fit_image):
-    if _is_valid_content(image_url):
-        slide = _create_slide(prs, slide_template_idx)
-        _add_title(slide, title)
-        _add_image_or_text(slide, 1, image_url, fit_image)
-        return slide
+    # if _is_valid_content(image_url):
+    slide = _create_slide(prs, slide_template_idx)
+    _add_title(slide, title)
+    _add_image_or_text(slide, 1, image_url, fit_image)
+    return slide
 
 
 def create_chart_slide(prs, title, chart_type, chart_data, chart_modifier=None):

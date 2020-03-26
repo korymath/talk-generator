@@ -34,7 +34,7 @@ for f in prohibited_images_files:
 
 setup(
     name="talkgenerator",
-    version="2.1.1",
+    version="2.1.2",
     description="Automatically generating presentation slide decks based on a given topic for improvised presentations",
     long_description=readme,
     author="Thomas Winters, Kory Mathewson",
