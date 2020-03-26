@@ -6,6 +6,7 @@ from io import BytesIO
 from typing import List
 
 import requests
+from PIL import Image
 from lxml.etree import XMLSyntaxError
 from pptx import Presentation
 
@@ -44,6 +45,19 @@ LAYOUT_TITLE_AND_CHART = 16
 
 
 # = HELPERS =
+class ExternalImage:
+    def __init__(self, url):
+        self._url = url
+
+    @lru_cache()
+    def get_bytes_io(self):
+        response = requests.get(self._url)
+        tmp_img = BytesIO(response.content)
+        return tmp_img
+
+    def image(self):
+        return Image.open(self.get_bytes_io())
+
 
 # VALIDITY CHECKING
 
@@ -77,24 +91,22 @@ def _add_text(slide, placeholder_id, text):
         return True
 
 
-def _add_image(slide, placeholder_id, image, original_image_size=True):
+def _add_image(
+    slide, placeholder_id: int, image: ImageData, original_image_size: bool = True
+):
     if isinstance(image, ImageData):
-        image_url = image.get_image_url()
+        image_url = image.get_original_image_url()
     else:
         image_url = image
 
-    if not os.path.isfile(image_url):
-        return None
-
-    response = requests.get(image.get_original_image_url())
-    tmp_img = BytesIO(response.content)
+    external_image = ExternalImage(image_url)
 
     placeholder = slide.placeholders[placeholder_id]
     if original_image_size:
         # Calculate the image size of the image
         try:
-            im = os_util.open_image(image_url)
-            width, height = im.size
+            # im = os_util.open_image(image_url)
+            width, height = external_image.image().size
 
             # Make sure the placeholder doesn't zoom in
             placeholder.height = height
@@ -102,9 +114,8 @@ def _add_image(slide, placeholder_id, image, original_image_size=True):
 
             # Insert the picture
             try:
-                placeholder = placeholder.insert_picture(tmp_img)
+                placeholder = placeholder.insert_picture(external_image.get_bytes_io())
             except (ValueError, XMLSyntaxError) as e:
-                # traceback.print_exc(file=sys.stdout)
                 logger.error("_add_image error: {}".format(e))
                 return None
 
@@ -126,14 +137,12 @@ def _add_image(slide, placeholder_id, image, original_image_size=True):
 
             return placeholder
         except FileNotFoundError as fnfe:
-            # traceback.print_exc(file=sys.stdout)
             logger.error("_add_image file not found: {}".format(fnfe))
             return None
     else:
         try:
-            return placeholder.insert_picture(tmp_img)
+            return placeholder.insert_picture(external_image.get_bytes_io())
         except OSError or ValueError:
-            # traceback.print_exc(file=sys.stdout)
             logger.error(
                 "Unexpected error inserting image:", image, ":", sys.exc_info()[0]
             )
