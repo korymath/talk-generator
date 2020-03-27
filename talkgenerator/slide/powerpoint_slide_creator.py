@@ -197,7 +197,7 @@ def add_sources_note(slide, _sources: List[str]):
 # and create layouted slide with these inputs
 
 
-def create_new_powerpoint():
+def create_new_powerpoint() -> Presentation:
     return Presentation(get_powerpoint_template_file())
 
 

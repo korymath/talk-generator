@@ -5,8 +5,11 @@ import random
 import subprocess
 import sys
 import logging
-from typing import List, Union
+from typing import List, Union, Tuple, Optional
 
+from pptx import Presentation
+
+from slide.slide_deck import SlideDeck
 from talkgenerator.schema.content_generators import full_name_generator
 from talkgenerator.schema.presentation_schema_types import get_schema
 from talkgenerator import runtime_checker
@@ -19,7 +22,7 @@ MAX_PRESENTATION_SAVE_TRIES = 100
 logger = logging.getLogger("talkgenerator")
 
 
-def generate_presentation_using_cli_arguments(args):
+def generate_presentation_using_cli_arguments(args) -> Tuple[Presentation, SlideDeck, str]:
     """Make a talk with the given topic."""
 
     runtime_checker.check_runtime_environment()
@@ -38,7 +41,7 @@ def generate_presentation_using_cli_arguments(args):
         int_seed=args.int_seed,
         print_logs=args.print_logs,
         save_ppt=args.save_ppt,
-        open_ppt=args.open_ppt
+        open_ppt=args.open_ppt,
     )
 
 
@@ -54,7 +57,7 @@ def generate_presentation(
     output_folder: str = "../output/",
     open_ppt: bool = False,
     print_logs=False,
-):
+) -> Tuple[Presentation, SlideDeck, str]:
     if print_logs:
         os_util.show_logs(logger)
 
@@ -113,13 +116,13 @@ def generate_presentation(
     return presentation, slide_deck, presentation_file
 
 
-def save_presentation_to_pptx(output_folder: str, file_name: str, prs, index=0):
+def save_presentation_to_pptx(output_folder: str, file_name: str, prs, index=0) -> Optional[str]:
     """Save the talk."""
     if index > MAX_PRESENTATION_SAVE_TRIES:
         return None
 
     suffix = "_" + str(index) if index > 0 else ""
-    fp = os.path.join(output_folder, str(file_name) + str(suffix) + ".pptx")
+    fp: str = os.path.join(output_folder, str(file_name) + str(suffix) + ".pptx")
 
     # If file already exists, don't overwrite it:
     if pathlib.Path(fp).is_file():
