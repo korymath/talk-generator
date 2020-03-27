@@ -125,3 +125,6 @@ test_output/
 data/auth/wikihow.json
 data/auth/pexels.json
 venv2/
+venv3/
+
+tmp/

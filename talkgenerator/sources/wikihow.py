@@ -101,7 +101,7 @@ def _remove_trademarks(action):
 
 
 @lru_cache(maxsize=20)
-@cachier(cache_dir=Path("..", ".cache").absolute())
+@cachier(cache_dir=Path("..", "tmp").absolute())
 def basic_search_wikihow(search_words):
     return requests.get(
         "https://en.wikihow.com/wikiHowTo?search=" + search_words.replace(" ", "+")
@@ -113,7 +113,7 @@ wikihow_session = None
 
 
 @lru_cache(maxsize=20)
-@cachier(cache_dir=Path("..", ".cache").absolute())
+@cachier(cache_dir=Path("..", "tmp").absolute())
 def _advanced_search_wikihow(search_words):
     # session = get_wikihow_session()
     if wikihow_session:

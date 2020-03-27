@@ -16,24 +16,6 @@ from talkgenerator.datastructures.image_data import ImageData
 logger = logging.getLogger("talkgenerator")
 
 
-def download_image(from_url, to_url):
-    """Download image from url to path."""
-    # Create the parent folder if it doesn't exist
-    dir_path = pathlib.Path(os.path.dirname(to_url))
-    dir_path.mkdir(parents=True, exist_ok=True)
-    # tempfile.mkdtemp(dir=dir_path)
-
-    # Download
-    f = open(to_url, "wb")
-    # f = tempfile.NamedTemporaryFile('wb', dir=to_url)
-    f.write(requests.get(from_url, allow_redirects=True).content)
-    f.close()
-
-
-def get_file_name(url):
-    return ntpath.basename(url)
-
-
 def to_actual_file(filename=""):
     """Return the path to the filename specified.
     This is used most often to get the path of data files."""
@@ -70,7 +52,7 @@ def get_prohibited_images():
 @lru_cache(maxsize=20)
 def is_image(content: Union[str, ImageData]):
     if isinstance(content, ImageData):
-        return _is_image_path(content.get_image_url())
+        return True
     else:
         return _is_image_path(content)
 
@@ -85,26 +67,6 @@ def _is_image_path(content: str):
         or ".png" in lower_url
         or ".jpeg" in lower_url
     )
-
-
-@lru_cache(maxsize=20)
-def is_valid_image(image: Union[str, ImageData]):
-    try:
-        if isinstance(image, ImageData):
-            image_url = image.get_image_url()
-        else:
-            image_url = image
-
-        im = open_image(os.path.normpath(image_url))
-        if not im or im in get_prohibited_images():
-            logger.warning("Image denied because on blacklist:" + image_url)
-            return False
-    except (OSError, SyntaxError) as e:
-        # traceback.print_exc(file=sys.stdout)
-        logger.error("The image format is not valid for: {}".format(e))
-        return False
-
-    return True
 
 
 def show_logs(given_logger: logging.Logger):

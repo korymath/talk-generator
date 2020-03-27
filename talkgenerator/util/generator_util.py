@@ -163,32 +163,15 @@ class FromListGenerator(Generator):
         return random_util.choice_optional(self._list_generator(presentation_context))
 
 
-class InvalidImagesRemoverGenerator(Generator):
-    def __init__(self, list_generator):
-        self._list_generator = list_generator
-
-    def __call__(self, presentation_context):
-        return [
-            item
-            for item in self._list_generator(presentation_context)
-            if os_util.is_image(item) and os_util.is_valid_image(item)
-        ]
-
-
 seeded_identity_generator = SeededGenerator(IdentityGenerator)
 seeded_titled_identity_generator = SeededGenerator(TitledIdentityGenerator)
 
 
 class ExternalImageListGenerator(Generator):
     def __init__(
-        self,
-        image_generator,
-        file_name_generator,
-        check_image_validness=True,
-        weighted=False,
+        self, image_generator, check_image_validness=True, weighted=False,
     ):
         self._image_generator = image_generator
-        self._file_name_generator = file_name_generator
         self._check_image_validness = check_image_validness
         self._weighted = weighted
 
@@ -215,31 +198,7 @@ class ExternalImageListGenerator(Generator):
                 images.remove(original_chosen_image)
                 continue
 
-            downloaded_url = self._file_name_generator(chosen_image.get_image_url())
-            try:
-                if not self._check_image_validness or os_util.is_image(chosen_image):
-                    try:
-                        os_util.download_image(
-                            chosen_image.get_image_url(), downloaded_url
-                        )
-                    except OSError:
-                        url_without_query = chosen_image.get_image_url().split(
-                            "?", maxsplit=1
-                        )[0]
-                        os_util.download_image(url_without_query, downloaded_url)
-
-                    if os_util.is_valid_image(downloaded_url):
-                        chosen_image.set_local_image_url(downloaded_url)
-                        return chosen_image
-                else:
-                    logger.warning("Not a image url" + str(chosen_image))
-            except PermissionError:
-                logger.warning("Permission error when downloading" + str(chosen_image))
-            except requests.exceptions.MissingSchema:
-                logger.warning("Missing schema for image " + str(chosen_image))
-            except OSError:
-                logger.warning("Non existing image for: " + str(chosen_image))
-            images.remove(original_chosen_image)
+            return chosen_image
         return None
 
 
