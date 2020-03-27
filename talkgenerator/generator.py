@@ -9,7 +9,7 @@ from typing import List, Union, Tuple, Optional
 
 from pptx import Presentation
 
-from slide.slide_deck import SlideDeck
+from talkgenerator.slide.slide_deck import SlideDeck
 from talkgenerator.schema.content_generators import full_name_generator
 from talkgenerator.schema.presentation_schema_types import get_schema
 from talkgenerator import runtime_checker
