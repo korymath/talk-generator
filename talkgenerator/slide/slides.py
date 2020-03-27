@@ -1,6 +1,5 @@
 import logging
-from abc import ABCMeta, abstractmethod
-from random import random
+from abc import ABCMeta
 from typing import Dict
 
 from talkgenerator.slide import powerpoint_slide_creator

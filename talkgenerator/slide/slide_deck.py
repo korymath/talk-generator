@@ -1,7 +1,7 @@
 import logging
 from typing import List
 
-from slide.slides import Slide
+from talkgenerator.slide.slides import Slide
 
 logger = logging.getLogger("talkgenerator")
 
