@@ -11,7 +11,8 @@ class Slide(metaclass=ABCMeta):
     """ Class representing a slide object that could be used to export to Powerpoint pptx or other representations later
     """
 
-    def __init__(self, ppt_slide_creator, arguments):
+    def __init__(self, type_name, ppt_slide_creator, arguments):
+        self._type_name = type_name
         self._ppt_slide_creator = ppt_slide_creator
         self._arguments = arguments
         self._note = ""
@@ -38,10 +39,17 @@ class Slide(metaclass=ABCMeta):
             logger.error("attribute error on create slide {}".format(e))
         return ppt_slide
 
+    def create_slide_dictionary(self):
+        slide_dict = dict(self._arguments)
+        slide_dict["type"] = self._type_name
+        slide_dict["sources"] = self._sources
+        return slide_dict
+
 
 class TitleSlide(Slide):
     def __init__(self, title, subtitle):
         super().__init__(
+            type_name="title",
             ppt_slide_creator=powerpoint_slide_creator.create_title_slide,
             arguments={"title": title, "subtitle": subtitle},
         )
@@ -50,6 +58,7 @@ class TitleSlide(Slide):
 class LarqeQuoteSlide(Slide):
     def __init__(self, title, text, background_image=None):
         super().__init__(
+            type_name="large_quote",
             ppt_slide_creator=powerpoint_slide_creator.create_large_quote_slide,
             arguments={
                 "title": title,
@@ -62,6 +71,7 @@ class LarqeQuoteSlide(Slide):
 class ImageSlide(Slide):
     def __init__(self, title=None, image_url=None, original_image_size=True):
         super().__init__(
+            type_name="image",
             ppt_slide_creator=powerpoint_slide_creator.create_image_slide,
             arguments={
                 "title": title,
@@ -74,6 +84,7 @@ class ImageSlide(Slide):
 class FullImageSlide(Slide):
     def __init__(self, title=None, image_url=None, original_image_size=True):
         super().__init__(
+            type_name="full_image",
             ppt_slide_creator=powerpoint_slide_creator.create_full_image_slide,
             arguments={
                 "title": title,
@@ -94,6 +105,7 @@ class TwoColumnImageSlide(Slide):
         original_image_size=True,
     ):
         super().__init__(
+            type_name="two_column_image",
             ppt_slide_creator=powerpoint_slide_creator.create_two_column_images_slide,
             arguments={
                 "title": title,
@@ -119,6 +131,7 @@ class ThreeColumnImageSlide(Slide):
         original_image_size=True,
     ):
         super().__init__(
+            type_name="three_column_image",
             ppt_slide_creator=powerpoint_slide_creator.create_three_column_images_slide,
             arguments={
                 "title": title,
@@ -136,6 +149,7 @@ class ThreeColumnImageSlide(Slide):
 class ChartSlide(Slide):
     def __init__(self, title, chart_type, chart_data, chart_modifier=None):
         super().__init__(
+            type_name="chart",
             ppt_slide_creator=powerpoint_slide_creator.create_chart_slide,
             arguments={
                 "title": title,
