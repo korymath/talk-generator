@@ -52,6 +52,7 @@ class PresentationSchema:
         title: str = None,
         parallel: bool = False,
         int_seed: int = None,
+        save_ppt: bool = True,
     ):
         """Generate a presentation about a certain topic with a certain number of slides"""
 
@@ -63,7 +64,6 @@ class PresentationSchema:
                 title = "About " + topics[0]
 
         # Create new presentation
-        presentation = self._powerpoint_creator()
         slide_deck = SlideDeck(num_slides)
 
         # Create the topic-for-each-slide generator
@@ -102,8 +102,12 @@ class PresentationSchema:
                 int_seed,
             )
 
-        slide_deck.save_to_powerpoint(presentation)
-        return presentation, slide_deck
+        if save_ppt:
+            presentation = self._powerpoint_creator()
+            slide_deck.save_to_powerpoint(presentation)
+            return presentation, slide_deck
+
+        return None, slide_deck
 
     def _generate_slide_deck_parallel(
         self,

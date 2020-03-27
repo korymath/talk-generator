@@ -86,6 +86,7 @@ def generate_presentation(
         title=title,
         parallel=parallel,
         int_seed=int_seed,
+        save_ppt=save_ppt,
     )
 
     cleaned_topics = ",".join(topics).replace(" ", "").replace(",", "_")
