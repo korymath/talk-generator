@@ -36,12 +36,6 @@ def _map_to_image_data(photo):
         creator_name = creator_user["name"] + " (Unsplash)"
     return ImageData(image_url=link_download, source=creator_name)
 
-
-@cachier(cache_dir=Path("..", "tmp").absolute())
-def search_photos_return_urls(query):
-    return [im.get_image_url() for im in search_photos(query)]
-
-
 def random(_=None):
     try:
         random_image = unsplash_session.photos(type_="random")

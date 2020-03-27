@@ -110,7 +110,7 @@ def _add_image(
     slide, placeholder_id: int, image: ImageData, original_image_size: bool = True
 ):
     if isinstance(image, ImageData):
-        image_url = image.get_original_image_url()
+        image_url = image.get_image_url()
     else:
         image_url = image
 
