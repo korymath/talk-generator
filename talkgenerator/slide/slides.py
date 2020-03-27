@@ -1,6 +1,7 @@
 import logging
 from abc import ABCMeta, abstractmethod
 from random import random
+from typing import Dict
 
 from talkgenerator.slide import powerpoint_slide_creator
 
@@ -11,7 +12,7 @@ class Slide(metaclass=ABCMeta):
     """ Class representing a slide object that could be used to export to Powerpoint pptx or other representations later
     """
 
-    def __init__(self, type_name, ppt_slide_creator, arguments):
+    def __init__(self, type_name: str, ppt_slide_creator, arguments: Dict):
         self._type_name = type_name
         self._ppt_slide_creator = ppt_slide_creator
         self._arguments = arguments
@@ -39,7 +40,7 @@ class Slide(metaclass=ABCMeta):
             logger.error("attribute error on create slide {}".format(e))
         return ppt_slide
 
-    def create_slide_dictionary(self):
+    def to_slide_dictionary(self) -> dict:
         slide_dict = dict(self._arguments)
         slide_dict["type"] = self._type_name
         slide_dict["sources"] = self._sources
@@ -47,7 +48,7 @@ class Slide(metaclass=ABCMeta):
 
 
 class TitleSlide(Slide):
-    def __init__(self, title, subtitle):
+    def __init__(self, title:str, subtitle:str:
         super().__init__(
             type_name="title",
             ppt_slide_creator=powerpoint_slide_creator.create_title_slide,
@@ -56,7 +57,7 @@ class TitleSlide(Slide):
 
 
 class LarqeQuoteSlide(Slide):
-    def __init__(self, title, text, background_image=None):
+    def __init__(self, title:str, text:str, background_image=None):
         super().__init__(
             type_name="large_quote",
             ppt_slide_creator=powerpoint_slide_creator.create_large_quote_slide,
