@@ -37,6 +37,8 @@ def generate_presentation_using_cli_arguments(args):
         parallel=args.parallel,
         int_seed=args.int_seed,
         print_logs=args.print_logs,
+        save_ppt=args.save_ppt,
+        open_ppt=args.open_ppt
     )
 
 
