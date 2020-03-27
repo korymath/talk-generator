@@ -118,7 +118,6 @@ def _add_image(
         image_ref = ExternalImage(image_url)
     else:
         path = Path(image_url).absolute()
-        print("INTERNAL", image_url, path, str(path))
         image_ref = InternalImage(str(path))
 
     placeholder = slide.placeholders[placeholder_id]
@@ -126,7 +125,7 @@ def _add_image(
         # Calculate the image size of the image
         try:
             # im = os_util.open_image(image_url)
-            print("image", image_url, image_ref)
+            # TODO: calculate width & height somehow without downloading the image
             width, height = image_ref.image().size
 
             # Make sure the placeholder doesn't zoom in
