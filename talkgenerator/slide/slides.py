@@ -48,7 +48,7 @@ class Slide(metaclass=ABCMeta):
 
 
 class TitleSlide(Slide):
-    def __init__(self, title:str, subtitle:str:
+    def __init__(self, title:str, subtitle:str):
         super().__init__(
             type_name="title",
             ppt_slide_creator=powerpoint_slide_creator.create_title_slide,
