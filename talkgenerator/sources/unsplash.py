@@ -63,7 +63,7 @@ def random_as_list(_=None):
 
 @cachier(cache_dir=Path("..", ".cache").absolute())
 def search_photos(query) -> List[ImageData]:
-    if unsplash_session:
+    if unsplash_session and query:
         results = unsplash_session.search(type_="photos", query=query)
         if results and results.body:
             images = []
@@ -76,5 +76,7 @@ def search_photos(query) -> List[ImageData]:
                     query
                 )
             )
+    elif unsplash_session and not query:
+        return random_as_list()
     else:
         logger.warning("No active Unsplash session due to missing/wrong credentials.")

@@ -26,7 +26,7 @@ def search_horizontal(query):
 
 @cachier(cache_dir=Path("..", ".cache").absolute())
 def search_photos(query, orientation="all") -> List[ImageData]:
-    if pixabay_session:
+    if pixabay_session and query:
         results = pixabay_session.search(q=query, orientation=orientation)
         if results and results["hits"]:
             images = []
