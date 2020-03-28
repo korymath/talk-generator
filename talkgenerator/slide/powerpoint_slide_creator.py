@@ -110,7 +110,7 @@ def _add_image(
     slide, placeholder_id: int, image: ImageData, original_image_size: bool = True
 ):
     if isinstance(image, ImageData):
-        image_url = image.get_original_image_url()
+        image_url = image.get_image_url()
     else:
         image_url = image
 
@@ -118,7 +118,6 @@ def _add_image(
         image_ref = ExternalImage(image_url)
     else:
         path = Path(image_url).absolute()
-        print("INTERNAL", image_url, path, str(path))
         image_ref = InternalImage(str(path))
 
     placeholder = slide.placeholders[placeholder_id]
@@ -126,7 +125,7 @@ def _add_image(
         # Calculate the image size of the image
         try:
             # im = os_util.open_image(image_url)
-            print("image", image_url, image_ref)
+            # TODO: calculate width & height somehow without downloading the image
             width, height = image_ref.image().size
 
             # Make sure the placeholder doesn't zoom in
@@ -198,7 +197,7 @@ def add_sources_note(slide, _sources: List[str]):
 # and create layouted slide with these inputs
 
 
-def create_new_powerpoint():
+def create_new_powerpoint() -> Presentation:
     return Presentation(get_powerpoint_template_file())
 
 

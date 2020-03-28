@@ -1,6 +1,6 @@
 import logging
-from abc import ABCMeta, abstractmethod
-from random import random
+from abc import ABCMeta
+from typing import Dict
 
 from talkgenerator.slide import powerpoint_slide_creator
 
@@ -11,7 +11,9 @@ class Slide(metaclass=ABCMeta):
     """ Class representing a slide object that could be used to export to Powerpoint pptx or other representations later
     """
 
-    def __init__(self, arguments):
+    def __init__(self, type_name: str, ppt_slide_creator, arguments: Dict):
+        self._type_name = type_name
+        self._ppt_slide_creator = ppt_slide_creator
         self._arguments = arguments
         self._note = ""
         self._sources = []
@@ -23,15 +25,9 @@ class Slide(metaclass=ABCMeta):
     def set_note(self, note: str):
         self._note = note
 
-    @property
-    @abstractmethod
-    def ppt_slide_creator(self):
-        """ The function converting it to powerpoint"""
-        pass
-
     def create_powerpoint_slide(self, prs):
         """ Should generate a slide in the powerpoint """
-        ppt_slide = self.ppt_slide_creator(prs, **self._arguments)
+        ppt_slide = self._ppt_slide_creator(prs, **self._arguments)
         try:
             if ppt_slide:
                 ppt_slide.notes_slide.notes_text_frame.text = self._note
@@ -43,55 +39,59 @@ class Slide(metaclass=ABCMeta):
             logger.error("attribute error on create slide {}".format(e))
         return ppt_slide
 
+    def to_slide_dictionary(self) -> dict:
+        slide_dict = dict(self._arguments)
+        slide_dict["type"] = self._type_name
+        slide_dict["sources"] = self._sources
+        return slide_dict
+
 
 class TitleSlide(Slide):
-    def __init__(self, title, subtitle):
-        super().__init__({"title": title, "subtitle": subtitle})
-
-    @property
-    def ppt_slide_creator(self):
-        return powerpoint_slide_creator.create_title_slide
+    def __init__(self, title:str, subtitle:str):
+        super().__init__(
+            type_name="title",
+            ppt_slide_creator=powerpoint_slide_creator.create_title_slide,
+            arguments={"title": title, "subtitle": subtitle},
+        )
 
 
 class LarqeQuoteSlide(Slide):
-    def __init__(self, title, text, background_image=None):
+    def __init__(self, title:str, text:str, background_image=None):
         super().__init__(
-            {"title": title, "text": text, "background_image": background_image}
+            type_name="large_quote",
+            ppt_slide_creator=powerpoint_slide_creator.create_large_quote_slide,
+            arguments={
+                "title": title,
+                "text": text,
+                "background_image": background_image,
+            },
         )
-
-    @property
-    def ppt_slide_creator(self):
-        return powerpoint_slide_creator.create_large_quote_slide
 
 
 class ImageSlide(Slide):
     def __init__(self, title=None, image_url=None, original_image_size=True):
         super().__init__(
-            {
+            type_name="image",
+            ppt_slide_creator=powerpoint_slide_creator.create_image_slide,
+            arguments={
                 "title": title,
                 "image_url": image_url,
                 "original_image_size": original_image_size,
-            }
+            },
         )
-
-    @property
-    def ppt_slide_creator(self):
-        return powerpoint_slide_creator.create_image_slide
 
 
 class FullImageSlide(Slide):
     def __init__(self, title=None, image_url=None, original_image_size=True):
         super().__init__(
-            {
+            type_name="full_image",
+            ppt_slide_creator=powerpoint_slide_creator.create_full_image_slide,
+            arguments={
                 "title": title,
                 "image_url": image_url,
                 "original_image_size": original_image_size,
-            }
+            },
         )
-
-    @property
-    def ppt_slide_creator(self):
-        return powerpoint_slide_creator.create_full_image_slide
 
 
 class TwoColumnImageSlide(Slide):
@@ -105,19 +105,17 @@ class TwoColumnImageSlide(Slide):
         original_image_size=True,
     ):
         super().__init__(
-            {
+            type_name="two_column_image",
+            ppt_slide_creator=powerpoint_slide_creator.create_two_column_images_slide,
+            arguments={
                 "title": title,
                 "caption_1": caption_1,
                 "image_or_text_1": image_or_text_1,
                 "caption_2": caption_2,
                 "image_or_text_2": image_or_text_2,
                 "original_image_size": original_image_size,
-            }
+            },
         )
-
-    @property
-    def ppt_slide_creator(self):
-        return powerpoint_slide_creator.create_two_column_images_slide
 
 
 class ThreeColumnImageSlide(Slide):
@@ -133,7 +131,9 @@ class ThreeColumnImageSlide(Slide):
         original_image_size=True,
     ):
         super().__init__(
-            {
+            type_name="three_column_image",
+            ppt_slide_creator=powerpoint_slide_creator.create_three_column_images_slide,
+            arguments={
                 "title": title,
                 "caption_1": caption_1,
                 "image_or_text_1": image_or_text_1,
@@ -142,25 +142,19 @@ class ThreeColumnImageSlide(Slide):
                 "caption_3": caption_3,
                 "image_or_text_3": image_or_text_3,
                 "original_image_size": original_image_size,
-            }
+            },
         )
-
-    @property
-    def ppt_slide_creator(self):
-        return powerpoint_slide_creator.create_three_column_images_slide
 
 
 class ChartSlide(Slide):
     def __init__(self, title, chart_type, chart_data, chart_modifier=None):
         super().__init__(
-            {
+            type_name="chart",
+            ppt_slide_creator=powerpoint_slide_creator.create_chart_slide,
+            arguments={
                 "title": title,
                 "chart_type": chart_type,
                 "chart_data": chart_data,
                 "chart_modifier": chart_modifier,
-            }
+            },
         )
-
-    @property
-    def ppt_slide_creator(self):
-        return powerpoint_slide_creator.create_chart_slide
