@@ -26,7 +26,7 @@ def _search_pexels(query):
 
 
 def search_photos(query) -> List[ImageData]:
-    if pexels_session:
+    if pexels_session and query:
         results = _search_pexels(query)
         if results and results["photos"]:
             images = []

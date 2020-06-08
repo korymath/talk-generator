@@ -1,4 +1,7 @@
 import logging
+from typing import List
+
+from talkgenerator.slide.slides import Slide
 
 logger = logging.getLogger("talkgenerator")
 
@@ -8,7 +11,7 @@ class SlideDeck:
 
     def __init__(self, size):
         self._size = size
-        self._slides = [None] * size
+        self._slides : List[Slide] = [None] * size
 
     def add_slide(self, slide_index: int, slide):
         self._slides[slide_index] = slide
@@ -23,7 +26,10 @@ class SlideDeck:
                 "ERROR: SOME SLIDES WERE NOT GENERATED: {}".format(self._slides)
             )
             self._slides = [slide for slide in self._slides if slide is not None]
-        return [x.create_powerpoint_slide(prs_template) for x in self._slides]
+        return [slide.create_powerpoint_slide(prs_template) for slide in self._slides]
+
+    def to_slide_deck_dictionary(self) -> List[dict]:
+        return [slide.to_slide_dictionary() for slide in self._slides]
 
     def get_structured_data(self):
         """ Return slide deck as structured data for alternative presentation """
@@ -32,7 +38,7 @@ class SlideDeck:
                 "ERROR: SOME SLIDES WERE NOT GENERATED: {}".format(self._slides)
             )
             self._slides = [slide for slide in self._slides if slide is not None]
-        return [x for x in self._slides]
+        return [slide for slide in self._slides]
 
     def has_slide_nr(self, index):
         return 0 <= index < self._size and self._slides[index] is not None

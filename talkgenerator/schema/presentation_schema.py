@@ -7,7 +7,9 @@ import time
 import logging
 from multiprocessing.pool import ThreadPool
 import random
-from typing import List, Collection, Callable, Dict, Union, Optional
+from typing import List, Collection, Callable, Dict, Union, Optional, Tuple
+
+from pptx import Presentation
 
 from talkgenerator.datastructures.image_data import ImageData
 from talkgenerator.schema.slide_topic_generators import SlideSeedGenerator
@@ -52,7 +54,8 @@ class PresentationSchema:
         title: str = None,
         parallel: bool = False,
         int_seed: int = None,
-    ):
+        save_ppt: bool = True,
+    ) -> Tuple[Presentation, SlideDeck]:
         """Generate a presentation about a certain topic with a certain number of slides"""
 
         # Generate random talk title
@@ -63,7 +66,6 @@ class PresentationSchema:
                 title = "About " + topics[0]
 
         # Create new presentation
-        presentation = self._powerpoint_creator()
         slide_deck = SlideDeck(num_slides)
 
         # Create the topic-for-each-slide generator
@@ -102,8 +104,12 @@ class PresentationSchema:
                 int_seed,
             )
 
-        slide_deck.save_to_powerpoint(presentation)
-        return presentation, slide_deck
+        if save_ppt:
+            presentation = self._powerpoint_creator()
+            slide_deck.save_to_powerpoint(presentation)
+            return presentation, slide_deck
+
+        return None, slide_deck
 
     def _generate_slide_deck_parallel(
         self,
