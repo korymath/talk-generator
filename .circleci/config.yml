@@ -42,6 +42,7 @@ jobs:
             . venv/bin/activate
             pip install --upgrade pip
             pip install pytest
+            pip install pytest-cov
             pip install codecov
             pytest --cov=talkgenerator tests/
             codecov --token=e25ce249-b3da-4d80-b8d3-074f7d288969
