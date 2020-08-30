@@ -66,8 +66,7 @@ Test files are `tests/*.py`, prefixed with `test_`. Test files use the `unittest
 They can easily be run all together when using PyCharm by right clicking on `talk-generator` and pressing *Run 'Unittests in talk-generator'*
 
 ```sh
-. venv/bin/activate
-pytest --cov=talkgenerator tests/
+coverage run -m pytest; coverage html
 ```
 
 Test coverage is automatically handled by `codecov`. Tests are automatically run with CircleCI based on the `.yml` file in the `.circleci` directory.
