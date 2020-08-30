@@ -30,7 +30,7 @@ with open('requirements.txt') as f:
 
 setup(
     name="talkgenerator",
-    version="2.1.6",
+    version="2.5.0",
     description="Automatically generating presentation slide decks based on a given topic for improvised presentations",
     long_description="Check our GitHub repository on https://github.com/korymath/talk-generator for more information!",
     author="Thomas Winters, Kory Mathewson",
