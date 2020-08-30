@@ -15,6 +15,7 @@ def check_and_download():
         for corpus in required_corpus_list:
             _check_and_download_corpus(corpus, corpus.split("/")[1])
     except Exception as e:
+        logging.error(e)
         print_corpus_download_warning()
         return False
 
@@ -25,6 +26,7 @@ def _check_and_download_corpus(corpus_fullname, corpus_shortname):
     try:
         nltk.data.find(corpus_fullname)
     except LookupError as le:
+        logging.error(le)
         nltk.download(corpus_shortname)
 
 
@@ -33,9 +35,9 @@ def print_corpus_download_warning():
     Hmm...
     ---------------------
 
-    We had some trouble downloading the NLTK corpuses.. 
-    Try running the following from a command line. This should 
-    download the needed packages.. but it might also tell you if 
+    We had some trouble downloading the NLTK corpuses..
+    Try running the following from a command line. This should
+    download the needed packages.. but it might also tell you if
     there is another issue.
 
     $ python3 -m nltk.downloader punkt averaged_perceptron_tagger

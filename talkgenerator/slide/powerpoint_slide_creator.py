@@ -7,7 +7,9 @@ from pathlib import Path
 from typing import List
 
 import requests
+import PIL
 from PIL import Image
+from PIL import UnidentifiedImageError
 from lxml.etree import XMLSyntaxError
 from pptx import Presentation
 
@@ -68,7 +70,13 @@ class ExternalImage(FileLikeImage):
         return self.get_bytes_io()
 
     def image(self):
-        return Image.open(self.get_bytes_io())
+        open_image = None
+        try:
+            open_image = Image.open(self.get_bytes_io())
+        except PIL.UnidentifiedImageError as e:
+            logging.error(e)
+            logging.error('PIL.UnidentifiedImageError')
+        return open_image
 
 
 class InternalImage(FileLikeImage):
@@ -162,10 +170,9 @@ def _add_image(
     else:
         try:
             return placeholder.insert_picture(image_ref.get_file_like())
-        except OSError or ValueError:
-            logger.error(
-                "Unexpected error inserting image:", image, ":", sys.exc_info()[0]
-            )
+        except (OSError, ValueError) as e:
+            logger.error(e)
+            logger.error("Unexpected error inserting image: {}:{}".format(image, sys.exc_info()[0]))
             return None
 
 

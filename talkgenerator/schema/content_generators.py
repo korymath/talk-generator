@@ -2,12 +2,9 @@ from typing import Collection, Union
 
 from talkgenerator.sources import pixabay, pexels
 from talkgenerator.schema.content_generator_structures import *
-from talkgenerator.sources import (
-    inspirobot,
-    giphy,
-    shitpostbot,
-    unsplash,
-)
+from talkgenerator.sources import inspirobot
+from talkgenerator.sources import shitpostbot
+from talkgenerator.sources import unsplash
 from talkgenerator.util.generator_util import *
 
 # ===============================
@@ -140,16 +137,11 @@ inspirobot_image_generator = inspirobot.get_random_inspirobot_image
 
 # GIFS
 
-giphy_generator = SeededGenerator(
-    BackupGenerator(giphy.get_related_giphy, giphy.get_random_giphy)
-)
 reddit_gif_generator = create_reddit_image_generator(
     "gifs", "gif", "gifextra", "nonononoYES"
 )
 
-combined_gif_generator = CombinedGenerator(
-    (1, giphy_generator), (1, reddit_gif_generator)
-)
+combined_gif_generator = CombinedGenerator((1, reddit_gif_generator))
 
 # REDDIT
 

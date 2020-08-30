@@ -1,4 +1,5 @@
 import random
+import logging
 import unittest
 from unittest import mock
 
@@ -16,7 +17,7 @@ class TestTalkGenerator(unittest.TestCase):
         self.default_args.configure_mock(num_slides=3)
         self.default_args.configure_mock(schema="default")
         self.default_args.configure_mock(title=None)
-        self.default_args.configure_mock(parallel=False)
+        self.default_args.configure_mock(parallel=True)
         self.default_args.configure_mock(
             output_folder=os_util.to_actual_file("../output/test/")
         )
@@ -25,14 +26,15 @@ class TestTalkGenerator(unittest.TestCase):
         self.default_args.configure_mock(int_seed=123)
 
     def test_serial(self):
-        ppt, slide_deck, location = generator.generate_presentation_using_cli_arguments(
+        self.default_args.configure_mock(parallel=False)
+        ppt, _, _ = generator.generate_presentation_using_cli_arguments(
             self.default_args
         )
 
         self.assertEqual(3, len(ppt.slides))
 
     def test_to_dictionary(self):
-        ppt, slide_deck, location = generator.generate_presentation(
+        _, slide_deck, _ = generator.generate_presentation(
             schema="default",
             slides=3,
             topic="cat",
@@ -45,25 +47,8 @@ class TestTalkGenerator(unittest.TestCase):
             print_logs=False,
         )
         slides_dict = slide_deck.to_slide_deck_dictionary()
+        logging.info(slides_dict)
         self.assertIsNotNone(slides_dict)
-        print(slides_dict)
-
-    def test_parallel(self):
-        self.default_args.configure_mock(parallel=True)
-        ppt, slide_deck, location = generator.generate_presentation_using_cli_arguments(
-            self.default_args
-        )
-
-        self.assertEqual(3, len(ppt.slides))
-
-    def test_multiple_topics(self):
-        self.default_args.configure_mock(topic="cat, dog, bread, house")
-        self.default_args.configure_mock(num_slides=6)
-        ppt, slide_deck, location = generator.generate_presentation_using_cli_arguments(
-            self.default_args
-        )
-
-        self.assertEqual(6, len(ppt.slides))
 
     def test_all_slide_generators(self):
         basic_presentation_context = {
@@ -76,9 +61,9 @@ class TestTalkGenerator(unittest.TestCase):
         presentation = powerpoint_slide_creator.create_new_powerpoint()
 
         for slide_generator in slide_schemas.all_slide_generators:
-            print("Testing Slide Generator", slide_generator)
+            logging.info("Testing Slide Generator: {}".format(slide_generator))
             random.seed(123)
-            slide, generated_elements = slide_generator.generate(
+            slide, _ = slide_generator.generate(
                 basic_presentation_context, []
             )
             slide.create_powerpoint_slide(presentation)

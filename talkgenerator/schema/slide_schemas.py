@@ -153,7 +153,7 @@ single_image_slide_generators = [
             anticipation_title_generator, combined_gif_generator
         ),
         tags=["full_image", "gif"],
-        name="Full Screen Giphy",
+        name="Full Screen Gif",
     ),
     SlideGeneratorData(
         # slide_templates.generate_image_slide(
@@ -161,7 +161,7 @@ single_image_slide_generators = [
             default_slide_title_generator, combined_gif_generator
         ),
         tags=["single_image", "gif"],
-        name="Single Image Giphy",
+        name="Single Image Gif",
     ),
     SlideGeneratorData(
         # slide_templates.generate_full_image_slide(

@@ -85,13 +85,13 @@ def check_environment_variables():
 def print_env_file_warning():
     env_message = """
     Hi! Before you can run talkgenerator you need to set some secret keys in an .env file.
-    
+
     Which keys?
     -------------
     Take a look at https://github.com/korymath/talk-generator#setting-up-required-authentication
 
     Creating an .env file
-    ------------- 
+    -------------
     $ touch .env
     $ echo VARIABLE_NEEDED=VALUE >> .env
     $ echo OTHER_VARIABLE_NEEDED=VALUE >> .env
