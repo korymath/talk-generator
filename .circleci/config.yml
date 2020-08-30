@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.1
+      - image: circleci/python:latest
 
     working_directory: ~/talkgenerator
 
@@ -25,9 +25,9 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install --upgrade pip
-            pip install -r requirements.txt
-            python3 -m nltk.downloader wordnet punkt averaged_perceptron_tagger
+            pip install --upgrade pip setuptools
+            python3 -m pip install -r requirements.txt --use-feature=2020-resolver
+            python run_nltk_download.py
 
       - save_cache:
           paths:
@@ -40,7 +40,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install --upgrade pip
+            pip install --upgrade pip setuptools
             pip install pytest
             pip install pytest-cov
             pip install codecov

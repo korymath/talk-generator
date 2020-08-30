@@ -1,4 +1,5 @@
 # Talk Powerpoint Generator
+
 [![CircleCI](https://circleci.com/gh/korymath/talk-generator.svg?style=svg&circle-token=dcba7d5a9ff7953cff0526e201990c0b811b3aae)](https://circleci.com/gh/korymath/talk-generator)
 [![codecov](https://codecov.io/gh/korymath/talk-generator/branch/master/graph/badge.svg?token=gqkCyuXop0)](https://codecov.io/gh/korymath/talk-generator)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/korymath/britbot/blob/master/LICENSE.md)
@@ -21,20 +22,20 @@ Our program relies on certain APIs that require authentication in order to use i
 Create a file named `.env` (don't forget the period) in your project directory, and fill this with the correct API keys as described on our [wiki page about this](https://github.com/korymath/talk-generator/wiki/Setting-Up-API-Keys).
 
 ```sh
-# Make a new Python 3 virtual environment 
+# Make a new Python 3 virtual environment
 python3 -m venv venv
 
 # Activate the virtual environment
 source venv/bin/activate
 
 # Upgrade pip and install  requirements
-pip install --upgrade pip
+pip install --upgrade pip setuptools
 python3 -m pip install -r requirements.txt --use-feature=2020-resolver
 
 # Download NLTK dependencies
-python3 -m nltk.downloader punkt averaged_perceptron_tagger
+python run_nltk_download.py
 
-# Install the Talk Generator 
+# Install the Talk Generator
 pip install -e .
 
 # Generate a 10 slide talk with topic peanuts
@@ -60,6 +61,7 @@ talkgenerator --topic "peanuts" --num_slides 10
 See the [wiki](https://github.com/korymath/talk-generator/wiki/Program-structure) to know more about the inner implementation.
 
 ## Tests
+
 Test files are `tests/*.py`, prefixed with `test_`. Test files use the `unittest` module.
 They can easily be run all together when using PyCharm by right clicking on `talk-generator` and pressing *Run 'Unittests in talk-generator'*
 
@@ -83,7 +85,7 @@ If you would like to refer to this project in academic work, please cite the fol
 
 Winters T., Mathewson K.W. (2019) **Automatically Generating Engaging Presentation Slide Decks**. In: Ekárt A., Liapis A., Castro Pena M. (eds) Computational Intelligence in Music, Sound, Art and Design. EvoMUSART 2019. Lecture Notes in Computer Science, vol 11453. Springer, Cham
 
-```
+```sh
 @InProceedings{winters2019tedric,
     author="Winters, Thomas
     and Mathewson, Kory W.",
