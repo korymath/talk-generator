@@ -29,7 +29,7 @@ source venv/bin/activate
 
 # Upgrade pip and install  requirements
 pip install --upgrade pip
-python3 -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt --use-feature=2020-resolver
 
 # Download NLTK dependencies
 python3 -m nltk.downloader punkt averaged_perceptron_tagger
