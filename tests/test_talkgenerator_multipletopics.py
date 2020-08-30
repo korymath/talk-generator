@@ -16,7 +16,7 @@ class TestTalkGenerator(unittest.TestCase):
         self.default_args.configure_mock(num_slides=3)
         self.default_args.configure_mock(schema="default")
         self.default_args.configure_mock(title=None)
-        self.default_args.configure_mock(parallel=False)
+        self.default_args.configure_mock(parallel=True)
         self.default_args.configure_mock(
             output_folder=os_util.to_actual_file("../output/test/")
         )

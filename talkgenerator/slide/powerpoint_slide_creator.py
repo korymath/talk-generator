@@ -50,10 +50,10 @@ LAYOUT_TITLE_AND_CHART = 16
 # = HELPERS =
 class FileLikeImage:
     def get_file_like(self):
-        return NotImplemented()
+        raise NotImplementedError()
 
     def image(self):
-        return NotImplemented()
+        raise NotImplementedError()
 
 
 class ExternalImage(FileLikeImage):
@@ -132,38 +132,32 @@ def _add_image(
     if original_image_size:
         # Calculate the image size of the image
         try:
-            # im = os_util.open_image(image_url)
-            # TODO: calculate width & height somehow without downloading the image
-            width, height = image_ref.image().size
-
-            # Make sure the placeholder doesn't zoom in
-            placeholder.height = height
-            placeholder.width = width
-
             # Insert the picture
             try:
+                width, height = image_ref.image().size
+                # Make sure the placeholder doesn't zoom in
+                placeholder.height = height
+                placeholder.width = width
                 placeholder = placeholder.insert_picture(image_ref.get_file_like())
-            except (ValueError, XMLSyntaxError) as e:
+                # Calculate ratios and compare
+                image_ratio = width / height
+                placeholder_ratio = placeholder.width / placeholder.height
+                ratio_difference = placeholder_ratio - image_ratio
+                # Placeholder width too wide:
+                if ratio_difference > 0:
+                    difference_on_each_side = ratio_difference / 2
+                    placeholder.crop_left = -difference_on_each_side
+                    placeholder.crop_right = -difference_on_each_side
+                # Placeholder height too high
+                else:
+                    difference_on_each_side = -ratio_difference / 2
+                    placeholder.crop_bottom = -difference_on_each_side
+                    placeholder.crop_top = -difference_on_each_side
+                return placeholder
+            except (ValueError, XMLSyntaxError, AttributeError) as e:
                 logger.error("_add_image error: {}".format(e))
                 return None
 
-            # Calculate ratios and compare
-            image_ratio = width / height
-            placeholder_ratio = placeholder.width / placeholder.height
-            ratio_difference = placeholder_ratio - image_ratio
-
-            # Placeholder width too wide:
-            if ratio_difference > 0:
-                difference_on_each_side = ratio_difference / 2
-                placeholder.crop_left = -difference_on_each_side
-                placeholder.crop_right = -difference_on_each_side
-            # Placeholder height too high
-            else:
-                difference_on_each_side = -ratio_difference / 2
-                placeholder.crop_bottom = -difference_on_each_side
-                placeholder.crop_top = -difference_on_each_side
-
-            return placeholder
         except FileNotFoundError as fnfe:
             logger.error("_add_image file not found: {}".format(fnfe))
             return None
