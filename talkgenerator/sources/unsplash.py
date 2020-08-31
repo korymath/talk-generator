@@ -5,7 +5,7 @@ from json import JSONDecodeError
 from pathlib import Path
 from typing import List
 
-from cachier import cachier
+# from cachier import cachier
 from pyunsplash import PyUnsplash
 
 from talkgenerator.datastructures.image_data import ImageData
@@ -55,7 +55,7 @@ def random_as_list(_=None):
         return []
 
 
-@cachier(cache_dir=Path("..", "tmp").absolute())
+# @cachier(cache_dir=Path("..", "tmp").absolute())
 def search_photos(query) -> List[ImageData]:
     if unsplash_session and query:
         results = unsplash_session.search(type_="photos", query=query)

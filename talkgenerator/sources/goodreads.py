@@ -3,7 +3,7 @@ from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
-from cachier import cachier
+# from cachier import cachier
 
 from talkgenerator.util import scraper_util
 
@@ -14,7 +14,7 @@ quote_search_url = (
 
 
 @lru_cache(maxsize=20)
-@cachier(cache_dir=Path("..", "tmp").absolute())
+# @cachier(cache_dir=Path("..", "tmp").absolute())
 def _search_quotes_page(search_term, page):
     url = quote_search_url.format(page, search_term.replace(" ", "+"))
     try:

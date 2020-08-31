@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 from typing import List
 
-from cachier import cachier
+# from cachier import cachier
 from pexels_api import API
 from talkgenerator import settings
 from talkgenerator.datastructures.image_data import ImageData
@@ -20,7 +20,7 @@ def get_pexels_session():
 pexels_session = get_pexels_session()
 
 
-@cachier(cache_dir=Path("..", "tmp").absolute())
+# @cachier(cache_dir=Path("..", "tmp").absolute())
 def _search_pexels(query):
     return pexels_session.search(query)
 
