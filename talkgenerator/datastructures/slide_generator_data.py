@@ -1,18 +1,11 @@
+import logging
 from functools import lru_cache
-
-
-# WEIGHT FUNCTIONS
-# def create_peaked_weight(peak_values, weight, other_weight):
-#     def weight_function(slide_nr, num_slides):
-#         actual_peak_values = fix_indices(peak_values, num_slides)
-#         if slide_nr in actual_peak_values:
-#             return weight
-#         return other_weight
-#
-#     return weight_function
 from typing import Collection, Union, Set, Callable, Tuple
 
 from talkgenerator.datastructures.image_data import ImageData
+
+
+logger = logging.getLogger("talkgenerator")
 
 
 class PeakedWeight(object):
@@ -69,13 +62,24 @@ class SlideGeneratorData:
 
     def generate(self, presentation_context, used_elements):
         """Generate a slide for a given presentation using the given seed."""
+        logger.debug('slide_generator_data.generate()')
+        logger.debug('presentation_context: {}'.format(presentation_context))
+        logger.debug('used_elements: {}'.format(used_elements))
+        logger.debug('self._allowed_repeated_elements: {}'.format(self._allowed_repeated_elements))
+
         # Try a certain amount of times
         for i in range(self._retries):
+            logger.debug('retry: {}'.format(i))
+            logger.debug('self._generator: {}'.format(self._generator))
             slide_results = self._generator.generate_slide(
                 presentation_context, (used_elements, self._allowed_repeated_elements)
             )
+            logger.debug('slide_results: {}'.format(slide_results))
+
             if slide_results:
                 (slide, generated_elements) = slide_results
+                logger.debug('slide: {}'.format(slide))
+                logger.debug('generated_elements: {}'.format(generated_elements))
 
                 # If the generated content is nothing, don't try again
                 if _has_not_generated_something(generated_elements):

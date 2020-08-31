@@ -1,11 +1,14 @@
 """
-This module represents the abstractions of a presentation schema (responsible for specifying how to generate a
-presentation), and slide generators, that have functions for generating slides along with some other metadata.
-
+This module represents the abstractions of a presentation schema
+(responsible for specifying how to generate a presentation),
+and slide generators, that have functions for generating slides
+along with some other metadata.
 """
 import time
 import logging
+import multiprocessing
 from multiprocessing.pool import ThreadPool
+multiprocessing.set_start_method('spawn')
 import random
 from typing import List, Collection, Callable, Dict, Union, Optional, Tuple
 
@@ -13,10 +16,8 @@ from pptx import Presentation
 
 from talkgenerator.datastructures.image_data import ImageData
 from talkgenerator.schema.slide_topic_generators import SlideSeedGenerator
-from talkgenerator.datastructures.slide_generator_data import (
-    _filter_generated_elements,
-    SlideGeneratorData,
-)
+from talkgenerator.datastructures.slide_generator_data import _filter_generated_elements
+from talkgenerator.datastructures.slide_generator_data import SlideGeneratorData
 from talkgenerator.slide import slide_generator_types
 from talkgenerator.slide.slide_deck import SlideDeck
 from talkgenerator.util import random_util
@@ -25,8 +26,8 @@ logger = logging.getLogger("talkgenerator")
 
 
 class PresentationSchema:
-    """ Class responsible for determining which slide generators to use in a presentation, and how the (topic) seed for
-    each slide is generated """
+    """ Class responsible for determining which slide generators to use in a presentation,
+    and how the (topic) seed for each slide is generated."""
 
     def __init__(
         self,
@@ -58,18 +59,22 @@ class PresentationSchema:
     ) -> Tuple[Presentation, SlideDeck]:
         """Generate a presentation about a certain topic with a certain number of slides"""
 
+        logger.info('Made it to presentation_schema...')
         # Generate random talk title
         if not title or title is None:
             if self._title_generator is not None:
                 title = self._title_generator({"seed": topics[0]})
             else:
                 title = "About " + topics[0]
+        logger.info('Generate talk title: {}'.format(title))
 
         # Create new presentation
         slide_deck = SlideDeck(num_slides)
+        logger.info('Slide deck: {}'.format(slide_deck))
 
         # Create the topic-for-each-slide generator
         seed_generator = self._seed_generator(topics, num_slides)
+        logger.info('Seed generator: {}'.format(seed_generator))
 
         # Create main presentation_context
         main_presentation_context = {
@@ -188,6 +193,7 @@ class PresentationSchema:
         int_seed=None,
     ):
         for slide_nr in range(num_slides):
+            logger.debug('Generating slide: {}'.format(slide_nr))
             # Generate the slide
             slide_results = self.generate_slide(
                 presentation_context=create_slide_presentation_context(
@@ -250,6 +256,7 @@ class PresentationSchema:
         prohibited_generators=None,
         int_seed=None,
     ):
+        logger.debug('presentation_schema.generate_slide: {}'.format(slide_nr))
         if int_seed is not None:
             random.seed(int_seed + slide_nr)
 
@@ -259,6 +266,7 @@ class PresentationSchema:
 
         # Select the slide generator to generate with
         generator = self._select_generator(slide_nr, num_slides, prohibited_generators)
+        logger.debug('Generator: {}'.format(generator))
 
         start_time = time.time()
         if generator:
@@ -268,6 +276,7 @@ class PresentationSchema:
                 )
             )
             slide_result = generator.generate(presentation_context, used_elements)
+            logger.debug('Slide result: {}'.format(slide_result))
 
             # Try again if slide is None, and prohibit generator for generating for this topic
             if not bool(slide_result):
@@ -306,13 +315,16 @@ class PresentationSchema:
 
     def _select_generator(self, slide_nr, total_slides, prohibited_generators):
         """Select a generator for a certain slide number"""
+        logging.debug('presentation_schema._select_generator self._slide_generators: {}'.format(
+                self._slide_generators))
+        logging.debug('self._ignore_weights: {}'.format(self._ignore_weights))
         if self._ignore_weights:
             return random_util.choice_optional(self._slide_generators)
-        return random_util.weighted_random(
+        _selected_generator = random_util.weighted_random(
             self._get_weighted_generators_for_slide_nr(
-                slide_nr, total_slides, prohibited_generators
-            )
-        )
+                slide_nr, total_slides, prohibited_generators))
+        logging.debug('_selected_generator: {}'.format(_selected_generator))
+        return _selected_generator
 
     def _get_weighted_generators_for_slide_nr(
         self, slide_nr, total_slides, prohibited_generators

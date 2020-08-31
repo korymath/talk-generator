@@ -2,7 +2,6 @@ import logging
 from pathlib import Path
 from typing import List
 
-from cachier import cachier
 from pixabay import Image
 from talkgenerator import settings
 from talkgenerator.datastructures.image_data import ImageData
@@ -17,15 +16,14 @@ def get_pixabay_session():
     return api
 
 
-pixabay_session = get_pixabay_session()
-
-
 def search_horizontal(query):
     return search_photos(query, orientation="horizontal")
 
 
-@cachier(cache_dir=Path("..", "tmp").absolute())
 def search_photos(query, orientation="all") -> List[ImageData]:
+    pixabay_session = get_pixabay_session()
+    logger.debug('pixabay_session: {}'.format(pixabay_session))
+    logger.debug('pixabay.search_photos called with query: {}'.format(query))
     if pixabay_session and query:
         results = pixabay_session.search(q=query, orientation=orientation)
         if results and results["hits"]:

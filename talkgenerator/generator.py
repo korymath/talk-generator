@@ -58,6 +58,9 @@ def generate_presentation(
     open_ppt: bool = False,
     print_logs=False,
 ) -> Tuple[Presentation, SlideDeck, str]:
+
+    logger.info('**************************')
+    logger.info('Generating presentation...')
     if print_logs:
         os_util.show_logs(logger)
 
@@ -66,6 +69,7 @@ def generate_presentation(
 
     # Retrieve the schema to generate the presentation with
     presentation_schema = get_schema(schema)
+    logger.info('Presentation schema: {}'.format(presentation_schema))
 
     # Generate random presenter name if no presenter name given
     if not presenter:
@@ -83,6 +87,14 @@ def generate_presentation(
     else:
         topics = [topic.strip() for topic in topic.split(",")]
 
+    logger.info('Presentation topics: {}'.format(topics))
+    logger.info('Presentation num_slides: {}'.format(slides))
+    logger.info('Presentation presenter: {}'.format(presenter))
+    logger.info('Presentation title: {}'.format(title))
+    logger.info('Presentation parallel: {}'.format(parallel))
+    logger.info('Presentation int_seed: {}'.format(int_seed))
+    logger.info('Presentation save_ppt: {}'.format(save_ppt))
+
     # Generate the presentation object
     presentation, slide_deck = presentation_schema.generate_presentation(
         topics=topics,
@@ -93,6 +105,10 @@ def generate_presentation(
         int_seed=int_seed,
         save_ppt=save_ppt,
     )
+
+    logger.info('**************************')
+    logger.info('Presentation generated: {}'.format(presentation))
+    logger.info('Slide deck generated: {}'.format(slide_deck))
 
     cleaned_topics = ",".join(topics).replace(" ", "").replace(",", "_")
     file_name = "".join(e for e in cleaned_topics if e.isalnum() or e == "_")

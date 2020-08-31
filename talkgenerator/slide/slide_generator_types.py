@@ -1,7 +1,11 @@
-from abc import ABCMeta, abstractmethod
+import logging
+from abc import ABCMeta
+from abc import abstractmethod
 
 from talkgenerator.slide import slides
 from talkgenerator.util import generator_util
+
+logger = logging.getLogger("talkgenerator")
 
 
 class SlideGenerator(metaclass=ABCMeta):
@@ -23,8 +27,12 @@ class SlideGenerator(metaclass=ABCMeta):
         return cls(CombinedSlideGenerator(*generators))
 
     def generate_slide(self, presentation_context, used) -> (slides.Slide, list):
-        """ Generates the slide using the given generators """
+        """ Generates the slide using the given generators."""
+        logger.debug('slide_generator_types.generate_slide')
+        logger.debug('presentation_context: {}'.format(presentation_context))
+        logger.debug('self._slide_content_generator: {}'.format(self._slide_content_generator))
         generated = self._slide_content_generator(presentation_context)
+        logger.debug('generated: {}'.format(generated))
         if is_different_enough(generated, used):
             return self.slide_type(*generated), generated
 
@@ -220,6 +228,7 @@ class TwoImagesAndTupledCaptions(SlideGenerator):
         original_image_size=True,
     ):
         super().__init__(self)
+        logger.debug('initializing TwoImagesAndTupledCaptions')
         self._title_generator = title_generator
         self._captions_generator = captions_generator
         self._image_1_generator = image_1_generator
@@ -227,13 +236,33 @@ class TwoImagesAndTupledCaptions(SlideGenerator):
         self._original_image_size = original_image_size
 
     def __call__(self, presentation_context):
+        logger.debug('Calling TwoImagesAndTupledCaptions')
+        logger.debug('**********************************')
+        logger.debug('presentation_context: {}'.format(presentation_context))
+        logger.debug('captions_generator: {}'.format(self._captions_generator))
+        logger.debug('original_image_size: {}'.format(self._original_image_size))
+
         generated_tuple = self._captions_generator(presentation_context)
+        logger.debug('generated_tuple: {}'.format(generated_tuple))
+
+        logger.debug('title_generator: {}'.format(self._title_generator))
+        _title = self._title_generator(presentation_context)
+        logger.debug('_title: {}'.format(_title))
+
+        logger.debug('image_1_generator: {}'.format(self._image_1_generator))
+        _image1 = self._image_1_generator(presentation_context)
+        logger.debug('_image1: {}'.format(_image1))
+
+        logger.debug('image_2_generator: {}'.format(self._image_2_generator))
+        _image2 = self._image_2_generator(presentation_context)
+        logger.debug('_image2: {}'.format(_image2))
+
         return (
-            self._title_generator(presentation_context),
+            _title,
             generated_tuple[0],
-            self._image_1_generator(presentation_context),
+            _image1,
             generated_tuple[1],
-            self._image_2_generator(presentation_context),
+            _image2,
             self._original_image_size,
         )
 

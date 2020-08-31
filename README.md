@@ -23,20 +23,20 @@ Create a file named `.env` (don't forget the period) in your project directory, 
 
 ```sh
 # Make a new Python 3 virtual environment
-python3 -m venv venv
+python3 -m venv venv;
 
 # Activate the virtual environment
-source venv/bin/activate
+source venv/bin/activate;
 
 # Upgrade pip and install  requirements
-pip install --upgrade pip setuptools
-python3 -m pip install -r requirements.txt --use-feature=2020-resolver
+pip install --upgrade pip setuptools;
+python3 -m pip install -r requirements.txt --use-feature=2020-resolver;
 
 # Download NLTK dependencies
-python run_nltk_download.py
+python run_nltk_download.py;
 
 # Install the Talk Generator
-pip install -e .
+pip install -e .;
 
 # Generate a 10 slide talk with topic peanuts
 talkgenerator --topic "peanuts" --num_slides 10

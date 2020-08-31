@@ -2,8 +2,11 @@
 Light, commonly used, non-specific generators that are helpful shortcuts for creating
 certain types of (content) generators
 """
-import logging
+import os
+import sys
 import random
+import logging
+import inspect
 from typing import Callable, Optional, Dict, Union, Tuple
 
 import requests
@@ -12,6 +15,21 @@ from talkgenerator.datastructures.image_data import ImageData
 from talkgenerator.util import random_util, os_util
 
 logger = logging.getLogger("talkgenerator")
+
+
+def fullname(o):
+  # o.__module__ + "." + o.__class__.__qualname__ is an example in
+  # this context of H.L. Mencken's "neat, plausible, and wrong."
+  # Python makes no guarantees as to whether the __module__ special
+  # attribute is defined, so we take a more circumspect approach.
+  # Alas, the module name is explicitly excluded from __qualname__
+  # in Python 3.
+
+  module = o.__class__.__module__
+  if module is None or module == str.__class__.__module__:
+    return o.__class__.__name__  # Avoid reporting __builtin__
+  else:
+    return module + '.' + o.__class__.__name__
 
 
 class Generator(object):
@@ -46,11 +64,15 @@ class CombinedGenerator(Generator):
         self._weighted_generators = weighted_generators
 
     def __call__(self, seed: Union[str, Dict[str, str]]):
+        logger.debug('Calling generator_util.CombinedGenerator')
         current_weighted_generators = list(self._weighted_generators)
+        logger.debug("current_weighted_generators: {}".format(current_weighted_generators))
         while len(current_weighted_generators) > 0:
-            # print("combined generator using", current_weighted_generators)
             generator = random_util.weighted_random(current_weighted_generators)
+            logger.debug("current generator: {}".format(generator))
+            logger.debug("generator seed: {}".format(seed))
             generated = generator(seed)
+            logger.debug("generated: {}".format(generated))
             if generated is not None:
                 return generated
             _remove_object_from_weighted_list(current_weighted_generators, generator)
@@ -110,6 +132,9 @@ class SeededGenerator(Generator):
         self._simple_generator = simple_generator
 
     def __call__(self, presentation_context):
+        logger.debug('Calling generator_util.SeededGenerator')
+        logger.debug('presentation_context: {}'.format(presentation_context))
+        logger.debug('self._simple_generator: {}'.format(self._simple_generator))
         return self._simple_generator(presentation_context["seed"])
 
 
@@ -176,7 +201,15 @@ class ExternalImageListGenerator(Generator):
         self._weighted = weighted
 
     def __call__(self, presentation_context) -> Optional[ImageData]:
+        logger.debug('Calling generator_util.ExternalImageListGenerator')
+        logger.debug('self._image_generator: {}'.format(self._image_generator))
+        logger.debug('self._check_image_validness: {}'.format(self._check_image_validness))
+        logger.debug('self._weighted: {}'.format(self._weighted))
+        logger.debug('module where function def: {}'.format(self._image_generator.__module__))
+        logger.debug('****************************************************************')
         images = self._image_generator(presentation_context)
+        logger.debug('images: {}'.format(images))
+        logger.debug('****************************************************************')
 
         while bool(images) and len(images) > 0:
             original_chosen_image = (
