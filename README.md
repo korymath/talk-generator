@@ -30,7 +30,7 @@ source venv/bin/activate;
 
 # Upgrade pip and install  requirements
 pip install --upgrade pip setuptools;
-python3 -m pip install -r requirements.txt --use-feature=2020-resolver;
+python3 -m pip install -r requirements.txt;
 
 # Download NLTK dependencies
 python run_nltk_download.py;
