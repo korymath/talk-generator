@@ -39,7 +39,6 @@ regex==2020.7.14
 requests==2.24.0
 six==1.15.0
 soupsieve==2.0.1
--e git+https://github.com/korymath/talk-generator@43c0f9ec5fc71e8f724253cc39f5964bdbd4dbaa#egg=talkgenerator
 toml==0.10.1
 tomli==1.2.1
 tqdm==4.48.2
