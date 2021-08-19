@@ -208,7 +208,7 @@ class ExternalImageListGenerator(Generator):
         logger.debug('module where function def: {}'.format(self._image_generator.__module__))
         logger.debug('****************************************************************')
         images = self._image_generator(presentation_context)
-        logger.debug('images: {}'.format(images))
+        # logger.debug('images: {}'.format(images))
         logger.debug('****************************************************************')
 
         while bool(images) and len(images) > 0:

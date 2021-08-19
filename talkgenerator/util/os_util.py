@@ -74,7 +74,7 @@ def show_logs(given_logger: logging.Logger):
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        "[%(levelname)s %(asctime)s %(filename)s:%(lineno)s] %(message)s"
     )
     handler.setFormatter(formatter)
     given_logger.addHandler(handler)

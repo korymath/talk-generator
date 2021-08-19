@@ -1,7 +1,6 @@
 # coding=utf-8
 import unittest
 
-from talkgenerator.schema.slide_topic_generators import SideTrackingTopicGenerator
 from talkgenerator.sources import conceptnet
 
 
