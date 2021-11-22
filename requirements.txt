@@ -26,8 +26,8 @@ pexels-api==1.0.1
 Pillow==8.3.2
 pluggy==0.13.1
 portalocker==2.0.0
-praw==7.1.0
-prawcore==1.5.0
+praw==7.5.0
+praw,
 py==1.10.0
 pyparsing==2.4.7
 pytest==6.0.1
