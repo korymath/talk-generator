@@ -10,7 +10,7 @@ class RedditTest(unittest.TestCase):
             "memes", str("cat") + " nsfw:no (url:.jpg OR url:.png OR url:.gif)"
         )
         print("Result from reddit is", result)
-        self.assertIsNone(result)
+        self.assertIsNotNone(result)
         self.assertTrue(len(result) > 0)
 
     def test_reddit_simple(self):
