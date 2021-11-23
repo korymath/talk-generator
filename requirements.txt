@@ -34,7 +34,7 @@ pytest-cov==2.10.1
 python-dotenv==0.14.0
 python-pptx==0.6.18
 pyunsplash==1.0.0b9
-regex==2020.7.14
+regex
 requests==2.24.0
 six==1.15.0
 soupsieve==2.0.1
