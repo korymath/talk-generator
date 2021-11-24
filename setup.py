@@ -48,6 +48,5 @@ setup(
         ("text-templates", all_text_templates),
     ],
     include_package_data=True,
-    install_requires=required,
     entry_points={"console_scripts": ["talkgenerator = talkgenerator.run:main_cli"]},
 )
