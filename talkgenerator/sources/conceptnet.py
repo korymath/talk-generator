@@ -104,12 +104,22 @@ def _get_data(word, arguments=None):
     return result
 
 
+def create_self_node(word: str):
+    """ In case ConceptNet errors, just use word itself"""
+    return {
+        "weight": 1,
+        "rel": {"label": "IsA"},
+        "start": {"label": word},
+        "end": {"label": word},
+    }
+
+
 def _get_edges(word, arguments=None):
     data = _get_data(word, arguments)
     if data:
         if "error" in data:
             logger.error("ConceptNet seems to be down!\nError: " + str(data))
-            return []
+            return [create_self_node(word)]
         if "edges" in data:
             return data["edges"]
         else:
@@ -118,7 +128,7 @@ def _get_edges(word, arguments=None):
                     word, str(data)
                 )
             )
-            return []
+            return [create_self_node(word)]
 
 
 def _get_weight_and_word(edge, word):
