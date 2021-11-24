@@ -5,6 +5,7 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 import requests
+
 # from cachier import cachier
 
 from talkgenerator.util import generator_util, cache_util
@@ -106,7 +107,18 @@ def _get_data(word, arguments=None):
 def _get_edges(word, arguments=None):
     data = _get_data(word, arguments)
     if data:
-        return data["edges"]
+        if "error" in data:
+            logger.error("ConceptNet seems to be down!\nError: " + str(data))
+            return []
+        if "edges" in data:
+            return data["edges"]
+        else:
+            logger.error(
+                "ConceptNet does not return a result for {}!\nError: {}".format(
+                    word, str(data)
+                )
+            )
+            return []
 
 
 def _get_weight_and_word(edge, word):
