@@ -75,7 +75,7 @@ ted_schema = PresentationSchema(
     powerpoint_creator=powerpoint_slide_creator.create_new_powerpoint,
     # Topic per slide generator
     seed_generator=lambda topics, num_slides: slide_topic_generators.SideTrackingTopicGenerator(
-        topics=topics, num_slides=num_slides, topic_return_period_range=range(1,3)
+        topics=topics, num_slides=num_slides, topic_return_period_range=range(2,4)
     ),
     # Title of the presentation
     title_generator=talk_ted_title_generator,
