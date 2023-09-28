@@ -35,7 +35,7 @@ python-dotenv==0.14.0
 python-pptx==0.6.18
 pyunsplash==1.0.0b9
 regex
-requests==2.24.0
+requests==2.31.0
 six==1.15.0
 soupsieve==2.0.1
 toml==0.10.1
