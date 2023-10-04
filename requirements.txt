@@ -23,7 +23,7 @@ packaging==20.4
 pathspec==0.9.0
 pathtools==0.1.2
 pexels-api==1.0.1
-Pillow==9.3.0
+Pillow==10.0.1
 pluggy==0.13.1
 portalocker==2.0.0
 praw==7.5.0
